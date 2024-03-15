@@ -39,3 +39,13 @@ gantt
     local registration                       :locreg, after semseg, 2w
     error computation + results              :errcomp, after locreg, 1w
 ```
+
+
+## How to build c++ project
+To build and test the project, follow the following steps:
+
+```terminal
+cmake -S . -B build
+cmake --build build
+./build/bin/diffCheck.exe
+```
