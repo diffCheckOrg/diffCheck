@@ -1,6 +1,7 @@
-#include <iostream>
+#include "diffcheckpch.hh"
+#include "diffCheck.hh"
 
 int main() {
-  std::cout << "Hello, World!" << std::endl;
+  diffCheck::testTemplateCheck();
   return 0;
 }

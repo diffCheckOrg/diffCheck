@@ -29,7 +29,7 @@ git commit -m "WIP-CAP:<description>      <--- for cap moment in not finished wo
 
 ### Naming & synthax convention
 Here's the naming convention for this project:
-- `localVariable`: lowerCamelCase.
+- ` `: lowerCamelCase.
 - `type PrivateVariable`: public member of a class
 - `type m_PrivateVariable`: Hungarian notation with UpperCamelCase for private class members.
 - `static type s_StaticVariable`: Hungarian notation with UpperCamelCase for static members of class.

@@ -37,6 +37,21 @@
 # add the build output folder
 build/
 
+#######################################
+## CMake
+#######################################
+# general file for cmake
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
 
 #######################################
 ## VSCode
