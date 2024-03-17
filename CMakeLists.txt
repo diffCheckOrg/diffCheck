@@ -6,15 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(external_tools)
 
-
-#--------------------------------------------------------------------------
-# options
-#--------------------------------------------------------------------------
-
 #--------------------------------------------------------------------------
 # library
 #--------------------------------------------------------------------------
-
 
 set(SHARED_LIB_NAME diffCheck)
 
@@ -42,6 +36,40 @@ target_include_directories(${SHARED_LIB_NAME}
 
 target_precompile_headers(${SHARED_LIB_NAME} PUBLIC src/diffcheckpch.hh)
 
+#--------------------------------------------------------------------------
+# 3rd party
+#--------------------------------------------------------------------------
+
+# glew --------------------------------------------------------------
+
+
+
+
+
+# fmt --------------------------------------------------------------
+set(FMT_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/fmt/lib)
+set(FMT_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/fmt/include)
+
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC ${FMT_LIB_PATH})
+target_link_libraries(${SHARED_LIB_NAME} INTERFACE ${FMT_LIB_PATH})
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${FMT_INCLUDE_PATH})
+target_include_directories(${SHARED_LIB_NAME} INTERFACE ${FMT_INCLUDE_PATH})
+
+# Eigen --------------------------------------------------------------
+set(EIGEN_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/eigen)
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${EIGEN_INCLUDE_PATH})
+target_include_directories(${SHARED_LIB_NAME} INTERFACE ${EIGEN_INCLUDE_PATH})
+
+# Open3D --------------------------------------------------------------
+set(O3D_VERSION 0_17)  # 0.17.0
+set(OPEN3D_SHAREDLIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/bin/Open3D)
+set(OPEN3D_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/include)
+
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_SHAREDLIB_PATH})
+target_link_libraries(${SHARED_LIB_NAME} INTERFACE ${OPEN3D_SHAREDLIB_PATH})
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_INCLUDE_PATH})
+target_include_directories(${SHARED_LIB_NAME} INTERFACE ${OPEN3D_INCLUDE_PATH})
+
 
 #--------------------------------------------------------------------------
 # executable
@@ -60,10 +88,6 @@ target_link_libraries(${APP_NAME_EXE} ${SHARED_LIB_NAME})
 target_include_directories(${APP_NAME_EXE}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
-
-#--------------------------------------------------------------------------
-# Pre-compiled headers
-#--------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------
 # Tests

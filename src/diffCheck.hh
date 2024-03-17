@@ -13,4 +13,7 @@ namespace diffCheck {
     /// @brief Function 3 of the library
     int func3();
 
+    /// @brief Testing open3d import
+    void testOpen3d();
+
 }  // namespace diffCheck
