@@ -8,5 +8,9 @@ namespace diffCheck {
     };
 
     /// @brief Testing function for header import
-    void testTemplateCheck();
+    void testHeaderCheck1();
+    /// @brief Testing function for header import
+    void testHeaderCheck2();
+    /// @brief Testing function for header import
+    void testHeaderCheck3();
 }  // namespace diffCheck
