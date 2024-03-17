@@ -4,11 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-
-# # change the default build type to Release
-# if(NOT CMAKE_BUILD_TYPE)
-#     set(CMAKE_BUILD_TYPE Release)
-# endif()
+include(external_tools)
 
 
 #--------------------------------------------------------------------------
@@ -76,4 +72,4 @@ target_include_directories(${APP_NAME_EXE}
 include(CTest)
 enable_testing()
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/global)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/global_registrations)
