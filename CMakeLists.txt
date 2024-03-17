@@ -40,25 +40,36 @@ target_precompile_headers(${SHARED_LIB_NAME} PUBLIC src/diffcheckpch.hh)
 # 3rd party
 #--------------------------------------------------------------------------
 
+# FIXME: problems with glfw (LINK : fatal error LNK1104: cannot open file '..\deps\glew\win\2_2_0\bin\Release\x64\glew32.obj' [F:\diffCheck\build\diffCheck.vcxproj])
+# glfw --------------------------------------------------------------
+add_subdirectory(deps/glfw)
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC glfw ${GLFW_LIBRARIES})
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${GLFW_INCLUDE_DIRS})
+target_link_libraries(${SHARED_LIB_NAME} INTERFACE glfw ${GLFW_LIBRARIES})
+target_include_directories(${SHARED_LIB_NAME} INTERFACE ${GLFW_INCLUDE_DIRS})
+
+# TODO: replace with add_subdirectory() instead of binaries
 # glew --------------------------------------------------------------
+set(GLEW_VERSION 2_2_0)  # 2.2.0
+set(GLEW_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/glew/win/${GLEW_VERSION}/bin/Release/x64/glew32)
+set(GLEW_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/glew/win/${GLEW_VERSION}/include)
 
-
-
-
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC ${GLEW_LIB_PATH})
+target_link_libraries(${SHARED_LIB_NAME} INTERFACE ${GLEW_LIB_PATH})
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${GLEW_INCLUDE_PATH})
+target_include_directories(${SHARED_LIB_NAME} INTERFACE ${GLEW_INCLUDE_PATH})
 
 # fmt --------------------------------------------------------------
-set(FMT_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/fmt/lib)
-set(FMT_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/fmt/include)
+add_subdirectory(deps/fmt)
 
-target_link_libraries(${SHARED_LIB_NAME} PUBLIC ${FMT_LIB_PATH})
-target_link_libraries(${SHARED_LIB_NAME} INTERFACE ${FMT_LIB_PATH})
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${FMT_INCLUDE_PATH})
-target_include_directories(${SHARED_LIB_NAME} INTERFACE ${FMT_INCLUDE_PATH})
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC fmt::fmt)
+target_link_libraries(${SHARED_LIB_NAME} INTERFACE fmt::fmt)
 
 # Eigen --------------------------------------------------------------
-set(EIGEN_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/eigen)
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${EIGEN_INCLUDE_PATH})
-target_include_directories(${SHARED_LIB_NAME} INTERFACE ${EIGEN_INCLUDE_PATH})
+add_subdirectory(deps/eigen)
+
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
+target_link_libraries(${SHARED_LIB_NAME} INTERFACE Eigen3::Eigen)
 
 # Open3D --------------------------------------------------------------
 set(O3D_VERSION 0_17)  # 0.17.0
