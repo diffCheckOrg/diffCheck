@@ -69,7 +69,7 @@ target_include_directories(${APP_NAME_EXE}
 # Tests
 #--------------------------------------------------------------------------
 
-include(CTest)
-enable_testing()
+# include(CTest)
+# enable_testing()
 
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/global_registrations)
