@@ -59,6 +59,8 @@ target_precompile_headers(${SHARED_LIB_NAME} PUBLIC src/diffcheckpch.hh)
 
 
 
+
+
 # FIXME: problems with glfw (LINK : fatal error LNK1104: cannot open file '..\deps\glew\win\2_2_0\bin\Release\x64\glew32.obj' [F:\diffCheck\build\diffCheck.vcxproj])
 # glfw (pre-build binaries) --------------------------------------------------------------
 
@@ -78,15 +80,9 @@ set_target_properties(glfw3 PROPERTIES
 # target_link_directories(${SHARED_LIB_NAME} INTERFACE ${GLFW_LIB_PATH})
 
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC glfw3)
-target_link_libraries(${SHARED_LIB_NAME} INTERFACE glfw3)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE glfw3)
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${GLFW_INCLUDE_PATH})
-target_include_directories(${SHARED_LIB_NAME} INTERFACE ${GLFW_INCLUDE_PATH})
-
-# #find openGL
-# find_package(OpenGL REQUIRED)
-# target_link_libraries(${SHARED_LIB_NAME} PUBLIC OpenGL::GL)
-# target_link_libraries(${SHARED_LIB_NAME} INTERFACE OpenGL::GL)
-
+# target_include_directories(${SHARED_LIB_NAME} INTERFACE ${GLFW_INCLUDE_PATH})
 
 # TODO: replace with add_subdirectory() instead of binaries
 # glew (pre-build binaries) --------------------------------------------------------------
@@ -109,23 +105,66 @@ set_target_properties(glew32 PROPERTIES
 # target_link_directories(${SHARED_LIB_NAME} INTERFACE ${GLEW_LIB_PATH})
 
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC glew32)
-target_link_libraries(${SHARED_LIB_NAME} INTERFACE glew32)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE glew32)
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${GLEW_INCLUDE_PATH})
-target_include_directories(${SHARED_LIB_NAME} INTERFACE ${GLEW_INCLUDE_PATH})
+# target_include_directories(${SHARED_LIB_NAME} INTERFACE ${GLEW_INCLUDE_PATH})
 
 # fmt (header-only)--------------------------------------------------------------
 add_subdirectory(deps/fmt)
 
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC fmt::fmt)
-target_link_libraries(${SHARED_LIB_NAME} INTERFACE fmt::fmt)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE fmt::fmt)
 
 # Eigen (header-only)--------------------------------------------------------------
 add_subdirectory(deps/eigen)
 
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
-target_link_libraries(${SHARED_LIB_NAME} INTERFACE Eigen3::Eigen)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE Eigen3::Eigen)
 
-# Open3D (pre-build binaries)--------------------------------------------------------------
+#FIXME: might need qt4 for visualizer
+
+
+
+
+
+# FIXME: no need to specify opnegl because by system and fetched automatically
+# # # OpenGL (from system) --------------------------------------------------------------
+# find_package(OpenGL REQUIRED)
+# target_link_libraries(${SHARED_LIB_NAME} PUBLIC OpenGL::GL)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE OpenGL::GL)
+
+
+
+
+
+
+
+# HERE'S THE PROBLEEEEEM <<<<<<
+# Libigl (header-only) --------------------------------------------------------------
+# set a flag
+
+# set target to create igl::glfw
+
+
+# add_subdirectory(deps/libigl)
+
+# # avoid to link with glad
+# target_link_libraries(${SHARED_LIB_NAME} PUBLIC igl::glfw)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE igl::glfw)
+set(LIBIGL_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/libigl/include)
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${LIBIGL_INCLUDE_PATH})
+target_include_directories(${SHARED_LIB_NAME} INTERFACE ${LIBIGL_INCLUDE_PATH})
+
+
+
+
+
+
+
+
+
+
+# Open3D (pre-build binaries /headless not visuals)--------------------------------------------------------------
 set(O3D_VERSION 0_17)  # 0.17.0
 set(OPEN3D_SHAREDLIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/bin)
 set(OPEN3D_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/lib)
@@ -138,15 +177,10 @@ set_target_properties(Open3D PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${OPEN3D_INCLUDE_PATH}
     )
 
-# target_link_directories(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_LIB_PATH})
-# target_link_directories(${SHARED_LIB_NAME} INTERFACE ${OPEN3D_LIB_PATH})
-# # target_link_directories(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_SHAREDLIB_PATH})
-# # target_link_directories(${SHARED_LIB_NAME} INTERFACE ${OPEN3D_SHAREDLIB_PATH})
-
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Open3D)
-target_link_libraries(${SHARED_LIB_NAME} INTERFACE Open3D)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE Open3D)
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_INCLUDE_PATH})
-target_include_directories(${SHARED_LIB_NAME} INTERFACE ${OPEN3D_INCLUDE_PATH})
+# target_include_directories(${SHARED_LIB_NAME} INTERFACE ${OPEN3D_INCLUDE_PATH})
 
 
 
