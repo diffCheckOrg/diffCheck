@@ -115,6 +115,27 @@ private:
 #include "aiacpch.h"
 ```
 
+### Debugging with GDB
+We use GDB for debugging. To install GDB on windows, do the following:
+1. Download the MSYS2 installer from the [MSYS2 website](https://www.msys2.org/).
+2. Run the installer and follow the instructions in the [MSYS2 installation guide](https://www.msys2.org/wiki/MSYS2-installation/).
+3. Open the MSYS2 terminal and update the core package database:
+```bash
+pacman -Syu
+```
+4. Install the GDB debugger:
+```bash
+pacman -S mingw-w64-x86_64-gdb
+```
+5. Add the GDB to the system path in PATH_ENVIRONMENT:
+6. Close the terminal sessions you where using and open a new one. Now you can use GDB.
+```bash
+gdb "path-to-executable"
+```
+> use `run` to start the program and `quit` to exit the debugger.
+> use `break` to set a breakpoint and `continue` to continue the execution of the program.
+> use `bt` to see the backtrace of the program when a segfault occurs.
+
 ### Doxygen
 For documentation we use the [*JavaDoc" convention](https://doxygen.nl/manual/docblocks.html).
 Follow [this guide for documenting the code](https://developer.lsst.io/cpp/api-docs.html).
