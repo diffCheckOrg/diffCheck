@@ -24,6 +24,30 @@ You can merge few tags e.g.:
 git commit -m "WIP-CAP:<description>      <--- for cap moment in not finished work 
 ```
 
+### Delete submodule
+To delete a submodule in Win, you need to:
+1. Delete the relevant section from the `.gitmodules` file. The section would look something like this:
+```terminal
+[submodule "submodule_name"]
+    path = submodule_path
+    url = submodule_url
+```
+2. Stage the `.gitmodules` changes:
+```terminal
+git add .gitmodules
+```
+3. (optional) Delete the relevant section from `.git/config`. The section would look something like this:
+```terminal
+[submodule "submodule_name"]
+    url = submodule_url
+```
+4. Run `git rm --cached path_to_submodule` (no trailing slash).
+5. Run `Remove-Item -Recurse -Force .git/modules/path_to_submodule`.
+6. Commit the changes:
+```terminal
+git commit -m "Remove a submodule name"
+```
+
 #==============================================================
 # C++
 
