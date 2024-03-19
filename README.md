@@ -40,6 +40,14 @@ gantt
     error computation + results              :errcomp, after locreg, 1w
 ```
 
+## 3rd party libraries
+
+The project uses the following 3rd party libraries:
+- `Open3d` for 3D point cloud processing (as binary submodule for win64 that we store in [submodule-open3d](https://github.com/diffCheckOrg/submodule-open3d)). Note that we deactivate the visualization part of `Open3d` to avoid conflicts with our visualizator.
+- `Eigen` for linear algebra (needed by `Open3d`)
+- `fmt` for string formatting (needed by `Open3d`)
+- `libigl` mainly for I/O and visualization
+- `glfw` for window and context creation (needed by `libigl`)
 
 ## How to build c++ project
 To build and test the project, follow the following steps:
