@@ -12,9 +12,6 @@
 [submodule "deps/fmt"]
 	path = deps/fmt
 	url = https://github.com/fmtlib/fmt.git
-[submodule "deps/glew"]
-	path = deps/glew
-	url = https://github.com/diffCheckOrg/submodule-glew.git
 [submodule "deps/libigl"]
 	path = deps/libigl
 	url = https://github.com/libigl/libigl.git
