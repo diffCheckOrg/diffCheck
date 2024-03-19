@@ -19,7 +19,6 @@ endif()
 #--------------------------------------------------------------------------
 # diffCheck dynamic lib
 #--------------------------------------------------------------------------
-
 set(SHARED_LIB_NAME diffCheck)
 
 file(GLOB_RECURSE SOURCES_LIB 
@@ -46,60 +45,24 @@ target_include_directories(${SHARED_LIB_NAME}
 #--------------------------------------------------------------------------
 # 3rd party
 #--------------------------------------------------------------------------
-# glfw (pre-build binaries) -----------------------------------------------
-# TODO: add binaries to deps
-# Get the latest commit on branch
-download_submodule_project(glfw)
-set(GLFW_VERSION 3_3_4)  # 3.3.4
-set(GLFW_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/win/${GLFW_VERSION}/lib-vc2019)
-set(GLFW_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/win/${GLFW_VERSION}/include)
-
-add_library(glfw3 SHARED IMPORTED)
-set_target_properties(glfw3 PROPERTIES
-    IMPORTED_LOCATION ${GLFW_LIB_PATH}/glfw3.dll
-    IMPORTED_IMPLIB ${GLFW_LIB_PATH}/glfw3.lib
-    INTERFACE_INCLUDE_DIRECTORIES ${GLFW_INCLUDE_PATH}
-    )
-
-target_link_libraries(${SHARED_LIB_NAME} PUBLIC glfw3)
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${GLFW_INCLUDE_PATH})
-
-# TODO: replace with add_subdirectory() instead of binaries
-# glew (pre-build binaries) ----------------------------------------------
-download_submodule_project(glew)
-set(GLEW_VERSION 2_2_0)  # 2.2.0
-set(GLEW_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/glew/win/${GLEW_VERSION}/bin/Release/x64)
-set(GLEW_STATIC_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/glew/win/${GLEW_VERSION}/lib/Release/x64)
-set(GLEW_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/glew/win/${GLEW_VERSION}/include)
-
-add_library(glew32 SHARED IMPORTED)
-set_target_properties(glew32 PROPERTIES
-    IMPORTED_LOCATION ${GLEW_LIB_PATH}/glew32.dll
-    IMPORTED_IMPLIB ${GLEW_STATIC_LIB_PATH}/glew32.lib
-    INTERFACE_INCLUDE_DIRECTORIES ${GLEW_INCLUDE_PATH}
-    )
-
-target_link_libraries(${SHARED_LIB_NAME} PUBLIC glew32)
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${GLEW_INCLUDE_PATH})
-
-# fmt (header-only)------------------------------------------------------
+# fmt (header-only)--------------------------------------------------------
 download_submodule_project(fmt)
 add_subdirectory(deps/fmt)
 
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC fmt::fmt)
 
-# Eigen (header-only)----------------------------------------------------
+# Eigen (header-only)------------------------------------------------------
 download_submodule_project(eigen)
 add_subdirectory(deps/eigen)
 
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
 
-# # # OpenGL (from system) ----------------------------------------------
+# OpenGL (from system) ----------------------------------------------------
 find_package(OpenGL REQUIRED)
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC OpenGL::GL)
 target_link_libraries(${SHARED_LIB_NAME} INTERFACE OpenGL::GL)
 
-# Libigl (header-only) --------------------------------------------------
+# Libigl + glfw (header-only) ---------------------------------------------
 download_submodule_project(libigl)
 # all dependecies for libigl: https://libigl.github.io/third-party/
 # set compiling flags for libigl
@@ -109,7 +72,7 @@ add_subdirectory(deps/libigl)
 
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC igl::glfw)
 
-# Open3D (pre-build binaries /headless not visuals)-----------------------
+# Open3D (pre-build binaries /headless not visuals)------------------------
 download_submodule_project(open3d)
 set(O3D_VERSION 0_17)  # 0.17.0
 set(OPEN3D_SHAREDLIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/bin)
@@ -126,10 +89,8 @@ set_target_properties(Open3D PROPERTIES
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Open3D)
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_INCLUDE_PATH})
 
-# ------------------------------------------------------------------------
-# copy all the dlls to the bin directory to make dll accessible
-# List of dynamic libraries that DiffCheck is linked against
-set(DEPENDENCIES glfw3 glew32 Open3D)
+# copy the o3d dll to the binary dir to make it available for the app
+set(DEPENDENCIES Open3D)
 
 foreach(DEP_LIB ${DEPENDENCIES})
     add_custom_command(TARGET ${SHARED_LIB_NAME} POST_BUILD
@@ -140,7 +101,7 @@ foreach(DEP_LIB ${DEPENDENCIES})
 endforeach()
 
 #--------------------------------------------------------------------------
-# executable
+# executable for prototyping
 #--------------------------------------------------------------------------
 set(APP_NAME_EXE diffCheckApp)
 
