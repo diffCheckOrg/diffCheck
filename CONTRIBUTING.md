@@ -115,6 +115,16 @@ private:
 #include "aiacpch.h"
 ```
 
+### Only smart (or unique) pointers
+It's 2024, we can pass on raw pointers. We use smart pointers. 
+```c++
+std::unique_ptr<AnExampleClass> example = std::make_unique<AnExampleClass>(0);
+```
+Or if you really need to use an unique pointer because you don't want to transfer the ownership of the object, use a shared pointer.
+```c++
+std::shared_ptr<AnExampleClass> example = std::make_shared<AnExampleClass>(0);
+```
+
 ### Debugging with GDB
 We use GDB for debugging. To install GDB on windows, do the following:
 1. Download the MSYS2 installer from the [MSYS2 website](https://www.msys2.org/).
