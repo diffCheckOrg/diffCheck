@@ -86,6 +86,13 @@
         "span": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "bitset": "cpp",
+        "cfenv": "cpp",
+        "ranges": "cpp",
+        "shared_mutex": "cpp",
+        "source_location": "cpp",
+        "stack": "cpp",
+        "valarray": "cpp"
     }
 }

@@ -12,9 +12,16 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 include(external_tools)
 
+#FIXME: here we need to use the external function to update the submodules to the
+# latest commit
 execute_process(COMMAND git submodule update --init --recursive
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     RESULT_VARIABLE GIT_SUBMOD_RESULT
+    )
+# do a git pull to get the latest commit
+execute_process(COMMAND git pull
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    RESULT_VARIABLE GIT_PULL_RESULT
     )
 if(NOT GIT_SUBMOD_RESULT EQUAL "0")
     message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
@@ -49,7 +56,7 @@ target_include_directories(${SHARED_LIB_NAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
-target_precompile_headers(${SHARED_LIB_NAME} PUBLIC src/diffcheckpch.hh)
+# target_precompile_headers(${SHARED_LIB_NAME} PUBLIC src/diffcheckpch.hh)
 
 #--------------------------------------------------------------------------
 # 3rd party
@@ -76,13 +83,8 @@ set_target_properties(glfw3 PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${GLFW_INCLUDE_PATH}
     )
 
-# target_link_directories(${SHARED_LIB_NAME} PUBLIC ${GLFW_LIB_PATH})
-# target_link_directories(${SHARED_LIB_NAME} INTERFACE ${GLFW_LIB_PATH})
-
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC glfw3)
-# target_link_libraries(${SHARED_LIB_NAME} INTERFACE glfw3)
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${GLFW_INCLUDE_PATH})
-# target_include_directories(${SHARED_LIB_NAME} INTERFACE ${GLFW_INCLUDE_PATH})
 
 # TODO: replace with add_subdirectory() instead of binaries
 # glew (pre-build binaries) --------------------------------------------------------------
@@ -121,17 +123,13 @@ add_subdirectory(deps/eigen)
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
 # target_link_libraries(${SHARED_LIB_NAME} INTERFACE Eigen3::Eigen)
 
-#FIXME: might need qt4 for visualizer
-
-
-
 
 
 # FIXME: no need to specify opnegl because by system and fetched automatically
 # # # OpenGL (from system) --------------------------------------------------------------
-# find_package(OpenGL REQUIRED)
-# target_link_libraries(${SHARED_LIB_NAME} PUBLIC OpenGL::GL)
-# target_link_libraries(${SHARED_LIB_NAME} INTERFACE OpenGL::GL)
+find_package(OpenGL REQUIRED)
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC OpenGL::GL)
+target_link_libraries(${SHARED_LIB_NAME} INTERFACE OpenGL::GL)
 
 
 
@@ -141,19 +139,19 @@ target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
 
 # HERE'S THE PROBLEEEEEM <<<<<<
 # Libigl (header-only) --------------------------------------------------------------
-# set a flag
 
-# set target to create igl::glfw
+# all dependecies for libigl: https://libigl.github.io/third-party/
+# set compiling flags for libigl
+set(LIBIGL_USE_STATIC_LIBRARY OFF)
+set(LIBIGL_GLFW ON)
+add_subdirectory(deps/libigl)
 
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC igl::glfw)
+# target_link_libraries(${SHARED_LIB_NAME} INTERFACE igl::core igl::opengl igl::opengl_glfw)
 
-# add_subdirectory(deps/libigl)
-
-# # avoid to link with glad
-# target_link_libraries(${SHARED_LIB_NAME} PUBLIC igl::glfw)
-# target_link_libraries(${SHARED_LIB_NAME} INTERFACE igl::glfw)
-set(LIBIGL_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/libigl/include)
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${LIBIGL_INCLUDE_PATH})
-target_include_directories(${SHARED_LIB_NAME} INTERFACE ${LIBIGL_INCLUDE_PATH})
+# set(LIBIGL_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/libigl/include)
+# target_include_directories(${SHARED_LIB_NAME} PUBLIC ${LIBIGL_INCLUDE_PATH})
+# target_include_directories(${SHARED_LIB_NAME} INTERFACE ${LIBIGL_INCLUDE_PATH})
 
 
 
@@ -185,8 +183,8 @@ target_include_directories(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_INCLUDE_PATH})
 
 
 
-# copy all the dlls to the bin directory
-# List of libraries that DiffCheck is linked against
+# copy all the dlls to the bin directory to make dll accessible
+# List of dynamic libraries that DiffCheck is linked against
 set(DEPENDENCIES glfw3 glew32 Open3D)
 
 foreach(DEP_LIB ${DEPENDENCIES})
@@ -196,8 +194,6 @@ foreach(DEP_LIB ${DEPENDENCIES})
         $<TARGET_FILE_DIR:${SHARED_LIB_NAME}>
     )
 endforeach()
-
-
 
 
 #--------------------------------------------------------------------------

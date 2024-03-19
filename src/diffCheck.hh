@@ -1,11 +1,21 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+// #include <glad/glad.h>
+// #include <GL/glew.h>  // Remove this line
+// #include <GLFW/glfw3.h>
+// #define GLFW_INCLUDE_NONE
+// #include <GLFW/glfw3.h>
+// #include <glad/gl.h>
+
+
+
+#include <igl/readPLY.h>
+#include <igl/opengl/glfw/Viewer.h>
 
 #include <open3d/Open3D.h>
 
-#include "diffcheckpch.hh"
+
+
 
 // #include "diffCheck/glHeader.hh"
 #include "diffCheck/libHeaderTemplate.hh"  // This is a dummy include to test the include path
