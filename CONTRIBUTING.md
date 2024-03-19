@@ -2,7 +2,7 @@
 # Guide for contributors
 Here's you can find some documentations and guidelines to contribute to the source code.
 
-#==============================================================
+---
 # Git
 
 ### GitHub commit convetion
@@ -48,7 +48,7 @@ git add .gitmodules
 git commit -m "Remove a submodule name"
 ```
 
-#==============================================================
+---
 # C++
 
 ### Naming & synthax convention
@@ -147,13 +147,7 @@ Follow [this guide for documenting the code](https://developer.lsst.io/cpp/api-d
  */
 ```
 
-
-### Pre-Compiled headers
-AC uses a precompile header `aiacpch.h` to the project to shorten compilation time for headers that you rarely modify such as stdb library, opencv etc.. Add to `aiacpch.h` every big header you do not use often.
-Include at the very top `#include "aiacpch.h"` of every `.cpp` file.
-
-
-### Logging
+### Logging (TO BE UPDATED)
 To log use the following MACROS. All the code is contained in `Log.hpp` and `Log.cpp`. 
 ```c++
 AIAC_INFO("test_core_info");
@@ -171,7 +165,7 @@ The logging can be silenced by setting OFF the option in the main `CMakeLists.tx
 option(SILENT_LOGGING "Do not log messages in the terminal of on." ON)
 ```
 
-### CTesting
+### CTesting (TO BE UPDATED)
 When necessary, c++ testing is done by using CTest. Important/critical features (e.g., correcting functioning of graphics with OpenGL and Glfw) needs testing to be written (this is usefull for e.g., GitHub Actions). Such tests can be extracted from the main source code and integrated in a seperate section: cmake testing.
 
 To add a new test do as follow.
