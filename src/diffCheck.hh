@@ -5,7 +5,12 @@
 
 #include <open3d/Open3D.h>
 
+// diffCheck includes
 #include "diffCheck/libHeaderTemplate.hh"  // This is a dummy include to test the include path
+#include "diffCheck/geometry/DFPointCloud.hh"
+#include "diffCheck/IOManager.hh"
+#include "diffCheck/visualizer.hh"
+
 
 namespace diffCheck {
     /// @brief Function 1 of the library
@@ -19,8 +24,4 @@ namespace diffCheck {
 
     /// @brief Testing open3d import
     void testOpen3d();
-
-    /// @brief Testing libigl import
-    void testLibigl();
-
 }  // namespace diffCheck
