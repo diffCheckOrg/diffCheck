@@ -25,7 +25,3 @@ jobs:
           -D CMAKE_BUILD_TYPE=Release
       - name: CMake Build
         run: cmake --build ${{github.workspace}}/build --config Release
-
-      # - name: Unit Test
-      #   working-directory: ${{github.workspace}}/build
-      #   run: ctest -C ${{env.BUILD_TYPE}}
