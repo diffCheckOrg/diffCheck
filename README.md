@@ -74,3 +74,4 @@ See the [CONTRIBUTING.md](https://github.com/diffCheckOrg/diffCheck/blob/main/CO
 - [ ] @Andrea: add writing functions for mesh and point cloud
 - [ ] @Andrea: refactor `IOManager.hh` with a class `IOManager` and static methods
 - [ ] @Andrea: test Rhino exporeted `.ply` files
+- [ ] @Andrea: tests suite for IO /pcdmesh / visualizer
