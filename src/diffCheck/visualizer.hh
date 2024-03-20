@@ -4,6 +4,7 @@
 #include <Eigen/Core>
 
 #include "diffCheck/geometry/DFPointCloud.hh"
+#include "diffCheck/geometry/DFMesh.hh"
 
 namespace diffCheck::visualizer
 {
@@ -23,13 +24,13 @@ namespace diffCheck::visualizer
          */
         void LoadPointCloud(std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud);
 
-        // TODO: implement the  diffCHeck mesh object
+        // TODO: need to implement color and normals for meshes
         /**
          * @brief Load a mesh to visualize
          * 
-         * @param mesh the mesh to visualize
+         * @param std::shared_ptr<diffCheck::geometry::DFMesh> the mesh to visualize
          */
-        void LoadMesh(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F);
+        void LoadMesh(std::shared_ptr<diffCheck::geometry::DFMesh> &mesh);
 
         /// @brief Main function to start the visualizer
         void Run();
@@ -38,8 +39,5 @@ namespace diffCheck::visualizer
         /// @brief The viewer object from libigl
         igl::opengl::glfw::Viewer m_Viewer;
         /// @brief The vertices of the mesh
-        Eigen::MatrixXd m_V;
-        /// @brief The faces of the mesh
-        Eigen::MatrixXi m_F;
     };
 }  // namespace diffCheck::visualizer

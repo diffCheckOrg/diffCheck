@@ -146,7 +146,7 @@ gdb "path-to-executable"
 > use `break` to set a breakpoint and `continue` to continue the execution of the program.
 > use `bt` to see the backtrace of the program when a segfault occurs.
 
-### Doxygen
+<!-- ### Doxygen
 For documentation we use the [*JavaDoc" convention](https://doxygen.nl/manual/docblocks.html).
 Follow [this guide for documenting the code](https://developer.lsst.io/cpp/api-docs.html).
 ```c++
@@ -155,9 +155,9 @@ Follow [this guide for documenting the code](https://developer.lsst.io/cpp/api-d
  * @param filename path to the map.yaml file
  * @param planes vector of TSPlane objects
  */
-```
+``` -->
 
-### Logging (TO BE UPDATED)
+<!-- ### Logging (TO BE UPDATED)
 To log use the following MACROS. All the code is contained in `Log.hpp` and `Log.cpp`. 
 ```c++
 AIAC_INFO("test_core_info");
@@ -173,7 +173,41 @@ The output is like so:
 The logging can be silenced by setting OFF the option in the main `CMakeLists.txt` and do clean reconfiguration.
 ```cmake
 option(SILENT_LOGGING "Do not log messages in the terminal of on." ON)
+``` -->
+
+### I/O and basic datatypes
+Here's how you can import point cloud from file:
+```c++
+#include "diffCheck/geometry/DFPointCloud.hh"
+#include "diffCheck/geometry/DFMesh.hh"
+
+// clouds
+std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
+std::string pathMesh = R"(C:\Users\yourfilecloudpath.ply)";
+dfPointCloudPtr->LoadFromPLY(pathCloud);
+
+// mesh
+std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
+std::string pathCloud = R"(C:\Users\yourfilemeshpath.ply)";
+dfMeshPtr->LoadFromPLY(pathMesh);
 ```
+
+### Visualizer
+Clouds and mesh can be visualized like this:
+```c++
+#include "diffCheck/visualizer/DFVisualizer.hh"
+
+// clouds
+std::shared_ptr<diffCheck::visualizer::DFVisualizer> dfVisualizerPtr = std::make_shared<diffCheck::visualizer::DFVisualizer>();
+dfVisualizerPtr->LoadPointCloud(dfPointCloudPtr);
+dfVisualizerPtr->Run();
+
+// mesh
+std::shared_ptr<diffCheck::visualizer::DFVisualizer> dfVisualizerPtr = std::make_shared<diffCheck::visualizer::DFVisualizer>();
+dfVisualizerPtr->LoadMesh(dfMeshPtr);
+dfVisualizerPtr->Run();
+```
+
 
 ### CTesting (TO BE UPDATED)
 When necessary, c++ testing is done by using CTest. Important/critical features (e.g., correcting functioning of graphics with OpenGL and Glfw) needs testing to be written (this is usefull for e.g., GitHub Actions). Such tests can be extracted from the main source code and integrated in a seperate section: cmake testing.

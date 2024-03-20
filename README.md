@@ -55,5 +55,18 @@ To build and test the project, follow the following steps:
 ```terminal
 cmake -S . -B build
 cmake --build build
-./build/bin/diffCheck.exe
+./build/bin/diffCheckApp.exe <-- for prototyping
 ```
+
+## Prototype diffCheck in C++
+To prototype:
+1) add a header/source file in `src/diffCheck` and include the header in `diffCheck.hh` interface
+1) test it in `diffCheckApp` (the cmake will output an executable in bin)
+
+See the [CONTRIBUTING.md](https://github.com/diffCheckOrg/diffCheck/blob/main/CONTRIBUTING.md) for more information on how to prototype with diffCheck (code guidelines, visualizer, utilities, etc).
+
+
+## TODO:
+- [ ] @Andrea: add writing functions for mesh and point cloud
+- [ ] @Andrea: refactor `IOManager.hh` with a class `IOManager` and static methods
+- [ ] @Andrea: test Rhino exporeted `.ply` files

@@ -22,9 +22,8 @@ endif()
 set(SHARED_LIB_NAME diffCheck)
 
 file(GLOB_RECURSE SOURCES_LIB 
-    src/diffCheck.cc src/diffCheck.hh        # diffCheck interface
+    src/diffCheck.hh                         # diffCheck interface
     src/diffCheck/*.cc src/diffCheck/*.hh    # diffCheck src
-    src/diffcheckpch.cc src/diffcheckpch.hh  # precompiled headers
     )
 
 add_library(${SHARED_LIB_NAME} SHARED ${SOURCES_LIB})

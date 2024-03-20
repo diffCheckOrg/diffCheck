@@ -6,21 +6,24 @@
 #include <igl/readPLY.h>
 
 #include "diffCheck/geometry/DFPointCloud.hh"
+#include "diffCheck/geometry/DFMesh.hh"
 
 namespace diffCheck::io
 {
+    // TODO: here we should  add a class IOManager and the functions should be static
     /**
      * @brief Read a point cloud from a file
      * 
      * @param filename the path to the file with the extension
+     * @return std::shared_ptr<diffCheck::geometry::DFPointCloud> the point cloud
      */
     std::shared_ptr<diffCheck::geometry::DFPointCloud> ReadPLYPointCloud(const std::string &filename);
     
-    // TODO: return a dggeometry::Mesh object
     /**
-     * @brief Read mesh of format file
+     * @brief Read mesh from ply format
      * 
      * @param filename the path to the file with the extension
+     * @return std::shared_ptr<diffCheck::geometry::DFMesh> the mesh
      */
-    void ReadPLYMeshFromFile(const std::string &filename);
+    std::shared_ptr<diffCheck::geometry::DFMesh> ReadPLYMeshFromFile(const std::string &filename);
 } // namespace diffCheck::io

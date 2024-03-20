@@ -23,11 +23,23 @@ namespace diffCheck::visualizer
         this->m_Viewer.data().point_size = 10;
     }
 
-    // TODO: implement the  diffCHeck mesh object
-    void Visualizer::LoadMesh(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F)
+    void Visualizer::LoadMesh(std::shared_ptr<diffCheck::geometry::DFMesh> &mesh)
     {
+        Eigen::MatrixXd V(mesh->Vertices.size(), 3);
+        for (int i = 0; i < mesh->Vertices.size(); i++)
+        {
+            V(i, 0) = mesh->Vertices[i](0);
+            V(i, 1) = mesh->Vertices[i](1);
+            V(i, 2) = mesh->Vertices[i](2);
+        }
+        Eigen::MatrixXi F(mesh->Faces.size(), 3);
+        for (int i = 0; i < mesh->Faces.size(); i++)
+        {
+            F(i, 0) = mesh->Faces[i](0);
+            F(i, 1) = mesh->Faces[i](1);
+            F(i, 2) = mesh->Faces[i](2);
+        }
         this->m_Viewer.data().set_mesh(V, F);
-        this->m_Viewer.data().set_face_based(true);
     }
 
     void Visualizer::Run()
