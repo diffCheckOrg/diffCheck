@@ -193,18 +193,20 @@ dfMeshPtr->LoadFromPLY(pathMesh);
 ```
 
 ### Visualizer
+![left](./assets/img/visualizer_diffCheck.gif) ![right](./assets/img/gif_meshvisual.gif)
+
 Clouds and mesh can be visualized like this:
 ```c++
 #include "diffCheck/visualizer/DFVisualizer.hh"
 
 // clouds
 std::shared_ptr<diffCheck::visualizer::DFVisualizer> dfVisualizerPtr = std::make_shared<diffCheck::visualizer::DFVisualizer>();
-dfVisualizerPtr->LoadPointCloud(dfPointCloudPtr);
+dfVisualizerPtr->AddPointCloud(dfPointCloudPtr);
 dfVisualizerPtr->Run();
 
 // mesh
 std::shared_ptr<diffCheck::visualizer::DFVisualizer> dfVisualizerPtr = std::make_shared<diffCheck::visualizer::DFVisualizer>();
-dfVisualizerPtr->LoadMesh(dfMeshPtr);
+dfVisualizerPtr->AddMesh(dfMeshPtr);
 dfVisualizerPtr->Run();
 ```
 

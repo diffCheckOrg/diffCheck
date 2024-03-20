@@ -3,7 +3,7 @@
 
 namespace diffCheck::visualizer
 {
-    void Visualizer::LoadPointCloud(std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud)
+    void Visualizer::AddPointCloud(std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud)
     {
         Eigen::MatrixXd V(pointCloud->Points.size(), 3);
         for (int i = 0; i < pointCloud->Points.size(); i++)
@@ -23,7 +23,7 @@ namespace diffCheck::visualizer
         this->m_Viewer.data().point_size = 10;
     }
 
-    void Visualizer::LoadMesh(std::shared_ptr<diffCheck::geometry::DFMesh> &mesh)
+    void Visualizer::AddMesh(std::shared_ptr<diffCheck::geometry::DFMesh> &mesh)
     {
         Eigen::MatrixXd V(mesh->Vertices.size(), 3);
         for (int i = 0; i < mesh->Vertices.size(); i++)

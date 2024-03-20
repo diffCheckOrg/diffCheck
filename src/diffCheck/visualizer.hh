@@ -22,7 +22,7 @@ namespace diffCheck::visualizer
          * 
          * @param pointCloud the point cloud to visualize
          */
-        void LoadPointCloud(std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud);
+        void AddPointCloud(std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud);
 
         // TODO: need to implement color and normals for meshes
         /**
@@ -30,7 +30,7 @@ namespace diffCheck::visualizer
          * 
          * @param std::shared_ptr<diffCheck::geometry::DFMesh> the mesh to visualize
          */
-        void LoadMesh(std::shared_ptr<diffCheck::geometry::DFMesh> &mesh);
+        void AddMesh(std::shared_ptr<diffCheck::geometry::DFMesh> &mesh);
 
         /// @brief Main function to start the visualizer
         void Run();

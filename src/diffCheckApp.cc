@@ -23,8 +23,8 @@ int main()
   std::cout << "Number of colors in the mesh: " << dfMeshPtr->ColorsVertex.size() << std::endl;
 
   std::shared_ptr<diffCheck::visualizer::Visualizer> visualizerPtr = std::make_shared<diffCheck::visualizer::Visualizer>();
-  // visualizerPtr->LoadPointCloud(dfPointCloudPtr);
-  visualizerPtr->LoadMesh(dfMeshPtr);
+  // visualizerPtr->AddPointCloud(dfPointCloudPtr);
+  visualizerPtr->AddMesh(dfMeshPtr);
   visualizerPtr->Run();
 
   return 0;

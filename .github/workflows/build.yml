@@ -1,0 +1,47 @@
+name: "build"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v3
+        - name: Log in to Docker Hub
+          uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+        - name: Build container
+          run: docker build -t ghcr.io/diffCheckOrg/diffCheck-windows:latest ${{ github.workspace }}/tests/dockerfiles/windows
+        - name: Push
+          run: docker push ghcr.io/diffCheckOrg/diffCheck-windows:latest
+
+  configure-and-build:
+    needs: build-container
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/diffCheckOrg/diffCheck-windows:latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+      - name: Configure
+        run: |
+          git config --global --add safe.directory ${PWD}
+          cmake -B build .
+      - uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: configure-artifacts
+          path: build/
+          retention-days: 1
+      - name: Build
+        run: cmake --build build
