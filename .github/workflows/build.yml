@@ -19,15 +19,15 @@ jobs:
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
         - name: Build container
-          run: docker build -t ghcr.io/diffCheckOrg/diffcheck-windows:latest ${{ github.workspace }}/tests/dockerfiles/windows
+          run: docker build -t ghcr.io/diffcheckorg/diffcheck-windows:latest ${{ github.workspace }}/tests/dockerfiles/windows
         - name: Push
-          run: docker push ghcr.io/diffCheckOrg/diffcheck-windows:latest
+          run: docker push ghcr.io/diffcheckorg/diffcheck-windows:latest
 
   configure-and-build:
     needs: build-container
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/diffCheckOrg/diffcheck-windows:latest
+      image: ghcr.io/diffcheckorg/diffcheck-windows:latest
     steps:
       - uses: actions/checkout@v4
         with:
