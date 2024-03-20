@@ -193,7 +193,6 @@ dfMeshPtr->LoadFromPLY(pathMesh);
 ```
 
 ### Visualizer
-![left](./assets/img/visualizer_diffCheck.gif) ![right](./assets/img/gif_meshvisual.gif)
 
 Clouds and mesh can be visualized like this:
 ```c++
