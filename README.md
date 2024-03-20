@@ -1,6 +1,6 @@
 # diffCheck
 <p align="left">
-    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/windows-build.yml/badge.svg">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
 </p>
 
 Temporary repository for diffCheck
