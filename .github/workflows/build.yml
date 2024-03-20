@@ -1,4 +1,4 @@
-name: "build"
+name: "windows-build"
 
 on:
   push:
@@ -7,24 +7,25 @@ on:
     branches: ["main"]
 
 
+
+env:
+  BUILD_TYPE: Release
+  VCPKG_FILE: c:/vcpkg/scripts/buildsystems/vcpkg.cmake
+
 jobs:
-  build:
+  windows:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - name: Create Build Environment
-      run: cmake -E make_directory ${{github.workspace}}/build
+      - name: CMAKE Configure
+        run: >
+          cmake -B ${{github.workspace}}/build -S ${{github.workspace}} 
+          -D CMAKE_BUILD_TYPE=Release
+      - name: CMake Build
+        run: cmake --build ${{github.workspace}}/build --config Release
 
-    - name: Configure CMake
-      shell: cmd
-      run: |
-        cd ${{github.workspace}}/build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build
-      shell: cmd
-      run: |
-        cd ${{github.workspace}}/build
-        cmake --build . --config Release
+      # - name: Unit Test
+      #   working-directory: ${{github.workspace}}/build
+      #   run: ctest -C ${{env.BUILD_TYPE}}
