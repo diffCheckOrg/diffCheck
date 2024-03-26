@@ -76,12 +76,12 @@ namespace diffCheck::geometry
 
     void DFMesh::LoadFromPLY(const std::string &path)
     {
-        diffCheck::io::ReadPLYMeshFromFile(path);
-        this->Vertices = diffCheck::io::ReadPLYMeshFromFile(path)->Vertices;
-        this->Faces = diffCheck::io::ReadPLYMeshFromFile(path)->Faces;
-        this->NormalsVertex = diffCheck::io::ReadPLYMeshFromFile(path)->NormalsVertex;
-        this->ColorsVertex = diffCheck::io::ReadPLYMeshFromFile(path)->ColorsVertex;
-        this->NormalsFace = diffCheck::io::ReadPLYMeshFromFile(path)->NormalsFace;
-        this->ColorsFace = diffCheck::io::ReadPLYMeshFromFile(path)->ColorsFace;
+        std::shared_ptr<diffCheck::geometry::DFMesh> tempMesh_ptr = diffCheck::io::ReadPLYMeshFromFile(path);
+        this->Vertices = tempMesh_ptr->Vertices;
+        this->Faces = tempMesh_ptr->Faces;
+        this->NormalsVertex = tempMesh_ptr->NormalsVertex;
+        this->ColorsVertex = tempMesh_ptr->ColorsVertex;
+        this->NormalsFace = tempMesh_ptr->NormalsFace;
+        this->ColorsFace = tempMesh_ptr->ColorsFace;
     }
 } // namespace diffCheck::geometry
