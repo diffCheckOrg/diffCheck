@@ -8,7 +8,10 @@ int main()
   std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
   
   // std::string pathCloud = R"(C:\Users\andre\Downloads\scan_data_normals.ply\scan_data_normals.ply)";
-  std::string pathMesh = R"(C:\Users\andre\Downloads\crankshaft-hd-ply\Crankshaft HD.ply)";
+  std::string pathMesh = R"(F:\diffCheck\temp\export_meesh_tri.ply)";
+  // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
+  // std::string pathMesh = R"(C:\Users\andre\Downloads\crankshaft-hd-ply\Crankshaft HD.ply)";
+
 
   // dfPointCloudPtr->LoadFromPLY(pathCloud);
   dfMeshPtr->LoadFromPLY(pathMesh);

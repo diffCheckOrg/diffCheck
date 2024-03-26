@@ -93,6 +93,7 @@
         "shared_mutex": "cpp",
         "source_location": "cpp",
         "stack": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "*.inc": "cpp"
     }
 }

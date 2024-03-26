@@ -10,7 +10,6 @@
 
 namespace diffCheck::io
 {
-    // TODO: here we should  add a class IOManager and the functions should be static
     /**
      * @brief Read a point cloud from a file
      * 

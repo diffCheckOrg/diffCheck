@@ -99,6 +99,8 @@ foreach(DEP_LIB ${DEPENDENCIES})
     )
 endforeach()
 
+# # CGAL ( ctories(${SHARED_LIB_NAME} PUBLIC ${CGAL_INCLUDE_DIRS})
+
 #--------------------------------------------------------------------------
 # executable for prototyping
 #--------------------------------------------------------------------------
