@@ -69,3 +69,9 @@ _deps
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+#######################################
+## General
+#######################################
+# temp folder
+temp/
