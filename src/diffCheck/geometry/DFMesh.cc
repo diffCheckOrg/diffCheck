@@ -19,23 +19,32 @@ namespace diffCheck::geometry
             this->Faces[i] = O3DTriangleMesh->triangles_[i];
         }
 
-        this->NormalsVertex.resize(O3DTriangleMesh->vertex_normals_.size());
-        for (size_t i = 0; i < O3DTriangleMesh->vertex_normals_.size(); i++)
-        {
-            this->NormalsVertex[i] = O3DTriangleMesh->vertex_normals_[i];
-        }
+        // if (O3DTriangleMesh->HasVertexNormals())
+        // {
+        //     this->NormalsVertex.resize(O3DTriangleMesh->vertex_normals_.size());
+        //     for (size_t i = 0; i < O3DTriangleMesh->vertex_normals_.size(); i++)
+        //     {
+        //         this->NormalsVertex[i] = O3DTriangleMesh->vertex_normals_[i];
+        //     }
+        // }
 
-        this->NormalsFace.resize(O3DTriangleMesh->triangle_normals_.size());
-        for (size_t i = 0; i < O3DTriangleMesh->triangle_normals_.size(); i++)
-        {
-            this->NormalsFace[i] = O3DTriangleMesh->triangle_normals_[i];
-        }
+        // if (O3DTriangleMesh->HasTriangleNormals())
+        // {
+        //     this->NormalsFace.resize(O3DTriangleMesh->triangle_normals_.size());
+        //     for (size_t i = 0; i < O3DTriangleMesh->triangle_normals_.size(); i++)
+        //     {
+        //         this->NormalsFace[i] = O3DTriangleMesh->triangle_normals_[i];
+        //     }
+        // }
 
-        this->ColorsVertex.resize(O3DTriangleMesh->vertex_colors_.size());
-        for (size_t i = 0; i < O3DTriangleMesh->vertex_colors_.size(); i++)
-        {
-            this->ColorsVertex[i] = O3DTriangleMesh->vertex_colors_[i];
-        }
+        // if (O3DTriangleMesh->HasVertexColors())
+        // {
+        //     this->ColorsVertex.resize(O3DTriangleMesh->vertex_colors_.size());
+        //     for (size_t i = 0; i < O3DTriangleMesh->vertex_colors_.size(); i++)
+        //     {
+        //         this->ColorsVertex[i] = O3DTriangleMesh->vertex_colors_[i];
+        //     }
+        // }
     }
 
     std::shared_ptr<open3d::geometry::TriangleMesh> DFMesh::Cvt2O3DTriangleMesh()
