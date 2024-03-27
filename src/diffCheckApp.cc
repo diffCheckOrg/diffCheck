@@ -1,6 +1,7 @@
 
 #include "diffCheck.hh"
 
+
 #include <open3d/Open3D.h>
 #include <open3d/io/PointCloudIO.h>
 #include <open3d/io/TriangleMeshIO.h>
@@ -11,6 +12,9 @@
 
 int main()
 {
+
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudFromMeshPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
 
