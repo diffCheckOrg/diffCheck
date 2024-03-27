@@ -7,4 +7,5 @@
 #include "diffCheck/geometry/DFPointCloud.hh"
 #include "diffCheck/geometry/DFMesh.hh"
 #include "diffCheck/IOManager.hh"
+#include "diffCheck/registration/Registration.hh"
 #include "diffCheck/visualizer.hh"
