@@ -15,24 +15,13 @@ int main()
   std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
 
   std::string pathCloud = R"(C:\Users\andre\Downloads\scan_data_normals.ply\scan_data_normals.ply)";
-  // std::string pathMesh = R"(F:\diffCheck\temp\export_meesh_tri.ply)";
-  // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
-  std::string pathMesh = R"(C:\Users\andre\Downloads\crankshaft-hd-ply\Crankshaft HD.ply)";
+  std::string pathMesh = R"(F:\diffCheck\assets\dataset\mesh_fromRh_unfixedLength.ply)";
 
-  dfPointCloudPtr->LoadFromPLY(pathCloud);
-
-
-  std::shared_ptr<open3d::geometry::TriangleMesh> sphereMesh = open3d::geometry::TriangleMesh::CreateSphere(50.0, 100, 100);
-
-  dfMeshPtr->Cvt2DFMesh(sphereMesh);
-
-  std::cout << "Number of vertices in the mesh: " << sphereMesh->vertices_.size() << std::endl;
-  std::cout << "Number of faces in the mesh: " << sphereMesh->triangles_.size() << std::endl;
-
-  std::cout << "Loading mesh from: " << pathMesh << std::endl;
+  dfMeshPtr->LoadFromPLY(pathMesh);
+  // dfPointCloudPtr->LoadFromPLY(pathCloud);
 
   std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();
-  vis->AddPointCloud(dfPointCloudPtr);
+  // vis->AddPointCloud(dfPointCloudPtr);
   vis->AddMesh(dfMeshPtr);
   vis->Run();
 

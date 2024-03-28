@@ -47,7 +47,15 @@ gantt
 ## 3rd party libraries
 
 The project uses the following 3rd party libraries:
-- `Open3d` for 3D point cloud processing (as binary submodule for win64 that we store in [submodule-open3d](https://github.com/diffCheckOrg/submodule-open3d)). Note that we deactivate the visualization part of `Open3d` to avoid conflicts with our visualizator.
+- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/releases/download/v0.18.0/open3d-devel-windows-amd64-0.18.0.zip), unzip the file and by following the instructions below:
+```terminal
+cd open3d
+mkdir build
+cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="C:\Program Files\Open3D" -S . -B build
+cmake --build build --config Release --target ALL_BUILD
+cmake --build build --config Release --target INSTALL
+
+
 - `Eigen` for linear algebra (needed by `Open3d`)
 - `fmt` for string formatting (needed by `Open3d`)
 - `libigl` mainly for I/O and visualization
@@ -57,8 +65,8 @@ The project uses the following 3rd party libraries:
 To build and test the project, follow the following steps:
 
 ```terminal
-cmake -S . -B build
-cmake --build build
+cmake/config.bat
+cmake/build.bat
 ./build/bin/diffCheckApp.exe <-- for prototyping
 ```
 
