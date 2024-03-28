@@ -54,7 +54,7 @@ mkdir build
 cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="C:\Program Files\Open3D" -S . -B build
 cmake --build build --config Release --target ALL_BUILD
 cmake --build build --config Release --target INSTALL
-
+```
 
 - `Eigen` for linear algebra (needed by `Open3d`)
 - `fmt` for string formatting (needed by `Open3d`)
