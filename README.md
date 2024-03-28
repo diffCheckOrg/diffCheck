@@ -47,10 +47,24 @@ gantt
 ## 3rd party libraries
 
 The project uses the following 3rd party libraries:
-- `Open3d 0.18.0` for 3D point cloud processing as pre-build binaries ([store here](https://github.com/diffCheckOrg/submodule-open3d.git))
-- `Eigen` for linear algebra
+- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/releases/download/v0.18.0/open3d-devel-windows-amd64-0.18.0.zip), unzip the file and by following the instructions below:
+```terminal
+cd open3d
+mkdir build
+cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="C:\Program Files\Open3D" -S . -B build
+cmake --build build --config Release --target ALL_BUILD
+cmake --build build --config Release --target INSTALL
+```
+- `Eigen` for linear algebra (needed by `Open3d`)
 - `CGAL` for general geometric processing and IO
-- `Boost` for general utilities as pre-build binaries ([store here](https://github.com/diffCheckOrg/submodule-boost.git))
+- `Boost` for general utilities, it needs to be installed from source [from the repo](https://github.com/boostorg/boost) as such:
+```terminal
+git clone --recursive https://github.com/boostorg/boost.git
+cd boost
+cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="C:\Program Files\Boost" -S . -B build
+cmake --build build --config Release --target ALL_BUILD
+cmake --build build --config Release --target INSTALL
+```
 
 ## How to build c++ project
 To build and test the project, follow the following steps:
@@ -58,7 +72,7 @@ To build and test the project, follow the following steps:
 ```terminal
 cmake/config.bat
 cmake/build.bat
-./build/bin/Release/diffCheckApp.exe <-- for prototyping
+./build/bin/diffCheckApp.exe <-- for prototyping
 ```
 
 ## Prototype diffCheck in C++
