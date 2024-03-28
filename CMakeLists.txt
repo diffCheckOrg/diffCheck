@@ -16,6 +16,7 @@ if(NOT GIT_SUBMOD_RESULT EQUAL "0")
     message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
 endif()
 
+
 #--------------------------------------------------------------------------
 # diffCheck dynamic lib
 #--------------------------------------------------------------------------
@@ -23,7 +24,7 @@ set(SHARED_LIB_NAME diffCheck)
 
 file(GLOB_RECURSE SOURCES_LIB 
     src/diffCheck.hh                         # diffCheck interface
-    src/diffCheck/*.cc src/diffCheck/*.hh    # diffCheck src
+    src/diffCheck/*.cc src/diffCheck/*.hh    # diffCheck src  
     )
 
 add_library(${SHARED_LIB_NAME} SHARED ${SOURCES_LIB})
@@ -35,69 +36,66 @@ if (WIN32)
 endif()
     set_target_properties(${SHARED_LIB_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin  # for dll
-        # ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin  # for lib
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib  # for lib
         )
 target_include_directories(${SHARED_LIB_NAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
+
 #--------------------------------------------------------------------------
 # 3rd party
 #--------------------------------------------------------------------------
-# fmt (header-only)--------------------------------------------------------
-download_submodule_project(fmt)
-add_subdirectory(deps/fmt)
 
-target_link_libraries(${SHARED_LIB_NAME} PUBLIC fmt::fmt)
-
-# Eigen (header-only)------------------------------------------------------
+# Eigen -------------------------------------------------------------------
 download_submodule_project(eigen)
 add_subdirectory(deps/eigen)
-
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
 
-# OpenGL (from system) ----------------------------------------------------
-find_package(OpenGL REQUIRED)
-target_link_libraries(${SHARED_LIB_NAME} PUBLIC OpenGL::GL)
-target_link_libraries(${SHARED_LIB_NAME} INTERFACE OpenGL::GL)
+# Open3D (from system) -----------------------------------------------------    
+# The options need to be the same as Open3D's default
+# If Open3D is configured and built with custom options, you'll also need to
+# specify the same custom options.
+option(STATIC_WINDOWS_RUNTIME "Use static (MT/MTd) Windows runtime" ON)
+if(STATIC_WINDOWS_RUNTIME)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+endif()
 
-# Libigl + glfw (header-only) ---------------------------------------------
-download_submodule_project(libigl)
-# all dependecies for libigl: https://libigl.github.io/third-party/
-# set compiling flags for libigl
-set(LIBIGL_USE_STATIC_LIBRARY OFF)
-set(LIBIGL_GLFW ON)
-add_subdirectory(deps/libigl)
+find_package(Open3D 0.18.0 REQUIRED)
 
-target_link_libraries(${SHARED_LIB_NAME} PUBLIC igl::glfw)
+# print the version debug or release of the package
+message(STATUS "Open3D version: ${Open3D_VERSION}"
+               "Open3D include dir: ${Open3D_INCLUDE_DIRS}"
+               "Open3D library dir: ${Open3D_LIBRARIES}")
 
-# Open3D (pre-build binaries /headless not visuals)------------------------
-download_submodule_project(open3d)
-set(O3D_VERSION 0_17)  # 0.17.0
-set(OPEN3D_SHAREDLIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/bin)
-set(OPEN3D_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/lib)
-set(OPEN3D_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/${O3D_VERSION}/include)
+# link the release version of the open3d library
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC Open3D::Open3D)
 
-add_library(Open3D SHARED IMPORTED)
-set_target_properties(Open3D PROPERTIES
-    IMPORTED_LOCATION ${OPEN3D_SHAREDLIB_PATH}/Open3D.dll
-    IMPORTED_IMPLIB ${OPEN3D_LIB_PATH}/Open3D.lib
-    INTERFACE_INCLUDE_DIRECTORIES ${OPEN3D_INCLUDE_PATH}
-    )
+# On Windows if BUILD_SHARED_LIBS is enabled, copy .dll files to the executable directory
+if(WIN32)
+    get_target_property(open3d_type Open3D::Open3D TYPE)
+    if(open3d_type STREQUAL "SHARED_LIBRARY")
+        message(STATUS "Copying Open3D.dll to ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
+        add_custom_command(TARGET ${SHARED_LIB_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:Open3D::Open3D>
+            $<TARGET_FILE_DIR:${SHARED_LIB_NAME}>)
+    endif()
+endif()
 
-target_link_libraries(${SHARED_LIB_NAME} PUBLIC Open3D)
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${OPEN3D_INCLUDE_PATH})
+# Boost (from system) -----------------------------------------------------
+# download and install from https://sourceforge.net/projects/boost/files/boost-binaries/1.84.0/boost_1_84_0-msvc-14.3-64.exe/download
+find_package(Boost REQUIRED)
 
-# copy the o3d dll to the binary dir to make it available for the app
-set(DEPENDENCIES Open3D)
+# print boost include dir
+message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
 
-foreach(DEP_LIB ${DEPENDENCIES})
-    add_custom_command(TARGET ${SHARED_LIB_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:${DEP_LIB}>
-        $<TARGET_FILE_DIR:${SHARED_LIB_NAME}>
-    )
-endforeach()
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
+
+# CGAL (header-only) ------------------------------------------------------
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
 
 #--------------------------------------------------------------------------
 # executable for prototyping
