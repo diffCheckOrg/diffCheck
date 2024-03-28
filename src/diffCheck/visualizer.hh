@@ -1,6 +1,10 @@
 #pragma once
 
-#include <igl/opengl/glfw/Viewer.h>
+#include <memory>
+#include <vector>
+
+#include <open3d/Open3D.h>
+
 #include <Eigen/Core>
 
 #include "diffCheck/geometry/DFPointCloud.hh"
@@ -11,12 +15,21 @@ namespace diffCheck::visualizer
     class Visualizer
     {
     public:
-        Visualizer()
-        {
-            m_Viewer = igl::opengl::glfw::Viewer();
-        };
+        Visualizer(
+            std::string title = "DiffCheckApp",
+            int width = 1000,
+            int height = 800,
+            int posX = 50,
+            int posY = 50,
+            bool showNormals = false,
+            bool showWireframe = true
+            ) : Title(title), Width(width), Height(height),
+                PosX(posX), PosY(posY),
+                ShowNormals(showNormals), ShowWireframe(showWireframe)
+        {}
         ~Visualizer() = default;
 
+    public:
         /**
          * @brief Load a point cloud to visualize
          * 
@@ -24,7 +37,6 @@ namespace diffCheck::visualizer
          */
         void AddPointCloud(std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud);
 
-        // TODO: need to implement color and normals for meshes
         /**
          * @brief Load a mesh to visualize
          * 
@@ -35,9 +47,24 @@ namespace diffCheck::visualizer
         /// @brief Main function to start the visualizer
         void Run();
 
+    public:
+        /// @brief title of the window
+        std::string Title;
+        /// @brief width of the window
+        int Width;
+        /// @brief height of the window
+        int Height;
+        /// @brief position of the window
+        int PosX;
+        /// @brief position of the window
+        int PosY;
+        /// @brief weither to show the normals
+        bool ShowNormals;
+        /// @brief weither to show the wireframe
+        bool ShowWireframe;
+
     private:
-        /// @brief The viewer object from libigl
-        igl::opengl::glfw::Viewer m_Viewer;
-        /// @brief The vertices of the mesh
+        /// @brief the geometries to visualize
+        std::vector<std::shared_ptr<const open3d::geometry::Geometry>, std::allocator<std::shared_ptr<const open3d::geometry::Geometry>>> m_Geometries;
     };
 }  // namespace diffCheck::visualizer

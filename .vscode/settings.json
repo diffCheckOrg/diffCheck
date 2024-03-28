@@ -94,6 +94,8 @@
         "source_location": "cpp",
         "stack": "cpp",
         "valarray": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "coroutine": "cpp",
+        "resumable": "cpp"
     }
 }
