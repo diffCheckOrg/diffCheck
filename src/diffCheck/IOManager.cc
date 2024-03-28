@@ -2,12 +2,12 @@
 
 #include <open3d/Open3D.h>
 
-#include <CGAL/Simple_cartesian.h>
-#include <CGAL/Polyhedron_3.h>
-#include <CGAL/IO/PLY/PLY_reader.h>
+// #include <CGAL/Simple_cartesian.h>
+// #include <CGAL/Polyhedron_3.h>
+// #include <CGAL/IO/PLY/PLY_reader.h>
 
-typedef CGAL::Simple_cartesian<double> Kernel;
-typedef CGAL::Polyhedron_3<Kernel> Polyhedron;
+// typedef CGAL::Simple_cartesian<double> Kernel;
+// typedef CGAL::Polyhedron_3<Kernel> Polyhedron;
 
 
 namespace diffCheck::io
@@ -25,7 +25,7 @@ namespace diffCheck::io
         std::shared_ptr<diffCheck::geometry::DFMesh> mesh = std::make_shared<diffCheck::geometry::DFMesh>();
         std::shared_ptr<open3d::geometry::TriangleMesh> open3dMesh = open3d::io::CreateMeshFromFile(filename);
         mesh->Cvt2DFMesh(open3dMesh);
-        
+
         // bool isFromRhino = false;
         // std::ifstream file(filename);
         // std::string line;
