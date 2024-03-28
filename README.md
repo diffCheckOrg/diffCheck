@@ -55,11 +55,16 @@ cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="C:\Program Files
 cmake --build build --config Release --target ALL_BUILD
 cmake --build build --config Release --target INSTALL
 ```
-
 - `Eigen` for linear algebra (needed by `Open3d`)
-- `fmt` for string formatting (needed by `Open3d`)
-- `libigl` mainly for I/O and visualization
-- `glfw` for window and context creation (needed by `libigl`)
+- `CGAL` for general geometric processing and IO
+- `Boost` for general utilities, it needs to be installed from source [from the repo](https://github.com/boostorg/boost) as such:
+```terminal
+git clone --recursive https://github.com/boostorg/boost.git
+cd boost
+cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="C:\Program Files\Boost" -S . -B build
+cmake --build build --config Release --target ALL_BUILD
+cmake --build build --config Release --target INSTALL
+```
 
 ## How to build c++ project
 To build and test the project, follow the following steps:
