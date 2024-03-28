@@ -63,7 +63,7 @@ else()
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
 
-add_external_package(Open3D 0.18.0 REQUIRED)
+find_package(Open3D 0.18.0 REQUIRED)
 
 # print the version debug or release of the package
 message(STATUS "Open3D version: ${Open3D_VERSION}"
@@ -85,22 +85,22 @@ if(WIN32)
     endif()
 endif()
 
-# Boost (header-only) -----------------------------------------------------
-# download_submodule_project(boost)
-# add_subdirectory(deps/boost)
-# target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/boost/include)
+# Boost (from system) -----------------------------------------------------
+# download and install from https://sourceforge.net/projects/boost/files/boost-binaries/1.84.0/boost_1_84_0-msvc-14.3-64.exe/download
+find_package(Boost REQUIRED)
+
+# print boost include dir
+message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
+
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 
 # CGAL (header-only) ------------------------------------------------------
-# download_submodule_project(cgal)
-# add_subdirectory(deps/cgal)
-# target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
-
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
 
 #--------------------------------------------------------------------------
 # executable for prototyping
 #--------------------------------------------------------------------------
 set(APP_NAME_EXE diffCheckApp)
-
 
 add_executable(${APP_NAME_EXE} src/diffCheckApp.cc)
 

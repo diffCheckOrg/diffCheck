@@ -2,6 +2,13 @@
 
 #include <open3d/Open3D.h>
 
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Polyhedron_3.h>
+#include <CGAL/IO/PLY/PLY_reader.h>
+
+typedef CGAL::Simple_cartesian<double> Kernel;
+typedef CGAL::Polyhedron_3<Kernel> Polyhedron;
+
 
 namespace diffCheck::io
 {
@@ -15,29 +22,26 @@ namespace diffCheck::io
 
     std::shared_ptr<diffCheck::geometry::DFMesh> ReadPLYMeshFromFile(const std::string &filename)
     {
-        std::shared_ptr<open3d::geometry::TriangleMesh> open3dMesh = open3d::io::CreateMeshFromFile(filename);
         std::shared_ptr<diffCheck::geometry::DFMesh> mesh = std::make_shared<diffCheck::geometry::DFMesh>();
+        std::shared_ptr<open3d::geometry::TriangleMesh> open3dMesh = open3d::io::CreateMeshFromFile(filename);
         mesh->Cvt2DFMesh(open3dMesh);
-        return mesh;
-
-        // FIXME: test if the variable length in open3d is working
-        // // check if the ply is from Rhino by searching for the string "Rhinoceros"
+        
+        // bool isFromRhino = false;
         // std::ifstream file(filename);
         // std::string line;
-        // bool isRhino = false;
         // while (std::getline(file, line))
         // {
-        //     if (line.find("Rhinoceros") != std::string::npos)
+        //     if (line.find("Rhinoeros") != std::string::npos)
         //     {
-        //         isRhino = true;
+        //         isFromRhino = true;
         //         break;
         //     }
         // }
         // file.close();
-        // std::cout << "isRhino: " << isRhino << std::endl;
+        // std::cout << "isFromRhino: " << isFromRhino << std::endl;
 
-        // // detect if the ply is of fixed variable lengths or not
-        // bool isFixedLength = false;
+
+        // bool isFixedLength = false;  // aka Rhino quad/tri exported mesh
         // std::ifstream file2(filename);
         // std::string line2;
         // while (std::getline(file2, line2))
@@ -50,5 +54,7 @@ namespace diffCheck::io
         // }
         // file2.close();
         // std::cout << "isFixedLength: " << isFixedLength << std::endl;
+
+        return mesh;
     }
 } // namespace diffCheck::io

@@ -1,8 +1,7 @@
 #pragma once
 
 
-// // include CGAL
-// #include <CGAL/IO/PLY/PLY_reader.h>
+// include CGAL 
 
 #include <open3d/Open3D.h>
 

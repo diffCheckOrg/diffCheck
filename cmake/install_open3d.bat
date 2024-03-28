@@ -44,17 +44,16 @@ if not exist "%targetDir%" (
 
 :: Download the file
 echo Downloading Open3D...
-curl -L -o "%targetDir%\open3d.zip" "%url%"
+curl -L -o "%filePath%" "%url%"
 
-:: wait for the file to be completely downloaded
-ping -n 5
-
-:: check if the file was downloaded
-if not exist "%targetDir%\open3d.zip" (
-    echo Failed to download Open3D.
-    exit /b 1
+:: check if the file was downloaded if not wait
+:wait
+if not exist "%filePath%" (
+    echo Waiting for download to complete...
+    timeout /t 5 /nobreak >nul
+    goto wait
 )
-
+echo File downloaded.
 
 :: Extract the file
 echo Extracting Open3D...

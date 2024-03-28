@@ -16,6 +16,8 @@ int main()
 
   std::string pathCloud = R"(C:\Users\andre\Downloads\scan_data_normals.ply\scan_data_normals.ply)";
   std::string pathMesh = R"(F:\diffCheck\assets\dataset\mesh_fromRh_unfixedLength.ply)";
+  // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
+
 
   dfMeshPtr->LoadFromPLY(pathMesh);
   // dfPointCloudPtr->LoadFromPLY(pathCloud);
