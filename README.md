@@ -47,11 +47,13 @@ gantt
 ## 3rd party libraries
 
 The project uses the following 3rd party libraries:
-- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/releases/download/v0.18.0/open3d-devel-windows-amd64-0.18.0.zip), unzip the file to `Program Files/Open3D`. Change `<Your user name>` with your user name:
+- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/archive/refs/tags/v0.18.0.zip), unzip the file and by following the instructions below:
 ```terminal
-Expand-Archive -DestinationPath 'C:\Users\<Your user name>\Downloads' -LiteralPath "C:\Users\<Your user name>\Downloads\open3d-devel-windows-amd64-0.18.0.zip"
-Move-Item -LiteralPath 'C:\Users\<Your user name>\Downloads\open3d-devel-windows-amd64-0.18.0\*' -Destination 'C:\Program Files\Open3D\'
-rmdir 'C:\Users\<Your user name>\Downloads\open3d-devel-windows-amd64-0.18.0\'
+cd open3d
+mkdir build
+cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="C:\Program Files\Open3D" -S . -B build
+cmake --build build --config Release --target ALL_BUILD
+cmake --build build --config Release --target INSTALL
 ```
 - `Eigen` for linear algebra (needed by `Open3d`)
 - `CGAL` for general geometric processing and IO
