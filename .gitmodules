@@ -2,7 +2,6 @@
 	path = deps/googletest
 	url = https://github.com/google/googletest
 	branch = main
-[submodule "deps/eigen"]
-	path = deps/eigen
-	url = https://gitlab.com/libeigen/eigen.git
-	branch = master
+[submodule "deps/boost"]
+	path = deps/boost
+	url = https://github.com/diffCheckOrg/submodule-boost.git
