@@ -47,10 +47,10 @@ gantt
 ## 3rd party libraries
 
 The project uses the following 3rd party libraries:
-- `Open3d 0.18.0` for 3D point cloud processing as pre-build binaries)
+- `Open3d 0.18.0` for 3D point cloud processing as pre-build binaries ([store here](https://github.com/diffCheckOrg/submodule-open3d.git))
 - `Eigen` for linear algebra
 - `CGAL` for general geometric processing and IO
-- `Boost` for general utilities as pre-build binaries
+- `Boost` for general utilities as pre-build binaries ([store here](https://github.com/diffCheckOrg/submodule-boost.git))
 
 ## How to build c++ project
 To build and test the project, follow the following steps:
