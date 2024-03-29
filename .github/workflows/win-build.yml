@@ -20,8 +20,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: CMAKE Configure
-        run: >
-          cmake -B ${{github.workspace}}/build -S ${{github.workspace}} 
-          -D CMAKE_BUILD_TYPE=Release
+        run: ${{github.workspace}}/cmake/config.bat
       - name: CMake Build
-        run: cmake --build ${{github.workspace}}/build --config Release
+        run: ${{github.workspace}}/cmake/build.bat
