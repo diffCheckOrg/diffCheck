@@ -70,7 +70,7 @@ To build and test the project, follow the following steps:
 ```terminal
 cmake/config.bat
 cmake/build.bat
-./build/bin/diffCheckApp.exe <-- for prototyping
+./build/bin/Release/diffCheckApp.exe <-- for prototyping
 ```
 
 ## Prototype diffCheck in C++
