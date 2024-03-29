@@ -37,8 +37,8 @@ gantt
     title       diffCheck - backend dev
     excludes    weekends
 
-    data i/o                                 :active, dataio, 2024-03-15, 1w
-    global registration                      :glbreg, after dataio, 2w
+    data i/o                                 :active, dataio, 2024-03-15, 3w
+    global registration                      :glbreg, 2024-03-29, 2w
     semantic seg. from 3D model              :semseg, after glbreg, 1w
     local registration                       :locreg, after semseg, 2w
     error computation + results              :errcomp, after locreg, 1w
