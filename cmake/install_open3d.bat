@@ -44,46 +44,43 @@ if not exist "%targetDir%" (
 
 :: Download the file
 echo Downloading Open3D...
-curl -L -o "%filePath%" "%url%"
+curl -L -o "%targetDir%\open3d.zip" "%url%"
 
-:: check if the file was downloaded if not wait
-:wait
-if not exist "%filePath%" (
-    echo Waiting for download to complete...
-    timeout /t 5 /nobreak >nul
-    goto wait
+:: Check if the file was downloaded
+if not exist "%targetDir%\open3d.zip" (
+    echo Failed to download Open3D.
+    exit /b 1
 )
-echo File downloaded.
 
 :: Extract the file
 echo Extracting Open3D...
 powershell -Command "Expand-Archive -Path '%targetDir%\open3d.zip' -DestinationPath '%targetDir%'"
 
-:: Delete the downloaded zip file
-del "%targetDir%\open3d.zip"
+@REM :: Delete the downloaded zip file
+@REM del "%targetDir%\open3d.zip"
 
-:: Change to the target directory
-cd /d "%targetDir%"
+@REM :: Change to the target directory
+@REM cd /d "%targetDir%"
 
-:: Run the cmake commands
-echo Building Open3D...
-cmake -DBUILD_WEBRTC=OFF -DBUILD_SHARED_LIBS=ON -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="%targetDir%" -S . -B build
-if errorlevel 1 (
-    echo Failed to run cmake configuration command.
-    exit /b 1
-)
+@REM :: Run the cmake commands
+@REM echo Building Open3D...
+@REM cmake -DBUILD_WEBRTC=OFF -DBUILD_SHARED_LIBS=ON -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="%targetDir%" -S . -B build
+@REM if errorlevel 1 (
+@REM     echo Failed to run cmake configuration command.
+@REM     exit /b 1
+@REM )
 
-cmake --build build --config Release --target ALL_BUILD
-if errorlevel 1 (
-    echo Failed to build ALL_BUILD.
-    exit /b 1
-)
+@REM cmake --build build --config Release --target ALL_BUILD
+@REM if errorlevel 1 (
+@REM     echo Failed to build ALL_BUILD.
+@REM     exit /b 1
+@REM )
 
-cmake --build build --config Release --target INSTALL
-if errorlevel 1 (
-    echo Failed to install.
-    exit /b 1
-)
+@REM cmake --build build --config Release --target INSTALL
+@REM if errorlevel 1 (
+@REM     echo Failed to install.
+@REM     exit /b 1
+@REM )
 
-echo Done.
-endlocal
+@REM echo Done.
+@REM endlocal
