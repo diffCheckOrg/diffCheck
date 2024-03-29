@@ -12,7 +12,6 @@
 
 int main()
 {
-
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudFromMeshPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
