@@ -5,6 +5,3 @@
 [submodule "deps/eigen"]
 	path = deps/eigen
 	url = https://gitlab.com/libeigen/eigen.git
-[submodule "deps/loguru"]
-	path = deps/loguru
-	url = https://github.com/emilk/loguru.git
