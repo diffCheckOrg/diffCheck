@@ -3,14 +3,12 @@
 #include <string>
 #include <filesystem>
 
-#include <igl/readPLY.h>
 
 #include "diffCheck/geometry/DFPointCloud.hh"
 #include "diffCheck/geometry/DFMesh.hh"
 
 namespace diffCheck::io
 {
-    // TODO: here we should  add a class IOManager and the functions should be static
     /**
      * @brief Read a point cloud from a file
      * 
