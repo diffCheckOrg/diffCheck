@@ -103,17 +103,17 @@ if(WIN32)
     endif()
 endif()
 
-# # Boost (from system) -----------------------------------------------------
-# # download and install from https://sourceforge.net/projects/boost/files/boost-binaries/1.84.0/boost_1_84_0-msvc-14.3-64.exe/download
-# find_package(Boost REQUIRED)
+# Boost (header only) -----------------------------------------------------
+download_submodule_project(boost)
+target_link_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/boost/win/1_89/include/boost-1_85)
 
-# # print boost include dir
-# message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
+# print boost include dir
+message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
 
-# target_include_directories(${SHARED_LIB_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 
-# # CGAL (header-only) ------------------------------------------------------
-# target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
+# CGAL (header-only) ------------------------------------------------------
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
 
 #--------------------------------------------------------------------------
 # executable for prototyping
