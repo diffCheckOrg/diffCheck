@@ -20,21 +20,7 @@ int main()
 
   // create a sphere from o3d
   auto mesh = open3d::geometry::TriangleMesh::CreateSphere(1.0, 4);
-
-  std::string pathCloud = R"(C:\Users\localuser\Downloads\00_pt.ply)";
-  std::string pathMesh = R"(C:\Users\localuser\Downloads\00_mesh.ply)";
-  // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
-
   dfMeshPtr->LoadFromPLY(pathMesh);
-  dfPointCloudPtr->LoadFromPLY(pathCloud);
-
-  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfGroundTruth;
-  dfGroundTruth->Cvt2DFPointCloud(dfMeshPtr->Cvt2O3DTriangleMesh()->SamplePointsUniformly(10000));
-
-  // DIFFCHECK_INFO("test");
-  // DIFFCHECK_WARN("test");
-  // DIFFCHECK_ERROR("test");
-  // DIFFCHECK_FATAL("test");
 
 
   dfMeshPtr->Cvt2DFMesh(mesh);
