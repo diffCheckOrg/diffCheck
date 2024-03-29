@@ -18,8 +18,13 @@ int main()
   std::string pathMesh = R"(F:\diffCheck\assets\dataset\mesh_fromRh_unfixedLength.ply)";
   // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
 
-
+  // create a sphere from o3d
+  auto mesh = open3d::geometry::TriangleMesh::CreateSphere(1.0, 4);
   dfMeshPtr->LoadFromPLY(pathMesh);
+
+
+  dfMeshPtr->Cvt2DFMesh(mesh);
+
   // dfPointCloudPtr->LoadFromPLY(pathCloud);
 
   std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();

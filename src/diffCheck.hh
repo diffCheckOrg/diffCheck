@@ -1,8 +1,6 @@
 #pragma once
 
 
-// include CGAL 
-
 #include <open3d/Open3D.h>
 
 // diffCheck includes
