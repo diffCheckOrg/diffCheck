@@ -47,7 +47,7 @@ gantt
 ## 3rd party libraries
 
 The project uses the following 3rd party libraries:
-- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/releases/download/v0.18.0/open3d-devel-windows-amd64-0.18.0.zip), unzip the file and by following the instructions below:
+- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/archive/refs/tags/v0.18.0.zip), unzip the file and by following the instructions below:
 ```terminal
 cd open3d
 mkdir build
@@ -72,7 +72,7 @@ To build and test the project, follow the following steps:
 ```terminal
 cmake/config.bat
 cmake/build.bat
-./build/bin/diffCheckApp.exe <-- for prototyping
+./build/bin/Release/diffCheckApp.exe <-- for prototyping
 ```
 
 ## Prototype diffCheck in C++
