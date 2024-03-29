@@ -29,21 +29,20 @@ int main()
   T(0, 3) = 1;
   T(1, 3) = 4;
 
-  std::shared_ptr<open3d::geometry::PointCloud> o3DPC = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtr->Cvt2O3DPointCloud()->Transform(T));
-  dfPointCloudPtrAfterTrans->Cvt2DFPointCloud(o3DPC);
+  std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudAfterTrans = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtr->Cvt2O3DPointCloud()->Transform(T));
+  dfPointCloudPtrAfterTrans->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
 
   std::shared_ptr<diffCheck::registration::Registration> reg = std::make_shared<diffCheck::registration::Registration>();
-  auto result = reg->o3dFastGlobalRegistrationFeatureMatching(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
+  auto result = reg->O3DFastGlobalRegistrationFeatureMatching(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
 
   // apply the transformation to the source point cloud
-  Eigen::Matrix
-  <double, 4, 4> transformation = result.transformation_;
-  std::shared_ptr<open3d::geometry::PointCloud> o3DPCReg = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtrAfterTrans->Cvt2O3DPointCloud()->Transform(transformation));
-  dfPointCloudPtrAfterReg->Cvt2DFPointCloud(o3DPCReg);
+  Eigen::Matrix<double, 4, 4> transformation = result.transformation_;
+  std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudPtrAfterReg = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtrAfterTrans->Cvt2O3DPointCloud()->Transform(transformation));
+  dfPointCloudPtrAfterReg->Cvt2DFPointCloud(o3DPointCloudPtrAfterReg);
 
 
   std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();
-  //vis->AddPointCloud(dfPointCloudPtrAfterTrans);
+  vis->AddPointCloud(dfPointCloudPtrAfterTrans);
   vis->AddPointCloud(dfPointCloudPtrAfterReg);
   vis->AddMesh(dfMeshPtr);
   vis->Run();
