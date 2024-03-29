@@ -47,11 +47,11 @@ gantt
 ## 3rd party libraries
 
 The project uses the following 3rd party libraries:
-- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/releases/download/v0.18.0/open3d-devel-windows-amd64-0.18.0.zip), unzip the file to `Program Files/Open3D`:
+- `Open3d 0.18.0` for 3D point cloud processing it needs to be installed from source [from here](https://github.com/isl-org/Open3D/releases/download/v0.18.0/open3d-devel-windows-amd64-0.18.0.zip), unzip the file to `Program Files/Open3D`. Change `<Your user name>` with your user name:
 ```terminal
-Expand-Archive -DestinationPath 'C:\Users\localuser\Downloads' -LiteralPath "C:\Users\localuser\Downloads\open3d-devel-windows-amd64-0.18.0.zip"
-Move-Item -LiteralPath 'C:\Users\localuser\Downloads\open3d-devel-windows-amd64-0.18.0\*' -Destination 'C:\Program Files\Open3D\'
-rmdir 'C:\Users\localuser\Downloads\open3d-devel-windows-amd64-0.18.0\'
+Expand-Archive -DestinationPath 'C:\Users\<Your user name>\Downloads' -LiteralPath "C:\Users\<Your user name>\Downloads\open3d-devel-windows-amd64-0.18.0.zip"
+Move-Item -LiteralPath 'C:\Users\<Your user name>\Downloads\open3d-devel-windows-amd64-0.18.0\*' -Destination 'C:\Program Files\Open3D\'
+rmdir 'C:\Users\<Your user name>\Downloads\open3d-devel-windows-amd64-0.18.0\'
 ```
 - `Eigen` for linear algebra (needed by `Open3d`)
 - `CGAL` for general geometric processing and IO
