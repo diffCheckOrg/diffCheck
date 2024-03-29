@@ -52,7 +52,7 @@ download_submodule_project(eigen)
 add_subdirectory(deps/eigen)
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
 
-# Open3D (pre-built binaries) -----------------------------------------------------    
+# Open3D (from system) -----------------------------------------------------    
 # The options need to be the same as Open3D's default
 # If Open3D is configured and built with custom options, you'll also need to
 # specify the same custom options.
@@ -63,8 +63,6 @@ else()
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
 
-download_submodule_project(open3d)
-set(Open3D_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/0_18/CMake)
 find_package(Open3D 0.18.0 REQUIRED)
 
 # print the version debug or release of the package
@@ -87,9 +85,9 @@ if(WIN32)
     endif()
 endif()
 
-# Boost (header only) -----------------------------------------------------
-download_submodule_project(boost)
-target_link_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/boost/win/1_89/include/boost-1_85)
+# Boost (from system) -----------------------------------------------------
+# download and install from https://sourceforge.net/projects/boost/files/boost-binaries/1.84.0/boost_1_84_0-msvc-14.3-64.exe/download
+find_package(Boost REQUIRED)
 
 # print boost include dir
 message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
