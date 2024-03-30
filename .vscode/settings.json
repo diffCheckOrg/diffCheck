@@ -96,6 +96,7 @@
         "valarray": "cpp",
         "*.inc": "cpp",
         "coroutine": "cpp",
-        "resumable": "cpp"
+        "resumable": "cpp",
+        "*.ipp": "cpp"
     }
 }
