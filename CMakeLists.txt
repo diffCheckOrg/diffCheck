@@ -4,8 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-# import the custom cmake utilities funcs
 include(external_tools)
+include(options)
 
 # do a submodule init if not done already
 execute_process(COMMAND git submodule update --init --recursive
@@ -16,6 +16,13 @@ if(NOT GIT_SUBMOD_RESULT EQUAL "0")
     message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
 endif()
 
+
+#--------------------------------------------------------------------------
+# pre-compiled definitions
+#--------------------------------------------------------------------------
+if(SILENT_LOGGING)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE SILENT_LOGGING=true)
+endif()
 
 #--------------------------------------------------------------------------
 # diffCheck dynamic lib
@@ -42,6 +49,9 @@ target_include_directories(${SHARED_LIB_NAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
+    #set the MD_DynamicRelease flag for MSVC since we are compiling with /MD for py wrap
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+
 
 #--------------------------------------------------------------------------
 # 3rd party
@@ -52,17 +62,7 @@ download_submodule_project(eigen)
 add_subdirectory(deps/eigen)
 target_link_libraries(${SHARED_LIB_NAME} PUBLIC Eigen3::Eigen)
 
-# Open3D (pre-built binaries) -----------------------------------------------------    
-# The options need to be the same as Open3D's default
-# If Open3D is configured and built with custom options, you'll also need to
-# specify the same custom options.
-option(STATIC_WINDOWS_RUNTIME "Use static (MT/MTd) Windows runtime" ON)
-if(STATIC_WINDOWS_RUNTIME)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-else()
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-endif()
-
+# Open3D (pre-built binaries) ---------------------------------------------
 download_submodule_project(open3d)
 set(Open3D_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/open3d/win/0_18/CMake)
 find_package(Open3D 0.18.0 REQUIRED)
@@ -91,13 +91,13 @@ endif()
 download_submodule_project(boost)
 target_link_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/boost/win/1_89/include/boost-1_85)
 
-# print boost include dir
-message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
-
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
-
 # CGAL (header-only) ------------------------------------------------------
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
+
+# loguru (header-only) ----------------------------------------------------
+download_submodule_project(loguru)
+add_subdirectory(deps/loguru)
+target_link_libraries(${SHARED_LIB_NAME} PUBLIC loguru::loguru)
 
 #--------------------------------------------------------------------------
 # executable for prototyping

@@ -157,23 +157,25 @@ Follow [this guide for documenting the code](https://developer.lsst.io/cpp/api-d
  */
 ``` -->
 
-<!-- ### Logging (TO BE UPDATED)
-To log use the following MACROS. All the code is contained in `Log.hpp` and `Log.cpp`. 
+### Logging
+To log use the following MACROS. All the code is contained in `log.hh` and `log.cc`.
 ```c++
-AIAC_INFO("test_core_info");
-AIAC_WARN("test_core_warn");
-AIAC_CRITICAL("test_core_critical");
-AIAC_DEBUG("test_core_debug");
-AIAC_ERROR("test_core_error");
+DIFFCHECK_INFO("test_core_info");
+DIFFCHECK_WARN("test_core_warn");
+DIFFCHECK_ERROR("test_core_error");
+DIFFCHECK_FATAL("test_core_critical");
 ```
 The output is like so:
 ```bash
-[source main.cpp] [function main] [line 32] [16:30:05] APP: test
+2024-03-30 12:53:29.971 (   0.000s) [        ADF6D348]        diffCheckApp.cc:24    INFO| test_core_info
+2024-03-30 12:53:29.972 (   0.000s) [        ADF6D348]        diffCheckApp.cc:25    WARN| test_core_warn
+2024-03-30 12:53:29.972 (   0.000s) [        ADF6D348]        diffCheckApp.cc:26     ERR| test_core_error
+2024-03-30 12:53:29.972 (   0.000s) [        ADF6D348]        diffCheckApp.cc:27    FATL| test_core_critical
 ```
-The logging can be silenced by setting OFF the option in the main `CMakeLists.txt` and do clean reconfiguration.
+The logging can be silenced by setting ON the option in the main `CMakeLists.txt`.
 ```cmake
 option(SILENT_LOGGING "Do not log messages in the terminal of on." ON)
-``` -->
+```
 
 ### I/O and basic datatypes
 Here's how you can import point cloud from file:
