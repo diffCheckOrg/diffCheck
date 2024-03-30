@@ -22,7 +22,11 @@ int main()
 
   // create a sphere from o3d
   auto mesh = open3d::geometry::TriangleMesh::CreateSphere(1.0, 4);
-  dfMeshPtr->LoadFromPLY(pathMesh);
+
+  DIFFCHECK_INFO("test");
+  DIFFCHECK_WARN("test");
+  DIFFCHECK_ERROR("test");
+  DIFFCHECK_FATAL("test");
 
 
   dfMeshPtr->Cvt2DFMesh(mesh);
@@ -33,6 +37,7 @@ int main()
   // vis->AddPointCloud(dfPointCloudPtr);
   vis->AddMesh(dfMeshPtr);
   vis->Run();
+
 
   return 0;
 }
