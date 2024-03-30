@@ -6,7 +6,7 @@
 
 // diffCheck includes
 #include "diffCheck/log.hh"
-diffCheck::Log LOG = diffCheck::Log();
+const diffCheck::Log LOG = diffCheck::Log();
 
 #include "diffCheck/geometry/DFPointCloud.hh"
 #include "diffCheck/geometry/DFMesh.hh"
