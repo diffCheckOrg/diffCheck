@@ -16,8 +16,8 @@ int main()
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
 
-  std::string pathCloud = R"(C:\Users\localuser\Downloads\00_pt.ply)";
-  std::string pathMesh = R"(C:\Users\localuser\Downloads\00_mesh.ply)";
+  std::string pathCloud = R"(C:\Users\localuser\Downloads\04_pt.ply)";
+  std::string pathMesh = R"(C:\Users\localuser\Downloads\04_mesh.ply)";
   // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
 
   dfMeshPtr->LoadFromPLY(pathMesh);
@@ -25,15 +25,16 @@ int main()
 
   // create a rigid rotation matrix
   Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
-  T.block<3, 3>(0, 0) = Eigen::AngleAxisd(3 , Eigen::Vector3d::UnitZ()).toRotationMatrix(); // Yes, Pi = 3 in this case
-  T(0, 3) = 1;
-  T(1, 3) = 4;
+  T.block<3, 3>(0, 0) = Eigen::AngleAxisd(3 , Eigen::Vector3d::UnitZ()).toRotationMatrix(); // Yes, Pi = 3 in this world
+  T(0, 3) = 10;
+  T(1, 3) = -40;
 
   std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudAfterTrans = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtr->Cvt2O3DPointCloud()->Transform(T));
   dfPointCloudPtrAfterTrans->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
 
   std::shared_ptr<diffCheck::registration::Registration> reg = std::make_shared<diffCheck::registration::Registration>();
   auto result = reg->O3DFastGlobalRegistrationFeatureMatching(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
+  //auto result = reg->O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
 
   // apply the transformation to the source point cloud
   Eigen::Matrix<double, 4, 4> transformation = result.transformation_;
