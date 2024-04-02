@@ -75,3 +75,6 @@ _deps
 #######################################
 # temp folder
 temp/
+
+# temporary logging file
+*.log
