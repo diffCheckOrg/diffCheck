@@ -68,4 +68,4 @@ _deps
 .history/
 
 # Built Visual Studio Code Extensions
-*.vsix
+*.vsix.DS_Store
