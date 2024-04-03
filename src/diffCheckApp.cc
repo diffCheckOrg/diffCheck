@@ -14,6 +14,7 @@ int main()
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterTrans = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrGroundTruth = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
 
   std::string pathCloud = R"(C:\Users\localuser\Downloads\04_pt.ply)";
@@ -22,6 +23,9 @@ int main()
 
   dfMeshPtr->LoadFromPLY(pathMesh);
   dfPointCloudPtr->LoadFromPLY(pathCloud);
+
+  // populate the mesh with points and store it in dfPointCloudPtrGroundTruth
+  dfPointCloudPtrGroundTruth->Cvt2DFPointCloud(dfMeshPtr->Cvt2O3DTriangleMesh()->SamplePointsUniformly(100000));
 
   // create a rigid rotation matrix
   Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
@@ -33,17 +37,18 @@ int main()
   dfPointCloudPtrAfterTrans->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
 
   std::shared_ptr<diffCheck::registration::Registration> reg = std::make_shared<diffCheck::registration::Registration>();
-  auto result = reg->O3DFastGlobalRegistrationFeatureMatching(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
-  //auto result = reg->O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
+  //auto result = reg->O3DFastGlobalRegistrationFeatureMatching(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
+  auto result = reg->O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtr);
 
   // apply the transformation to the source point cloud
   Eigen::Matrix<double, 4, 4> transformation = result.transformation_;
   std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudPtrAfterReg = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtrAfterTrans->Cvt2O3DPointCloud()->Transform(transformation));
   dfPointCloudPtrAfterReg->Cvt2DFPointCloud(o3DPointCloudPtrAfterReg);
-
+  std::vector<double> errors = reg->ComputeP2PDistance(dfPointCloudPtrAfterReg, dfPointCloudPtrGroundTruth);
+  std::cout << "Mean distance: " << std::accumulate(errors.begin(), errors.end(), 0.0) / errors.size() << std::endl;
 
   std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();
-  vis->AddPointCloud(dfPointCloudPtrAfterTrans);
+  vis->AddPointCloud(dfPointCloudPtrGroundTruth);
   vis->AddPointCloud(dfPointCloudPtrAfterReg);
   vis->AddMesh(dfMeshPtr);
   vis->Run();

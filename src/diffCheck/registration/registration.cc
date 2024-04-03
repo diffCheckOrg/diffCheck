@@ -2,6 +2,17 @@
 
 namespace diffCheck::registration
 {
+    std::vector<double> Registration::ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
+    {
+        std::vector<double> errors;
+        auto O3DSourcePointCloud = source->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = target->Cvt2O3DPointCloud();
+        
+        std::vector<double> distances;
+
+        distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
+        return distances;
+    }
     /*
     Documentation on Fast Point Feature Historigrams: https://pcl.readthedocs.io/projects/tutorials/en/latest/fpfh_estimation.html
     
