@@ -1,0 +1,1 @@
+This directory contains all the code for the grasshopper plugin of DiffCheck written in CPython.
