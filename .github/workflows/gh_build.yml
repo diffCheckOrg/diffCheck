@@ -1,0 +1,38 @@
+name: build-components
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+  build_ghuser_components:
+    runs-on: windows-latest
+    name: Build components
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Install IronPython
+        run: |
+          choco install ironpython --version=2.7.8.1
+      - uses: ./.github/actions/ghpython-components
+        with:
+          source: ./src/gh/components
+          target: build
+      # upload them as artifacts:
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ghuser-components
+          path: build
+
+  build_release_on_tag:
+    needs: build_ghuser_components
+    runs-on: windows-latest
+    name: Build release
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
