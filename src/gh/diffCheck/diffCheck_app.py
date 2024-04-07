@@ -7,42 +7,40 @@ import Rhino
 import Rhino.Geometry as rg
 
 import os
-from df_geometries import DFVertex, DFFace, DFBeam, DFAssembly  # diffCheck.df_geometries 
+import typing
 
-def main():
-    # vertices
-    vertex1 = DFVertex(1, 2, 3)
-    vertex2 = DFVertex(4, 5, 6)
-    vertex3 = DFVertex(7, 8, 9)
-    vertex4 = DFVertex(10, 11, 12)
-    vertex5 = DFVertex(13, 14, 15)
-    # print(vertex1.x)
-    # print(vertex2.y)
-    # print(vertex3.z)
+from df_geometries import DFBeam, DFAssembly  # diffCheck.df_geometries 
 
-    # faces
-    face1 = DFFace([vertex1, vertex2, vertex3], 1)
-    face2 = DFFace([vertex4, vertex5, vertex3, vertex4], 2)
-    face3 = DFFace([vertex1, vertex2, vertex5], 3)
-    face4 = DFFace([vertex1, vertex2, vertex3, vertex4])
-    face5 = DFFace([vertex1, vertex2, vertex3, vertex4, vertex5])
-    face6 = DFFace([vertex1, vertex2, vertex3, vertex4, vertex5, vertex1])
-    # print(face1.id)
-    # print(face2.is_joint)
-    # print(face3.is_joint)
 
+def main(
+    i_breps : typing.List[rg.Brep],
+    i_export_dir : str
+    ):
+    """
+    Main function to test the package
+    :param i_breps: list of breps
+    :param i_export_dir: directory to export the xml
+    """
+    
     # beams
-    beam1 = DFBeam("Beam1", [face1, face2, face3, face4])
-    beam2 = DFBeam("Beam2", [face1, face2, face3, face4, face5, face6])
-    beam3 = DFBeam.from_brep(brep)
-    print(beam3)
-    # print(beam1.id)
-    # print(beam2.id)
+    beams : typing.List[DFBeam] = []
+    for brep in i_breps:
+        beam = DFBeam.from_brep(brep)
+        beams.append(beam)
 
     # assembly
-    assembly = DFAssembly([beam1, beam2], "Assembly1")
-    print(assembly.beams)
-    print(assembly)
+    assembly1 = DFAssembly(beams, "Assembly1")
+    print(assembly1.beams)
+    print(assembly1)
+
+    # dump the xml
+    xml : str = assembly1.dump_to_xml(i_export_dir)
+    o_xml = xml
+
+    # # (optional) you can also load the xml
+    # file_path = os.path.join(i_export_dir, "Assembly1_0.xml")
+    # assembly2 = DFAssembly.from_xml(file_path)
 
 if __name__ == "__main__":
-    main()
+    main(i_breps,
+         i_export_dir)
