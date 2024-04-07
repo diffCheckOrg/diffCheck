@@ -1,8 +1,4 @@
 #! python3
-"""
-    This module is used as entry point to test the package in Rh/Gh
-"""
-
 import Rhino
 import Rhino.Geometry as rg
 
@@ -21,7 +17,7 @@ def main(
     :param i_breps: list of breps
     :param i_export_dir: directory to export the xml
     """
-    
+
     # beams
     beams : typing.List[DFBeam] = []
     for brep in i_breps:
