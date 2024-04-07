@@ -165,16 +165,12 @@ class DFAssembly:
             beams.append(beam)
         return cls(beams, name)
 
-    def dump_to_xml(self, dir: str):
+    def to_xml(self):
         """
         Dump the assembly to an XML file
 
-        :param dir: The directory to save the XML file
         :return xml_string: The pretty XML string
         """
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        file_path = os.path.join(dir, f"{self.name}_{timestamp}.xml")
-
         root = ET.Element("Assembly")
         root.set("name", self.name)
         # dfbeams
@@ -198,7 +194,18 @@ class DFAssembly:
         xml_string = ET.tostring(root, encoding='unicode')
         dom = parseString(xml_string)
         pretty_xml = dom.toprettyxml()
-        with open(file_path, 'w') as f:
-            f.write(pretty_xml)
 
         return pretty_xml
+
+    def dump(self, pretty_xml : str, dir: str):
+        """
+        Dump the pretty XML to a file
+
+        :param pretty_xml: The pretty XML string
+        :param dir: The directory to save the XML
+        """
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        file_path = os.path.join(dir, f"{self.name}_{timestamp}.xml")
+
+        with open(file_path, "w") as f:
+            f.write(pretty_xml)

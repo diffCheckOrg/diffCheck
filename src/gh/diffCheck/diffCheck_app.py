@@ -8,16 +8,13 @@ import typing
 from df_geometries import DFBeam, DFAssembly  # diffCheck.df_geometries 
 
 
-def main(
-    i_breps : typing.List[rg.Brep],
-    i_export_dir : str
-    ):
+if __name__ == "__main__":
     """
     Main function to test the package
     :param i_breps: list of breps
     :param i_export_dir: directory to export the xml
+    :param i_dump: whether to dump the xml
     """
-
     # beams
     beams : typing.List[DFBeam] = []
     for brep in i_breps:
@@ -30,13 +27,7 @@ def main(
     print(assembly1)
 
     # dump the xml
-    xml : str = assembly1.dump_to_xml(i_export_dir)
+    xml : str = assembly1.to_xml()
+    if i_dump:
+        assembly1.dump(xml, i_export_dir)
     o_xml = xml
-
-    # # (optional) you can also load the xml
-    # file_path = os.path.join(i_export_dir, "Assembly1_0.xml")
-    # assembly2 = DFAssembly.from_xml(file_path)
-
-if __name__ == "__main__":
-    main(i_breps,
-         i_export_dir)
