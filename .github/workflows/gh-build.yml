@@ -21,7 +21,7 @@ jobs:
 
       - uses: compas-dev/compas-actions.ghpython_components@v5
         with:
-          source: components
+          source: src/gh/components
           target: build
           interpreter: cpython
 
