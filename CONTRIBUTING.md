@@ -49,6 +49,36 @@ git commit -m "Remove a submodule name"
 ```
 
 ---
+# PyPI
+To push the package to PyPI, you need to:
+1. Install the package `twine`:
+```bash
+pip install twine
+```
+2. Build the package:
+```bash
+python setup.py sdist bdist_wheel
+```
+3. Check the package:
+```bash
+twine check dist/*
+```
+4. Upload the package:
+```bash
+twine upload dist/*
+```
+Be sure to have the right to upload the package to the PyPI repository.
+To do so you need to set the `~/.pypirc` file with the following content:
+```bash
+[distutils]
+index-servers=pypi
+
+[pypi]
+  username = __token__
+  password = pypi-<your-TOKEN>
+```
+
+---
 # C++
 
 ### Naming & synthax convention

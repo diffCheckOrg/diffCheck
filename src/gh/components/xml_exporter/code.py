@@ -1,5 +1,5 @@
 #! python3
-# requirements: diffcheck
+# requirements: diffCheck
 """
 This read breps from Rhino, converts them to DFBeams and DFAssemblies, and exports them to XML.
 
@@ -7,14 +7,15 @@ This read breps from Rhino, converts them to DFBeams and DFAssemblies, and expor
 :param i_export_dir: directory to export the xml
 :param i_dump: press to dump the xml
 """
+import System
+import typing
+
 import Rhino
 import Rhino.Geometry as rg
 
-import typing
-
 from ghpythonlib.componentbase import executingcomponent as component
 
-from  diffCheck.df_geometries.df_geometries import DFBeam, DFAssembly
+from diffCheck.df_geometries import DFBeam, DFAssembly
 
 
 class XMLExporter(component):
