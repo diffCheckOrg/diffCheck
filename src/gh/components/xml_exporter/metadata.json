@@ -23,8 +23,7 @@
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "bool",
-                "simplify": false
+                "typeHintID": "bool"
             },
             {
                 "name": "i_export_dir",
@@ -36,7 +35,7 @@
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "str",
+                "typeHintID": "str"
             },
             {
                 "name": "i_breps",
@@ -48,8 +47,7 @@
                 "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "brep",
-                "simplify": false
+                "typeHintID": "brep"
             }
         ],
         "outputParameters": [
