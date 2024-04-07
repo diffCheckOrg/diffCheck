@@ -173,7 +173,6 @@ class DFAssembly:
         :return xml_string: The pretty XML string
         """
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        timestamp = "0"
         file_path = os.path.join(dir, f"{self.name}_{timestamp}.xml")
 
         root = ET.Element("Assembly")
