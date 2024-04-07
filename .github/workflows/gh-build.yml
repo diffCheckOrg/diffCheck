@@ -1,4 +1,4 @@
-name: build-components
+name: gh-build
 
 on:
     push:
@@ -21,6 +21,7 @@ jobs:
         with:
           source: ./src/gh/components
           target: build
+          interpreter: cpython
       # upload them as artifacts:
       - uses: actions/upload-artifact@v2
         with:
