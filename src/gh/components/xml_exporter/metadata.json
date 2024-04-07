@@ -1,8 +1,8 @@
 {
     "name": "Exporter to xml",
     "nickname": "XMLout",
-    "category": "Utilities",
-    "subcategory": "ALL",
+    "category": "diffCheck",
+    "subcategory": "Utility",
     "description": "This component reads breps, convert them to DFBeams and DFAssemblies and export it to XML.",
     "exposure": 4,
     "instanceGuid": "cdae4bd5-d18e-4b06-9367-791b6b1f6837",
