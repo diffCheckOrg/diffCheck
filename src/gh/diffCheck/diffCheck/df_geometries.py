@@ -10,6 +10,8 @@ import Rhino.Geometry as rg
 import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 
+from df_joint_detector import JointDetector
+
 
 @dataclass
 class DFVertex:
@@ -85,11 +87,6 @@ class DFBeam:
     faces : typing.List[DFFace]
     def __post_init__(self):
         self.name = self.name or "Unnamed Beam"
-
-        try:
-            self.faces = list(self.faces)
-        except TypeError:
-            raise ValueError("Faces must be of type List[Face]")
         self.faces = self.faces or []
 
         self.__id = uuid.uuid4().int
@@ -97,21 +94,9 @@ class DFBeam:
     @classmethod
     def from_brep(cls, brep):
         """
-        Create a Beam from a RhinoBrep object
+        Create a DFBeam from a RhinoBrep object
         """
-        faces : typing.List[DFFace] = []
-        brep_faces = brep.Faces
-        for brep_face in brep_faces:
-            vertices = []
-            face_loop = brep_face.OuterLoop
-            face_loop_trims = face_loop.Trims
-            vertices : typing.List[DFVertex] = []
-            for face_loop_trim in face_loop_trims:
-                vertices.append(DFVertex(
-                    face_loop_trim.Edge.PointAtStart.X,
-                    face_loop_trim.Edge.PointAtStart.Y, 
-                    face_loop_trim.Edge.PointAtStart.Z))
-            faces.append(DFFace(vertices))
+        faces = JointDetector(brep).run()
         beam = cls("Beam", faces)
         return beam
 
