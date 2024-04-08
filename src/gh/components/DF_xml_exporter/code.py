@@ -15,10 +15,10 @@ import Rhino.Geometry as rg
 
 from ghpythonlib.componentbase import executingcomponent as component
 
-from diffCheck.df_geometries import DFBeam, DFAssembly
+from diffCheck.df_geometries import DFVertex, DFFace, DFBeam, DFAssembly
 
 
-class XMLExporter(component):
+class DFXMLExporter(component):
     def RunScript(self,
                   i_dump : bool,
                   i_export_dir : str,

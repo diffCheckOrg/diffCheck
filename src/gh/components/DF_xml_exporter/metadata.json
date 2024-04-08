@@ -1,5 +1,5 @@
 {
-    "name": "Exporter to xml",
+    "name": "DFXMLExporter",
     "nickname": "XMLout",
     "category": "diffCheck",
     "subcategory": "Utility",

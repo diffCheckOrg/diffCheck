@@ -6,113 +6,10 @@ import scriptcontext as sc
 import os
 import typing
 
-from df_geometries import DFBeam, DFAssembly  # diffCheck.
+from df_geometries import DFVertex, DFFace, DFBeam, DFAssembly  # diffCheck.
 import df_transformations  # diffCheck.
-
-
-
-
-    # vd.addBrep(brep, clr=(255, 0, 0, 30))
-
-
-def distinguish_holes_cuts(breps) -> typing.Tuple[typing.List[Rhino.Geometry.Brep], typing.List[Rhino.Geometry.Brep]]:
-    """ 
-        Analyse the result breps from the boolean difference operation
-        and distinguish between holes and cuts
-
-        :param breps: list of breps
-        :return: holes and cuts breps
-    """
-    is_hole = False
-    is_cut = False
-    is_mix = False
-    holes_b = []
-    cuts_b = []
-    mix_b = []
-
-    # parse holes, cuts and mix
-    for b in breps:
-        is_cut = True
-        for f in b.Faces:
-            f_brep = f.ToBrep()
-            f = f_brep.Faces[0]
-            if not f.IsPlanar():
-                is_cut = False
-                is_hole = True
-                b_faces = util.explode_brep(b)
-                for b_face in b_faces:
-                    if b_face.Faces[0].IsPlanar():
-                        b_face_edges = b_face.Edges
-                        for b_face_edge in b_face_edges:
-                            if not b_face_edge.IsClosed:
-                                is_mix = True
-                                is_hole = False
-                                break
-                        if is_mix:
-                            break
-                break
-
-        if is_hole:
-            holes_b.append(b)
-        elif is_cut: 
-            cuts_b.append(b)
-        elif is_mix:
-            mix_b.append(b)
-
-        is_hole = False
-        is_cut = False
-        is_mix = False
-    
-    # deal with mix
-    candidate_cuts = []
-    candidate_holes = []
-    for b in mix_b:
-        # -- algorithm draft --
-        # (1) explode
-        # (2) seperate in tow list flat surfaces (cuts + cylinder's bases) and non flat surfaces (cylinders)
-        # (3) cap each object in both lists
-        # (4) boolunion every object in both lists
-        # (5) check if closed, if it is 
-        # ----------------------
-        # (1) explode
-        faces_b = util.explode_brep(b)
-
-        # (2) seperate in tow list flat surfaces (cuts + cylinder's bases) and non flat surfaces (cylinders)
-        flat_faces_b = []
-        non_flat_faces_b = []
-        for f_b in faces_b:
-            if f_b.Faces[0].IsPlanar():
-                flat_faces_b.append(f_b)
-            else:
-                non_flat_faces_b.append(f_b)
-  
-        # (*) cap the cylinders
-        non_flat_faces_b = [f_b.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance) for f_b in non_flat_faces_b]
-        
-        # (4) boolunion every object in both lists
-        flat_faces_b = Rhino.Geometry.Brep.CreateBooleanUnion(flat_faces_b, sc.doc.ModelAbsoluteTolerance)
-        non_flat_faces_b = Rhino.Geometry.Brep.CreateBooleanUnion(non_flat_faces_b, sc.doc.ModelAbsoluteTolerance)
-
-        # (3) cap candidate cuts
-        flat_faces_b = [f_b.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance) for f_b in flat_faces_b]
-        # non_flat_faces_b = [f_b.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance) for f_b in non_flat_faces_b]
-
-        # (*) merge all coplanar faces in breps cut candidates
-        for f_b in flat_faces_b:
-            if f_b is not None:
-                f_b.MergeCoplanarFaces(sc.doc.ModelAbsoluteTolerance)
-
-        # (5) check if closed, if it is add to cuts, if not add to holes
-        for f_b in flat_faces_b:
-            if f_b is not None:
-                if f_b.IsSolid:
-                    cuts_b.append(f_b)
-        for f_b in non_flat_faces_b:
-            if f_b is not None:
-                if f_b.IsSolid:
-                    holes_b.append(f_b)
-
-    return holes_b, cuts_b
+import df_joint_detector  # diffCheck.
+import df_util  # diffCheck.
 
 
 if __name__ == "__main__":
@@ -120,20 +17,20 @@ if __name__ == "__main__":
     print("Running diffCheck...")
     x_form = df_transformations.pln_2_pln_world_transform(i_brep)
 
-    # transformation to matrix
-    i_brep_copy.Transform(x_form)
-    
     # reverse the transformation
     x_form_back = df_transformations.get_inverse_transformation(x_form)
 
     # i_brep.Transform(x_form_back)
-
-
-    o_brep = i_brep
+    # o_brep = i_brep
     
 
-    # compute the bounding box
+    # compute the bounding box and inflate to include butt joints typo
     bbox = i_brep.GetBoundingBox(True)
+    diagonal = bbox.Diagonal
+    scaling_factor = diagonal.Length / 10
+    bbox.Inflate(
+        scaling_factor, 0, 0
+    )
     bbox_b = bbox.ToBrep()
 
     print("Bounding box computed...")
@@ -143,15 +40,72 @@ if __name__ == "__main__":
         print("No breps found after boolean difference. Exiting...")
         # return
 
+    ##################################################################
+    ##################################################################
     # distinguish holes and cuts
-    holes_b, cuts_b = distinguish_holes_cuts(brep_result)
+    holes_b, cuts_b = df_joint_detector.distinguish_holes_cuts(brep_result)
 
+    # retransform back everything
     for b in holes_b:
         b.Transform(x_form_back)
     for b in cuts_b:
         b.Transform(x_form_back)
+    i_brep.Transform(x_form_back)
+
+    # parse into DFFaces with detection of
+    #  - wether it is a joint (bool)
+    #  - if it is a hole, which one is (id)
+
+    df_faces = []
+    all_faces_centroids : typing.List[rg.Point3d] = []
+    cuts_faces_centroids : typing.Dict[int, typing.List[rg.Point3d]] = {}
+    detected_facesjoint_centroids : typing.List[rg.Point3d] = []
+    side_faces_centroids : typing.List[rg.Point3d] = []
+
+    # get all the medians of the faces of cuts_b
+    for idx, b in enumerate(cuts_b):
+        temp_face_centroids = []
+        for f in b.Faces:
+            centroid = DFFace.compute_mass_center(f)
+            temp_face_centroids.append(centroid)
+        cuts_faces_centroids[idx] = temp_face_centroids
+
+    print(f"Detected faces: {list(cuts_faces_centroids.values()).__len__()}")
+    tol = sc.doc.ModelAbsoluteTolerance
+
+    breps = [i_brep]
+    for b in breps:
+        for f in b.Faces:
+            centroid_2test = DFFace.compute_mass_center(f)
+            all_faces_centroids.append(centroid_2test)
+            
+            for idx, centroids in cuts_faces_centroids.items():
+                for centroid in centroids:
+                    if centroid_2test.DistanceTo(centroid) < tol:
+                        df_vertices = []
+                        face_loop = f.OuterLoop
+                        face_loop_trims = face_loop.Trims
+                        for face_loop_trim in face_loop_trims:
+                            df_vertices.append(DFVertex.from_rg_point3d(face_loop_trim.PointAtStart))
+                        df_faces.append(DFFace(df_vertices, idx))
+                        detected_facesjoint_centroids.append(centroid_2test)
+                        break
+            else:
+                df_vertices = []
+                face_loop = f.OuterLoop
+                face_loop_trims = face_loop.Trims
+                for face_loop_trim in face_loop_trims:
+                    df_vertices.append(DFVertex.from_rg_point3d(face_loop_trim.PointAtStart))
+                df_faces.append(DFFace(df_vertices))
+                side_faces_centroids.append(centroid_2test)
 
     o_brep = cuts_b
+
+    o_centroids1 = side_faces_centroids
+    o_centroids2 = detected_facesjoint_centroids
+
+    # beams
+    beam = DFBeam("Beam1", df_faces)
     ##################################################################
 
     # """

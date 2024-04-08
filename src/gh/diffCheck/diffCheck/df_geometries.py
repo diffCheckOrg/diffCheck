@@ -27,6 +27,9 @@ class DFVertex:
     def __repr__(self):
         return f"Vertex: X={self.x}, Y={self.y}, Z={self.z}"
 
+    def from_rg_point3d(point: rg.Point3d):
+        return DFVertex(point.X, point.Y, point.Z)
+
 
 @dataclass
 class DFFace:
@@ -46,6 +49,19 @@ class DFFace:
 
     def __repr__(self):
         return f"Face vertices: {len(self.vertices)}"
+
+    @staticmethod
+    def compute_mass_center(face: rg.BrepFace) -> rg.Point3d:
+        """
+        Compute the mass center of a  face
+
+        :param face: The face to compute the mass center from
+        :return mass_center: The mass center of the face
+        """
+        amp = rg.AreaMassProperties.Compute(face)
+        if amp:
+            return amp.Centroid
+        return None
 
     @property
     def is_joint(self):
