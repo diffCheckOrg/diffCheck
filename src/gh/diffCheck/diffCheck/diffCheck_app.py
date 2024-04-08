@@ -27,7 +27,7 @@ if __name__ == "__main__":
         beams.append(beam)
 
     # assembly
-    assembly1 = DFAssembly(beams, "Assembly1")
+    assembly1 = DFAssembly(beams, i_assembly_name)
     print(assembly1.beams)
     print(assembly1)
 

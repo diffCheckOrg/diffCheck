@@ -21,6 +21,7 @@ from diffCheck.df_geometries import DFVertex, DFFace, DFBeam, DFAssembly
 class DFXMLExporter(component):
     def RunScript(self,
                   i_dump : bool,
+                  i_name : str,
                   i_export_dir : str,
                   i_breps : typing.List[Rhino.Geometry.Brep]
                   ):
@@ -37,7 +38,7 @@ class DFXMLExporter(component):
             beams.append(beam)
 
         # assembly
-        assembly1 = DFAssembly(beams, "Assembly1")
+        assembly1 = DFAssembly(beams, i_name)
         print(assembly1.beams)
         print(assembly1)
 

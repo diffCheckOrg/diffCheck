@@ -26,6 +26,18 @@
                 "typeHintID": "bool"
             },
             {
+                "name": "i_assembly_name",
+                "nickname": "i_assembly_name",
+                "description": "The name of the assembly to export.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
                 "name": "i_export_dir",
                 "nickname": "i_export_dir",
                 "description": "The directors where to export the xml file.",
