@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='diffCheck',
-    version='0.0.2',
+    version='0.0.3',
     packages=find_packages(),
     description='DiffCheck is a package to check the differences between two timber structures',
     long_description=open('README.md').read(),

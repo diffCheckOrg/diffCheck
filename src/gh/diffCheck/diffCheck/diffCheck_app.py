@@ -1,4 +1,5 @@
 #! python3
+
 import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
@@ -36,3 +37,13 @@ if __name__ == "__main__":
     if i_dump:
         assembly1.dump(xml, i_export_dir)
     o_xml = xml
+
+    # show the joint/side faces
+    joints_faces_breps = []
+    sides_faces_breps = []
+    for beam in beams:
+        joints_faces_breps.extend([face.to_brep() for face in beam.joint_faces])
+        sides_faces_breps.extend([face.to_brep() for face in beam.side_faces])
+
+    o_joints = joints_faces_breps
+    o_sides = sides_faces_breps

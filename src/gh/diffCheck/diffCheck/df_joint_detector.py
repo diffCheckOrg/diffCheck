@@ -155,12 +155,14 @@ class JointDetector():
             b.Transform(x_form_back)
         for b in self._cuts:
             b.Transform(x_form_back)
+        for b in self._mix:
+            b.Transform(x_form_back)
         self.brep.Transform(x_form_back)
 
+        # get all the medians of the faces of cuts only
         cuts_faces_centroids : typing.Dict[int, typing.List[rg.Point3d]] = {}
-
-        # get all the medians of the faces of cuts
         for idx, b in enumerate(self._cuts):
+            idx = idx + 1
             temp_face_centroids = []
             for f in b.Faces:
                 centroid = DFFace.compute_mass_center(f)
@@ -170,22 +172,16 @@ class JointDetector():
         # compare with the brep medians faces to get the joint/sides's faces
         for f in self.brep.Faces:
             centroid_2test = DFFace.compute_mass_center(f)
-            for idx, centroids in cuts_faces_centroids.items():
+            for key, centroids in cuts_faces_centroids.items():
+                is_joint = False
                 for centroid in centroids:
                     if centroid_2test.DistanceTo(centroid) < sc.doc.ModelAbsoluteTolerance:
-                        df_vertices = []
-                        face_loop = f.OuterLoop
-                        face_loop_trims = face_loop.Trims
-                        for face_loop_trim in face_loop_trims:
-                            df_vertices.append(DFVertex.from_rg_point3d(face_loop_trim.PointAtStart))
-                        self._faces.append(DFFace(df_vertices, idx))
+                        self._faces.append(DFFace.from_brep(f, key))
+                        is_joint = True
                         break
-            else:
-                df_vertices = []
-                face_loop = f.OuterLoop
-                face_loop_trims = face_loop.Trims
-                for face_loop_trim in face_loop_trims:
-                    df_vertices.append(DFVertex.from_rg_point3d(face_loop_trim.PointAtStart))
-                self._faces.append(DFFace(df_vertices))
+                if is_joint:
+                    break
+            if not is_joint:
+                self._faces.append(DFFace.from_brep(f, None))
 
         return self._faces

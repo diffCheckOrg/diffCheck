@@ -29,8 +29,23 @@ class DFVertex:
     def __repr__(self):
         return f"Vertex: X={self.x}, Y={self.y}, Z={self.z}"
 
-    def from_rg_point3d(point: rg.Point3d):
-        return DFVertex(point.X, point.Y, point.Z)
+    def __hash__(self):
+        return hash((self.x, self.y, self.z))
+
+    def __eq__(self, other):
+        if isinstance(other, DFVertex):
+            return self.x == other.x and self.y == other.y and self.z == other.z
+        return False
+
+    @classmethod
+    def from_rg_point3d(cls, point: rg.Point3d):
+        """
+        Create a DFVertex from a Rhino Point3d object
+
+        :param point: The Rhino Point3d object
+        :return vertex: The DFVertex object
+        """
+        return cls(point.X, point.Y, point.Z)
 
 
 @dataclass
@@ -45,12 +60,20 @@ class DFFace:
             raise ValueError("A face must have at least 3 vertices")
         self.vertices = self.vertices or []
 
-        self.joint_id = self.joint_id or None
+        self.joint_id = self.joint_id
         self.__is_joint = False
         self.__id = uuid.uuid4().int
 
     def __repr__(self):
         return f"Face vertices: {len(self.vertices)}"
+
+    def __hash__(self):
+        return hash((tuple(self.vertices), self.joint_id))
+
+    def __eq__(self, other):
+        if isinstance(other, DFFace):
+            return self.vertices == other.vertices and self.joint_id == other.joint_id
+        return False
 
     @staticmethod
     def compute_mass_center(face: rg.BrepFace) -> rg.Point3d:
@@ -65,9 +88,44 @@ class DFFace:
             return amp.Centroid
         return None
 
+    @classmethod
+    def from_brep(cls, brep_face: rg.BrepFace, joint_id: int=None):
+        """
+        Create a DFFace from a Rhino Brep face
+
+        :param brep_face: The Rhino Brep face
+        :param joint_id: The joint id
+        :return face: The DFFace object
+        """
+        vertices = []
+        face_loop = brep_face.OuterLoop
+        face_loop_trims = face_loop.Trims
+
+        face_curve_loop = brep_face.OuterLoop.To3dCurve()
+        face_curve_loop = face_curve_loop.ToNurbsCurve()
+        face_vertices = face_curve_loop.Points
+
+        for f_v in face_vertices:
+            vertex = DFVertex(f_v.X, f_v.Y, f_v.Z)
+            vertices.append(vertex)
+
+        return cls(vertices, joint_id)
+
+    def to_brep(self):
+        """
+        Convert the face to a Rhino Brep planar face
+
+        :return brep_face: The Rhino Brep planar face
+        """
+        vertices : rg.Point3d = [rg.Point3d(vertex.x, vertex.y, vertex.z) for vertex in self.vertices]
+        polyline = rg.Polyline(vertices)
+        face_brep = rg.Brep.CreatePlanarBreps([polyline.ToNurbsCurve()])[0]
+
+        return face_brep
+
     @property
     def is_joint(self):
-        if self.joint_id:
+        if self.joint_id is not None:
             self.__is_joint = True
             return True
         self.__is_joint = False
@@ -88,15 +146,19 @@ class DFBeam:
     def __post_init__(self):
         self.name = self.name or "Unnamed Beam"
         self.faces = self.faces or []
+        self._joint_faces = []
+        self._side_faces = []
 
         self.__id = uuid.uuid4().int
 
     @classmethod
     def from_brep(cls, brep):
         """
-        Create a DFBeam from a RhinoBrep object
+        Create a DFBeam from a RhinoBrep object.
+        It also removes duplicates and creates a list of unique faces.
         """
         faces = JointDetector(brep).run()
+        faces = list(set(faces))
         beam = cls("Beam", faces)
         return beam
 
@@ -106,6 +168,14 @@ class DFBeam:
     @property
     def id(self):
         return self.__id
+
+    @property
+    def joint_faces(self):
+        return [face for face in self.faces if face.is_joint]
+
+    @property
+    def side_faces(self):
+        return [face for face in self.faces if not face.is_joint]
 
 
 @dataclass
