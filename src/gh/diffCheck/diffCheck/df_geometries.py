@@ -231,48 +231,10 @@ class DFAssembly:
     def remove_beam(self, beam_id: int):
         self.beams = [beam for beam in self.beams if beam.id != beam_id]
 
-    # @classmethod
-    # def from_xml(cls, file_path: str):
-    #     """
-    #     Create an assembly from an XML file
-
-    #     :param file_path: The path to the XML file
-    #     :return assembly: The assembly object
-    #     """
-    #     # parse the XML file
-    #     tree = ET.parse(file_path)
-    #     root = tree.getroot()
-    #     beams : typing.List[DFBeam] = []
-        
-    #     name = root.get("name")
-    #     for beam_elem in root.findall("Beam"):
-    #         beam = DFBeam(beam_elem.get("name"), [])
-    #         beam._DFBeam__id = int(beam_elem.get("id"))
-    #         for face_elem in beam_elem.findall("Face"):
-    #             outer_loop = []
-    #             for vertex_elem in face_elem.findall("Vertex"):
-    #                 vertex = DFVertex(
-    #                     float(vertex_elem.get("x")),
-    #                     float(vertex_elem.get("y")),
-    #                     float(vertex_elem.get("z"))
-    #                 )
-    #                 outer_loop.append(vertex)
-    #             face = DFFace(outer_loop)
-    #             face._DFFace__id = int(face_elem.get("id"))
-    #             face._DFFace__is_joint = bool(face_elem.get("is_joint"))
-    #             face_joint : str = face_elem.get("joint_id")
-    #             if face_joint != "None":
-    #                 face.joint_id = int(face_joint)
-    #             else:
-    #                 face.joint_id = None
-    #             beam.faces.append(face)
-    #         beams.append(beam)
-    #     return cls(beams, name)
-
-    # FIXME: to be reworked
     def to_xml(self):
         """
-        Dump the assembly to an XML file
+        Dump the assembly's meshes to an XML file. On top of the DiffCheck datatypes and structure,
+        we export the underlaying beams's meshes from Rhino as vertices and faces.
 
         :return xml_string: The pretty XML string
         """
@@ -285,17 +247,26 @@ class DFAssembly:
             beam_elem.set("id", str(beam.id))
             # dffaces
             for face in beam.faces:
-                face_elem = ET.SubElement(beam_elem, "Face")
+                face_elem = ET.SubElement(beam_elem, "DFFace")
                 face_elem.set("id", str(face.id))
                 face_elem.set("is_joint", str(face.is_joint))
                 face_elem.set("joint_id", str(face.joint_id))
-                # dfvertices
-                for loop in face.all_loops:
-                    for vertex in loop:
-                        vertex_elem = ET.SubElement(face_elem, "DFVertex")
-                        vertex_elem.set("x", str(vertex.x))
-                        vertex_elem.set("y", str(vertex.y))
-                        vertex_elem.set("z", str(vertex.z))
+                # export linked mesh
+                facerhmesh_elem = ET.SubElement(face_elem, "RhMesh")
+                mesh = face.to_mesh()
+                mesh_vertices = mesh.Vertices
+                for idx, vertex in enumerate(mesh_vertices):
+                    facerhmesh_vertex_elem = ET.SubElement(facerhmesh_elem, "RhMeshVertex")
+                    facerhmesh_vertex_elem.set("x", str(vertex.X))
+                    facerhmesh_vertex_elem.set("y", str(vertex.Y))
+                    facerhmesh_vertex_elem.set("z", str(vertex.Z))
+                mesh_faces = mesh.Faces
+                for idx, face in enumerate(mesh_faces):
+                    facerhmesh_face_elem = ET.SubElement(facerhmesh_elem, "RhMeshFace")
+                    facerhmesh_face_elem.set("v1", str(face.A))
+                    facerhmesh_face_elem.set("v2", str(face.B))
+                    facerhmesh_face_elem.set("v3", str(face.C))
+                    facerhmesh_face_elem.set("v4", str(face.D))
 
         tree = ET.ElementTree(root)
         xml_string = ET.tostring(root, encoding='unicode')
@@ -304,7 +275,7 @@ class DFAssembly:
 
         return pretty_xml
 
-    def dump(self, pretty_xml : str, dir: str):
+    def dump_xml(self, pretty_xml : str, dir: str):
         """
         Dump the pretty XML to a file
 

@@ -34,7 +34,7 @@ if __name__ == "__main__":
     # dump the xml
     xml : str = assembly1.to_xml()
     if i_dump:
-        assembly1.dump(xml, i_export_dir)
+        assembly1.dump_xml(xml, i_export_dir)
     o_xml = xml
 
     # show the joint/side faces
