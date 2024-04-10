@@ -150,7 +150,7 @@ class DFFace:
 
         :return mesh: The Rhino Mesh object
         """
-        mesh = self.to_brep().GetMesh(rg.MeshType.Default)
+        mesh = rg.Mesh.CreateFromBrep(self.to_brep())[0]
         return mesh
 
     @property

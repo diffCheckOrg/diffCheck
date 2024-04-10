@@ -40,5 +40,3 @@ if __name__ == "__main__":
     # show the joint/side faces
     o_joints = [jf.to_brep() for jf in assembly1.all_joint_faces]
     o_sides = [sf.to_brep() for sf in assembly1.all_side_faces]
-
-    o_test1 = beams[0].faces[7].to_brep()
