@@ -59,38 +59,31 @@ class DFVertex:
 @dataclass
 class DFFace:
     """
-    This class represents a face, in diffCheck, a face is a collection of vertices
+    This class represents a face, in diffCheck, a face is a collection of vertices.
     """
-    outer_loop : typing.List[DFVertex]
-    inner_loops : typing.List[typing.List[DFVertex]]
+    # just as breps a first outer loop and then inner loops of DFVertices
+    all_loops : typing.List[typing.List[DFVertex]]
     joint_id : int
     def __post_init__(self):
-        if len(self.outer_loop) < 3:
+        if len(self.all_loops[0]) < 3:
             raise ValueError("A face must have at least 3 vertices")
-        self.outer_loop = self.outer_loop
-        self.inner_loops = self.inner_loops or []
+        self.all_loops = self.all_loops or []
 
         self.joint_id = self.joint_id or None
         self.__is_joint = False
         self.__id = uuid.uuid4().int
 
-        self._hastenonmortise = len(self.inner_loops) > 0
-
-        self._brepface : rg.BrepFace = None
-
     def __repr__(self):
-        return f"Face vertices: {len(self.outer_loop)}, Joint: {self.joint_id}, Inner loops: {len(self.inner_loops)}"
+        return f"Face id: {len(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
 
     def __hash__(self):
-        outer_loop = tuple(tuple(vertex.__dict__.values()) for vertex in self.outer_loop)
-        inner_loops = tuple(tuple(tuple(vertex.__dict__.values()) for vertex in loop) for loop in self.inner_loops)
+        outer_loop = tuple(tuple(vertex.__dict__.values()) for vertex in self.all_loops[0])
+        inner_loops = tuple(tuple(vertex.__dict__.values()) for loop in self.all_loops[1:] for vertex in loop)
         return hash((outer_loop, inner_loops))
 
     def __eq__(self, other):
         if isinstance(other, DFFace):
-            is_outer_loop_equal = self.outer_loop == other.outer_loop
-            is_inner_loops_equal = self.inner_loops == other.inner_loops
-            return is_outer_loop_equal and is_inner_loops_equal
+            return self.all_loops == other.all_loops
         return False
 
     @staticmethod
@@ -115,35 +108,20 @@ class DFFace:
         :param joint_id: The joint id
         :return face: The DFFace object
         """
-        outer_loop = []
+        all_loops = []
 
-        face_loop = brep_face.OuterLoop
-        face_loop_trims = face_loop.Trims
+        for idx, loop in enumerate(brep_face.Loops):
+            loop_trims = loop.Trims
+            loop_curve = loop.To3dCurve()
+            loop_curve = loop_curve.ToNurbsCurve()
+            loop_vertices = loop_curve.Points
+            loop = []
+            for l_v in loop_vertices:
+                vertex = DFVertex(l_v.X, l_v.Y, l_v.Z)
+                loop.append(vertex)
+            all_loops.append(loop)
 
-        face_curve_loop = brep_face.OuterLoop.To3dCurve()
-        face_curve_loop = face_curve_loop.ToNurbsCurve()
-        face_vertices = face_curve_loop.Points
-
-        for f_v in face_vertices:
-            vertex = DFVertex(f_v.X, f_v.Y, f_v.Z)
-            outer_loop.append(vertex)
-        
-        inner_loops = []
-
-        if brep_face.Loops.Count > 1:
-            face_loops = brep_face.Loops
-            for idx, loop in enumerate(face_loops):
-                loop_trims = loop.Trims
-                loop_curve = loop.To3dCurve()
-                loop_curve = loop_curve.ToNurbsCurve()
-                loop_vertices = loop_curve.Points
-                inner_loop = []
-                for l_v in loop_vertices:
-                    vertex = DFVertex(l_v.X, l_v.Y, l_v.Z)
-                    inner_loop.append(vertex)
-                inner_loops.append(inner_loop)
-
-        df_face = cls(outer_loop, inner_loops, joint_id)
+        df_face = cls(all_loops, joint_id)
         df_face._brepface = brep_face
 
         return df_face
@@ -154,19 +132,26 @@ class DFFace:
 
         :return brep_face: The Rhino Brep planar face
         """
-        # if the DFace was created from a brep face, return the brep face
-        if self._brepface is not None:
-            return self._brepface
+        brep_curves = []
 
-        # FIXME: the rebuilding of breps with multiple loops is not working yet
-        outer_vertices : rg.Point3d = [rg.Point3d(vertex.x, vertex.y, vertex.z) for vertex in self.outer_loop]
-        outer_polyline = rg.Polyline(outer_vertices)
-        outer_curve = outer_polyline.ToNurbsCurve()
-        outer_curve = rg.Curve.CreateControlPointCurve(outer_vertices, 1)
-        trim_loops.append(outer_curve)
-        outer_brep = rg.Brep.CreatePlanarBreps(outer_curve, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance)[0]
+        for loop in self.all_loops:
+            inner_vertices = [rg.Point3d(vertex.x, vertex.y, vertex.z) for vertex in loop]
+            inner_polyline = rg.Polyline(inner_vertices)
+            inner_curve = inner_polyline.ToNurbsCurve()
+            brep_curves.append(inner_curve)
 
-        return outer_brep
+        brep = rg.Brep.CreatePlanarBreps(brep_curves, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance)[0]
+
+        return brep
+
+    def to_mesh(self):
+        """
+        Convert the face to a Rhino Mesh
+
+        :return mesh: The Rhino Mesh object
+        """
+        mesh = self.to_brep().GetMesh(rg.MeshType.Default)
+        return mesh
 
     @property
     def is_joint(self):
@@ -179,11 +164,6 @@ class DFFace:
     @property
     def id(self):
         return self.__id
-
-    @property
-    def has_tenonmortise(self):
-        self._hastenonmortise = len(self.inner_loops) > 0
-        return self._hastenonmortise
 
 
 @dataclass
@@ -251,43 +231,43 @@ class DFAssembly:
     def remove_beam(self, beam_id: int):
         self.beams = [beam for beam in self.beams if beam.id != beam_id]
 
-    @classmethod
-    def from_xml(cls, file_path: str):
-        """
-        Create an assembly from an XML file
+    # @classmethod
+    # def from_xml(cls, file_path: str):
+    #     """
+    #     Create an assembly from an XML file
 
-        :param file_path: The path to the XML file
-        :return assembly: The assembly object
-        """
-        # parse the XML file
-        tree = ET.parse(file_path)
-        root = tree.getroot()
-        beams : typing.List[DFBeam] = []
+    #     :param file_path: The path to the XML file
+    #     :return assembly: The assembly object
+    #     """
+    #     # parse the XML file
+    #     tree = ET.parse(file_path)
+    #     root = tree.getroot()
+    #     beams : typing.List[DFBeam] = []
         
-        name = root.get("name")
-        for beam_elem in root.findall("Beam"):
-            beam = DFBeam(beam_elem.get("name"), [])
-            beam._DFBeam__id = int(beam_elem.get("id"))
-            for face_elem in beam_elem.findall("Face"):
-                outer_loop = []
-                for vertex_elem in face_elem.findall("Vertex"):
-                    vertex = DFVertex(
-                        float(vertex_elem.get("x")),
-                        float(vertex_elem.get("y")),
-                        float(vertex_elem.get("z"))
-                    )
-                    outer_loop.append(vertex)
-                face = DFFace(outer_loop)
-                face._DFFace__id = int(face_elem.get("id"))
-                face._DFFace__is_joint = bool(face_elem.get("is_joint"))
-                face_joint : str = face_elem.get("joint_id")
-                if face_joint != "None":
-                    face.joint_id = int(face_joint)
-                else:
-                    face.joint_id = None
-                beam.faces.append(face)
-            beams.append(beam)
-        return cls(beams, name)
+    #     name = root.get("name")
+    #     for beam_elem in root.findall("Beam"):
+    #         beam = DFBeam(beam_elem.get("name"), [])
+    #         beam._DFBeam__id = int(beam_elem.get("id"))
+    #         for face_elem in beam_elem.findall("Face"):
+    #             outer_loop = []
+    #             for vertex_elem in face_elem.findall("Vertex"):
+    #                 vertex = DFVertex(
+    #                     float(vertex_elem.get("x")),
+    #                     float(vertex_elem.get("y")),
+    #                     float(vertex_elem.get("z"))
+    #                 )
+    #                 outer_loop.append(vertex)
+    #             face = DFFace(outer_loop)
+    #             face._DFFace__id = int(face_elem.get("id"))
+    #             face._DFFace__is_joint = bool(face_elem.get("is_joint"))
+    #             face_joint : str = face_elem.get("joint_id")
+    #             if face_joint != "None":
+    #                 face.joint_id = int(face_joint)
+    #             else:
+    #                 face.joint_id = None
+    #             beam.faces.append(face)
+    #         beams.append(beam)
+    #     return cls(beams, name)
 
     # FIXME: to be reworked
     def to_xml(self):
@@ -296,11 +276,11 @@ class DFAssembly:
 
         :return xml_string: The pretty XML string
         """
-        root = ET.Element("Assembly")
+        root = ET.Element("DFAssembly")
         root.set("name", self.name)
         # dfbeams
         for beam in self.beams:
-            beam_elem = ET.SubElement(root, "Beam")
+            beam_elem = ET.SubElement(root, "DFBeam")
             beam_elem.set("name", beam.name)
             beam_elem.set("id", str(beam.id))
             # dffaces
@@ -310,11 +290,13 @@ class DFAssembly:
                 face_elem.set("is_joint", str(face.is_joint))
                 face_elem.set("joint_id", str(face.joint_id))
                 # dfvertices
-                for vertex in face.outer_loop:
-                    vertex_elem = ET.SubElement(face_elem, "Vertex")
-                    vertex_elem.set("x", str(vertex.x))
-                    vertex_elem.set("y", str(vertex.y))
-                    vertex_elem.set("z", str(vertex.z))
+                for loop in face.all_loops:
+                    for vertex in loop:
+                        vertex_elem = ET.SubElement(face_elem, "DFVertex")
+                        vertex_elem.set("x", str(vertex.x))
+                        vertex_elem.set("y", str(vertex.y))
+                        vertex_elem.set("z", str(vertex.z))
+
         tree = ET.ElementTree(root)
         xml_string = ET.tostring(root, encoding='unicode')
         dom = parseString(xml_string)

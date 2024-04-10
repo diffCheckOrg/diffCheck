@@ -2,7 +2,6 @@
 
 import Rhino
 import Rhino.Geometry as rg
-import scriptcontext as sc
 
 import os
 import typing
@@ -39,8 +38,7 @@ if __name__ == "__main__":
     o_xml = xml
 
     # show the joint/side faces
-    joints_faces_breps = [jf.to_brep() for jf in assembly1.all_joint_faces]
-    sides_faces_breps = [sf.to_brep() for sf in assembly1.all_side_faces]
+    o_joints = [jf.to_brep() for jf in assembly1.all_joint_faces]
+    o_sides = [sf.to_brep() for sf in assembly1.all_side_faces]
 
-    o_joints = joints_faces_breps
-    o_sides = sides_faces_breps
+    o_test1 = beams[0].faces[7].to_brep()
