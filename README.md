@@ -1,9 +1,15 @@
-# diffCheck
-<p align="left">
+<p align="center">
+    <img src="./assets/logo/logo_400_400.png" width="150">
+</p>
+<p align="center">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
 </p>
 
-Temporary repository for diffCheck
+<!-- 
+# diffCheck
+<p align="left">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
+</p> -->
 
 ## Roadmap
 
