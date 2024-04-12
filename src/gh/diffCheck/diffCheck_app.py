@@ -8,11 +8,7 @@ import typing
 
 import diffCheck
 
-# import diffCheck.df_joint_detector  # diffCheck.
-import diffCheck.df_geometries  # diffCheck.
-# # from diffCheck.df_geometries import DFVertex, DFFace, DFBeam, DFAssembly  # diffCheck.
-# # import diffCheck.df_transformations  # diffCheck.
-# # import diffCheck.df_util  # diffCheck.
+import diffCheck.df_geometries
 
 
 if __name__ == "__main__":

@@ -6,8 +6,8 @@ import typing
 from dataclasses import dataclass
 
 import df_util
-import df_transformations
-from df_geometries import DFFace
+import diffCheck.df_transformations
+from diffCheck.df_geometries import DFFace
 
 @dataclass
 class JointDetector():
@@ -37,10 +37,10 @@ class JointDetector():
         # 1. Bring to XY, mamke AABB and get negative boolean difference
         ############################################################################
         # bring to plane xy
-        x_form = df_transformations.pln_2_pln_world_transform(self.brep)
+        x_form = diffCheck.df_transformations.pln_2_pln_world_transform(self.brep)
 
         # reverse the transformation
-        x_form_back = df_transformations.get_inverse_transformation(x_form)
+        x_form_back = diffCheck.df_transformations.get_inverse_transformation(x_form)
 
         # compute the bounding box and inflate to include butt joints typo
         bbox = self.brep.GetBoundingBox(True)
