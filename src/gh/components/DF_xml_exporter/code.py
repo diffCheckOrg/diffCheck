@@ -1,12 +1,6 @@
 #! python3
 # requirements: diffCheck
-"""
-This read breps from Rhino, converts them to DFBeams and DFAssemblies, and exports them to XML.
 
-:param i_breps: list of breps
-:param i_export_dir: directory to export the xml
-:param i_dump: press to dump the xml
-"""
 import System
 import typing
 
@@ -16,20 +10,24 @@ import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
 from diffCheck.df_geometries import DFVertex, DFFace, DFBeam, DFAssembly
+import diffCheck.df_transformations
+import diffCheck.df_joint_detector
+import diffCheck.df_util
 
 
 class DFXMLExporter(component):
     def RunScript(self,
                   i_dump : bool,
-                  i_name : str,
+                  i_assembly_name : str,
                   i_export_dir : str,
                   i_breps : typing.List[Rhino.Geometry.Brep]
                   ):
         """
-        Main function to test the package
-        :param i_dump: whether to dump the xml
-        :param i_export_dir: directory to export the xml
-        :param i_breps: list of breps
+            This read breps from Rhino, converts them to DFBeams and DFAssemblies, and exports them to XML.
+            
+            :param i_dump: whether to dump the xml
+            :param i_export_dir: directory to export the xml
+            :param i_breps: list of breps
         """
         # beams
         beams : typing.List[DFBeam] = []
@@ -38,9 +36,7 @@ class DFXMLExporter(component):
             beams.append(beam)
 
         # assembly
-        assembly1 = DFAssembly(beams, i_name)
-        print(assembly1.beams)
-        print(assembly1)
+        assembly1 = DFAssembly(beams, i_assembly_name)
 
         # dump the xml
         xml : str = assembly1.to_xml()
@@ -48,4 +44,8 @@ class DFXMLExporter(component):
             assembly1.dump(xml, i_export_dir)
         o_xml = xml
 
-        return o_xml
+        # show the joint/side faces
+        o_joints = [jf.to_brep() for jf in assembly1.all_joint_faces]
+        o_sides = [sf.to_brep() for sf in assembly1.all_side_faces]
+
+        return o_xml, o_joints, o_sides

@@ -7,8 +7,7 @@ from dataclasses import dataclass
 
 import df_util
 import df_transformations
-from df_geometries import DFVertex, DFFace
-
+from df_geometries import DFFace
 
 @dataclass
 class JointDetector():

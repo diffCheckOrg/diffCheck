@@ -10,7 +10,7 @@ import Rhino.Geometry as rg
 import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 
-from df_joint_detector import JointDetector
+import diffCheck.df_joint_detector
 
 
 @dataclass
@@ -187,7 +187,7 @@ class DFBeam:
         Create a DFBeam from a RhinoBrep object.
         It also removes duplicates and creates a list of unique faces.
         """
-        faces = JointDetector(brep).run()
+        faces = diffCheck.df_joint_detector.JointDetector(brep).run()
         faces = list(set(faces))
         beam = cls("Beam", faces)
         return beam

@@ -70,6 +70,22 @@
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
+            },
+            {
+                "name": "o_joints",
+                "nickname": "o_joints",
+                "description": "The breps of the faces belonging to joints.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_sides",
+                "nickname": "o_sides",
+                "description": "The breps of the faces belonging to sides.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
             }
         ]
     }
