@@ -1,8 +1,8 @@
-#include "registration.hh"
+#include "globalregistration.hh"
 
 namespace diffCheck::registration
 {
-    std::vector<double> Registration::ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
+    std::vector<double> GlobalRegistration::ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
     {
         std::vector<double> errors;
         auto O3DSourcePointCloud = source->Cvt2O3DPointCloud();
@@ -13,7 +13,7 @@ namespace diffCheck::registration
         distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
         return distances;
     }
-    open3d::pipelines::registration::RegistrationResult Registration::O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
+    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
         {
         std::shared_ptr<open3d::geometry::PointCloud> sourceO3D = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> targetO3D = target->Cvt2O3DPointCloud();
@@ -39,7 +39,7 @@ namespace diffCheck::registration
         return result;
     }
 
-    open3d::pipelines::registration::RegistrationResult Registration::O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
+    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
     {
         std::shared_ptr<open3d::geometry::PointCloud> sourceO3D = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> targetO3D = target->Cvt2O3DPointCloud();
@@ -68,7 +68,7 @@ namespace diffCheck::registration
         return result;
     }
 
-    open3d::pipelines::registration::RegistrationResult Registration::O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
+    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
     {
         std::shared_ptr<open3d::geometry::PointCloud> sourceO3D = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> targetO3D = target->Cvt2O3DPointCloud();
@@ -94,7 +94,7 @@ namespace diffCheck::registration
         return result;
     }
 
-    open3d::pipelines::registration::RegistrationResult Registration::O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
+    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target)
     {
         std::shared_ptr<open3d::geometry::PointCloud> sourceO3D = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> targetO3D = target->Cvt2O3DPointCloud();

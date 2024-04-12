@@ -3,13 +3,14 @@
 #include "diffCheck.hh"
 #include <open3d/pipelines/registration/Registration.h>
 
-namespace diffCheck::registration{
+namespace diffCheck::registration
+{
 
-class Registration
+class GlobalRegistration //Must convert to static class
 {
     public:
     
-    std::vector<double> ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
+    static std::vector<double> ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
     
     /*
     Documentation on Fast Point Feature Historigrams: https://pcl.readthedocs.io/projects/tutorials/en/latest/fpfh_estimation.html
@@ -25,14 +26,14 @@ class Registration
 
     Quite important for us: the resultant hyperspace is dependent on the quality of the surface normal estimations at each point (if pc noisy, historigram different).
     */
-    open3d::pipelines::registration::RegistrationResult O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
+    static open3d::pipelines::registration::RegistrationResult O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
 
     /*
     Very little information on this registration method compared to the previous one.
     If I understand correctly, this method finds keypoints in the FPFH hyperspaces of the source and target point clouds and then tries to match them.
     https://pcl.readthedocs.io/projects/tutorials/en/latest/correspondence_grouping.html 
     */ 
-    open3d::pipelines::registration::RegistrationResult O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
+    static open3d::pipelines::registration::RegistrationResult O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
     /*
     Ransac registration based on correspondence:
     Correspondances are computed between the source and target point clouds.
@@ -42,15 +43,12 @@ class Registration
     In practice, Open3D gives little information about the feature correspondence
 
     */
-    open3d::pipelines::registration::RegistrationResult Registration::O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
+    static open3d::pipelines::registration::RegistrationResult O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
     /*
     Ransac registration based on Feature Matching
     https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html#RANSAC
     */
-    open3d::pipelines::registration::RegistrationResult Registration::O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
+    static open3d::pipelines::registration::RegistrationResult O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, std::shared_ptr<geometry::DFPointCloud> target);
 
-    
-
-    
 };
 }
