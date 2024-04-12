@@ -139,19 +139,6 @@ int iterations = 50;
   devisu.Run();
   }
   }
-  for (int i = 0; i < iterations; i++)
-  {
-    std::cout<<"Transformation: "<<i;
-    std::cout<<"FGR Feature Matching Error: "<<errorsFGRFeatureMatching[i];
-    std::cout<<"FGR Correspondance Error: "<<errorsFGRCorrespondance[i];
-    std::cout<<"Ransac Correspondance Error: "<<errorsRansacCorrespondance[i];
-    std::cout<<"Ransac Feature Matching Error: "<<errorsRansacFeatureMatching[i]<<std::endl;
-
-    std::cout<<"FGR Feature Matching Time: "<<timesFGRFeatureMatching[i];
-    std::cout<<"FGR Correspondance Time: "<<timesFGRCorrespondance[i];
-    std::cout<<"Ransac Correspondance Time: "<<timesRansacCorrespondance[i];
-    std::cout<<"Ransac Feature Matching Time: "<<timesRansacFeatureMatching[i]<<std::endl;
-  }
   
   // write the errors and computation times to 2 csv files with one column per method
   std::ofstream fileErrors("errors.csv");
