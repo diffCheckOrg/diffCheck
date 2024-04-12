@@ -139,8 +139,8 @@ int iterations = 50;
   devisu.Run();
   }
   }
-  
-  // write the errors and computation times to 2 csv files with one column per method
+  /*
+    // write the errors and computation times to 2 csv files with one column per method
   std::ofstream fileErrors("errors.csv");
   std::ofstream fileTimes("times.csv");
   fileErrors<<"FGR Feature Matching,FGR Correspondance,Ransac Correspondance,Ransac Feature Matching"<<std::endl;
@@ -152,5 +152,7 @@ int iterations = 50;
   }
   fileErrors.close();
   fileTimes.close();
+  */
+
   return 0;
 }

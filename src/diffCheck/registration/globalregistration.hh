@@ -46,7 +46,7 @@ class GlobalRegistration
                                                                                                         int maxTupleCount = 500);
 
     /**
-    Very little information on this registration method compared to the previous one.
+    Little information on this registration method compared to the previous one.
     If I understand correctly, this method finds keypoints in the FPFH hyperspaces of the source and target point clouds and then tries to match them.
     https://pcl.readthedocs.io/projects/tutorials/en/latest/correspondence_grouping.html 
 
@@ -72,7 +72,7 @@ class GlobalRegistration
     Then, a transformation is computed that minimizes the error between the correspondances. 
     If the error is above a certain threshold, the transformation is discarded and a new one is computed.
 
-    In practice, Open3D gives little information about the feature correspondence
+    In practice, Open3D gives little information about the feature correspondence, compared to the FGR methods
 
     @param source the source point cloud
     @param target the target point cloud
