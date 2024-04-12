@@ -8,4 +8,4 @@
 #include "diffCheck/geometry/DFMesh.hh"
 #include "diffCheck/IOManager.hh"
 #include "diffCheck/visualizer.hh"
-#include "diffCheck/registration/registration.hh"
+#include "diffCheck/registration/globalregistration.hh"
