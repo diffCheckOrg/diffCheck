@@ -11,3 +11,4 @@ const diffCheck::Log LOG = diffCheck::Log();
 #include "diffCheck/geometry/DFMesh.hh"
 #include "diffCheck/IOManager.hh"
 #include "diffCheck/visualizer.hh"
+#include "diffCheck/registration/refinedRegistration.hh"
