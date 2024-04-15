@@ -2,7 +2,7 @@
 <p align="left">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
-    <img src="https://img.shields.io/pypi/v/diffCheck">
+    <img src="https://img.shields.io/pypi/v/diffCheck" href="https://pypi.org/project/diffCheck/">
 </p>
 
 
