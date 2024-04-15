@@ -1,5 +1,6 @@
 #! python3
 # r: diffCheck==0.0.8
+# r: numpy
 
 import System
 import typing

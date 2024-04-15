@@ -85,7 +85,6 @@ def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Trans
         return
     plane_src = biggest_face.TryGetPlane()[1]
     plane_tgt = Rhino.Geometry.Plane.WorldXY
-    print("Found plane for longest edge: " + str(plane_src))
 
     # plane to plane transformation
     x_form_pln2pln = Rhino.Geometry.Transform.PlaneToPlane(plane_src, plane_tgt)
@@ -109,9 +108,10 @@ def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Trans
     x_form_transl_B = None
     x_form_rot90z = None
     if x_val_sum > y_val_sum:
-        print("Bounding box is alligned to x axis. No rotation needed.")
+        # AABB is alligned to x axis. No rotation needed
+        pass
     else:
-        print("Bounding box is not alligned to y axis. A 90 deg rotation is needed.")
+        # AABB is not alligned to y axis. A 90 deg rotation is needed.
         x_form_rot90z = Rhino.Geometry.Transform.Rotation(
             math.radians(90), rg.Vector3d.ZAxis, rg.Point3d.Origin
         )

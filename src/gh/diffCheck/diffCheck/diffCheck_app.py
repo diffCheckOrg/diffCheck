@@ -7,10 +7,14 @@ import os
 import typing
 
 import diffCheck
-import diffCheck.df_util 
-from diffCheck.df_geometries import DFVertex, DFFace, DFBeam, DFAssembly
+import diffCheck.df_geometries
 
-import diffCheck.df_joint_detector
+
+import sys
+import importlib
+for key in list(sys.modules.keys()):
+    if "diffCheck" in key:
+        importlib.reload(sys.modules[key])
 
 if __name__ == "__main__":
     """
@@ -22,12 +26,11 @@ if __name__ == "__main__":
     # beams
     beams = []
     for brep in i_breps:
-        beam = DFBeam.from_brep(brep)
-        print(beam)
+        beam = diffCheck.df_geometries.DFBeam.from_brep(brep)
         beams.append(beam)
 
     # assembly
-    assembly1 = DFAssembly(beams, i_assembly_name)
+    assembly1 = diffCheck.df_geometries.DFAssembly(beams, i_assembly_name)
 
     # dump the xml
     xml: str = assembly1.to_xml()
