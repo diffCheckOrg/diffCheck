@@ -9,7 +9,6 @@ import typing
 import diffCheck
 import diffCheck.df_geometries
 
-
 import sys
 import importlib
 for key in list(sys.modules.keys()):

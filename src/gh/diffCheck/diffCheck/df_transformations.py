@@ -3,6 +3,7 @@ import Rhino.Geometry as rg
 import scriptcontext as sc
 
 import numpy as np
+import math
 
 
 def get_inverse_transformation(
