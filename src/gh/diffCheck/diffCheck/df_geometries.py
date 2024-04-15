@@ -195,7 +195,6 @@ class DFBeam:
         for data in data_faces:
             face = DFFace.from_brep(data[0], data[1])
             faces.append(face)
-            print("TEEEEEEEEST")
         beam = cls("Beam", faces)
         return beam
 
