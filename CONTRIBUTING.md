@@ -82,6 +82,8 @@ Lastly, install the pip pacakge from the repository in editable mode. This way, 
 C:\Users\<your-username>\.rhinocode\py39-rh8\python.exe -m pip install -e "<path-to-repository-root>\src\gh\diffCheck"
 ```
 
+For your info the packages is installed in `C:\Users\andre\.rhinocode\py39-rh8\Lib\site-packages`.
+
 That's it you are now a contributor to the diffCheck! We raccomand to not download anymore from yak package but rather use the source code in the repository. If you want the latest diffCheck, checkout and pull the main.
 
 ## GHPy: B) development/debug
@@ -98,6 +100,7 @@ We reccomand to use `VSCode` as IDE for developing the components. This is becau
 3. Open the `code.py` from the `src/gh/diffCheck/components` folder you are working on in `VSCode`, and set its path to the ScriptSync ghcomponent.
 4. If you modify the code in `VSCode`, the changes will be reflected in the Grasshopper component as soon as you save in `VSCode` again the `code.py`.
 
+If you want to use the GHEditor it's ok but everytime you modify the pakcage or the component's code, after any modifications you need to restart the Python interpreter from the ScriptEditor (`Tools > Reload Python3 (CPython) Engine`) and recompute the solution in Grasshopper.
 
 ## GHPy: C) Release
 The release will be made via CI from main. As a contributor you don't need to worry about this. The plug-in is componentized, pushed to yak/PyPI and the user can download the latest version from yak.
