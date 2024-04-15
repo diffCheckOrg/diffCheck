@@ -5,12 +5,12 @@ import Rhino.Geometry as rg
 import typing
 from dataclasses import dataclass
 
-import df_util
+import diffCheck.df_util
 import diffCheck.df_transformations
-from diffCheck.df_geometries import DFFace
+
 
 @dataclass
-class JointDetector():
+class JointDetector:
     """
     This class is responsible for detecting joints in a brep
     """
@@ -25,9 +25,21 @@ class JointDetector():
         self._mix : typing.List[rg.Brep]= []
 
         # list of DFFaces from joints and sides
-        self._faces : typing.List[DFFace] = []
+        self._faces = []
 
-    def run(self) -> typing.List[DFFace]:
+    def _compute_mass_center(self, b_face: rg.BrepFace) -> rg.Point3d:
+        """
+        Compute the mass center of a brep face
+
+        :param b_face: The brep face to compute the mass center from
+        :return mass_center: The mass center of the brep face
+        """
+        amp = rg.AreaMassProperties.Compute(b_face)
+        if amp:
+            return amp.Centroid
+        return None
+
+    def run(self) :
         """
             Run the joint detector
 
@@ -73,7 +85,7 @@ class JointDetector():
                     is_cut = False
                     is_hole = True
 
-                    b_faces = df_util.explode_brep(b)
+                    b_faces = diffCheck.df_util.explode_brep(b)
                     for b_face in b_faces:
                         if b_face.Faces[0].IsPlanar():
                             b_face_edges = b_face.Edges
@@ -109,7 +121,7 @@ class JointDetector():
             # (5) check if closed, if it is 
             # ----------------------
             # (1) explode
-            faces_b = df_util.explode_brep(b)
+            faces_b = diffCheck.df_util.explode_brep(b)
 
             # (2) seperate in tow list flat surfaces (cuts + cylinder's bases) and non flat surfaces (cylinders)
             flat_faces_b = []
@@ -164,23 +176,23 @@ class JointDetector():
             idx = idx + 1
             temp_face_centroids = []
             for f in b.Faces:
-                centroid = DFFace.compute_mass_center(f)
+                centroid = self._compute_mass_center(f)
                 temp_face_centroids.append(centroid)
             cuts_faces_centroids[idx] = temp_face_centroids
 
         # compare with the brep medians faces to get the joint/sides's faces
         for f in self.brep.Faces:
-            centroid_2test = DFFace.compute_mass_center(f)
+            centroid_2test = self._compute_mass_center(f)
             for key, centroids in cuts_faces_centroids.items():
                 is_joint = False
                 for centroid in centroids:
                     if centroid_2test.DistanceTo(centroid) < sc.doc.ModelAbsoluteTolerance:
-                        self._faces.append(DFFace.from_brep(f, key))
+                        self._faces.append([f, key])
                         is_joint = True
                         break
                 if is_joint:
                     break
             if not is_joint:
-                self._faces.append(DFFace.from_brep(f, None))
+                self._faces.append([f, None])
 
         return self._faces

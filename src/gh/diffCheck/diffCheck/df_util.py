@@ -21,12 +21,14 @@ def explode_brep(brep) -> typing.List[Rhino.Geometry.Brep]:
                 exploded_objects.append(face_brep)
     return exploded_objects
 
+
 def get_crv_circle_center(crv) -> rg.Point3d:
     """ Get the center of a circle """
     bbox = crv.GetBoundingBox(True)
     bbox_b = bbox.ToBrep()
     center_point = bbox_b.GetBoundingBox(True).Center
     return center_point
+
 
 def is_pt_unique_in_dict(pt, pt_dict) -> bool:
     """
@@ -51,6 +53,7 @@ def is_pt_unique_in_dict(pt, pt_dict) -> bool:
             break
     return is_unique
 
+
 def is_pt_unique_in_list(pt, list) -> bool:
     """
         Detect if the point exists in the list, and if so, return the index
@@ -74,6 +77,7 @@ def is_pt_unique_in_list(pt, list) -> bool:
             break
     return is_unique
 
+
 def detect_idx_pt_in_list(pt, list) -> int:
     """
         Detect the index of a point in a list
@@ -96,6 +100,7 @@ def detect_idx_pt_in_list(pt, list) -> int:
         if X_a == X_b and Y_a == Y_b and Z_a == Z_b:
             return idx
     return idx
+
 
 def compute_ordered_vertices(brep_face) -> typing.List[Rhino.Geometry.Point3d]:
     """ Retrieve the ordered vertices of a brep face """
@@ -127,7 +132,7 @@ def compute_ordered_vertices(brep_face) -> typing.List[Rhino.Geometry.Point3d]:
                     edges_sorted.append(edge)
                     edges.pop(edges.index(edge))
                     break
-    
+
     for edge in edges_sorted:
         sorted_vertices.append(edge.PointAtStart)
 

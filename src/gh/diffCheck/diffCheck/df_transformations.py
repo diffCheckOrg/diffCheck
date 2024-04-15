@@ -4,19 +4,24 @@ import scriptcontext as sc
 
 import numpy as np
 
-def get_inverse_transformation(x_form : Rhino.Geometry.Transform) -> Rhino.Geometry.Transform:
+
+def get_inverse_transformation(
+    x_form: Rhino.Geometry.Transform,
+) -> Rhino.Geometry.Transform:
     """
         Get the inverse of a transformation
         
         :param x_form: the transformation to get the inverse from
         :return: the inverse transformation
     """
-    transformation_matrix = np.array([
-        [x_form.M00, x_form.M01, x_form.M02, x_form.M03],
-        [x_form.M10, x_form.M11, x_form.M12, x_form.M13],
-        [x_form.M20, x_form.M21, x_form.M22, x_form.M23],
-        [x_form.M30, x_form.M31, x_form.M32, x_form.M33]
-    ])
+    transformation_matrix = np.array(
+        [
+            [x_form.M00, x_form.M01, x_form.M02, x_form.M03],
+            [x_form.M10, x_form.M11, x_form.M12, x_form.M13],
+            [x_form.M20, x_form.M21, x_form.M22, x_form.M23],
+            [x_form.M30, x_form.M31, x_form.M32, x_form.M33],
+        ]
+    )
     inverse_transformation_matrix = np.linalg.inv(transformation_matrix)
 
     x_form_back = Rhino.Geometry.Transform()
@@ -26,13 +31,15 @@ def get_inverse_transformation(x_form : Rhino.Geometry.Transform) -> Rhino.Geome
 
     return x_form_back
 
-def pln_2_pln_world_transform(brep : Rhino.Geometry.Brep) -> Rhino.Geometry.Transform:
+
+def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Transform:
     """
         Transform a brep (beam) to the world plane
         
         :param brep: the brep to transform
         :return: the transformation
     """
+
     def _get_lowest_brep_vertex(brep) -> Rhino.Geometry.Point3d:
         """
             Get the the vertex with the lowest y,x and z values
@@ -71,7 +78,7 @@ def pln_2_pln_world_transform(brep : Rhino.Geometry.Brep) -> Rhino.Geometry.Tran
         if rg.AreaMassProperties.Compute(face).Area > biggest_face_area:
             biggest_face_area = rg.AreaMassProperties.Compute(face).Area
             biggest_face = face
-    
+
     # get the plane of the biggest face
     if biggest_face.TryGetPlane()[0] is False:
         log.error("Could not find plane for longest edge. Exiting...")
@@ -105,11 +112,15 @@ def pln_2_pln_world_transform(brep : Rhino.Geometry.Brep) -> Rhino.Geometry.Tran
         print("Bounding box is alligned to x axis. No rotation needed.")
     else:
         print("Bounding box is not alligned to y axis. A 90 deg rotation is needed.")
-        x_form_rot90z = Rhino.Geometry.Transform.Rotation(math.radians(90), rg.Vector3d.ZAxis, rg.Point3d.Origin)
+        x_form_rot90z = Rhino.Geometry.Transform.Rotation(
+            math.radians(90), rg.Vector3d.ZAxis, rg.Point3d.Origin
+        )
         brep.Transform(x_form_rot90z)
         lowest_vertex = _get_lowest_brep_vertex(brep)
 
-        x_form_transl_B = Rhino.Geometry.Transform.Translation(rg.Vector3d(-lowest_vertex))
+        x_form_transl_B = Rhino.Geometry.Transform.Translation(
+            rg.Vector3d(-lowest_vertex)
+        )
         brep.Transform(x_form_transl_B)
 
     # resume the transformations in one

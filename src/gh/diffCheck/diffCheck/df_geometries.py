@@ -18,9 +18,11 @@ class DFVertex:
     """
     This class represents a vertex, a simple container with 3 coordinates
     """
-    x : float
-    y : float
-    z : float
+
+    x: float
+    y: float
+    z: float
+
     def __post_init__(self):
         self.x = self.x or 0.0
         self.y = self.y or 0.0
@@ -61,15 +63,17 @@ class DFFace:
     """
     This class represents a face, in diffCheck, a face is a collection of vertices.
     """
+
     # just as breps a first outer loop and then inner loops of DFVertices
-    all_loops : typing.List[typing.List[DFVertex]]
-    joint_id : int
+    all_loops: typing.List[typing.List[DFVertex]]
+    joint_id: int = None
+
     def __post_init__(self):
         if len(self.all_loops[0]) < 3:
             raise ValueError("A face must have at least 3 vertices")
-        self.all_loops = self.all_loops or []
+        self.all_loops = self.all_loops
 
-        self.joint_id = self.joint_id or None
+        self.joint_id = self.joint_id
         self.__is_joint = False
         self.__id = uuid.uuid4().int
 
@@ -77,8 +81,14 @@ class DFFace:
         return f"Face id: {len(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
 
     def __hash__(self):
-        outer_loop = tuple(tuple(vertex.__dict__.values()) for vertex in self.all_loops[0])
-        inner_loops = tuple(tuple(vertex.__dict__.values()) for loop in self.all_loops[1:] for vertex in loop)
+        outer_loop = tuple(
+            tuple(vertex.__dict__.values()) for vertex in self.all_loops[0]
+        )
+        inner_loops = tuple(
+            tuple(vertex.__dict__.values())
+            for loop in self.all_loops[1:]
+            for vertex in loop
+        )
         return hash((outer_loop, inner_loops))
 
     def __eq__(self, other):
@@ -86,21 +96,8 @@ class DFFace:
             return self.all_loops == other.all_loops
         return False
 
-    @staticmethod
-    def compute_mass_center(face: rg.BrepFace) -> rg.Point3d:
-        """
-        Compute the mass center of a  face
-
-        :param face: The face to compute the mass center from
-        :return mass_center: The mass center of the face
-        """
-        amp = rg.AreaMassProperties.Compute(face)
-        if amp:
-            return amp.Centroid
-        return None
-
     @classmethod
-    def from_brep(cls, brep_face: rg.BrepFace, joint_id: int=None):
+    def from_brep(cls, brep_face: rg.BrepFace, joint_id: int = None):
         """
         Create a DFFace from a Rhino Brep face
 
@@ -135,12 +132,16 @@ class DFFace:
         brep_curves = []
 
         for loop in self.all_loops:
-            inner_vertices = [rg.Point3d(vertex.x, vertex.y, vertex.z) for vertex in loop]
+            inner_vertices = [
+                rg.Point3d(vertex.x, vertex.y, vertex.z) for vertex in loop
+            ]
             inner_polyline = rg.Polyline(inner_vertices)
             inner_curve = inner_polyline.ToNurbsCurve()
             brep_curves.append(inner_curve)
 
-        brep = rg.Brep.CreatePlanarBreps(brep_curves, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance)[0]
+        brep = rg.Brep.CreatePlanarBreps(
+            brep_curves, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance
+        )[0]
 
         return brep
 
@@ -171,8 +172,10 @@ class DFBeam:
     """
     This class represents a beam, in diffCheck, a beam is a collection of faces
     """
-    name : str
-    faces : typing.List[DFFace]
+
+    name: str
+    faces: typing.List[DFFace]
+
     def __post_init__(self):
         self.name = self.name or "Unnamed Beam"
         self.faces = self.faces or []
@@ -187,8 +190,11 @@ class DFBeam:
         Create a DFBeam from a RhinoBrep object.
         It also removes duplicates and creates a list of unique faces.
         """
-        faces = diffCheck.df_joint_detector.JointDetector(brep).run()
-        faces = list(set(faces))
+        faces : typing.List[DFFace] = []
+        data_faces = diffCheck.df_joint_detector.JointDetector(brep).run()
+        for data in data_faces:
+            face = DFFace.from_brep(data[0], data[1])
+            faces.append(face)
         beam = cls("Beam", faces)
         return beam
 
@@ -213,8 +219,10 @@ class DFAssembly:
     """
     This class represents an assembly of beams
     """
-    beams : typing.List[DFBeam]
-    name : str
+
+    beams: typing.List[DFBeam]
+    name: str
+
     def __post_init__(self):
         self.beams = self.beams
         self.name = self.name or "Unnamed Assembly"
@@ -256,7 +264,9 @@ class DFAssembly:
                 mesh = face.to_mesh()
                 mesh_vertices = mesh.Vertices
                 for idx, vertex in enumerate(mesh_vertices):
-                    facerhmesh_vertex_elem = ET.SubElement(facerhmesh_elem, "RhMeshVertex")
+                    facerhmesh_vertex_elem = ET.SubElement(
+                        facerhmesh_elem, "RhMeshVertex"
+                    )
                     facerhmesh_vertex_elem.set("x", str(vertex.X))
                     facerhmesh_vertex_elem.set("y", str(vertex.Y))
                     facerhmesh_vertex_elem.set("z", str(vertex.Z))
@@ -269,13 +279,13 @@ class DFAssembly:
                     facerhmesh_face_elem.set("v4", str(face.D))
 
         tree = ET.ElementTree(root)
-        xml_string = ET.tostring(root, encoding='unicode')
+        xml_string = ET.tostring(root, encoding="unicode")
         dom = parseString(xml_string)
         pretty_xml = dom.toprettyxml()
 
         return pretty_xml
 
-    def dump_xml(self, pretty_xml : str, dir: str):
+    def dump_xml(self, pretty_xml: str, dir: str):
         """
         Dump the pretty XML to a file
 
