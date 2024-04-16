@@ -14,10 +14,8 @@
 int main()
 {
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterTrans_1 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterTrans_2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterTrans_3 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterTrans_4 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterTrans = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrGroundTruthNoNormals = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrGroundTruth = std::make_shared<diffCheck::geometry::DFPointCloud>();
   std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
 
@@ -31,23 +29,16 @@ int main()
   // add noise to dfPointCloudPtr
   for (int i = 0; i < dfPointCloudPtr->Points.size(); i++)
   {
-    dfPointCloudPtr->Points[i] += Eigen::Vector3d::Random() * 0.01 ;
+    dfPointCloudPtr->Points[i] += Eigen::Vector3d::Random() * 0.1 ;
   }
 
-  std::vector<double> timesFGRFeatureMatching;
-  std::vector<double> timesFGRCorrespondance;
-  std::vector<double> timesRansacCorrespondance;
-  std::vector<double> timesRansacFeatureMatching;
-
-  std::vector<double> errorsFGRFeatureMatching;
-  std::vector<double> errorsFGRCorrespondance;
-  std::vector<double> errorsRansacCorrespondance;
-  std::vector<double> errorsRansacFeatureMatching;
 int iterations = 50;
 
   // populate the mesh with points and store it in dfPointCloudPtrGroundTruth
-  dfPointCloudPtrGroundTruth->Cvt2DFPointCloud(dfMeshPtr->Cvt2O3DTriangleMesh()->SamplePointsUniformly(100000));
-
+  dfPointCloudPtrGroundTruthNoNormals->Cvt2DFPointCloud(dfMeshPtr->Cvt2O3DTriangleMesh()->SamplePointsUniformly(10000));
+  std::shared_ptr<open3d::geometry::PointCloud> pcd = dfPointCloudPtrGroundTruthNoNormals->Cvt2O3DPointCloud();
+  pcd->EstimateNormals();
+  dfPointCloudPtrGroundTruth->Cvt2DFPointCloud(pcd);
   std::vector<Eigen::Matrix4d> transformations;
   for (int i = 0; i < iterations; i++)
   {
@@ -66,78 +57,41 @@ int iterations = 50;
   std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloud = dfPointCloudPtr->Cvt2O3DPointCloud();
 
   std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudAfterTrans = std::make_shared<open3d::geometry::PointCloud>(o3DPointCloud->Transform(transformations[i]));
-  dfPointCloudPtrAfterTrans_1 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  dfPointCloudPtrAfterTrans_2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  dfPointCloudPtrAfterTrans_3 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  dfPointCloudPtrAfterTrans_4 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  dfPointCloudPtrAfterTrans = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  
 
-  dfPointCloudPtrAfterTrans_1->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
-  dfPointCloudPtrAfterTrans_2->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
-  dfPointCloudPtrAfterTrans_3->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
-  dfPointCloudPtrAfterTrans_4->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
+  dfPointCloudPtrAfterTrans->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
 
+  std::vector<Eigen::Matrix<double, 4, 4>> registrationResults;
   // Testing the Fast Global Registration on Feature Matching method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_1 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  clock_t start_1 = clock();
-  auto result_1 = diffCheck::registration::GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans_1, dfPointCloudPtr);
-  double _intermediate_time_1 = (clock() - start_1) / (double) CLOCKS_PER_SEC;
-  timesFGRFeatureMatching.push_back(_intermediate_time_1);
+  auto result_1 = diffCheck::registration::GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
   Eigen::Matrix<double, 4, 4> transformation = result_1.transformation_;
-  std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudPtrAfterReg_1 = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtrAfterTrans_1->Cvt2O3DPointCloud()->Transform(transformation));
-  dfPointCloudPtrAfterReg_1->Cvt2DFPointCloud(o3DPointCloudPtrAfterReg_1);
-  std::vector<double> errors_1 =  diffCheck::registration::GlobalRegistration::ComputeP2PDistance(dfPointCloudPtrAfterReg_1, dfPointCloudPtrGroundTruth);
-  errorsFGRFeatureMatching.push_back(std::accumulate(errors_1.begin(), errors_1.end(), 0.0) / errors_1.size());
-
+  registrationResults.push_back(transformation);
+  
   // Testing the Fast Global Registration on Correspondance method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  clock_t start_2 = clock();
-  auto result_2 = diffCheck::registration::GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans_2, dfPointCloudPtr);
-  double _intermediate_time_2 = (clock() - start_2) / (double) CLOCKS_PER_SEC;
-  timesFGRCorrespondance.push_back(_intermediate_time_2);
+  auto result_2 = diffCheck::registration::GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
   Eigen::Matrix<double, 4, 4> transformation_2 = result_2.transformation_;
-  std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudPtrAfterReg_2 = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtrAfterTrans_2->Cvt2O3DPointCloud()->Transform(transformation_2));
-  dfPointCloudPtrAfterReg_2->Cvt2DFPointCloud(o3DPointCloudPtrAfterReg_2);
-  std::vector<double> errors_2 =  diffCheck::registration::GlobalRegistration::ComputeP2PDistance(dfPointCloudPtrAfterReg_2, dfPointCloudPtrGroundTruth);
-  errorsFGRCorrespondance.push_back(std::accumulate(errors_2.begin(), errors_2.end(), 0.0) / errors_2.size());
-
+  registrationResults.push_back(transformation_2);  
+  
   // Testing the Ransac registration based on correspondance method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_3 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  clock_t start_3 = clock();
-  auto result_3 = diffCheck::registration::GlobalRegistration::O3DRansacOnCorrespondence(dfPointCloudPtrAfterTrans_3, dfPointCloudPtr);
-  double _intermediate_time_3 = (clock() - start_3) / (double) CLOCKS_PER_SEC;
-  timesRansacCorrespondance.push_back(_intermediate_time_3);
+  auto result_3 = diffCheck::registration::GlobalRegistration::O3DRansacOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
   Eigen::Matrix<double, 4, 4> transformation_3 = result_3.transformation_;
-  std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudPtrAfterReg_3 = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtrAfterTrans_3->Cvt2O3DPointCloud()->Transform(transformation_3));
-  dfPointCloudPtrAfterReg_3->Cvt2DFPointCloud(o3DPointCloudPtrAfterReg_3);
-  std::vector<double> errors_3 = diffCheck::registration::GlobalRegistration::ComputeP2PDistance(dfPointCloudPtrAfterReg_3, dfPointCloudPtrGroundTruth);
-  errorsRansacCorrespondance.push_back(std::accumulate(errors_3.begin(), errors_3.end(), 0.0) / errors_3.size());
+  registrationResults.push_back(transformation_3);
 
   // Testing the Ransac registration based on Feature Matching method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_4 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  clock_t start_4 = clock();
-  auto result_4 = diffCheck::registration::GlobalRegistration::O3DRansacOnFeatureMatching(dfPointCloudPtrAfterTrans_4, dfPointCloudPtr);
-  double _intermediate_time_4 = (clock() - start_4) / (double) CLOCKS_PER_SEC;
-  timesRansacFeatureMatching.push_back(_intermediate_time_4);
+  auto result_4 = diffCheck::registration::GlobalRegistration::O3DRansacOnFeatureMatching(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
   Eigen::Matrix<double, 4, 4> transformation_4 = result_4.transformation_;
-  std::shared_ptr<open3d::geometry::PointCloud> o3DPointCloudPtrAfterReg_4 = std::make_shared<open3d::geometry::PointCloud>(dfPointCloudPtrAfterTrans_4->Cvt2O3DPointCloud()->Transform(transformation_4));
-  dfPointCloudPtrAfterReg_4->Cvt2DFPointCloud(o3DPointCloudPtrAfterReg_4);
-  std::vector<double> errors_4 = diffCheck::registration::GlobalRegistration::ComputeP2PDistance(dfPointCloudPtrAfterReg_4, dfPointCloudPtrGroundTruth);
-  errorsRansacFeatureMatching.push_back(std::accumulate(errors_4.begin(), errors_4.end(), 0.0) / errors_4.size());
+  registrationResults.push_back(transformation_4);
 
   std::cout<<"Iteration: "<<i<<" "<<std::flush;
-
-  if(i%10 == 0)
-  {
-    std::cout<<std::endl;
   
-  diffCheck::visualizer::Visualizer devisu = diffCheck::visualizer::Visualizer();
-  devisu.AddPointCloud(dfPointCloudPtrAfterReg_1);
-  devisu.AddPointCloud(dfPointCloudPtrAfterReg_2);
-  devisu.AddPointCloud(dfPointCloudPtrAfterReg_3);
-  devisu.AddPointCloud(dfPointCloudPtrAfterReg_4);
-  devisu.AddMesh(dfMeshPtr);
-  devisu.Run();
-  }
+  // compute the errors
+  std::vector<double> errors = diffCheck::registration::GlobalRegistration::EvaluateRegistrations(dfPointCloudPtrAfterTrans, dfPointCloudPtr, registrationResults);
+  std::cout<<"Errors: FGRCorrespondence "<<errors[0]<<", FGRFeatureMatching: "<<errors[1]<<", RanSaC Correspondence: "<<errors[2]<<", RanSaC FeatureMatching: "<<errors[3]<<std::endl;
   }
   /*
     // write the errors and computation times to 2 csv files with one column per method
