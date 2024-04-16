@@ -88,19 +88,31 @@ That's it you are now a contributor to the diffCheck! We raccomand to not downlo
 
 ## GHPy: B) development/debug
 
-### Code structure
+### B.1) Code structure
 For DiffCheck there are 2 main folders in the repository:
 * `src/gh/diffCheck/components` here you can add new components or modify existing ones (for more info on how to create one we point you to [this documentation](https://github.com/compas-dev/compas-actions.ghpython_components)). Here we call the 
 * `src/gh/diffCheck/diffCheck` this is our package where the core functionalities are implemented.
 
-### IDE
+### B.2) Developing component's content
+The idea is to start by developing the content of the component in the file `src/gh/diffCheck/diffCgeck_app.py`. This would be a simple script that contains the logic of the component. Once the script `diffCheck_app.py` is working correctly, you can move the code to the component file in the `src/gh/diffCheck/components` folder. This is because the component file is the one that will be componentized and distributed via yak.
+
 We reccomand to use `VSCode` as IDE for developing the components. This is because it has a good integration with the `Grasshopper` environment and it is easy to debug the components. To set up the IDE follow these steps:
 1. Install the `ScriptSync` extension for `VSCode`.
 2. Install the `ScriptSync` from the yak manager in Rhino.
-3. Open the `code.py` from the `src/gh/diffCheck/components` folder you are working on in `VSCode`, and set its path to the ScriptSync ghcomponent.
+3. Open the `diffCheckApp.py` from the `src/gh/diffCheck/components` folder you are working on in `VSCode`, and set its path to the ScriptSync ghcomponent.
 4. If you modify the code in `VSCode`, the changes will be reflected in the Grasshopper component as soon as you save in `VSCode` again the `code.py`.
+5. Once your code is working, prepare the code and componentize it.
 
 If you want to use the GHEditor it's ok but everytime you modify the pakcage or the component's code, after any modifications you need to restart the Python interpreter from the ScriptEditor (`Tools > Reload Python3 (CPython) Engine`) and recompute the solution in Grasshopper.
+
+### B.3) Componentize the code
+Prepare your component as explained here. You can componentize it locally and test it in Grasshopper. Here's how to componentize:
+```terminal
+python f:\diffCheck\src\gh\util\componentizer_cpy.py --ghio "C:\Users\andre\.nuget\packages\grasshopper\8.2.23346.13001\lib\net48\" .\src\gh\components\ .\build\gh
+```
+> Note that you need to find the path to your GHIO folder. This is the folder where the `Grasshopper.dll` is located. E.g. You can find it in the `nuget` folder in the Rhino installation directory.
+
+Once you are sure that the component is working correctly, you can push the changes to the repository.
 
 ## GHPy: C) Release
 The release will be made via CI from main. As a contributor you don't need to worry about this. The plug-in is componentized, pushed to yak/PyPI and the user can download the latest version from yak.
