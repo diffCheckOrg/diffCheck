@@ -1,6 +1,0 @@
-arguments: loguru
-Current dir: F:\diffCheck
-File verbosity level: 9
-date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
-2024-03-30 12:53:29.971 (   0.001s) [main thread     ]             loguru.cpp:841   INFO| Logging to 'diffCheckEvery.log', mode: 'w', verbosity: 9
-2024-03-30 12:53:29.971 (   0.001s) [main thread     ]             loguru.cpp:841   INFO| Logging to 'diffCheckErrors.log', mode: 'w', verbosity: -2
