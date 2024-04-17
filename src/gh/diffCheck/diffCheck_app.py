@@ -19,7 +19,7 @@ if __name__ == "__main__":
         :param i_export_dir: directory to export the xml
         :param i_dump: whether to dump the xml
     """
-    # data_faces = diffCheck.df_joint_detector.JointDetector(i_breps[0]).run()
+    # o_joints = diffCheck.df_joint_detector.JointDetector(i_breps[0]).run()
     # beams
     beams = []
     for brep in i_breps:

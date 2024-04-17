@@ -101,6 +101,8 @@ class JointDetector:
                     break
 
             if is_hole:
+                # TODO: for future development get rid of error
+                raise NotImplementedError("Hole detected, not implemented yet.")
                 self._holes.append(b)
             elif is_cut: 
                 self._cuts.append(b)
