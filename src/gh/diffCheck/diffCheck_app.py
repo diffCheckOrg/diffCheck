@@ -9,11 +9,8 @@ import typing
 import diffCheck
 import diffCheck.df_geometries
 
-import sys
-import importlib
-for key in list(sys.modules.keys()):
-    if "diffCheck" in key:
-        importlib.reload(sys.modules[key])
+print(diffCheck.__version__)
+
 
 if __name__ == "__main__":
     """
@@ -22,6 +19,7 @@ if __name__ == "__main__":
         :param i_export_dir: directory to export the xml
         :param i_dump: whether to dump the xml
     """
+    # data_faces = diffCheck.df_joint_detector.JointDetector(i_breps[0]).run()
     # beams
     beams = []
     for brep in i_breps:

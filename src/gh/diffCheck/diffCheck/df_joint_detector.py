@@ -8,6 +8,8 @@ from dataclasses import dataclass
 import diffCheck.df_util
 import diffCheck.df_transformations
 
+from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
+
 
 @dataclass
 class JointDetector:
@@ -153,10 +155,11 @@ class JointDetector:
                 if f_b is not None:
                     if f_b.IsSolid:
                         self._cuts.append(f_b)
-            for f_b in non_flat_faces_b:
-                if f_b is not None:
-                    if f_b.IsSolid:
-                        self._holes.append(f_b)
+            if non_flat_faces_b is not None and len(non_flat_faces_b) > 0:
+                for f_b in non_flat_faces_b:
+                    if f_b is not None:
+                        if f_b.IsSolid:
+                            self._holes.append(f_b)
 
         ############################################################################
         # 3. Sort faces from joints and faces from sides
@@ -194,5 +197,8 @@ class JointDetector:
                     break
             if not is_joint:
                 self._faces.append([f, None])
+
+        if self._faces is None or len(self._faces) == 0:
+            ghenv.Component.AddRuntimeMessage(RML.Error, "No faces found after joint detection.")
 
         return self._faces
