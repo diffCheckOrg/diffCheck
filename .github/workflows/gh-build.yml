@@ -1,0 +1,31 @@
+name: gh-build
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+  build_ghuser_components:
+    runs-on: windows-latest
+    name: Build components
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Install CPython and pythonnet package
+        run: |
+          choco install python --version=3.9.10
+          python -m pip install pythonnet==3.0.3
+
+      - uses: compas-dev/compas-actions.ghpython_components@v5
+        with:
+          source: src/gh/components
+          target: build
+          interpreter: cpython
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ghuser-components
+          path: build
