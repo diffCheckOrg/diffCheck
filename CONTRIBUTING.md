@@ -77,6 +77,11 @@ C:\Users\<user-name>\.rhinocode\py39-rh8\site-envs\default-wMh5LZL3
 ```
 > note that if you drop an official released diffCheck component from yak, this one will have the `#r : diffCheck==<version_number>` notation at the top of the script. Get rid of all these release components before to start and be sur to erase again the previous folders (they recreated each time `#r : diffCheck` is called).
 
+Build the package from the py source code's directory:
+```py
+python setup.py sdist bdist_wheel
+```
+
 Lastly, install the pip pacakge from the repository in editable mode. This way, all the modifications made to the source code of the repository will be reflected in the installed package. Open a terminal and run the following command (replace the path with where you download the repository):
 ```terminal
 C:\Users\<your-username>\.rhinocode\py39-rh8\python.exe -m pip install -e "<path-to-repository-root>\src\gh\diffCheck"
