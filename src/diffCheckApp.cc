@@ -65,26 +65,26 @@ int iterations = 50;
   std::vector<Eigen::Matrix<double, 4, 4>> registrationResults;
   // Testing the Fast Global Registration on Feature Matching method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_1 = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  auto result_1 = diffCheck::registration::GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
-  Eigen::Matrix<double, 4, 4> transformation = result_1.transformation_;
+  diffCheck::transformation::DFTransformation result_1 = diffCheck::registration::GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
+  Eigen::Matrix<double, 4, 4> transformation = result_1.transformationMatrix;
   registrationResults.push_back(transformation);
   
   // Testing the Fast Global Registration on Correspondance method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
   auto result_2 = diffCheck::registration::GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
-  Eigen::Matrix<double, 4, 4> transformation_2 = result_2.transformation_;
+  Eigen::Matrix<double, 4, 4> transformation_2 = result_2.transformationMatrix;
   registrationResults.push_back(transformation_2);  
   
   // Testing the Ransac registration based on correspondance method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_3 = std::make_shared<diffCheck::geometry::DFPointCloud>();
   auto result_3 = diffCheck::registration::GlobalRegistration::O3DRansacOnCorrespondence(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
-  Eigen::Matrix<double, 4, 4> transformation_3 = result_3.transformation_;
+  Eigen::Matrix<double, 4, 4> transformation_3 = result_3.transformationMatrix;
   registrationResults.push_back(transformation_3);
 
   // Testing the Ransac registration based on Feature Matching method
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrAfterReg_4 = std::make_shared<diffCheck::geometry::DFPointCloud>();
   auto result_4 = diffCheck::registration::GlobalRegistration::O3DRansacOnFeatureMatching(dfPointCloudPtrAfterTrans, dfPointCloudPtrGroundTruth);
-  Eigen::Matrix<double, 4, 4> transformation_4 = result_4.transformation_;
+  Eigen::Matrix<double, 4, 4> transformation_4 = result_4.transformationMatrix;
   registrationResults.push_back(transformation_4);
 
   std::cout<<"Iteration: "<<i<<" "<<std::flush;
@@ -93,20 +93,6 @@ int iterations = 50;
   std::vector<double> errors = diffCheck::registration::GlobalRegistration::EvaluateRegistrations(dfPointCloudPtrAfterTrans, dfPointCloudPtr, registrationResults);
   std::cout<<"Errors: FGRCorrespondence "<<errors[0]<<", FGRFeatureMatching: "<<errors[1]<<", RanSaC Correspondence: "<<errors[2]<<", RanSaC FeatureMatching: "<<errors[3]<<std::endl;
   }
-  /*
-    // write the errors and computation times to 2 csv files with one column per method
-  std::ofstream fileErrors("errors.csv");
-  std::ofstream fileTimes("times.csv");
-  fileErrors<<"FGR Feature Matching,FGR Correspondance,Ransac Correspondance,Ransac Feature Matching"<<std::endl;
-  fileTimes<<"FGR Feature Matching,FGR Correspondance,Ransac Correspondance,Ransac Feature Matching"<<std::endl;
-  for (int i = 0; i < transformations.size(); i++)
-  {
-    fileErrors<<errorsFGRFeatureMatching[i]<<","<<errorsFGRCorrespondance[i]<<","<<errorsRansacCorrespondance[i]<<","<<errorsRansacFeatureMatching[i]<<std::endl;
-    fileTimes<<timesFGRFeatureMatching[i]<<","<<timesFGRCorrespondance[i]<<","<<timesRansacCorrespondance[i]<<","<<timesRansacFeatureMatching[i]<<std::endl;
-  }
-  fileErrors.close();
-  fileTimes.close();
-  */
 
   return 0;
 }

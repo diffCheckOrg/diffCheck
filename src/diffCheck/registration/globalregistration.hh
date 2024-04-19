@@ -14,11 +14,12 @@ class GlobalRegistration
     /** 
     * @brief Compute the "point to point" distance between two point clouds. 
     * 
-    * For every point in the source point cloud it looks in the KDTree of the target point cloud and finds the closest point.
+    * For every point in the source point cloud, it looks in the KDTree of the target point cloud and finds the closest point.
     * It returns a vector of distances, one for each point in the source point cloud.
     * 
     * @param source The source diffCheck point cloud
     * @param target The target diffCheck point cloud
+    * @return std::vector<double> A vector of distances, one for each point in the source point cloud.
     * 
     * @see https://github.com/isl-org/Open3D/blob/main/cpp/open3d/geometry/PointCloud.cpp
     */
@@ -29,7 +30,8 @@ class GlobalRegistration
      * 
      * @param source The source diffCheck point cloud
      * @param target The target diffCheck point cloud
-     * @param transform The vector of transformation matrix to apply to the source point cloud.
+     * @param transform The vector of transformation matrix we want to evaluate. they are applied to the source point cloud.
+     * @return std::vector<double> A vector of mean distances, one for each transform.
     */
 
     static std::vector<double> EvaluateRegistrations(std::shared_ptr<geometry::DFPointCloud> source, 
@@ -40,7 +42,7 @@ class GlobalRegistration
     * @brief Fast Global Registration based on Feature Matching using (Fast) Point Feature Histograms (FPFH) on the source and target point clouds
     *    
     * Very simply, point features are values computed on a point cloud (for example the normal of a point, the curvature, etc.).
-    * point features historigrams generalize this concept by computing point features in a local neighborhood of a point, stored as higher-dimentional historigrams.
+    * point features historigrams generalize this concept by computing point features in a local neighborhood of a point, and are stored as higher-dimentional historigrams. Those historigrams are then used to compute a transformation between the source and target point clouds.
     * 
     * @note The FPFH hyperspace is dependent on the quality of the surface normal estimations at each point (if pc noisy, historigram different).
     * 
@@ -52,12 +54,14 @@ class GlobalRegistration
     * @param maxCorrespondenceDistance the maximum distance between correspondences. A higher value will result in more correspondences, but potentially include wrong ones.
     * @param iterationNumber the number of iterations to run the RanSaC registration algorithm. A higher value will take more time to compute but increases the chances of finding a good transformation. As parameter of the FastGlobalRegistrationOption options 
     * @param maxTupleCount the maximum number of tuples to consider in the FPFH hyperspace. A higher value will result in heavier computation but potentially more precise. As parameter of the FastGlobalRegistrationOption options 
+    * @return diffCheck::transformation::DFTransformation The result of the registration, containing the transformation matrix and the fitness score.
     * 
+    * @see https://www.open3d.org/docs/latest/cpp_api/classopen3d_1_1pipelines_1_1registration_1_1_registration_result.html#a6722256f1f3ddccb2c4ec8d724693974 for more information on the RegistrationResult object
     * @see https://link.springer.com/content/pdf/10.1007/978-3-319-46475-6_47.pdf for the original article on Fast Global Registration
     * @see https://pcl.readthedocs.io/projects/tutorials/en/latest/pfh_estimation.html#pfh-estimation for more information on PFH (from PCL, not Open3D)
     * @see https://mediatum.ub.tum.de/doc/800632/941254.pdf for in-depth documentation on the theory
     */
-    static open3d::pipelines::registration::RegistrationResult O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
+    static diffCheck::transformation::DFTransformation O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                                         std::shared_ptr<geometry::DFPointCloud> target,
                                                                                                         bool voxelize = true,
                                                                                                         double voxelSize = 0.01,
@@ -82,10 +86,11 @@ class GlobalRegistration
     * @param maxNeighborKDTreeSearch the maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures
     * @param iterationNumber the number of iterations to run the Fast Global Registration algorithm.
     * @param maxTupleCount the maximum number of tuples to consider in the FPFH hyperspace 
+    * @return diffCheck::transformation::DFTransformation The result of the registration, containing the transformation matrix and the fitness score.
     * 
     * @see https://pcl.readthedocs.io/projects/tutorials/en/latest/correspondence_grouping.html (from PCL, not Open3D)
     */ 
-    static open3d::pipelines::registration::RegistrationResult O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
+    static diffCheck::transformation::DFTransformation O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                                               std::shared_ptr<geometry::DFPointCloud> target,
                                                                                                               bool voxelize = true,
                                                                                                               double voxelSize = 0.01,
@@ -110,8 +115,9 @@ class GlobalRegistration
     * @param maxNeighborKDTreeSearch the maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures
     * @param maxCorrespondenceDistance the maximum distance between correspondences in the FPFH space. A higher value will result in more correspondences, but potentially include wrong ones.
     * @param correspondenceSetSize the number of correspondences to consider in the Ransac algorithm
+    * @return diffCheck::transformation::DFTransformation The result of the registration, containing the transformation matrix and the fitness score.
     */
-    static open3d::pipelines::registration::RegistrationResult O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
+    static diffCheck::transformation::DFTransformation O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                          std::shared_ptr<geometry::DFPointCloud> target,
                                                                                          bool voxelize = true,
                                                                                          double voxelSize = 0.01,
@@ -136,10 +142,11 @@ class GlobalRegistration
     * @param transformationEstimation the transformation estimation method to use. By default, it uses a point to point transformation estimation.
     * @param ransacN the number of points to sample in the source point cloud. A higher value can result in a more precise transformation, but will take more time to compute.
     * @param correspondenceCheckersDistance the maximum distance between correspondances in the FPFH space before testing a RanSaC model. 
+    * @return diffCheck::transformation::DFTransformation The result of the registration, containing the transformation matrix and the fitness score.
     * 
     * @see https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html#RANSAC (from PCL, not Open3D)
     */
-    static open3d::pipelines::registration::RegistrationResult O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
+    static diffCheck::transformation::DFTransformation O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                           std::shared_ptr<geometry::DFPointCloud> target,
                                                                                           bool voxelize = true,
                                                                                           double voxelSize = 0.01,
@@ -151,6 +158,6 @@ class GlobalRegistration
                                                                                           double correspondenceCheckerDistance = 0.05,
                                                                                           int ransacMaxIteration = 1000,
                                                                                           double ransacConfidenceThreshold = 0.999);
-
 };
+
 }

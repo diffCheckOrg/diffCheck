@@ -31,7 +31,7 @@ namespace diffCheck::registration
     return errors;
     };
 
-    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
+    diffCheck::transformation::DFTransformation GlobalRegistration::O3DFastGlobalRegistrationFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                                                      std::shared_ptr<geometry::DFPointCloud> target,
                                                                                                                      bool voxelise,
                                                                                                                      double voxelSize,
@@ -59,16 +59,18 @@ namespace diffCheck::registration
         option->iteration_number_ = iterationNumber;
         option->maximum_tuple_count_ = maxTupleCount;
 
-        auto result = open3d::pipelines::registration::FastGlobalRegistrationBasedOnFeatureMatching(*sourceO3D,
+        open3d::pipelines::registration::RegistrationResult result = open3d::pipelines::registration::FastGlobalRegistrationBasedOnFeatureMatching(*sourceO3D,
                                                                                                     *targetO3D,
                                                                                                     *sourceFPFHFeatures,
                                                                                                     *targetFPFHFeatures,
                                                                                                     *option);
+        diffCheck::transformation::DFTransformation transformation = diffCheck::transformation::DFTransformation();
+        transformation.transformationMatrix = result.transformation_;
 
-        return result;
+        return transformation;
     }
 
-    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
+    diffCheck::transformation::DFTransformation GlobalRegistration::O3DFastGlobalRegistrationBasedOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                                                      std::shared_ptr<geometry::DFPointCloud> target,
                                                                                                                      bool voxelise,
                                                                                                                      double voxelSize,
@@ -105,10 +107,13 @@ namespace diffCheck::registration
                                                                                                     *targetO3D,
                                                                                                     correspondanceset,
                                                                                                     *option);
-        return result;
+        diffCheck::transformation::DFTransformation transformation = diffCheck::transformation::DFTransformation();
+        transformation.transformationMatrix = result.transformation_;
+
+        return transformation;
     }
 
-    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
+    diffCheck::transformation::DFTransformation GlobalRegistration::O3DRansacOnCorrespondence(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                                                      std::shared_ptr<geometry::DFPointCloud> target,
                                                                                                                      bool voxelise,
                                                                                                                      double voxelSize,
@@ -149,10 +154,13 @@ namespace diffCheck::registration
                                                                                                     ransacN,
                                                                                                     correspondanceChecker,
                                                                                                     open3d::pipelines::registration::RANSACConvergenceCriteria(ransacMaxIteration, ransacConfidenceThreshold));
-        return result;
+        diffCheck::transformation::DFTransformation transformation = diffCheck::transformation::DFTransformation();
+        transformation.transformationMatrix = result.transformation_;
+
+        return transformation;
     }
 
-    open3d::pipelines::registration::RegistrationResult GlobalRegistration::O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
+    diffCheck::transformation::DFTransformation GlobalRegistration::O3DRansacOnFeatureMatching(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                                                                      std::shared_ptr<geometry::DFPointCloud> target,
                                                                                                                      bool voxelise,
                                                                                                                      double voxelSize,
@@ -193,6 +201,9 @@ namespace diffCheck::registration
                                                                                                     correspondanceChecker,
                                                                                                     open3d::pipelines::registration::RANSACConvergenceCriteria(ransacMaxIteration, ransacConfidenceThreshold));
 
-        return result;
+        diffCheck::transformation::DFTransformation transformation = diffCheck::transformation::DFTransformation();
+        transformation.transformationMatrix = result.transformation_;
+
+        return transformation;
     }
 }
