@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./assets/logo/logo_pixelized_bwg.png" width="150">
+    <img src="./assets/logo/logo_pixelized_bwvioelt.png" width="150">
 </p>
 <p align="center">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
