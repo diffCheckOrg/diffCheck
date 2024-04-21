@@ -1,15 +1,10 @@
 <p align="center">
-    <img src="./assets/logo/logo_400_400.png" width="150">
+    <img src="./assets/logo/logo_pixelized_596_618.png" width="150">
 </p>
 <p align="center">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
 </p>
 
-<!-- 
-# diffCheck
-<p align="left">
-    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
-</p> -->
 
 ## Roadmap
 
