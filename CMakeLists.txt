@@ -16,7 +16,6 @@ if(NOT GIT_SUBMOD_RESULT EQUAL "0")
     message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
 endif()
 
-
 #--------------------------------------------------------------------------
 # pre-compiled definitions
 #--------------------------------------------------------------------------
