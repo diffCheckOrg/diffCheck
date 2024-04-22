@@ -29,6 +29,5 @@ namespace diffCheck::transformation
          * @brief 3x1 Translation vector for point clouds
          */
         Eigen::Vector3d TranslationVector;
-
-    };  
+    };
 }

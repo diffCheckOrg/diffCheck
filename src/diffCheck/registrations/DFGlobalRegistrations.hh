@@ -77,7 +77,6 @@ namespace diffCheck::registrations
             double ransacConfidenceThreshold = 0.999);
 
     private: ///< o3d utilities to evaluate registration errors
-        
         /**
          * @brief Evaluate the registration of a source point cloud to a target point cloud by applying a transformation matrix 
          * to the source point cloud and evaluate the error between the transformed source point cloud and the target point cloud.
