@@ -54,7 +54,7 @@ git commit -m "Remove a submodule name"
 ### Naming & synthax convention
 Here's the naming convention for this project:
 - ` `: lowerCamelCase.
-- `type PrivateVariable`: public member of a class
+- `type PublicVariable`: public member of a class
 - `type m_PrivateVariable`: Hungarian notation with UpperCamelCase for private class members.
 - `static type s_StaticVariable`: Hungarian notation with UpperCamelCase for static members of class.
 - `APP_SPEC`: Constants with SNAKE_UPPER_CASE.
