@@ -1,5 +1,4 @@
 #include "diffCheck/geometry/DFMesh.hh"
-
 #include "diffCheck/IOManager.hh"
 
 
@@ -18,33 +17,6 @@ namespace diffCheck::geometry
         {
             this->Faces[i] = O3DTriangleMesh->triangles_[i];
         }
-
-        // if (O3DTriangleMesh->HasVertexNormals())
-        // {
-        //     this->NormalsVertex.resize(O3DTriangleMesh->vertex_normals_.size());
-        //     for (size_t i = 0; i < O3DTriangleMesh->vertex_normals_.size(); i++)
-        //     {
-        //         this->NormalsVertex[i] = O3DTriangleMesh->vertex_normals_[i];
-        //     }
-        // }
-
-        // if (O3DTriangleMesh->HasTriangleNormals())
-        // {
-        //     this->NormalsFace.resize(O3DTriangleMesh->triangle_normals_.size());
-        //     for (size_t i = 0; i < O3DTriangleMesh->triangle_normals_.size(); i++)
-        //     {
-        //         this->NormalsFace[i] = O3DTriangleMesh->triangle_normals_[i];
-        //     }
-        // }
-
-        // if (O3DTriangleMesh->HasVertexColors())
-        // {
-        //     this->ColorsVertex.resize(O3DTriangleMesh->vertex_colors_.size());
-        //     for (size_t i = 0; i < O3DTriangleMesh->vertex_colors_.size(); i++)
-        //     {
-        //         this->ColorsVertex[i] = O3DTriangleMesh->vertex_colors_[i];
-        //     }
-        // }
     }
 
     std::shared_ptr<open3d::geometry::TriangleMesh> DFMesh::Cvt2O3DTriangleMesh()
@@ -81,6 +53,13 @@ namespace diffCheck::geometry
             O3DTriangleMesh->vertex_colors_[i] = this->ColorsVertex[i];
         }
         return O3DTriangleMesh;
+    }
+
+    void DFMesh::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)
+    {
+        auto O3DTriangleMesh = this->Cvt2O3DTriangleMesh();
+        O3DTriangleMesh->Transform(transformation.TransformationMatrix);
+        this->Cvt2DFMesh(O3DTriangleMesh);
     }
 
     void DFMesh::LoadFromPLY(const std::string &path)
