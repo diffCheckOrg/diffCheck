@@ -69,7 +69,7 @@ namespace diffCheck::registrations
         double radiusKDTreeSearch,
         int maxNeighborKDTreeSearch,
         double maxCorrespondenceDistance,
-        open3d::pipelines::registration::TransformationEstimationPointToPoint transformationEstimation,
+        bool isTEstimatePt2Pt,
         int ransacN,
         double correspondenceCheckerDistance ,
         int ransacMaxIteration,
@@ -77,6 +77,9 @@ namespace diffCheck::registrations
     {
         std::shared_ptr<open3d::geometry::PointCloud> sourceO3D = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> targetO3D = target->Cvt2O3DPointCloud();
+
+        open3d::pipelines::registration::TransformationEstimationPointToPoint transformationEstimation = 
+            open3d::pipelines::registration::TransformationEstimationPointToPoint(isTEstimatePt2Pt);
 
         if (voxelise)
         {
