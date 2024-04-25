@@ -55,7 +55,7 @@ namespace diffCheck::registrations
         * @param radiusKDTreeSearch the radius used to search for neighbors in the KDTree. It is used for the calculation of FPFHFeatures
         * @param maxNeighborKDTreeSearch the maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures
         * @param maxCorrespondenceDistance the maximum distance between correspondences in the FPFH space. A higher value will result in more correspondences, but potentially include wrong ones.
-        * @param transformationEstimation the transformation estimation method to use. By default, it uses a point to point transformation estimation.
+        * @param isTEstimatePt2Pt the transformation estimation method to use. By default, it uses a point to point transformation estimation. If true it will scale and deform the cloud.
         * @param ransacN the number of points to sample in the source point cloud. A higher value can result in a more precise transformation, but will take more time to compute.
         * @param correspondenceCheckersDistance the maximum distance between correspondances in the FPFH space before testing a RanSaC model. 
         * @return diffCheck::transformation::DFTransformation The result of the registration, containing the transformation matrix and the fitness score.
@@ -70,8 +70,8 @@ namespace diffCheck::registrations
             double radiusKDTreeSearch = 3,
             int maxNeighborKDTreeSearch  = 50,
             double maxCorrespondenceDistance = 0.05,
-            open3d::pipelines::registration::TransformationEstimationPointToPoint transformationEstimation = open3d::pipelines::registration::TransformationEstimationPointToPoint(false),
-            int ransacN = 5,
+            bool isTEstimatePt2Pt = false,
+            int ransacN = 3,
             double correspondenceCheckerDistance = 0.05,
             int ransacMaxIteration = 1000,
             double ransacConfidenceThreshold = 0.99);
