@@ -71,10 +71,10 @@ namespace diffCheck::registrations
             int maxNeighborKDTreeSearch  = 50,
             double maxCorrespondenceDistance = 0.05,
             open3d::pipelines::registration::TransformationEstimationPointToPoint transformationEstimation = open3d::pipelines::registration::TransformationEstimationPointToPoint(false),
-            int ransacN = 3,
+            int ransacN = 5,
             double correspondenceCheckerDistance = 0.05,
             int ransacMaxIteration = 1000,
-            double ransacConfidenceThreshold = 0.999);
+            double ransacConfidenceThreshold = 0.99);
 
     private: ///< o3d utilities to evaluate registration errors
         /**
@@ -86,7 +86,6 @@ namespace diffCheck::registrations
          * @param transform The vector of transformation matrix we want to evaluate. they are applied to the source point cloud.
          * @return std::vector<double> A vector of mean distances, one for each transform.
         */
-
         static std::vector<double> EvaluateRegistrations(std::shared_ptr<geometry::DFPointCloud> source, 
                                                                     std::shared_ptr<geometry::DFPointCloud> target,
                                                                     std::vector<Eigen::Matrix<double, 4, 4>> transforms);

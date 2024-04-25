@@ -49,6 +49,9 @@ namespace diffCheck::geometry
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
         O3DPointCloud->Transform(transformation.TransformationMatrix);
+        this->Points.clear();
+        this->Colors.clear();
+        this->Normals.clear();
         this->Cvt2DFPointCloud(O3DPointCloud);
     }
 
