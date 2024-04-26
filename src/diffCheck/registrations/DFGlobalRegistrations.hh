@@ -90,9 +90,10 @@ namespace diffCheck::registrations
          * @param transform The vector of transformation matrix we want to evaluate. they are applied to the source point cloud.
          * @return std::vector<double> A vector of mean distances, one for each transform.
         */
-        static std::vector<double> EvaluateRegistrations(std::shared_ptr<geometry::DFPointCloud> source, 
-                                                                    std::shared_ptr<geometry::DFPointCloud> target,
-                                                                    std::vector<Eigen::Matrix<double, 4, 4>> transforms);
+        static std::vector<double> EvaluateRegistrations(
+            std::shared_ptr<geometry::DFPointCloud> source, 
+            std::shared_ptr<geometry::DFPointCloud> target,
+            std::vector<Eigen::Matrix<double, 4, 4>> transforms);
     };
 
 }
