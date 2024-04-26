@@ -20,8 +20,8 @@ namespace diffCheck::registrations
         * 
         * @param source the source diffCheck point cloud
         * @param target the target diffCheck point cloud
-        * @param voxelSize the size of the voxels used to downsample the point clouds. A higher value will result in a more coarse point cloud (less resulting points).
-        * @param radiusKDTreeSearch the radius used to search for neighbors in the KDTree. It is used for the calculation of FPFHFeatures. A higher value will result in heavier computation but potentially more precise.
+        * @param voxelSize the size of the voxels used to downsample the point clouds. It is expressed relative to the point cloud size (0.01 means voxelSize = 1% of maxSize(pointCloud). A higher value will result in a more coarse point cloud (less resulting points).
+        * @param radiusKDTreeSearch  the radius used to search for neighbors in the KDTree.it is expressed relative to the point cloud size (0.01 means radiusKDTreeSearch = 1% of maxSize(pointCloud). It is used for the calculation of FPFHFeatures
         * @param maxNeighborKDTreeSearch the maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures. A higher value will result in heavier computation but potentially more precise.
         * @param maxCorrespondenceDistance the maximum distance between correspondences. A higher value will result in more correspondences, but potentially include wrong ones.
         * @param iterationNumber the number of iterations to run the RanSaC registration algorithm. A higher value will take more time to compute but increases the chances of finding a good transformation. As parameter of the FastGlobalRegistrationOption options 
@@ -37,11 +37,11 @@ namespace diffCheck::registrations
             std::shared_ptr<geometry::DFPointCloud> source, 
             std::shared_ptr<geometry::DFPointCloud> target,
             bool voxelize = true,
-            double voxelSize = 0.01,
-            double radiusKDTreeSearch = 0.05,
-            int maxNeighborKDTreeSearch = 20,
-            double maxCorrespondenceDistance = 10,
-            int iterationNumber = 64,
+            double voxelSize = 0.005,
+            double radiusKDTreeSearch = 0.1,
+            int maxNeighborKDTreeSearch = 50,
+            double maxCorrespondenceDistance = 0.05,
+            int iterationNumber = 128,
             int maxTupleCount = 1000);
         /**
         * @brief Ransac registration based on Feature Matching using (Fast) Point Feature Histograms (FPFH) on the source and target point clouds
@@ -54,10 +54,10 @@ namespace diffCheck::registrations
         * @param voxelSize the size of the voxels used to downsample the point clouds. It is expressed relative to the point cloud size (0.01 means voxelSize = 1% of maxSize(pointCloud). A higher value will result in a more coarse point cloud (less resulting points).
         * @param radiusKDTreeSearch the radius used to search for neighbors in the KDTree.it is expressed relative to the point cloud size (0.01 means radiusKDTreeSearch = 1% of maxSize(pointCloud). It is used for the calculation of FPFHFeatures
         * @param maxNeighborKDTreeSearch the maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures
-        * @param maxCorrespondenceDistance the maximum distance between correspondences in the FPFH space. A higher value will result in more correspondences, but potentially include wrong ones.
+        * @param maxCorrespondenceDistance the maximum distance between correspondences in the FPFH space. A higher value will result in more correspondences, but potentially include wrong ones. It is exprimed in relative values (it is scaled by the size of the bounding box of the poinnt cloud).
         * @param isTEstimatePt2Pt the transformation estimation method to use. By default, it uses a point to point transformation estimation. If true it will scale and deform the cloud.
         * @param ransacN the number of points to sample in the source point cloud. A higher value can result in a more precise transformation, but will take more time to compute.
-        * @param correspondenceCheckersDistance the maximum distance between correspondances in the FPFH space before testing a RanSaC model.
+        * @param correspondenceCheckersDistance the maximum distance between correspondances in the FPFH space before testing a RanSaC model. It is exprimed in relative values (it is scaled by the size of the bounding box of the poinnt cloud).
         * @param similarityThreshold the threshold for the ransac check based on edge length to consider a model as inlier. A higher value will be stricter, discarding more ransac models. 
         * @param ransacMaxIteration the maximum number of iterations to run the Ransac algorithm. A higher value will take more time to compute but increases the chances of finding a good transformation.
         * @param ransacConfidenceThreshold the threshold for the convergence criteria of the ransac models. A higher value will be stricter, discarding more ransac models.
@@ -69,14 +69,14 @@ namespace diffCheck::registrations
             std::shared_ptr<geometry::DFPointCloud> source,
             std::shared_ptr<geometry::DFPointCloud> target,
             bool voxelize = true,
-            double voxelSize = 0.01,
-            double radiusKDTreeSearch = 0.05,
+            double voxelSize = 0.005,
+            double radiusKDTreeSearch = 0.1,
             int maxNeighborKDTreeSearch  = 50,
             double maxCorrespondenceDistance = 0.05,
             bool isTEstimatePt2Pt = false,
             int ransacN = 3,
             double correspondenceCheckerDistance = 0.05,
-            double similarityThreshold = 0.95,
+            double similarityThreshold = 0.9,
             int ransacMaxIteration = 100000,
             double ransacConfidenceThreshold = 0.999);
 
