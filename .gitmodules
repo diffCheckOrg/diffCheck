@@ -12,5 +12,5 @@
 	path = deps/boost
 	url = https://github.com/diffCheckOrg/submodule-boost.git
 [submodule "deps/loguru"]
-    path = deps/loguru
-    url = https://github.com/emilk/loguru.git
+	path = deps/loguru
+	url = https://github.com/emilk/loguru.git
