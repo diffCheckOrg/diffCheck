@@ -44,6 +44,13 @@ namespace diffCheck::geometry
         */
         std::vector<double> ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> target);
 
+        /**
+         * @brief Compute the bounding box of the point cloud and stores it as member of the DFPointCloud object
+         * 
+         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum point and the second one the maximum point of the bounding box.
+        */
+        std::vector<Eigen::Vector3d> ComputeBoundingBox();
+
     public:  ///< Transformers
         /**
          * @brief Apply a transformation to the point cloud
@@ -75,5 +82,7 @@ namespace diffCheck::geometry
         std::vector<Eigen::Vector3d> Colors;
         /// @brief Eigen vector of 3D normals
         std::vector<Eigen::Vector3d> Normals;
+        /// @brief Eigen vector of two 3D vectors forming the bounnding box.
+        std::vector<Eigen::Vector3d> BoundingBox;
     };
 } // namespace diffCheck::geometry

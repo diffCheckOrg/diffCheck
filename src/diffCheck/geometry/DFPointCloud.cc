@@ -45,6 +45,16 @@ namespace diffCheck::geometry
         return distances;
     }
 
+    std::vector<Eigen::Vector3d> DFPointCloud::ComputeBoundingBox()
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto boundingBox = O3DPointCloud->GetAxisAlignedBoundingBox();
+        std::vector<Eigen::Vector3d> extremePoints;
+        extremePoints.push_back(boundingBox.GetMinBound());
+        extremePoints.push_back(boundingBox.GetMaxBound());
+        this->BoundingBox = extremePoints;
+        return extremePoints;
+    }   
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
