@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.)
-project(DiffCheck VERSION 1.0.0 LANGUAGES CXX C)
+project(diffCheck VERSION 1.0.0 LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -123,3 +123,15 @@ target_include_directories(${APP_NAME_EXE}
 # enable_testing()
 
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/global_registrations)
+
+#--------------------------------------------------------------------------
+# pybind11
+#--------------------------------------------------------------------------
+set(PYBINDMODULE_NAME diffCheckBindings)
+
+download_submodule_project(pybind11)
+add_subdirectory(deps/pybind11)
+
+pybind11_add_module(${PYBINDMODULE_NAME} src/diffCheckBindings.cc)
+target_link_libraries(${PYBINDMODULE_NAME} PRIVATE ${SHARED_LIB_NAME})
+target_include_directories(${PYBINDMODULE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

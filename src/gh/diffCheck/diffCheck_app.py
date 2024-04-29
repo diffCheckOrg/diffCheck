@@ -9,6 +9,10 @@ import typing
 import diffCheck
 import diffCheck.df_geometries
 
+import sys
+sys.path.append(R"F:\diffCheck\build\Release")
+import diffCheckBindings
+
 print(diffCheck.__version__)
 
 
