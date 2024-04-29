@@ -33,6 +33,38 @@ namespace diffCheck::geometry
         return O3DPointCloud;
     }
 
+    std::vector<double> DFPointCloud::ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> target)
+    {
+        std::vector<double> errors;
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = target->Cvt2O3DPointCloud();
+        
+        std::vector<double> distances;
+
+        distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
+        return distances;
+    }
+
+    std::vector<Eigen::Vector3d> DFPointCloud::ComputeBoundingBox()
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto boundingBox = O3DPointCloud->GetAxisAlignedBoundingBox();
+        std::vector<Eigen::Vector3d> extremePoints;
+        extremePoints.push_back(boundingBox.GetMinBound());
+        extremePoints.push_back(boundingBox.GetMaxBound());
+        this->BoundingBox = extremePoints;
+        return extremePoints;
+    }   
+    void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        O3DPointCloud->Transform(transformation.TransformationMatrix);
+        this->Points.clear();
+        this->Colors.clear();
+        this->Normals.clear();
+        this->Cvt2DFPointCloud(O3DPointCloud);
+    }
+
     void DFPointCloud::LoadFromPLY(const std::string &path)
     {
         auto cloud = diffCheck::io::ReadPLYPointCloud(path);

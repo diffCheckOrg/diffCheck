@@ -3,6 +3,8 @@
 #include <Eigen/Core>
 #include <open3d/Open3D.h>
 
+#include <diffCheck/transformation/DFTransformation.hh>
+
 namespace diffCheck::geometry
 {
     class DFMesh
@@ -11,8 +13,7 @@ namespace diffCheck::geometry
         DFMesh() = default;
         ~DFMesh() = default;
 
-    ///< Convertes
-    public:
+    public:  ///< Convertes
         /**
          * @brief Convert a open3d triangle mesh to our datatype
          * 
@@ -27,8 +28,15 @@ namespace diffCheck::geometry
          */
         std::shared_ptr<open3d::geometry::TriangleMesh> Cvt2O3DTriangleMesh();
 
-    ///< I/O loader
-    public:
+    public:  ///< Transformers
+        /**
+         * @brief Apply a transformation to the mesh
+         * 
+         * @param transformation the transformation to apply
+         */
+        void ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation);
+
+    public:  ///< I/O loader
         /**
          * @brief Read a mesh from a file
          * 
@@ -36,15 +44,13 @@ namespace diffCheck::geometry
          */
         void LoadFromPLY(const std::string &path);
 
-    ///< Getters
-    public:
+    public:  ///< Getters
         /// @brief Number of vertices in the mesh
         int GetNumVertices() const { return this->Vertices.size(); }
         /// @brief Number of faces in the mesh
         int GetNumFaces() const { return this->Faces.size(); }
 
-    ///< Basic mesh data
-    public:
+    public:  ///< Basic mesh data
         /// @brief Eigen vector of 3D vertices
         std::vector<Eigen::Vector3d> Vertices;
         /// @brief Eigen vector of faces
