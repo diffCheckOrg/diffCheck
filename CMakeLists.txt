@@ -149,21 +149,22 @@ if (BUILD_PYTHON_MODULE)
     target_link_libraries(${PYBINDMODULE_NAME} PRIVATE ${SHARED_LIB_NAME})
     target_include_directories(${PYBINDMODULE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+    # copy the pyd file to the pypi directory
     add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:${PYBINDMODULE_NAME}>
         ${PYPI_DIR}
         )
 
-    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:${SHARED_LIB_NAME}>
-        ${TARGET_DLL_PYPI_DIR}
-        )
-    # TODO: for open3d-dll is working but it should be done in a more elegant way
-    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:Open3D::Open3D>
-        ${TARGET_DLL_PYPI_DIR}
-        )
+    # get all the files -dlls in the bin directory and copy them one by one to the pypi directory
+    file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
+    foreach(file ${files})
+        message(STATUS "Copying ${file} to ${TARGET_DLL_PYPI_DIR}")
+        add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${file}
+            ${TARGET_DLL_PYPI_DIR}
+            )
+    endforeach()
+
 endif()
