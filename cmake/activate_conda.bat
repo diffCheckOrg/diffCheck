@@ -37,15 +37,16 @@ call conda env list | findstr /C:"diff_check" >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo diff_check environment not found, creating it now...
 
-    call conda env create -f environment.yml
-    if %ERRORLEVEL% neq 0 (
+    conda env create -f environment.yml && (
+        echo Environment created successfully.
+    ) || (
         echo Failed to create diff_check environment, please check the environment.yml file.
         exit /b 1
     )
 ) else (
     echo diff_check environment is available, updating it now...
 
-    call conda env update --name diff_check --file environment.yml --prune
+    conda env update --name diff_check --file environment.yml --prune
     if %ERRORLEVEL% neq 0 (
         echo Failed to update diff_check environment, please check the environment.yml file.
         exit /b 1
