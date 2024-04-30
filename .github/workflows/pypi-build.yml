@@ -35,12 +35,12 @@ jobs:
 
       - name: Build wheel
         run: |
-          cd src/gh/diffCheck/
+          cd ${{github.workspace}}/src/gh/diffCheck/
           python setup.py bdist_wheel
-          cd ../../..
+          cd ${{github.workspace}}
 
       - name: Upload wheel
         uses: actions/upload-artifact@v2
         with:
           name: wheel
-          path: src/gh/diffCheck/dist/
+          path: ${{github.workspace}}/src/gh/diffCheck/dist/

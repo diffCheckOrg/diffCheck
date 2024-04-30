@@ -2,7 +2,7 @@
     <img src="./assets/logo/logo_pixelized_bwvioelt.png" width="150">
 </p>
 <p align="center">
-    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/cpp-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/pypi-build.yml/badge.svg">
     <img src="https://img.shields.io/pypi/v/diffCheck" href="https://pypi.org/project/diffCheck/">
