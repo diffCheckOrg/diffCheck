@@ -29,10 +29,6 @@ jobs:
       - name: CMake Build
         run: ${{github.workspace}}/cmake/build.bat
 
-      - name: Install CPython
-        run: |
-          choco install python --version=3.9.10
-
       - name: Build wheel
         run: |
           cd ${{github.workspace}}/src/gh/diffCheck/
