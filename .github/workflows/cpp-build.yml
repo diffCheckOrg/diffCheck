@@ -18,16 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Setup conda environment
-      #   uses: conda-incubator/setup-miniconda@v2
-      #   with:
-      #     auto-update-conda: true
-      #     python-version: 3.9.1
-
       - name: Cmake Configure
         run: |
-          cd ${{github.workspace}}/src/diffCheck
-          mkdir build
           cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=OFF
 
       - name: CMake Build
