@@ -5,9 +5,10 @@ diffCheck/df_geometries.py
 diffCheck/df_joint_detector.py
 diffCheck/df_transformations.py
 diffCheck/df_util.py
-diffCheck/diffCheck_app.py
-diffCheck/test.py
+diffCheck/diffCheckBindings.cp39-win_amd64.pyd
+diffCheck/newmodule.py
 diffCheck.egg-info/PKG-INFO
 diffCheck.egg-info/SOURCES.txt
 diffCheck.egg-info/dependency_links.txt
+diffCheck.egg-info/requires.txt
 diffCheck.egg-info/top_level.txt

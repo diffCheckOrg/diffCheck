@@ -9,9 +9,27 @@ import typing
 import diffCheck
 import diffCheck.df_geometries
 
+# import diffCheck.diffCheckBindings
+
 import sys
-sys.path.append(R"F:\diffCheck\build\Release")
-import diffCheckBindings
+import platform
+print(sys.version)
+print(platform.architecture())
+
+# import sys
+# sys.path.append(R"F:\diffCheck\build\Release")
+# os.add_dll_directory(R"F:\diffCheck\build\Release")
+from diffCheck import diffCheckBindings
+
+print(f"is pyd working: {diffCheckBindings.test()}")
+
+
+df_cloud = diffCheckBindings.DFPointCloud(
+    [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]],
+    [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]],
+    [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]]
+)
+print(df_cloud.get_num_points())
 
 print(diffCheck.__version__)
 

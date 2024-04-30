@@ -1,18 +1,19 @@
 Metadata-Version: 2.1
 Name: diffCheck
-Version: 0.0.3
+Version: 0.0.17
 Summary: DiffCheck is a package to check the differences between two timber structures
 Home-page: https://github.com/diffCheckOrg/diffCheck
 Author: Andrea Settimi, Damien Gilliard, Eleni Skevaki, Marirena Kladeftira, Julien Gamerro, Stefana Parascho, and Yves Weinand
 Author-email: andrea.settimi@epfl.ch
-License: UNKNOWN
-Description: # DiffCheck Grasshopper Plugin
-        
-        DiffCheck is a plugin for Rhino/Grasshopper that allows the user to compare a 3D model with its scan. 
-        
-        More information to come
-Platform: UNKNOWN
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.9
 Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: pybind11>=2.5.0
+
+# DiffCheck Grasshopper Plugin
+
+DiffCheck is a plugin for Rhino/Grasshopper that allows the user to compare a 3D model with its scan. 
+
+More information to come

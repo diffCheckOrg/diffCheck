@@ -7,9 +7,12 @@
 
 namespace py = pybind11;
 
+bool test() { return true; }
 
 PYBIND11_MODULE(diffCheckBindings, m) {
     m.doc() = "diffCheck python bindings"; // optional module docstring
+
+    m.def("test", &test, "A function that returns true for testing import");
 
     py::class_<diffCheck::geometry::DFPointCloud>(m, "DFPointCloud")
         .def(py::init<>())
@@ -21,14 +24,3 @@ PYBIND11_MODULE(diffCheckBindings, m) {
 
         .def("get_num_points", &diffCheck::geometry::DFPointCloud::GetNumPoints);
 }
-
-
-// #include <pybind11/pybind11.h>
-
-// int add(int i, int j) {
-//     return i + j;
-// }
-
-// PYBIND11_MODULE(diffCheckBindings, m) {
-//     m.def("add", &add, "A function which adds two numbers");
-// }

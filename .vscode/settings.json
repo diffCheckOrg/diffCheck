@@ -97,6 +97,13 @@
         "*.inc": "cpp",
         "coroutine": "cpp",
         "resumable": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "cinttypes": "cpp",
+        "codecvt": "cpp",
+        "csetjmp": "cpp",
+        "cwctype": "cpp",
+        "memory_resource": "cpp",
+        "scoped_allocator": "cpp",
+        "strstream": "cpp"
     }
 }
