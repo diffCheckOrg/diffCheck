@@ -4,3 +4,6 @@
 option(STATIC_WINDOWS_RUNTIME "Use static (MT/MTd) Windows runtime" ON)
 
 option(SILENT_LOGGING "Do not log messages in the terminal if on." OFF)
+
+# To build the python bindings
+option(BUILD_PYTHON_MODULE "Build the python bindings" ON)

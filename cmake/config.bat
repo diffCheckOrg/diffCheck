@@ -5,4 +5,4 @@ REM activate the conda diff_check environment otherwise the python wrap won't wo
 call cmake/activate_conda.bat
 
 REM configure the project
-cmake -S . -B build
+cmake -S . -B build -A x64

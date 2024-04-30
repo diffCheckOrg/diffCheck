@@ -127,41 +127,43 @@ target_include_directories(${APP_NAME_EXE}
 #--------------------------------------------------------------------------
 # pybind11
 #--------------------------------------------------------------------------
-set(PYBINDMODULE_NAME diffCheckBindings)
-set(PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck)
-set(TARGET_DLL_PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck/dlls)
+if (BUILD_PYTHON_MODULE)
+    set(PYBINDMODULE_NAME diffCheckBindings)
+    set(PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck)
+    set(TARGET_DLL_PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck/dlls)
 
-download_submodule_project(pybind11)
-add_subdirectory(deps/pybind11)
+    download_submodule_project(pybind11)
+    add_subdirectory(deps/pybind11)
 
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+    find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
-message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
-message(STATUS "Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
-message(STATUS "Python3_LIBRARIES: ${Python3_LIBRARIES}")
-message(STATUS "Python3_VERSION: ${Python3_VERSION}")
+    message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
+    message(STATUS "Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
+    message(STATUS "Python3_LIBRARIES: ${Python3_LIBRARIES}")
+    message(STATUS "Python3_VERSION: ${Python3_VERSION}")
 
-set(PYBIND11_PYTHON_VERSION 3.9.10)
+    set(PYBIND11_PYTHON_VERSION 3.9.10)
 
-pybind11_add_module(${PYBINDMODULE_NAME} src/diffCheckBindings.cc)
+    pybind11_add_module(${PYBINDMODULE_NAME} src/diffCheckBindings.cc)
 
-target_link_libraries(${PYBINDMODULE_NAME} PRIVATE ${SHARED_LIB_NAME})
-target_include_directories(${PYBINDMODULE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+    target_link_libraries(${PYBINDMODULE_NAME} PRIVATE ${SHARED_LIB_NAME})
+    target_include_directories(${PYBINDMODULE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:${PYBINDMODULE_NAME}>
-    ${PYPI_DIR}
-    )
+    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:${PYBINDMODULE_NAME}>
+        ${PYPI_DIR}
+        )
 
-add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:${SHARED_LIB_NAME}>
-    ${TARGET_DLL_PYPI_DIR}
-    )
-# TODO: for open3d-dll is working but it should be done in a more elegant way
-add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:Open3D::Open3D>
-    ${TARGET_DLL_PYPI_DIR}
-    )
+    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:${SHARED_LIB_NAME}>
+        ${TARGET_DLL_PYPI_DIR}
+        )
+    # TODO: for open3d-dll is working but it should be done in a more elegant way
+    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:Open3D::Open3D>
+        ${TARGET_DLL_PYPI_DIR}
+        )
+endif()
