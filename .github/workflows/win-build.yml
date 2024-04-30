@@ -24,7 +24,7 @@ jobs:
           auto-update-conda: true
           python-version: 3.9.1
 
-      - name: CMAKE Configure
+      - name: Cmake Configure
         run: ${{github.workspace}}/cmake/config.bat
       - name: CMake Build
         run: ${{github.workspace}}/cmake/build.bat
