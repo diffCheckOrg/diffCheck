@@ -1,15 +1,27 @@
 # tasks.py
 from invoke import task
 
-@task
-def ghcomponentize(c):
-    path_ghcomponentizer = "./invokes/ghcomponentize/ghcomponentizer.py"
-    c.run(f"python {path_ghcomponentizer} --ghio ./invokes/ghcomponentize/ghio ./py/components ./build/gh")
+PATH_MANIFEST = "./manifest.yml"
+PATH_SETUP = "./src/gh/diffCheck/setup.py"
+PATH_INIT = "./src/gh/diffCheck/diffCheck/__init__.py"
+PATH_CMAKE = "./CMakeLists.txt"
+
 
 @task
 def versionize(c):
     path_versionize = "./invokes/versionize.py"
-    c.run(f"python {path_versionize} --from-manifest")
+    c.run(f"python {path_versionize} \
+        --from-manifest \
+        --path-manifest {PATH_MANIFEST} \
+        --path-setup {PATH_SETUP} \
+        --path-init {PATH_INIT} \
+        --path-cmake {PATH_CMAKE} \
+    ")
+
+@task
+def ghcomponentize(c):
+    path_ghcomponentizer = "./invokes/ghcomponentize/ghcomponentizer.py"
+    c.run(f"python {path_ghcomponentizer} --ghio ./invokes/ghcomponentize/ghio ./py/components ./build/gh")
 
 @task
 def flagerize(c, package_name="ACPy"):

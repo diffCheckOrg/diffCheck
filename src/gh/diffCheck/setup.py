@@ -8,7 +8,7 @@ import setuptools
 
 setup(
     name="diffCheck",
-    version="0.0.17",
+    version="0.0.23",
     packages=find_packages(),
     install_requires=[
         "numpy",

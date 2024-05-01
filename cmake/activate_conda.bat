@@ -32,14 +32,6 @@ exit /b 1
 :end
 echo Anaconda3 found.
 
-:: check if a different environment then diff_check is activated, if so deactivate it
-for /f "delims=" %%i in ('conda env list ^| findstr /C:"*"') do set "active_env=%%i"
-for /f "delims= " %%j in ("%active_env%") do set "active_env_name=%%j"
-if not "%active_env_name%"=="diff_check" (
-    echo You should deactivating %active_env_name% firs
-    echo Call "conda deactivate"
-)
-
 :: Check if the diff_check environment is available
 call conda env list | findstr /C:"diff_check" >nul 2>nul
 if %ERRORLEVEL% neq 0 (
@@ -56,5 +48,13 @@ if %ERRORLEVEL% neq 0 (
     )
 )
 echo diff_check environment is up to date.
+
+:: check if a different environment then diff_check is activated, if so deactivate it
+for /f "delims=" %%i in ('conda env list ^| findstr /C:"*"') do set "active_env=%%i"
+for /f "delims= " %%j in ("%active_env%") do set "active_env_name=%%j"
+if not "%active_env_name%"=="diff_check" (
+    echo You should deactivating %active_env_name% first with "conda deactivate" and "conda activate diff_check" before running this script.
+    exit /b 1
+)
 
 echo you can start the cmake config now ...

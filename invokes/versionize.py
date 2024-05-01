@@ -13,6 +13,7 @@ def main(
     path_manifest: str,
     path_setup: str,
     path_init: str,
+    path_cmake: str,
     is_from_manifest: bool,
     *args, **kwargs
 ) -> bool:
@@ -77,6 +78,15 @@ def main(
     with open(path_init, "w") as f:
         f.write(init)
 
+    # modify the CMake file
+    cmake_crt_version = None
+    # search the first "project" line
+    with open(path_cmake, "r") as f:
+        cmake = f.read()
+    cmake = re.sub(r"(project\(diffCheck VERSION )(\d+\.\d+\.\d+)", r"\g<1>" + version, cmake)
+    with open(path_cmake, "w") as f:
+        f.write(cmake)
+
     return True
 
 if __name__ == "__main__":
@@ -98,23 +108,30 @@ if __name__ == "__main__":
     parser.add_argument(
         "--path-manifest",
         type=str,
-        required=False,
+        required=True,
         default="./manifest.yml",
         help="The path to the manifest file."
     )
     parser.add_argument(
         "--path-setup",
         type=str,
-        required=False,
-        default="./py/pypi/setup.py",
+        required=True,
+        default="./src/gh/diffCheck/setup.py",
         help="The path to the setup file."
     )
     parser.add_argument(
         "--path-init",
         type=str,
-        required=False,
-        default="./py/pypi/ACPy/__init__.py",
+        required=True,
+        default="./src/gh/diffCheck/diffCheck/__init__.py",
         help="The path to the __init__ file."
+    )
+    parser.add_argument(
+        "--path-cmake",
+        type=str,
+        required=True,
+        default="./CMakeLists.txt",
+        help="The path to the CMake file."
     )
 
     args = parser.parse_args()
@@ -154,23 +171,17 @@ if __name__ == "__main__":
         is_init_ok = False
         parse_errors.append(f"Path to __init__ file is invalid: {args.path_init}")
 
+    is_cmake_ok = True
+    if not os.path.isfile(args.path_cmake):
+        is_cmake_ok = False
+        parse_errors.append(f"Path to CMake file is invalid: {args.path_cmake}")
+
     print("Versionizer checks:")
-    if is_version_ok:
-        print("\t[x] Correct version format")
-    else:
-        print(f"\t[ ] Correct version format")
-    if is_manifest_ok:
-        print("\t[x] Manifest file path is valid")
-    else:
-        print(f"\t[ ] Manifest file path is valid")
-    if is_setup_ok:
-        print("\t[x] Setup file path is valid")
-    else:
-        print(f"\t[ ] Setup file path is valid")
-    if is_init_ok:
-        print("\t[x] __init__ file path is valid")
-    else:
-        print(f"\t[ ] __init__ file path is valid")
+    print(f"\t[{'x' if is_version_ok else ' '}] Correct version format: {args.version}")
+    print(f"\t[{'x' if is_manifest_ok else ' '}] Manifest file exists: {args.path_manifest}")
+    print(f"\t[{'x' if is_setup_ok else ' '}] Setup file exists: {args.path_setup}")
+    print(f"\t[{'x' if is_init_ok else ' '}] __init__ file exists: {args.path_init}")
+    print(f"\t[{'x' if is_cmake_ok else ' '}] CMake file exists: {args.path_cmake}")
     if parse_errors.__len__() != 0:
         print("[ERRORS]:")
         for error in parse_errors:
@@ -183,6 +194,7 @@ if __name__ == "__main__":
         path_manifest=args.path_manifest,
         path_setup=args.path_setup,
         path_init=args.path_init,
+        path_cmake=args.path_cmake,
         is_from_manifest=args.from_manifest
     )
 
