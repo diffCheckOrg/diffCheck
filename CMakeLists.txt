@@ -80,7 +80,7 @@ if(WIN32)
     if(open3d_type STREQUAL "SHARED_LIBRARY")
         message(STATUS "Copying Open3D.dll to ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
         add_custom_command(TARGET ${SHARED_LIB_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:Open3D::Open3D>
             $<TARGET_FILE_DIR:${SHARED_LIB_NAME}>)
     endif()
@@ -151,7 +151,7 @@ if (BUILD_PYTHON_MODULE)
 
     # copy the pyd file to the pypi directory
     add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        COMMAND ${CMAKE_COMMAND} -E copy
         $<TARGET_FILE:${PYBINDMODULE_NAME}>
         ${PYPI_DIR}
         )
@@ -161,7 +161,7 @@ if (BUILD_PYTHON_MODULE)
     foreach(file ${files})
         message(STATUS "Copying ${file} to ${TARGET_DLL_PYPI_DIR}")
         add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            COMMAND ${CMAKE_COMMAND} -E copy
             ${file}
             ${TARGET_DLL_PYPI_DIR}
             )
