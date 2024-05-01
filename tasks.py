@@ -33,13 +33,16 @@ def pypireize(c):
     path_pypireize = "./invokes/pypireize.py"
     c.run(f"python {path_pypireize} --setup-path {PATH_SETUP}")
 
-
-
-
 @task
-def flagerize(c, package_name="ACPy"):
+def flagerize(c, package_name="diffCheck"):
     path_flagerize = "./invokes/flagerize.py"
-    c.run(f"python {path_flagerize} --package {package_name} --from-manifest")
+    c.run(f"python {path_flagerize} \
+        --package {package_name} \
+        --source {DIR_IN_GHUSER_COMPONENTS} \
+        --from-manifest \
+        --path-manifest {PATH_MANIFEST}")
+
+
 
 
 @task

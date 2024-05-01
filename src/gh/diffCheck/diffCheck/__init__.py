@@ -1,7 +1,7 @@
 import os
 import sys
 
-__version__ = "0.0.23"
+__version__ = "0.0.24"
 
 PATH_TO_DLL = "dlls"
 extra_dll_dir = os.path.join(os.path.dirname(__file__), PATH_TO_DLL)

@@ -7,27 +7,30 @@ import re
 
 import typing
 
+
 def main(
     package: str,
     from_manifest: bool,
     path_manifest: str,
-    *args, **kwargs
+    source: str,
+    version: str
 ) -> bool:
     # for all the files that are called code.py in the components folder
     # stamp on the second line of the file by not overwriting the first line
-    for root, dirs, files in os.walk("./py/components/"):
+    for root, dirs, files in os.walk(source):
         for file in files:
             if file == "code.py":
                 path = os.path.join(root, file)
                 with open(path, "r") as f:
                     lines = f.readlines()
-                # check if the line # r: package_name is already in the first 10 lines
+                # check if the line # r: package_name is already in the first 10 lines, erase it
                 if any([re.search(r"# r: .+==", line) for line in lines[:10]]):
                     print(f"File {path} is already stamped with the package version.")
-                    return False
+                    lines = [line for line in lines if not re.search(r"# r: .+==", line)]
+
                 with open(path, "w") as f:
                     f.write(lines[0])
-                    f.write(f"# r: {package}=={kwargs['version']}\n")
+                    f.write(f"# r: {package}=={version}\n")
                     for line in lines[1:]:
                         f.write(line)
     print("Done stamping components with version number of the pypi package.")
@@ -46,7 +49,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--source",
         type=str,
-        required=False,
+        required=True,
         default="./py/components/",
         help="The path to component folders."
     )
@@ -59,7 +62,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--path-manifest",
         type=str,
-        required=False,
+        required=True,
         default="./manifest.yml",
         help="The path to the manifest file."
     )
@@ -137,6 +140,7 @@ if __name__ == "__main__":
         package=args.package,
         from_manifest=args.from_manifest,
         path_manifest=args.path_manifest,
+        source=args.source,
         version=_version
     )
 
