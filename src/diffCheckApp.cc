@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include <Eigen/Core>
-
+#include <Open3D/Open3D.h>
 
 int main()
 {
@@ -28,9 +28,20 @@ int main()
 
   DIFFCHECK_INFO("Starting diffCheckApp...");
 
-  // std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
-  // std::string pathMesh = R"("C:\Users\andre\Downloads\01_mesh.ply")";
-  // dfMeshPtr->LoadFromPLY(pathMesh);
+  // create a sphere from o3d
+  auto mesh = open3d::geometry::TriangleMesh::CreateSphere(1.0, 4);
+  std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
+  dfMeshPtr->Cvt2DFMesh(mesh);
+
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  dfPointCloudPtr = dfMeshPtr->SamplePointsUniformly(1000);
+
+  // visualize cloud
+  std::shared_ptr<diffCheck::visualizer::Visualizer> visualizer = std::make_shared<diffCheck::visualizer::Visualizer>();
+  visualizer->AddPointCloud(dfPointCloudPtr);
+  visualizer->Run();
+
+
 
 
 

@@ -25,7 +25,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
 
     py::module_ submodule_geometry = m.def_submodule("dfb_geometry", "A submodule for the geometry classes.");
 
-    py::class_<diffCheck::geometry::DFPointCloud>(submodule_geometry, "DFPointCloud")
+    py::class_<diffCheck::geometry::DFPointCloud, std::shared_ptr<diffCheck::geometry::DFPointCloud>>(submodule_geometry, "DFPointCloud")
         .def(py::init<>())
         .def(py::init<std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>>())
         
@@ -48,11 +48,13 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             [](const diffCheck::geometry::DFPointCloud &self) { return self.Normals; },
             [](diffCheck::geometry::DFPointCloud &self, const std::vector<Eigen::Vector3d>& value) { self.Normals = value; });
 
-    py::class_<diffCheck::geometry::DFMesh>(submodule_geometry, "DFMesh")
+    py::class_<diffCheck::geometry::DFMesh, std::shared_ptr<diffCheck::geometry::DFMesh>>(submodule_geometry, "DFMesh")
         .def(py::init<>())
         .def(py::init<std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3i>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>>())
 
         .def("load_from_PLY", &diffCheck::geometry::DFMesh::LoadFromPLY)
+
+        // .def("sample_points_uniformly", &diffCheck::geometry::DFMesh::SamplePointsUniformly)
 
         .def("get_num_vertices", &diffCheck::geometry::DFMesh::GetNumVertices)
         .def("get_num_faces", &diffCheck::geometry::DFMesh::GetNumFaces)

@@ -3,6 +3,7 @@
 #include <Eigen/Core>
 #include <open3d/Open3D.h>
 
+#include <diffCheck/geometry/DFPointCloud.hh>
 #include <diffCheck/transformation/DFTransformation.hh>
 
 namespace diffCheck::geometry
@@ -43,6 +44,15 @@ namespace diffCheck::geometry
          * @return std::shared_ptr<open3d::geometry::TriangleMesh> the open3d triangle mesh
          */
         std::shared_ptr<open3d::geometry::TriangleMesh> Cvt2O3DTriangleMesh();
+
+    public:  ///< Mesh methods
+        /**
+         * @brief Sample the mesh uniformly with a target number of points
+         * 
+         * @param numPoints the number of points to sample
+         * @return std::shared_ptr<geometry::DFPointCloud> the sampled point cloud
+         */
+        std::shared_ptr<diffCheck::geometry::DFPointCloud> SamplePointsUniformly(int numPoints = 1000);
 
     public:  ///< Transformers
         /**

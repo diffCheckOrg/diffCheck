@@ -1,0 +1,52 @@
+{
+    "name": "DFLoadCloudFromFile",
+    "nickname": "CloudFFile",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Import a point cloud from a file.",
+    "exposure": 4,
+    "instanceGuid": "8652a7c1-b25e-4ad4-9565-4ed0c275647f",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_path",
+                "nickname": "i_path",
+                "description": "Path of the file (e.g. .ply) to import",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_scalef",
+                "nickname": "i_scalef",
+                "description": "Scaling factor to adapt the unit of the imported file to the rhino document.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_rh_cloud",
+                "nickname": "o_rh_cloud",
+                "description": "The imported cloud in rhino format.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
