@@ -28,16 +28,19 @@ def ghcomponentize(c):
         {DIR_IN_GHUSER_COMPONENTS} \
         {DIR_OUT_GHUER_COMPONENTS}")
 
+@task
+def pypireize(c):
+    path_pypireize = "./invokes/pypireize.py"
+    c.run(f"python {path_pypireize} --setup-path {PATH_SETUP}")
+
+
+
 
 @task
 def flagerize(c, package_name="ACPy"):
     path_flagerize = "./invokes/flagerize.py"
     c.run(f"python {path_flagerize} --package {package_name} --from-manifest")
 
-@task
-def pypireize(c):
-    path_pypireize = "./invokes/pypireize.py"
-    c.run(f"python {path_pypireize} --setup-path ./py/pypi/setup.py")
 
 @task
 def yakerize(c):
