@@ -24,8 +24,15 @@ jobs:
           auto-update-conda: true
           python-version: 3.9.1
 
+      - name: Create diff_check conda environment
+        run: conda env create -f environment.yml
+      
+      - name: Activate diff_check conda environment
+        run: conda activate diff_check
+
       - name: Cmake Configure
-        run: ${{github.workspace}}/cmake/config.bat
+        run: |
+          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON
       - name: CMake Build
         run: ${{github.workspace}}/cmake/build.bat
 

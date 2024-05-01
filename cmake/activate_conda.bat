@@ -1,13 +1,13 @@
 @echo off
 setlocal
 
-REM ########################################################################
-REM check if conda is available > 
-REM check that diff_check environment is available > 
-REM activate it
-REM ########################################################################
+:: ########################################################################
+:: check if conda is available > 
+:: check that diff_check environment is available > 
+:: activate it
+:: ########################################################################
 
-REM Check if conda command is available
+:: Check if conda command is available
 echo Checking if conda command is available...
 where conda >nul 2>nul
 if %ERRORLEVEL% equ 0 (
@@ -32,28 +32,29 @@ exit /b 1
 :end
 echo Anaconda3 found.
 
-REM Check if the diff_check environment is available
+:: check if a different environment then diff_check is activated, if so deactivate it
+for /f "delims=" %%i in ('conda env list ^| findstr /C:"*"') do set "active_env=%%i"
+for /f "delims= " %%j in ("%active_env%") do set "active_env_name=%%j"
+if not "%active_env_name%"=="diff_check" (
+    echo You should deactivating %active_env_name% firs
+    echo Call "conda deactivate"
+)
+
+:: Check if the diff_check environment is available
 call conda env list | findstr /C:"diff_check" >nul 2>nul
 if %ERRORLEVEL% neq 0 (
-    echo diff_check environment not found, creating it now...
-
-    conda env create -f environment.yml && (
-        echo Environment created successfully.
-    ) || (
-        echo Failed to create diff_check environment, please check the environment.yml file.
-        exit /b 1
-    )
+    echo diff_check environment not found, you should create one by running:
+    echo $ conda env create -f environment.yml
+    exit /b 1
 ) else (
     echo diff_check environment is available, updating it now...
-
-    conda env update --name diff_check --file environment.yml --prune
-    if %ERRORLEVEL% neq 0 (
+    conda env update --name diff_check --file environment.yml --prune && (
+        echo Environment created successfully.
+    ) || (
         echo Failed to update diff_check environment, please check the environment.yml file.
         exit /b 1
     )
 )
 echo diff_check environment is up to date.
 
-REM activate the diff_check environment
-call conda activate diff_check
-echo diff_check environment activated.
+echo you can start the cmake config now ...
