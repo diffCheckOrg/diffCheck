@@ -5,6 +5,8 @@ PATH_MANIFEST = "./manifest.yml"
 PATH_SETUP = "./src/gh/diffCheck/setup.py"
 PATH_INIT = "./src/gh/diffCheck/diffCheck/__init__.py"
 PATH_CMAKE = "./CMakeLists.txt"
+DIR_IN_GHUSER_COMPONENTS = "./src/gh/components"
+DIR_OUT_GHUER_COMPONENTS = "./build/gh"
 
 
 @task
@@ -21,7 +23,11 @@ def versionize(c):
 @task
 def ghcomponentize(c):
     path_ghcomponentizer = "./invokes/ghcomponentize/ghcomponentizer.py"
-    c.run(f"python {path_ghcomponentizer} --ghio ./invokes/ghcomponentize/ghio ./py/components ./build/gh")
+    c.run(f"python {path_ghcomponentizer} \
+        --ghio ./invokes/ghcomponentize/ghio \
+        {DIR_IN_GHUSER_COMPONENTS} \
+        {DIR_OUT_GHUER_COMPONENTS}")
+
 
 @task
 def flagerize(c, package_name="ACPy"):
