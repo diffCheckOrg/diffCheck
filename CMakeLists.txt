@@ -128,7 +128,7 @@ target_include_directories(${APP_NAME_EXE}
 # pybind11
 #--------------------------------------------------------------------------
 if (BUILD_PYTHON_MODULE)
-    set(PYBINDMODULE_NAME diffCheckBindings)
+    set(PYBINDMODULE_NAME diffcheck_bindings)
     set(PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck)
     set(TARGET_DLL_PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck/dlls)
 

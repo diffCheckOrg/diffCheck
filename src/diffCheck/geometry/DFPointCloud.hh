@@ -11,11 +11,12 @@ namespace diffCheck::geometry
     class DFPointCloud
     {
     public:
-        DFPointCloud() = default;
+        DFPointCloud() {}
         DFPointCloud(std::vector<Eigen::Vector3d> points,
                      std::vector<Eigen::Vector3d> colors,
                      std::vector<Eigen::Vector3d> normals)
-            : Points(points), Colors(colors), Normals(normals) {}
+            : Points(points), Colors(colors), Normals(normals) 
+        {}
         
         ~DFPointCloud() = default;
 
@@ -52,7 +53,8 @@ namespace diffCheck::geometry
         /**
          * @brief Compute the bounding box of the point cloud and stores it as member of the DFPointCloud object
          * 
-         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum point and the second one the maximum point of the bounding box.
+         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum
+         *  point and the second one the maximum point of the bounding box.
         */
         std::vector<Eigen::Vector3d> ComputeBoundingBox();
 
@@ -87,7 +89,5 @@ namespace diffCheck::geometry
         std::vector<Eigen::Vector3d> Colors;
         /// @brief Eigen vector of 3D normals
         std::vector<Eigen::Vector3d> Normals;
-        /// @brief Eigen vector of two 3D vectors forming the bounding box.
-        std::vector<Eigen::Vector3d> BoundingBox;
     };
 } // namespace diffCheck::geometry

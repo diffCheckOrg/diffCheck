@@ -1,0 +1,27 @@
+{
+    "name": "DFBindTester",
+    "nickname": "BindT",
+    "category": "diffCheck",
+    "subcategory": "Utility",
+    "description": "This component is testing the binding import of diffCheck.",
+    "exposure": 4,
+    "instanceGuid": "7a600924-29bb-4682-8b95-a37752cefdbc",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [],
+        "outputParameters": [
+            {
+                "name": "o_is_imported",
+                "nickname": "o_is_imported",
+                "description": "True if the import of the diffCheck bindings is successfull.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

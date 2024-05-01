@@ -26,8 +26,11 @@ int main()
 
   diffCheck::geometry::DFPointCloud dfPointCloud(points, colors, normals);
 
+  DIFFCHECK_INFO("Starting diffCheckApp...");
 
-
+  // std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
+  // std::string pathMesh = R"("C:\Users\andre\Downloads\01_mesh.ply")";
+  // dfMeshPtr->LoadFromPLY(pathMesh);
 
 
 
@@ -38,10 +41,8 @@ int main()
   // std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrWithoutNormals = std::make_shared<diffCheck::geometry::DFPointCloud>();
   // std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrGroundTruth = std::make_shared<diffCheck::geometry::DFPointCloud>();
   // std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtrGroundTruthFromMesh = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  // std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr = std::make_shared<diffCheck::geometry::DFMesh>();
 
   // // std::string pathCloud = R"(C:\Users\andre\Downloads\scan_data_normals.ply\scan_data_normals.ply)";
-  // // std::string pathMesh = R"(F:\diffCheck\assets\dataset\mesh_fromRh_unfixedLength.ply)";
   // // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
 
   // // create a sphere from o3d

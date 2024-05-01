@@ -10,7 +10,23 @@ namespace diffCheck::geometry
     class DFMesh
     {
     public:
-        DFMesh() = default;
+        DFMesh() {}
+        DFMesh(std::vector<Eigen::Vector3d> vertices,
+               std::vector<Eigen::Vector3i> faces,
+               std::vector<Eigen::Vector3d> normalsVertex,
+               std::vector<Eigen::Vector3d> normalsFace,
+               std::vector<Eigen::Vector3d> colorsVertex)
+            : 
+            Vertices(vertices),
+            Faces(faces),
+            NormalsVertex(normalsVertex),
+            NormalsFace(normalsFace),
+            ColorsVertex(colorsVertex)
+        {
+            this->ColorsFace.resize(faces.size());
+            this->ColorsFace.assign(faces.size(), Eigen::Vector3d(0, 0, 0));
+        }
+        
         ~DFMesh() = default;
 
     public:  ///< Convertes

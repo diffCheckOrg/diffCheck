@@ -1,6 +1,3 @@
-@echo off
-setlocal
-
 :: ########################################################################
 :: check if conda is available > 
 :: check that diff_check environment is available > 
