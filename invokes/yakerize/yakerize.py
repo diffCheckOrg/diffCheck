@@ -70,28 +70,28 @@ if __name__ == "__main__":
     parser.add_argument(
         "--manifest-path",
         type=str,
-        required=False,
+        required=True,
         default="./manifest.yml",
         help="The path to the manifest file."
     )
     parser.add_argument(
         "--logo-path",
         type=str,
-        required=False,
+        required=True,
         default="./logo.png",
         help="The path to the logo file."
     )
     parser.add_argument(
         "--license-path",
         type=str,
-        required=False,
+        required=True,
         default="./LICENSE",
         help="The path to the license file."
     )
     parser.add_argument(
         "--readme-path",
         type=str,
-        required=False,
+        required=True,
         default="./README.md",
         help="The path to the readme file."
     )

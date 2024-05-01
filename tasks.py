@@ -2,12 +2,18 @@
 from invoke import task
 
 PATH_MANIFEST = "./manifest.yml"
+PATH_LOGO = "./logo.png"
+PATH_LICENSE = "./LICENSE"
+PATH_README = "./README.md"
+
 PATH_SETUP = "./src/gh/diffCheck/setup.py"
 PATH_INIT = "./src/gh/diffCheck/diffCheck/__init__.py"
 PATH_CMAKE = "./CMakeLists.txt"
+
 DIR_IN_GHUSER_COMPONENTS = "./src/gh/components"
 DIR_OUT_GHUER_COMPONENTS = "./build/gh"
 
+DIR_OUT_YAK = "./build/yak"
 
 @task
 def versionize(c):
@@ -42,12 +48,14 @@ def flagerize(c, package_name="diffCheck"):
         --from-manifest \
         --path-manifest {PATH_MANIFEST}")
 
-
-
-
 @task
 def yakerize(c):
     path_yakerize = "./invokes/yakerize/yakerize.py"
-    gh_components_dir = "./build/gh"
     build_yak_dir = "./build/yak"
-    c.run(f"python {path_yakerize} --gh-components-dir {gh_components_dir} --build-dir {build_yak_dir}")
+    c.run(f"python {path_yakerize} \
+        --gh-components-dir {DIR_OUT_GHUER_COMPONENTS} \
+        --build-dir {DIR_OUT_YAK} \
+        --manifest-path {PATH_MANIFEST} \
+        --logo-path {PATH_LOGO} \
+        --license-path {PATH_LICENSE} \
+        --readme-path {PATH_README}")
