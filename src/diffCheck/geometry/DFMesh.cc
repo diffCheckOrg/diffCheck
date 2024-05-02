@@ -55,7 +55,7 @@ namespace diffCheck::geometry
         return O3DTriangleMesh;
     }
 
-    std::shared_ptr<diffCheck::geometry::DFPointCloud> DFMesh::SamplePointsUniformly(int numPoints)
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> DFMesh::SampleCloudUniform(int numPoints)
     {
         auto O3DTriangleMesh = this->Cvt2O3DTriangleMesh();
         auto O3DPointCloud = O3DTriangleMesh->SamplePointsUniformly(numPoints);

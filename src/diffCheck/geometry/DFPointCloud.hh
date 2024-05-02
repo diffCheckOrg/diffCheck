@@ -82,6 +82,13 @@ namespace diffCheck::geometry
         /// @brief Number of normals in the point cloud
         int GetNumNormals() const { return this->Normals.size(); }
 
+        /// @brief Check if the cloud has points
+        bool HasPoints() const { return this->Points.size() > 0; }
+        /// @brief Check if the cloud has colors
+        bool HasColors() const { return this->Colors.size() > 0; }
+        /// @brief Check if the cloud has normals
+        bool HasNormals() const { return this->Normals.size() > 0; }
+
     public:  ///< Basic point cloud data
         /// @brief Eigen vector of 3D points
         std::vector<Eigen::Vector3d> Points;

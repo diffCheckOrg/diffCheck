@@ -38,6 +38,10 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("get_num_colors", &diffCheck::geometry::DFPointCloud::GetNumColors)
         .def("get_num_normals", &diffCheck::geometry::DFPointCloud::GetNumNormals)
 
+        .def("has_points", &diffCheck::geometry::DFPointCloud::HasPoints)
+        .def("has_colors", &diffCheck::geometry::DFPointCloud::HasColors)
+        .def("has_normals", &diffCheck::geometry::DFPointCloud::HasNormals)
+
         .def_property("points",
             [](const diffCheck::geometry::DFPointCloud &self) { return self.Points; },
             [](diffCheck::geometry::DFPointCloud &self, const std::vector<Eigen::Vector3d>& value) { self.Points = value; })
@@ -54,7 +58,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
 
         .def("load_from_PLY", &diffCheck::geometry::DFMesh::LoadFromPLY)
 
-        // .def("sample_points_uniformly", &diffCheck::geometry::DFMesh::SamplePointsUniformly)
+        .def("sample_points_uniformly", &diffCheck::geometry::DFMesh::SampleCloudUniform)
 
         .def("get_num_vertices", &diffCheck::geometry::DFMesh::GetNumVertices)
         .def("get_num_faces", &diffCheck::geometry::DFMesh::GetNumFaces)

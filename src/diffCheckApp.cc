@@ -34,7 +34,7 @@ int main()
   dfMeshPtr->Cvt2DFMesh(mesh);
 
   std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  dfPointCloudPtr = dfMeshPtr->SamplePointsUniformly(1000);
+  dfPointCloudPtr = dfMeshPtr->SampleCloudUniform(1000);
 
   // visualize cloud
   std::shared_ptr<diffCheck::visualizer::Visualizer> visualizer = std::make_shared<diffCheck::visualizer::Visualizer>();

@@ -11,36 +11,28 @@ import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
-from diffCheck import diffcheck_bindings.dfb_geometry
+from diffCheck import diffcheck_bindings
+import diffCheck.df_cvt_bindings
+
+
 
 class DFMeshToCloud(component):
     def RunScript(self,
-            i_mesh: rg.Mesh):
+            i_mesh: rg.Mesh,
+            i_points: int) -> rg.PointCloud:
         """
             Convert a Rhino mesh to a cloud.
 
             :param i_mesh: mesh to convert
+            :param i_points: number of points to sample
 
             :return o_cloud: rhino cloud
         """
+        df_mesh = diffCheck.df_cvt_bindings.cvt_rhmesh_2_dfmesh(i_mesh)
+        df_cloud = df_mesh.sample_points_uniformly(i_points)
 
-        return True
+        # convert the df_cloud to a rhino cloud
+        rgpoints = [rg.Point3d(pt[0], pt[1], pt[2]) for pt in df_cloud.points]
+        rh_cloud = rg.PointCloud(rgpoints)
 
-
-
-        # is_binding_imported = diffCheckBindings.test()
-
-        # if not is_binding_imported:
-        #     ghenv.Component.AddRuntimeMessage(RML.Warning, "Bindings not imported.")
-        # else:
-        #     ghenv.Component.AddRuntimeMessage(RML.Remark, "Bindings imported.")
-
-        # return is_binding_imported
-
-###################################################################
-# >>>>>>>> DEBUG START - to comment out when componentized >>>>>>>>
-###################################################################
-
-if __name__ == "__main__":
-    comp = DFMeshToCloud()
-    o_is_imported = comp.RunScript(i_mesh)
+        return [rh_cloud]

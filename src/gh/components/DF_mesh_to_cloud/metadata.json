@@ -1,11 +1,11 @@
 {
-    "name": "DFXMLExporter",
-    "nickname": "XMLout",
+    "name": "DFMeshToCloud",
+    "nickname": "Geo2Pcd",
     "category": "diffCheck",
-    "subcategory": "Utility",
-    "description": "This component reads breps, convert them to DFBeams and DFAssemblies and export it to XML.",
+    "subcategory": "Cloud",
+    "description": "Sample a point cloud from a mesh.",
     "exposure": 4,
-    "instanceGuid": "88aae013-a876-4697-9369-2b7ee83b5fcf",
+    "instanceGuid": "e8e5e122-40d0-45cd-9f93-cc756fd8b307",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -14,75 +14,35 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_dump",
-                "nickname": "i_dump",
-                "description": "Press button to export xml",
+                "name": "i_mesh",
+                "nickname": "i_mesh",
+                "description": "Mesh to sample into a point cloud.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "bool"
+                "typeHintID": "mesh"
             },
             {
-                "name": "i_assembly_name",
-                "nickname": "i_assembly_name",
-                "description": "The name of the assembly to export.",
+                "name": "i_points",
+                "nickname": "i_points",
+                "description": "The number of points of the created cloud.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "str"
-            },
-            {
-                "name": "i_export_dir",
-                "nickname": "i_export_dir",
-                "description": "The directors where to export the xml file.",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "str"
-            },
-            {
-                "name": "i_breps",
-                "nickname": "i_breps",
-                "description": "The breps of the structure.",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "list",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "brep"
+                "typeHintID": "int"
             }
         ],
         "outputParameters": [
             {
-                "name": "o_xml",
-                "nickname": "o_xml",
-                "description": "The string of xml to be exported.",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_joints",
-                "nickname": "o_joints",
-                "description": "The breps of the faces belonging to joints.",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_sides",
-                "nickname": "o_sides",
-                "description": "The breps of the faces belonging to sides.",
+                "name": "o_rh_cloud",
+                "nickname": "o_rh_cloud",
+                "description": "The output sampled cloud.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

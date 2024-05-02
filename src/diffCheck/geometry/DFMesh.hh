@@ -52,7 +52,7 @@ namespace diffCheck::geometry
          * @param numPoints the number of points to sample
          * @return std::shared_ptr<geometry::DFPointCloud> the sampled point cloud
          */
-        std::shared_ptr<diffCheck::geometry::DFPointCloud> SamplePointsUniformly(int numPoints = 1000);
+        std::shared_ptr<diffCheck::geometry::DFPointCloud> SampleCloudUniform(int numPoints = 1000);
 
     public:  ///< Transformers
         /**
