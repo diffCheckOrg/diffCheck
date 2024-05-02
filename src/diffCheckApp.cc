@@ -23,8 +23,8 @@ int main()
 
   // create a sphere from o3d
 
-  std::string pathCloud = R"(C:\Users\localuser\Downloads\00_pt.ply)";
-  std::string pathMesh = R"(C:\Users\localuser\Downloads\00_mesh.ply)";
+  std::string pathCloud = R"(C:\Users\localuser\Downloads\04_pt.ply)";
+  std::string pathMesh = R"(C:\Users\localuser\Downloads\04_mesh.ply)";
   // std::string pathMesh = R"(F:\diffCheck\temp\03_mesh.ply)";
 
   dfMeshPtr->LoadFromPLY(pathMesh);
@@ -36,19 +36,27 @@ int main()
   transformation(1, 3) = -0.02;
   transformation(2, 3) = 0.02;
   Eigen::Matrix3d rotation;
-  rotation = Eigen::AngleAxisd(0, Eigen::Vector3d::UnitY());
+  rotation = Eigen::AngleAxisd(0.3, Eigen::Vector3d::UnitY());
   transformation.block<3, 3>(0, 0) = rotation * transformation.block<3, 3>(0, 0);
 
   dfPointCloudPtr->ApplyTransformation(transformation);
 
-  diffCheck::transformation::DFTransformation localRegistration = diffCheck::registration::RefinedRegistration::O3DICP(dfPointCloudPtr, dfGroundTruth, 0.05);
+  diffCheck::transformation::DFTransformation simpleICPTransformation 
+    = diffCheck::registration::RefinedRegistration::O3DICP(
+      dfPointCloudPtr, 
+      dfGroundTruth, 
+      0.05);
 
-  diffCheck::transformation::DFTransformation otherlocalRegistration = diffCheck::registration::RefinedRegistration::O3DGeneralizedICP(dfPointCloudPtr, dfGroundTruth, 0.05);
-  dfPointCloudPtr->ApplyTransformation(localRegistration);
+  diffCheck::transformation::DFTransformation generalizedICPTransformation 
+    = diffCheck::registration::RefinedRegistration::O3DGeneralizedICP(
+      dfPointCloudPtr,
+      dfGroundTruth,
+      0.05);
+  dfPointCloudPtr->ApplyTransformation(simpleICPTransformation);
 
-  std::cout<<localRegistration.TransformationMatrix<<std::endl;
-  std::cout<<otherlocalRegistration.TransformationMatrix<<std::endl;
-  
+  std::cout<<simpleICPTransformation.TransformationMatrix<<std::endl;
+  std::cout<<generalizedICPTransformation.TransformationMatrix<<std::endl;
+
   std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();
   // vis->AddPointCloud(dfPointCloudPtr);
   vis->AddMesh(dfMeshPtr);

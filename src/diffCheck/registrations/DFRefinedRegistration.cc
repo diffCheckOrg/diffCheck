@@ -17,7 +17,6 @@ namespace diffCheck::registration
         double scale = (minMax[1] - minMax[0]).norm();
         double absoluteMaxCorrespondenceDistance = maxCorrespondenceDistance * scale;
 
-        std::cout<<"Absolute Max Correspondence Distance: "<<absoluteMaxCorrespondenceDistance<<std::endl;
         std::shared_ptr<open3d::geometry::PointCloud> O3Dsource = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> O3Dtarget = target->Cvt2O3DPointCloud();
         Eigen::Matrix4d initialTransformation = Eigen::Matrix4d::Identity();
@@ -86,7 +85,7 @@ namespace diffCheck::registration
             = open3d::pipelines::registration::TransformationEstimationForGeneralizedICP();
 
         open3d::pipelines::registration::RegistrationResult result 
-            = open3d::pipelines::registration::RegistrationICP(
+            = open3d::pipelines::registration::RegistrationGeneralizedICP(
                 *O3Dsource, 
                 *O3Dtarget, 
                 absoluteMaxCorrespondenceDistance,
