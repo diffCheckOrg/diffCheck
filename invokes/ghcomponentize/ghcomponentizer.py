@@ -13,7 +13,6 @@ import clr
 import System
 import System.IO
 
-
 SCRIPT_COMPONENT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")
 CPY_VER = "3.-1"
 TEMPLATE_VER = re.compile("{{version}}")

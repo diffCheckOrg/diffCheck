@@ -1,0 +1,52 @@
+{
+    "name": "DFMeshToCloud",
+    "nickname": "Geo2Pcd",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Sample a point cloud from a mesh.",
+    "exposure": 4,
+    "instanceGuid": "e8e5e122-40d0-45cd-9f93-cc756fd8b307",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_mesh",
+                "nickname": "i_mesh",
+                "description": "Mesh to sample into a point cloud.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "mesh"
+            },
+            {
+                "name": "i_points",
+                "nickname": "i_points",
+                "description": "The number of points of the created cloud.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_rh_cloud",
+                "nickname": "o_rh_cloud",
+                "description": "The output sampled cloud.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.)
-project(DiffCheck VERSION 1.0.0 LANGUAGES CXX C)
+project(diffCheck VERSION 0.0.24 LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -80,7 +80,7 @@ if(WIN32)
     if(open3d_type STREQUAL "SHARED_LIBRARY")
         message(STATUS "Copying Open3D.dll to ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
         add_custom_command(TARGET ${SHARED_LIB_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:Open3D::Open3D>
             $<TARGET_FILE_DIR:${SHARED_LIB_NAME}>)
     endif()
@@ -123,3 +123,48 @@ target_include_directories(${APP_NAME_EXE}
 # enable_testing()
 
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/global_registrations)
+
+#--------------------------------------------------------------------------
+# pybind11
+#--------------------------------------------------------------------------
+if (BUILD_PYTHON_MODULE)
+    set(PYBINDMODULE_NAME diffcheck_bindings)
+    set(PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck)
+    set(TARGET_DLL_PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck/dlls)
+
+    download_submodule_project(pybind11)
+    add_subdirectory(deps/pybind11)
+
+    find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+
+    message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
+    message(STATUS "Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
+    message(STATUS "Python3_LIBRARIES: ${Python3_LIBRARIES}")
+    message(STATUS "Python3_VERSION: ${Python3_VERSION}")
+
+    set(PYBIND11_PYTHON_VERSION 3.9.10)
+
+    pybind11_add_module(${PYBINDMODULE_NAME} src/diffCheckBindings.cc)
+
+    target_link_libraries(${PYBINDMODULE_NAME} PRIVATE ${SHARED_LIB_NAME})
+    target_include_directories(${PYBINDMODULE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+    # copy the pyd file to the pypi directory
+    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:${PYBINDMODULE_NAME}>
+        ${PYPI_DIR}
+        )
+
+    # get all the files -dlls in the bin directory and copy them one by one to the pypi directory
+    file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
+    foreach(file ${files})
+        message(STATUS "Copying ${file} to ${TARGET_DLL_PYPI_DIR}")
+        add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${file}
+            ${TARGET_DLL_PYPI_DIR}
+            )
+    endforeach()
+
+endif()

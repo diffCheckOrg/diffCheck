@@ -1,11 +1,10 @@
-name: "win-build"
+name: "cpp-build"
 
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-
 
 
 env:
@@ -19,7 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: CMAKE Configure
-        run: ${{github.workspace}}/cmake/config.bat
+      - name: Cmake Configure
+        run: |
+          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=OFF
+
       - name: CMake Build
         run: ${{github.workspace}}/cmake/build.bat

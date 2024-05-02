@@ -1,11 +1,18 @@
 from setuptools import setup, find_packages
+from setuptools import setup, Extension
+from setuptools.command.build_ext import build_ext
+import sys
+import setuptools
+
+
 
 setup(
     name="diffCheck",
-    version="0.0.9",
+    version="0.0.24",
     packages=find_packages(),
     install_requires=[
         "numpy",
+        "pybind11>=2.5.0"
         # other dependencies...
     ],
     description="DiffCheck is a package to check the differences between two timber structures",
@@ -19,4 +26,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
     ],
+    # include_package_data=True,
+    package_data={
+        "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd"]
+        },
 )

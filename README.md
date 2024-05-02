@@ -2,9 +2,11 @@
     <img src="./assets/logo/logo_pixelized_bwvioelt.png" width="150">
 </p>
 <p align="center">
-    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/win-build.yml/badge.svg">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/cpp-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
-    <img src="https://img.shields.io/pypi/v/diffCheck" href="https://pypi.org/project/diffCheck/">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/pypi-build.yml/badge.svg">
+    <img href="https://pypi.org/project/diffCheck/" src="https://img.shields.io/pypi/v/diffCheck">
+    <img href="https://github.com/ellerbrock/open-source-badges/" src="https://badges.frapsoft.com/os/v2/open-source.svg?v=103">
 </p>
 
 
@@ -71,9 +73,3 @@ To prototype:
 
 See the [CONTRIBUTING.md](https://github.com/diffCheckOrg/diffCheck/blob/main/CONTRIBUTING.md) for more information on how to prototype with diffCheck (code guidelines, visualizer, utilities, etc).
 
-
-## TODO:
-- [ ] @Andrea: add writing functions for mesh and point cloud
-- [ ] @Andrea: refactor `IOManager.hh` with a class `IOManager` and static methods
-- [ ] @Andrea: test Rhino exporeted `.ply` files
-- [ ] @Andrea: tests suite for IO /pcdmesh / visualizer

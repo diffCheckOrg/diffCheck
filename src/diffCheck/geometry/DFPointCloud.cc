@@ -52,7 +52,6 @@ namespace diffCheck::geometry
         std::vector<Eigen::Vector3d> extremePoints;
         extremePoints.push_back(boundingBox.GetMinBound());
         extremePoints.push_back(boundingBox.GetMaxBound());
-        this->BoundingBox = extremePoints;
         return extremePoints;
     }   
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)

@@ -3,6 +3,7 @@
 #include <Eigen/Core>
 #include <open3d/Open3D.h>
 
+#include <diffCheck/geometry/DFPointCloud.hh>
 #include <diffCheck/transformation/DFTransformation.hh>
 
 namespace diffCheck::geometry
@@ -10,7 +11,23 @@ namespace diffCheck::geometry
     class DFMesh
     {
     public:
-        DFMesh() = default;
+        DFMesh() {}
+        DFMesh(std::vector<Eigen::Vector3d> vertices,
+               std::vector<Eigen::Vector3i> faces,
+               std::vector<Eigen::Vector3d> normalsVertex,
+               std::vector<Eigen::Vector3d> normalsFace,
+               std::vector<Eigen::Vector3d> colorsVertex)
+            : 
+            Vertices(vertices),
+            Faces(faces),
+            NormalsVertex(normalsVertex),
+            NormalsFace(normalsFace),
+            ColorsVertex(colorsVertex)
+        {
+            this->ColorsFace.resize(faces.size());
+            this->ColorsFace.assign(faces.size(), Eigen::Vector3d(0, 0, 0));
+        }
+        
         ~DFMesh() = default;
 
     public:  ///< Convertes
@@ -27,6 +44,15 @@ namespace diffCheck::geometry
          * @return std::shared_ptr<open3d::geometry::TriangleMesh> the open3d triangle mesh
          */
         std::shared_ptr<open3d::geometry::TriangleMesh> Cvt2O3DTriangleMesh();
+
+    public:  ///< Mesh methods
+        /**
+         * @brief Sample the mesh uniformly with a target number of points
+         * 
+         * @param numPoints the number of points to sample
+         * @return std::shared_ptr<geometry::DFPointCloud> the sampled point cloud
+         */
+        std::shared_ptr<diffCheck::geometry::DFPointCloud> SampleCloudUniform(int numPoints = 1000);
 
     public:  ///< Transformers
         /**

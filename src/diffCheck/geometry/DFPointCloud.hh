@@ -11,7 +11,13 @@ namespace diffCheck::geometry
     class DFPointCloud
     {
     public:
-        DFPointCloud() = default;
+        DFPointCloud() {}
+        DFPointCloud(std::vector<Eigen::Vector3d> points,
+                     std::vector<Eigen::Vector3d> colors,
+                     std::vector<Eigen::Vector3d> normals)
+            : Points(points), Colors(colors), Normals(normals) 
+        {}
+        
         ~DFPointCloud() = default;
 
     
@@ -47,7 +53,8 @@ namespace diffCheck::geometry
         /**
          * @brief Compute the bounding box of the point cloud and stores it as member of the DFPointCloud object
          * 
-         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum point and the second one the maximum point of the bounding box.
+         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum
+         *  point and the second one the maximum point of the bounding box.
         */
         std::vector<Eigen::Vector3d> ComputeBoundingBox();
 
@@ -75,6 +82,13 @@ namespace diffCheck::geometry
         /// @brief Number of normals in the point cloud
         int GetNumNormals() const { return this->Normals.size(); }
 
+        /// @brief Check if the cloud has points
+        bool HasPoints() const { return this->Points.size() > 0; }
+        /// @brief Check if the cloud has colors
+        bool HasColors() const { return this->Colors.size() > 0; }
+        /// @brief Check if the cloud has normals
+        bool HasNormals() const { return this->Normals.size() > 0; }
+
     public:  ///< Basic point cloud data
         /// @brief Eigen vector of 3D points
         std::vector<Eigen::Vector3d> Points;
@@ -82,7 +96,5 @@ namespace diffCheck::geometry
         std::vector<Eigen::Vector3d> Colors;
         /// @brief Eigen vector of 3D normals
         std::vector<Eigen::Vector3d> Normals;
-        /// @brief Eigen vector of two 3D vectors forming the bounnding box.
-        std::vector<Eigen::Vector3d> BoundingBox;
     };
 } // namespace diffCheck::geometry
