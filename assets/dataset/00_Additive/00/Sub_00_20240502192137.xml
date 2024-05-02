@@ -1,0 +1,312 @@
+<?xml version="1.0" ?>
+<DFAssembly name="Sub_00">
+	<DFBeam name="Beam" id="271755458757024146804951574305529625108">
+		<DFFace id="317698310289869726170409468791277424366" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="59.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="59.0" y="19.66666603088379" z="0.0"/>
+				<RhMeshVertex x="59.0" y="33.33333206176758" z="0.0"/>
+				<RhMeshVertex x="59.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="65.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="65.0" y="33.33333206176758" z="0.0"/>
+				<RhMeshVertex x="65.0" y="19.66666603088379" z="0.0"/>
+				<RhMeshVertex x="65.0" y="6.0" z="0.0"/>
+				<RhMeshFace v1="2" v2="3" v3="4" v4="5"/>
+				<RhMeshFace v1="0" v2="1" v3="6" v4="7"/>
+				<RhMeshFace v1="1" v2="2" v3="5" v4="6"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="304681207627374991784583802855555789899" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="63.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="63.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="65.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="65.0" y="6.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="321593849446661072540714762682134024518" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="65.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="65.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="65.0" y="26.5" z="0.0"/>
+				<RhMeshVertex x="65.0" y="26.5" z="6.0"/>
+				<RhMeshVertex x="65.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="65.0" y="47.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+				<RhMeshFace v1="5" v2="3" v3="2" v4="4"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="187340390398974782341176428304370301070" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="59.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="59.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="61.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="47.0" z="0.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="10468698048019324343489096319828873653" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="59.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="59.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="59.0" y="26.5" z="6.0"/>
+				<RhMeshVertex x="59.0" y="26.5" z="0.0"/>
+				<RhMeshVertex x="59.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="59.0" y="47.0" z="0.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+				<RhMeshFace v1="5" v2="3" v3="2" v4="4"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="163144168916308013189285503663418135188" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="59.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="65.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="65.0" y="19.66666603088379" z="6.0"/>
+				<RhMeshVertex x="65.0" y="33.33333206176758" z="6.0"/>
+				<RhMeshVertex x="65.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="59.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="59.0" y="33.33333206176758" z="6.0"/>
+				<RhMeshVertex x="59.0" y="19.66666603088379" z="6.0"/>
+				<RhMeshFace v1="7" v2="0" v3="1" v4="2"/>
+				<RhMeshFace v1="5" v2="6" v3="3" v4="4"/>
+				<RhMeshFace v1="6" v2="7" v3="2" v4="3"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="314448221485501506389574206635003918900" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="-2.842170943040401e-14" z="-8.881784197001252e-16"/>
+				<RhMeshVertex x="61.0" y="-2.842170943040401e-14" z="6.0"/>
+				<RhMeshVertex x="63.0" y="-2.842170943040401e-14" z="-8.881784197001252e-16"/>
+				<RhMeshVertex x="63.0" y="-2.842170943040401e-14" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="91098329224930393263917346749279297482" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="6.0" z="-8.881784197001252e-16"/>
+				<RhMeshVertex x="61.0" y="-2.842170943040401e-14" z="-8.881784197001252e-16"/>
+				<RhMeshVertex x="63.0" y="6.0" z="-8.881784197001252e-16"/>
+				<RhMeshVertex x="63.0" y="-2.842170943040401e-14" z="-8.881784197001252e-16"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="180319503970463735499316722727818410116" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="4.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="4.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="4.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="4.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="16596315709171943449063854684972545187" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="2.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="2.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="2.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="2.0" z="3.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="138380230477313446201715939202615241662" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="2.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="4.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="2.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="4.0" z="3.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="56720263783774939647959637557274599294" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="-2.842170943040401e-14" z="6.0"/>
+				<RhMeshVertex x="61.0" y="2.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="-2.842170943040401e-14" z="6.0"/>
+				<RhMeshVertex x="63.0" y="2.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="243870757648020194751468002692273141993" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="4.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="4.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="6.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="45389397250502398909688695715972766247" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="63.0" y="2.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="2.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="-2.842170943040401e-14" z="6.0"/>
+				<RhMeshVertex x="63.0" y="-2.842170943040401e-14" z="3.0"/>
+				<RhMeshVertex x="63.0" y="-2.842170943040401e-14" z="-8.881784197001252e-16"/>
+				<RhMeshVertex x="63.0" y="3.0" z="-4.440892098500626e-16"/>
+				<RhMeshVertex x="63.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="63.0" y="6.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="4.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="4.0" z="3.0"/>
+				<RhMeshFace v1="0" v2="3" v3="4" v4="4"/>
+				<RhMeshFace v1="0" v2="1" v3="2" v4="3"/>
+				<RhMeshFace v1="0" v2="4" v3="5" v4="5"/>
+				<RhMeshFace v1="10" v2="5" v3="6" v4="6"/>
+				<RhMeshFace v1="7" v2="10" v3="6" v4="6"/>
+				<RhMeshFace v1="8" v2="9" v3="7" v4="7"/>
+				<RhMeshFace v1="10" v2="7" v3="9" v4="9"/>
+				<RhMeshFace v1="5" v2="10" v3="0" v4="0"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="326649249514878852269859218081197131607" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="2.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="4.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="4.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="6.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="61.0" y="3.0" z="-4.440892098500626e-16"/>
+				<RhMeshVertex x="61.0" y="-2.842170943040401e-14" z="-8.881784197001252e-16"/>
+				<RhMeshVertex x="61.0" y="-2.842170943040401e-14" z="3.0"/>
+				<RhMeshVertex x="61.0" y="-2.842170943040401e-14" z="6.0"/>
+				<RhMeshVertex x="61.0" y="2.0" z="6.0"/>
+				<RhMeshFace v1="9" v2="10" v3="0" v4="8"/>
+				<RhMeshFace v1="7" v2="8" v3="0" v4="0"/>
+				<RhMeshFace v1="6" v2="7" v3="0" v4="0"/>
+				<RhMeshFace v1="4" v2="2" v3="3" v4="3"/>
+				<RhMeshFace v1="1" v2="2" v3="4" v4="4"/>
+				<RhMeshFace v1="5" v2="6" v3="1" v4="1"/>
+				<RhMeshFace v1="1" v2="6" v3="0" v4="0"/>
+				<RhMeshFace v1="4" v2="5" v3="1" v4="1"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="48862475661230741036032900725572895693" is_joint="True" joint_id="1">
+			<RhMesh>
+				<RhMeshVertex x="59.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="59.0" y="6.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="6.0" z="0.0"/>
+				<RhMeshVertex x="61.0" y="6.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="33430191455780259727847671622807662017" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="53.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="53.0" z="8.881784197001252e-16"/>
+				<RhMeshVertex x="63.0" y="53.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="53.0" z="8.881784197001252e-16"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="50143988472091141990720880180945442868" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="53.0" z="0.0"/>
+				<RhMeshVertex x="61.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="63.0" y="53.0" z="0.0"/>
+				<RhMeshVertex x="63.0" y="47.0" z="0.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="35318074339452021333813940377183476431" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="51.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="51.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="51.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="51.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="314426514494689034245614288165683964346" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="49.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="49.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="49.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="49.0" z="3.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="26786732103292419067630591275740946721" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="49.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="51.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="49.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="51.0" z="3.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="99812380385909312390282609486818788446" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="49.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="49.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="298422638408370154394698995302588135639" is_joint="False" joint_id="None">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="51.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="53.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="51.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="53.0" z="6.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="305814577925964960052327838988651902417" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="63.0" y="49.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="49.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="47.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="63.0" y="50.0" z="4.440892098500626e-16"/>
+				<RhMeshVertex x="63.0" y="53.0" z="8.881784197001252e-16"/>
+				<RhMeshVertex x="63.0" y="53.0" z="3.0"/>
+				<RhMeshVertex x="63.0" y="53.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="51.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="51.0" z="3.0"/>
+				<RhMeshFace v1="0" v2="3" v3="4" v4="4"/>
+				<RhMeshFace v1="0" v2="1" v3="2" v4="3"/>
+				<RhMeshFace v1="0" v2="4" v3="5" v4="5"/>
+				<RhMeshFace v1="10" v2="5" v3="6" v4="6"/>
+				<RhMeshFace v1="7" v2="10" v3="6" v4="6"/>
+				<RhMeshFace v1="8" v2="9" v3="10" v4="7"/>
+				<RhMeshFace v1="5" v2="10" v3="0" v4="0"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="149072477744363611899717994838248782851" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="61.0" y="49.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="51.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="51.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="53.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="53.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="53.0" z="8.881784197001252e-16"/>
+				<RhMeshVertex x="61.0" y="50.0" z="4.440892098500626e-16"/>
+				<RhMeshVertex x="61.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="61.0" y="47.0" z="3.0"/>
+				<RhMeshVertex x="61.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="61.0" y="49.0" z="6.0"/>
+				<RhMeshFace v1="0" v2="9" v3="10" v4="10"/>
+				<RhMeshFace v1="7" v2="8" v3="0" v4="0"/>
+				<RhMeshFace v1="9" v2="0" v3="8" v4="8"/>
+				<RhMeshFace v1="6" v2="7" v3="0" v4="0"/>
+				<RhMeshFace v1="4" v2="1" v3="2" v4="3"/>
+				<RhMeshFace v1="0" v2="1" v3="6" v4="6"/>
+				<RhMeshFace v1="6" v2="1" v3="5" v4="5"/>
+				<RhMeshFace v1="4" v2="5" v3="1" v4="1"/>
+			</RhMesh>
+		</DFFace>
+		<DFFace id="241430150705886833974191516552422329445" is_joint="True" joint_id="2">
+			<RhMesh>
+				<RhMeshVertex x="63.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="63.0" y="47.0" z="0.0"/>
+				<RhMeshVertex x="65.0" y="47.0" z="6.0"/>
+				<RhMeshVertex x="65.0" y="47.0" z="0.0"/>
+				<RhMeshFace v1="3" v2="1" v3="0" v4="2"/>
+			</RhMesh>
+		</DFFace>
+	</DFBeam>
+</DFAssembly>
