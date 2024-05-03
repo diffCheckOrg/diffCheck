@@ -50,7 +50,7 @@ namespace diffCheck::registration
          * @param relativeRMSE Threshold for relative RMSE to use in the p2p transformation estimation
          * @return diffCheck::transformation::DFTransformation
          * 
-         * @see https://www.robots.ox.ac.uk/~avsegal/resources/papers/Generalized_ICP.pdf for more information
+         * @see http://dx.doi.org/10.15607/RSS.2009.V.021 for more information
          */
         static diffCheck::transformation::DFTransformation O3DGeneralizedICP(
             std::shared_ptr<geometry::DFPointCloud> source, 
