@@ -13,7 +13,7 @@ namespace diffCheck::registration
          * 
          * The ICP registration  looks for points in the target point cloud that are closest to the source
          *  point cloud and computes the transformation that minimizes the distance between the two point clouds.
-         * The way the distance is either calculated with point to point or point to plane methods.
+         * The way the distance is calculated is either with point to point or point to plane methods.
          * 
          * @param source DFPointCloud source point cloud
          * @param target DFPointCloud Target point cloud
