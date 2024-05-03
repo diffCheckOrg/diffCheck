@@ -54,6 +54,7 @@ namespace diffCheck::registration
                 transformation_estimation,
                 criteria);
         }
+        
         diffCheck::transformation::DFTransformation transformation 
             = diffCheck::transformation::DFTransformation(result.transformation_);
         return transformation;
