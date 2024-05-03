@@ -75,12 +75,12 @@ See the [CONTRIBUTING.md](https://github.com/diffCheckOrg/diffCheck/blob/main/CO
 
 ## Component roadmap
 From the 3/5/2024 meeting, the architecture of the different grasshopper components was discussed as following:
-[] PLY loader : loads the ply files and converts them in RhinoCommon objects
-[] Global registration & refined registration to align the scan to the reference model
-[] Semantic segmentation to identify the pieces or joints in the point cloud
-[] Per-joint refinement to refine the global registration to each joints (only in the "substractive" case)
-[] Error estimation to evaluate the error for each piece or joint
-[] Error visualisation to visualise the error, only converts the data from error estimation, no calculation.
+- [ ] PLY loader : loads the ply files and converts them in RhinoCommon objects
+- [ ] Global registration & refined registration to align the scan to the reference model
+- [ ] Semantic segmentation to identify the pieces or joints in the point cloud
+- [ ] Per-joint refinement to refine the global registration to each joints (only in the "substractive" case)
+- [ ] Error estimation to evaluate the error for each piece or joint
+- [ ] Error visualisation to visualise the error, only converts the data from error estimation, no calculation.
 The brep element in the graph is only here to visualize the fact that we need the breps as data, but it is not a diffCheck component.
 
 
