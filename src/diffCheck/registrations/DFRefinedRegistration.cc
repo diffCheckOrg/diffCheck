@@ -30,6 +30,8 @@ namespace diffCheck::registration
 
         if(usePointToPlane)
         {
+            O3Dsource->EstimateNormals();
+            O3Dtarget->EstimateNormals();
             open3d::pipelines::registration::TransformationEstimationPointToPlane transformation_estimation 
                 = open3d::pipelines::registration::TransformationEstimationPointToPlane();
             result = open3d::pipelines::registration::RegistrationICP(
