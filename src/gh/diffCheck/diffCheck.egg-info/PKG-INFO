@@ -6,13 +6,15 @@ Home-page: https://github.com/diffCheckOrg/diffCheck
 Author: Andrea Settimi, Damien Gilliard, Eleni Skevaki, Marirena Kladeftira, Julien Gamerro, Stefana Parascho, and Yves Weinand
 Author-email: andrea.settimi@epfl.ch
 License: UNKNOWN
-Description: # DiffCheck Grasshopper Plugin
-        
-        DiffCheck is a plugin for Rhino/Grasshopper that allows the user to compare a 3D model with its scan. 
-        
-        More information to come
 Platform: UNKNOWN
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.9
 Description-Content-Type: text/markdown
+
+# DiffCheck Grasshopper Plugin
+
+DiffCheck is a plugin for Rhino/Grasshopper that allows the user to compare a 3D model with its scan. 
+
+More information to come
+

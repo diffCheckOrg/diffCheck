@@ -1,0 +1,52 @@
+{
+    "name": "DFLoadMeshFromFile",
+    "nickname": "MeshFFile",
+    "category": "diffCheck",
+    "subcategory": "Mesh",
+    "description": "This is a test component.",
+    "exposure": 4,
+    "instanceGuid": "e5319472-39ee-4b53-ba3c-9ae37af08610",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_path",
+                "nickname": "i_path",
+                "description": "Path of the file (e.g. .ply) to import",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_scalef",
+                "nickname": "i_scalef",
+                "description": "Scaling factor to adapt the unit of the imported file to the rhino document.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_rh_mesh",
+                "nickname": "o_rh_mesh",
+                "description": "The imported mesh.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

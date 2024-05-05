@@ -39,7 +39,6 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
 
     return df_cloud
 
-
 def cvt_dfcloud_2_rhcloud(df_cloud):
     """
         Convert a diffCheck cloud to a Rhino cloud.
@@ -99,6 +98,7 @@ def cvt_dfmesh_2_rhmesh(df_mesh: diffcheck_bindings.dfb_geometry.DFMesh) -> rg.M
 
     # faces
     for face in df_mesh.faces:
+        print(face)
         rh_mesh.Faces.AddFace(face[0], face[1], face[2])
 
     # normals

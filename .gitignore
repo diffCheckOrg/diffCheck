@@ -18,6 +18,8 @@
 *.so
 *.dylib
 *.dll
+# except for GH_IO.dll
+!GH_IO.dll
 
 # Fortran module files
 *.mod
