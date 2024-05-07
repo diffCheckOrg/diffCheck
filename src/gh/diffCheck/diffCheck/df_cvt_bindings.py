@@ -61,7 +61,9 @@ def cvt_dfcloud_2_rhcloud(df_cloud):
     df_cloud_normals = df_cloud.normals
 
     df_cloud_points = [rg.Point3d(pt[0], pt[1], pt[2]) for pt in df_cloud_points]
-    
+    df_cloud_normals = [rg.Vector3d(n[0], n[1], n[2]) for n in df_cloud_normals]
+    df_cloud_colors = [Rhino.Display.Color4f(c[0], c[1], c[2], 1.0) for c in df_cloud_colors]
+
     rh_cloud = rg.PointCloud()
 
     if df_cloud.has_normals() and df_cloud.has_colors():
@@ -98,8 +100,8 @@ def cvt_dfmesh_2_rhmesh(df_mesh: diffcheck_bindings.dfb_geometry.DFMesh) -> rg.M
 
     # faces
     for face in df_mesh.faces:
-        print(face)
-        rh_mesh.Faces.AddFace(face[0], face[1], face[2])
+        int_face = [int(f) for f in face]
+        rh_mesh.Faces.AddFace(int_face[0], int_face[1], int_face[2])
 
     # normals
     if len(df_mesh.normals_vertex) > 0:

@@ -26,22 +26,52 @@ class DFXMLExporter(component):
             :param i_breps: list of breps
         """
         # beams
-        beams: typing.List[DFBeam] = []
-        for brep in i_breps:
-            beam = DFBeam.from_brep(brep)
-            beams.append(beam)
+        # beams: typing.List[DFBeam] = []
+        # for brep in i_breps:
+        #     beam = DFBeam.from_brep(brep)
+        #     beams.append(beam)
 
-        # assembly
-        assembly1 = DFAssembly(beams, i_assembly_name)
+        # # assembly
+        # assembly1 = DFAssembly(beams, i_assembly_name)
 
-        # dump the xml
-        xml: str = assembly1.to_xml()
-        if i_dump:
-            assembly1.dump_xml(xml, i_export_dir)
-        o_xml = xml
+        # # dump the xml
+        # xml: str = assembly1.to_xml()
+        # if i_dump:
+        #     assembly1.dump_xml(xml, i_export_dir)
+        # o_xml = xml
 
-        # show the joint/side faces
-        o_joints = [jf.to_brep() for jf in assembly1.all_joint_faces]
-        o_sides = [sf.to_brep() for sf in assembly1.all_side_faces]
+        # # show the joint/side faces
+        # o_joints = [jf.to_brep() for jf in assembly1.all_joint_faces]
+        # o_sides = [sf.to_brep() for sf in assembly1.all_side_faces]
 
-        return o_xml, o_joints, o_sides
+        ###########################
+
+        faces, o_debug = diffCheck.df_joint_detector.JointDetector(i_breps[0]).run()
+
+        # o_joints = [f.to_brep() for f in faces]
+        # o_sides = [f.to_brep() for f in faces]
+
+        o_xml = ""
+        o_joints = []
+        o_sides = []
+
+        for f in faces:
+            if f[1] != None:
+                o_joints.append(f[0])
+            else:
+                o_sides.append(f[0])
+
+
+
+
+        return o_xml, o_joints, o_sides, o_debug
+
+
+if __name__ == "__main__":
+    com = DFXMLExporter()
+    o_xml, o_joints, o_sides, o_debug = com.RunScript(
+        i_dump,
+        i_assembly_name,
+        i_export_dir,
+        i_breps
+    )
