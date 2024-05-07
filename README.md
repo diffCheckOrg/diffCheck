@@ -73,3 +73,43 @@ To prototype:
 
 See the [CONTRIBUTING.md](https://github.com/diffCheckOrg/diffCheck/blob/main/CONTRIBUTING.md) for more information on how to prototype with diffCheck (code guidelines, visualizer, utilities, etc).
 
+## Component roadmap
+From the 3/5/2024 meeting, the architecture of the different grasshopper components was discussed as following:
+- [ ] PLY loader point cloud: @eleni: loads the pointcloud ply files and converts it into rg.PointCloud (+ cvt submodule)
+- [ ] PLY loader mesh: @eleni: loads the mesh ply files and converts it into rg.Mesh (+ cvt submodule)
+- [ ] Global registration: @andrea: to align the scan to the reference model
+- [ ] Refined registration: @andrea: to refine the alignement
+- [ ] Semantic segmentation additive: to identify the pieces or joints in the point cloud
+- [ ] Semantic segmentation subtractive: to identify the pieces or joints in the point cloud
+- [ ] Per-joint refinement to refine the global registration to each joints (only in the "substractive" case)
+- [ ] Error estimation to evaluate the error for each piece or joint
+- [ ] Error visualisation to visualise the error, only converts the data from error estimation, no calculation.
+The brep element in the graph is only here to visualize the fact that we need the breps as data, but it is not a diffCheck component.
+
+```mermaid
+stateDiagram
+
+classDef notAComponent fill:green
+    (brep):::notAComponent --> global_registration&ICP : [brep]
+    State diffCheck{
+        State for_additive_and_substractive {
+            PLY_loader --> global_registration&ICP : pointcloud
+            global_registration&ICP --> semantic_segmentation : pointcloud
+            global_registration&ICP --> semantic_segmentation : [brep]
+            semantic_segmentation --> error_estimation : [pointcloud]
+            semantic_segmentation --> error_estimation : [brep]
+            semantic_segmentation --> error_visualisation : [pointcloud]
+            semantic_segmentation --> error_visualisation : [brep]
+            semantic_segmentation --> per_joint_refinement : [pointcloud]
+            semantic_segmentation --> per_joint_refinement : [brep]
+            error_estimation --> error_visualisation : csv   
+            per_joint_refinement --> error_estimation : [[pointcloud]]
+            per_joint_refinement --> error_estimation : [brep]
+            }
+        State for_substractive {
+                per_joint_refinement
+            }
+    }
+    
+```
+Note : `[]` = list
