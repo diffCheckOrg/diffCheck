@@ -16,7 +16,7 @@
             {
                 "name": "i_path",
                 "nickname": "i_path",
-                "description": "Path of the file (e.g. .ply) to import",
+                "description": "Path to the .ply file to import",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -42,7 +42,7 @@
             {
                 "name": "o_rh_cloud",
                 "nickname": "o_rh_cloud",
-                "description": "The imported cloud in rhino format.",
+                "description": "The imported point cloud as a Rhino object.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

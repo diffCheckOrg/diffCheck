@@ -36,6 +36,6 @@ class DFLoadCloudFromFile(component):
         
         return [rh_cloud]
     
-if __name__ == "__main__":
-    com = DFLoadCloudFromFile()
-    o_rh_cloud = com.RunScript(i_path, i_scalef)
+# if __name__ == "__main__":
+#     com = DFLoadCloudFromFile()
+#     o_rh_cloud = com.RunScript(i_path, i_scalef)
