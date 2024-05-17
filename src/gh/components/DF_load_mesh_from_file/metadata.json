@@ -16,7 +16,7 @@
             {
                 "name": "i_path",
                 "nickname": "i_path",
-                "description": "Path of the file (e.g. .ply) to import",
+                "description": "Path to the .ply file to import",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -42,7 +42,7 @@
             {
                 "name": "o_rh_mesh",
                 "nickname": "o_rh_mesh",
-                "description": "The imported mesh.",
+                "description": "The imported mesh as a Rhino object.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
