@@ -22,7 +22,7 @@ def get_diff_color(est_area, gt_area):
 
     # Convert the HSV color to RGB
     r, g, b = colorsys.hsv_to_rgb(hue, 1, 1)
-    g, r, b = b, g, r  # Corrected order
+    # g, r, b = b, g, r  # Corrected order
 
     # Convert the RGB color to a System.Drawing.Color
     color = System.Drawing.Color.FromArgb(int(255 * r), int(255 * g), int(255 * b))  # Corrected order
