@@ -1,7 +1,7 @@
 #include "DFRefinedRegistration.hh"
 
 
-namespace diffCheck::registration
+namespace diffCheck::registrations
 {
     diffCheck::transformation::DFTransformation RefinedRegistration::O3DICP(
         std::shared_ptr<geometry::DFPointCloud> source, 

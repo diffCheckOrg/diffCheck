@@ -3,7 +3,7 @@
 
 # include <open3d/pipelines/registration/Registration.h>
 
-namespace diffCheck::registration
+namespace diffCheck::registrations
 {
     class RefinedRegistration
     {

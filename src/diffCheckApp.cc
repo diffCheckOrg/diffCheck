@@ -36,13 +36,13 @@ int main()
   dfPointCloudPtr->ApplyTransformation(transformation);
 
   diffCheck::transformation::DFTransformation simpleICPTransformation 
-    = diffCheck::registration::RefinedRegistration::O3DICP(
+    = diffCheck::registrations::RefinedRegistration::O3DICP(
       dfPointCloudPtr, 
       dfGroundTruth, 
       0.05);
 
   diffCheck::transformation::DFTransformation generalizedICPTransformation 
-    = diffCheck::registration::RefinedRegistration::O3DGeneralizedICP(
+    = diffCheck::registrations::RefinedRegistration::O3DGeneralizedICP(
       dfPointCloudPtr,
       dfGroundTruth,
       0.05);

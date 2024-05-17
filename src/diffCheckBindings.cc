@@ -82,9 +82,9 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             [](const diffCheck::geometry::DFMesh &self) { return self.ColorsFace; },
             [](diffCheck::geometry::DFMesh &self, const std::vector<Eigen::Vector3d>& value) { self.ColorsFace = value; });
     
-    // //#################################################################################################
-    // // df_registration namespace
-    // //#################################################################################################
+    //#################################################################################################
+    // df_registration namespace
+    //#################################################################################################
 
     // py::module_ submodule_geometry = m.def_submodule("df_registration", "A submodule for the registration methods.");
 }
