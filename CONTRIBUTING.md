@@ -113,7 +113,7 @@ If you want to use the GHEditor it's ok but everytime you modify the pakcage or 
 ### B.3) Componentize the code
 Prepare your component as explained here. You can componentize it locally and test it in Grasshopper. Here's how to componentize:
 ```terminal
-python f:\diffCheck\src\gh\util\componentizer_cpy.py --ghio "C:\Users\andre\.nuget\packages\grasshopper\8.2.23346.13001\lib\net48\" .\src\gh\components\ .\build\gh
+python .\invokes\ghcomponentize\ghcomponentizer.py --ghio "C:\Users\andre\.nuget\packages\grasshopper\8.2.23346.13001\lib\net48\" .\src\gh\components\ .\build\gh
 ```
 > Note that you need to find the path to your GHIO folder. This is the folder where the `Grasshopper.dll` is located. E.g. You can find it in the `nuget` folder in the Rhino installation directory.
 
