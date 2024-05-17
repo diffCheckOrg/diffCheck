@@ -20,6 +20,7 @@ namespace diffCheck::registrations
         * 
         * @param source the source diffCheck point cloud
         * @param target the target diffCheck point cloud
+        * @param voxelize whether to voxelize the point clouds before computing the FPFHFeatures. A higher value will result in a more coarse point cloud (less resulting points).
         * @param voxelSize the size of the voxels used to downsample the point clouds. It is expressed relative to the point cloud size (0.01 means voxelSize = 1% of maxSize(pointCloud). A higher value will result in a more coarse point cloud (less resulting points).
         * @param radiusKDTreeSearch  the radius used to search for neighbors in the KDTree.it is expressed relative to the point cloud size (0.01 means radiusKDTreeSearch = 1% of maxSize(pointCloud). It is used for the calculation of FPFHFeatures
         * @param maxNeighborKDTreeSearch the maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures. A higher value will result in heavier computation but potentially more precise.

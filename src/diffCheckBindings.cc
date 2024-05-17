@@ -20,7 +20,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
     submodule_test.def("test", &test, "Simple function testing a vanilla python bindings.");
 
     //#################################################################################################
-    // df_geometry namespace
+    // dfb_geometry namespace
     //#################################################################################################
 
     py::module_ submodule_geometry = m.def_submodule("dfb_geometry", "A submodule for the geometry classes.");
@@ -83,8 +83,50 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             [](diffCheck::geometry::DFMesh &self, const std::vector<Eigen::Vector3d>& value) { self.ColorsFace = value; });
     
     //#################################################################################################
-    // df_registration namespace
+    // dfb_transformation namespace
     //#################################################################################################
 
-    // py::module_ submodule_geometry = m.def_submodule("df_registration", "A submodule for the registration methods.");
+    py::module_ submodule_transformation = m.def_submodule("dfb_transformation", "A submodule for the transformation classes.");
+
+    py::class_<diffCheck::transformation::DFTransformation>(submodule_transformation, "DFTransformation")
+        .def(py::init<>())
+        .def(py::init<const Eigen::Matrix4d&>())
+        .def(py::init<const Eigen::Matrix3d&, const Eigen::Vector3d&>())
+
+        .def_readwrite("transformation_matrix", &diffCheck::transformation::DFTransformation::TransformationMatrix)
+        .def_readwrite("rotation_matrix", &diffCheck::transformation::DFTransformation::RotationMatrix)
+        .def_readwrite("translation_vector", &diffCheck::transformation::DFTransformation::TranslationVector);
+        
+
+    //#################################################################################################
+    // dfb_registrations namespace
+    //#################################################################################################
+
+    py::module_ submodule_registrations = m.def_submodule("dfb_registrations", "A submodule for the registration methods.");
+
+    py::class_<diffCheck::registrations::DFGlobalRegistrations>(submodule_registrations, "DFGlobalRegistrations")
+        .def_static("O3DFastGlobalRegistrationFeatureMatching", &diffCheck::registrations::DFGlobalRegistrations::O3DFastGlobalRegistrationFeatureMatching,
+            py::arg("source"),
+            py::arg("target"),
+            py::arg("voxelize") = true,
+            py::arg("voxel_size") = 0.005,
+            py::arg("radius_kd_tree_search") = 0.1,
+            py::arg("max_neighbor_kd_tree_search") = 50,
+            py::arg("max_correspondence_distance") = 0.05,
+            py::arg("iteration_number") = 128,
+            py::arg("max_tuple_count") = 1000)
+        .def_static("O3DRansacOnFeatureMatching", &diffCheck::registrations::DFGlobalRegistrations::O3DRansacOnFeatureMatching,
+            py::arg("source"),
+            py::arg("target"),
+            py::arg("voxelize") = true,
+            py::arg("voxel_size") = 0.005,
+            py::arg("radius_kd_tree_search") = 0.1,
+            py::arg("max_neighbor_kd_tree_search") = 50,
+            py::arg("max_correspondence_distance") = 0.05,
+            py::arg("is_t_estimate_pt2pt") = false,
+            py::arg("ransac_n") = 3,
+            py::arg("correspondence_checker_distance") = 0.05,
+            py::arg("similarity_threshold") = 0.9,
+            py::arg("ransac_max_iteration") = 100000,
+            py::arg("ransac_confidence_threshold") = 0.999);
 }

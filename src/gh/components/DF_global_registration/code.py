@@ -12,34 +12,74 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
 from diffCheck import diffcheck_bindings
-import diffCheck.df_cvt_bindings
+from diffCheck import df_cvt_bindings
 
 
 class DFGlobalRegistration(component):
     def RunScript(self,
-            i_mesh: rg.Mesh,
-            i_points: int) -> rg.PointCloud:
+        i_cloud_source: rg.PointCloud = None,
+        i_cloud_target: rg.PointCloud = None
+    ) -> rg.Transform:
         """
-            Convert a Rhino mesh to a cloud.
+            The global registration component aligns two point clouds in a rough way.
 
-            :param i_mesh: mesh to convert
-            :param i_points: number of points to sample
+            :param i_cloud_source: source point cloud
+            :param i_cloud_target: target point cloud to align to
 
-            :return o_cloud: rhino cloud
+            :return o_x_form : transformation matrix
         """
 
-        diffCheck.df_cvt_bindings.test()
+        # if i_cloud_source is None or i_cloud_target is None:
+        #     ghenv.Component.AddRuntimeMessage(RML.Error, "Please provide two point clouds to align")
+        #     return o_x_form
 
-        df_mesh = diffCheck.df_cvt_bindings.cvt_rhmesh_2_dfmesh(i_mesh)
-        df_cloud = df_mesh.sample_points_uniformly(i_points)
+        print(type(i_cloud_source))
 
-        # convert the df_cloud to a rhino cloud
-        rgpoints = [rg.Point3d(pt[0], pt[1], pt[2]) for pt in df_cloud.points]
-        rh_cloud = rg.PointCloud(rgpoints)
+        df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
+        df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
 
-        return [rh_cloud]
+        print(type(df_cloud_source))    
+        # # print all the available registration methods
+        # print(dir(diffcheck_bindings.dfb_registrations))
+        # registrations = diffcheck_bindings.dfb_registrations.DFGlobalRegistrations()
+
+
+
+        df_xform = diffcheck_bindings.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(
+            source=df_cloud_source,
+            target=df_cloud_target,
+            voxelize=True,
+            voxel_size=0.1,
+            radius_kd_tree_search=0.1,
+            max_neighbor_kd_tree_search=50,
+            max_correspondence_distance=0.05,
+            iteration_number=128,
+            max_tuple_count=1000
+        )
+        print(type(df_xform))
+
+        print(df_xform.transformation_matrix)
+        print("-------------------")
+        print(df_xform.rotation_matrix)
+        print("-------------------")
+        print(df_xform.translation_vector)
+
+        df_xform_matrix = df_xform.transformation_matrix
+
+
+        rh_form = rg.Transform()
+        for i in range(4):
+            for j in range(4):
+                rh_form[i, j] = df_xform_matrix[i, j]
+
+        print(rh_form)
+
+        o_x_form = rh_form
+
+
+        return o_x_form
 
 
 if __name__ == "__main__":
     com = DFGlobalRegistration()
-    com.RunScript(i_mesh, i_points)
+    o_x_form = com.RunScript(i_cloud_source, i_cloud_target)
