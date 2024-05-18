@@ -2,10 +2,10 @@
     "name": "DFMeshToCloud",
     "nickname": "Geo2Pcd",
     "category": "diffCheck",
-    "subcategory": "Cloud",
-    "description": "Sample a point cloud from a mesh.",
+    "subcategory": "Registrations",
+    "description": "Register two point clouds together if a fast global registration.",
     "exposure": 4,
-    "instanceGuid": "e8e5e122-40d0-45cd-9f93-cc756fd8b307",
+    "instanceGuid": "cacd1868-5e8f-451c-b89a-51a075f332cd",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -13,6 +13,18 @@
         "marshalOutGuids": true,
         "iconDisplay": 2,
         "inputParameters": [
+            {
+                "name": "i_recompute",
+                "nickname": "i_recompute",
+                "description": "Connect a button to recompute the registration.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
             {
                 "name": "i_cloud_source",
                 "nickname": "i_cloud_source",
@@ -36,6 +48,66 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_radius_kd_search",
+                "nickname": "i_radius_kd_search",
+                "description": "The radius used to search for neighbors in the KDTree.it is expressed relative to the point cloud size (0.01 means radiusKDTreeSearch = 1% of maxSize(pointCloud). It is used for the calculation of FPFHFeatures.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_neighbours_kd_search",
+                "nickname": "i_neighbours_kd_search",
+                "description": "The maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures. A higher value will result in heavier computation but potentially more precise.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "i_max_corrspondence_dist",
+                "nickname": "i_max_corrspondence_dist",
+                "description": "The maximum distance between correspondences. A higher value will result in more correspondences, but potentially include wrong ones.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_iteration_number",
+                "nickname": "i_iteration_number",
+                "description": "The number of iterations to run the RanSaC registration algorithm. A higher value will take more time to compute but increases the chances of finding a good transformation. As parameter of the FastGlobalRegistrationOption options.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "i_max_tuple_count",
+                "nickname": "i_max_tuple_count",
+                "description": "The maximum number of tuples to consider in the FPFH hyperspace. A higher value will result in heavier computation but potentially more precise. As parameter of the FastGlobalRegistrationOption options.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
             }
         ],
         "outputParameters": [
