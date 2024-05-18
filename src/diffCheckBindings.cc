@@ -91,12 +91,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
     py::class_<diffCheck::transformation::DFTransformation>(submodule_transformation, "DFTransformation")
         .def(py::init<>())
         .def(py::init<const Eigen::Matrix4d&>())
-        .def(py::init<const Eigen::Matrix3d&, const Eigen::Vector3d&>())
 
-        .def_readwrite("transformation_matrix", &diffCheck::transformation::DFTransformation::TransformationMatrix)
-        .def_readwrite("rotation_matrix", &diffCheck::transformation::DFTransformation::RotationMatrix)
-        .def_readwrite("translation_vector", &diffCheck::transformation::DFTransformation::TranslationVector);
-        
+        .def_readwrite("transformation_matrix", &diffCheck::transformation::DFTransformation::TransformationMatrix);
 
     //#################################################################################################
     // dfb_registrations namespace

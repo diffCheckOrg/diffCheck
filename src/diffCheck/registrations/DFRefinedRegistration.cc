@@ -14,8 +14,6 @@ namespace diffCheck::registrations
         bool usePointToPlane)
     {
         std::vector<Eigen::Vector3d> minMax = source->ComputeBoundingBox();
-        double scale = (minMax[1] - minMax[0]).norm();
-        double absoluteMaxCorrespondenceDistance = maxCorrespondenceDistance * scale;
 
         std::shared_ptr<open3d::geometry::PointCloud> O3Dsource = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> O3Dtarget = target->Cvt2O3DPointCloud();
@@ -37,7 +35,7 @@ namespace diffCheck::registrations
             result = open3d::pipelines::registration::RegistrationICP(
                 *O3Dsource, 
                 *O3Dtarget, 
-                absoluteMaxCorrespondenceDistance,
+                maxCorrespondenceDistance,
                 initialTransformation,
                 transformation_estimation,
                 criteria);
@@ -49,7 +47,7 @@ namespace diffCheck::registrations
             result = open3d::pipelines::registration::RegistrationICP(
                 *O3Dsource, 
                 *O3Dtarget, 
-                absoluteMaxCorrespondenceDistance,
+                maxCorrespondenceDistance,
                 initialTransformation,
                 transformation_estimation,
                 criteria);
@@ -68,8 +66,6 @@ namespace diffCheck::registrations
             double relativeRMSE)
     {
         std::vector<Eigen::Vector3d> minMax = source->ComputeBoundingBox();
-        double scale = (minMax[1] - minMax[0]).norm();
-        double absoluteMaxCorrespondenceDistance = maxCorrespondenceDistance * scale;
 
         std::shared_ptr<open3d::geometry::PointCloud> O3Dsource = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> O3Dtarget = target->Cvt2O3DPointCloud();
@@ -91,7 +87,7 @@ namespace diffCheck::registrations
             = open3d::pipelines::registration::RegistrationGeneralizedICP(
                 *O3Dsource, 
                 *O3Dtarget, 
-                absoluteMaxCorrespondenceDistance,
+                maxCorrespondenceDistance,
                 initialTransformation,
                 transformation_estimation,
                 criteria);

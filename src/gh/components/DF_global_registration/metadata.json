@@ -14,35 +14,35 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_mesh",
-                "nickname": "i_mesh",
-                "description": "Mesh to sample into a point cloud.",
+                "name": "i_cloud_source",
+                "nickname": "i_cloud_source",
+                "description": "The source point cloud.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "mesh"
+                "typeHintID": "pointcloud"
             },
             {
-                "name": "i_points",
-                "nickname": "i_points",
-                "description": "The number of points of the created cloud.",
+                "name": "i_cloud_target",
+                "nickname": "i_cloud_target",
+                "description": "The target cloud.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "int"
+                "typeHintID": "pointcloud"
             }
         ],
         "outputParameters": [
             {
-                "name": "o_rh_cloud",
-                "nickname": "o_rh_cloud",
-                "description": "The output sampled cloud.",
+                "name": "o_x_form",
+                "nickname": "o_x_form",
+                "description": "The computed transformation.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

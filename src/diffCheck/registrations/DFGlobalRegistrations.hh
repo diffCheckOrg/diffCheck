@@ -37,9 +37,9 @@ namespace diffCheck::registrations
         static diffCheck::transformation::DFTransformation O3DFastGlobalRegistrationFeatureMatching(
             std::shared_ptr<geometry::DFPointCloud> source, 
             std::shared_ptr<geometry::DFPointCloud> target,
-            bool voxelize = true,
+            bool voxelize = false,
             double voxelSize = 0.005,
-            double radiusKDTreeSearch = 0.1,
+            double radiusKDTreeSearch = 0.8,
             int maxNeighborKDTreeSearch = 50,
             double maxCorrespondenceDistance = 0.05,
             int iterationNumber = 128,
@@ -69,9 +69,9 @@ namespace diffCheck::registrations
         static diffCheck::transformation::DFTransformation O3DRansacOnFeatureMatching(
             std::shared_ptr<geometry::DFPointCloud> source,
             std::shared_ptr<geometry::DFPointCloud> target,
-            bool voxelize = true,
+            bool voxelize = false,
             double voxelSize = 0.005,
-            double radiusKDTreeSearch = 0.1,
+            double radiusKDTreeSearch = 0.8,
             int maxNeighborKDTreeSearch  = 50,
             double maxCorrespondenceDistance = 0.05,
             bool isTEstimatePt2Pt = false,
