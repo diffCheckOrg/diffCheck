@@ -21,7 +21,7 @@ runs:
     - name: Launch componentizer
       run: |
         $command="python"
-        $componentizer="${{github.workspace}}/invoke/ghcomponentize/ghcomponentizer.py"
+        $componentizer="${{github.workspace}}/invokes/ghcomponentize/ghcomponentizer.py"
         $params=$componentizer, "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
         $prefix="${{ inputs.prefix }}"
         if( $prefix )
