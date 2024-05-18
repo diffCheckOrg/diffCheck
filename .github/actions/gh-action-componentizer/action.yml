@@ -1,0 +1,35 @@
+name: 'Grasshopper componentizer'
+description: 'Create GHUser components from Python source code'
+inputs:
+  source:
+    description: 'Source directory where code for all components is stored'
+    required: true
+  target:
+    description: 'Target directory for ghuser files'
+    required: true
+  prefix:
+    description: 'Add this prefix to the name of each generated component'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Grasshopper
+      run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
+      shell: pwsh
+
+    - name: Launch componentizer
+      run: |
+        $command="python"
+        $componentizer="${{github.workspace}}/invoke/ghcomponentize/ghcomponentizer.py"
+        $params=$componentizer, "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
+        $prefix="${{ inputs.prefix }}"
+        if( $prefix )
+        {
+          $params=$params + "--prefix", "$prefix"
+        }
+        & $command $params
+      shell: pwsh
+branding:
+  icon: 'box'
+  color: 'orange'

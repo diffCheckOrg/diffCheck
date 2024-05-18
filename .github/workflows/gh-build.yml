@@ -19,11 +19,10 @@ jobs:
           choco install python --version=3.9.10
           python -m pip install pythonnet==3.0.3
 
-      - uses: compas-dev/compas-actions.ghpython_components@v5
+      - uses: ./.github/actions/gh-action-componentizer
         with:
           source: src/gh/components
           target: build
-          interpreter: cpython
 
       - uses: actions/upload-artifact@v2
         with:
