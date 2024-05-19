@@ -31,6 +31,13 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         
         .def("compute_P2PDistance", &diffCheck::geometry::DFPointCloud::ComputeP2PDistance)
         .def("compute_BoundingBox", &diffCheck::geometry::DFPointCloud::ComputeBoundingBox)
+        
+        .def("voxel_downsample", &diffCheck::geometry::DFPointCloud::VoxelDownsample,
+            py::arg("voxel_size"))
+        .def("uniform_downsample", &diffCheck::geometry::DFPointCloud::UniformDownsample,
+            py::arg("every_k_points"))
+        .def("downsample_by_size", &diffCheck::geometry::DFPointCloud::DownsampleBySize,
+            py::arg("target_size"))
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
 

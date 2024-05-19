@@ -16,7 +16,7 @@ from diffCheck import df_cvt_bindings
 import diffCheck.df_util
 
 
-class ICPRegistration(component):
+class DFICPRegistration(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
         i_cloud_target: rg.PointCloud,
@@ -106,7 +106,7 @@ class ICPRegistration(component):
 
 
 # if __name__ == "__main__":
-#     com = ICPRegistration()
+#     com = DFICPRegistration()
 #     o_x_form = com.RunScript(
 #         i_cloud_source,
 #         i_cloud_target,

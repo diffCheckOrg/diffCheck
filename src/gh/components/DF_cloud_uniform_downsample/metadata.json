@@ -1,0 +1,52 @@
+{
+    "name": "DFCloudUniformDownsample",
+    "nickname": "UniformDown",
+    "category": "diffCheck",
+    "subcategory": "Downsample",
+    "description": "Downsample a point cloud using in a uniform way by selecting every k points to delete.",
+    "exposure": 4,
+    "instanceGuid": "eea0b516-bfc6-4b03-aaee-9b9617e5e919",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud",
+                "nickname": "i_cloud",
+                "description": "The point cloud to reduce the size.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_every_k_points",
+                "nickname": "i_every_k_points",
+                "description": "Every k value points will be deleted.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The downsampled cloud.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
