@@ -31,7 +31,7 @@ class DFCloudSizeDownsample(component):
         df_cloud.downsample_by_size(i_size)
         o_cloud = df_cvt_bindings.cvt_dfcloud_2_rhcloud(df_cloud)
 
-        return o_cloud
+        return [o_cloud]
 
 # if __name__ == "__main__":
 #     com = DFCloudSizeDownsample()
