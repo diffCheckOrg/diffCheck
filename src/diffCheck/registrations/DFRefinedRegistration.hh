@@ -5,7 +5,7 @@
 
 namespace diffCheck::registrations
 {
-    class RefinedRegistration
+    class DFRefinedRegistration
     {
         public: ///< open3d registration methods
         /**
@@ -28,7 +28,7 @@ namespace diffCheck::registrations
         static diffCheck::transformation::DFTransformation O3DICP(
             std::shared_ptr<geometry::DFPointCloud> source, 
             std::shared_ptr<geometry::DFPointCloud> target,
-            double maxCorrespondenceDistance = 0.05,
+            double maxCorrespondenceDistance = 5,
             bool scalingForPointToPointTransformationEstimation = false,
             double relativeFitness = 1e-6,
             double relativeRMSE = 1e-6,
@@ -55,7 +55,7 @@ namespace diffCheck::registrations
         static diffCheck::transformation::DFTransformation O3DGeneralizedICP(
             std::shared_ptr<geometry::DFPointCloud> source, 
             std::shared_ptr<geometry::DFPointCloud> target,
-            double maxCorrespondenceDistance = 0.05,
+            double maxCorrespondenceDistance = 5,
             int maxIteration = 30,
             double relativeFitness = 1e-6,
             double relativeRMSE = 1e-6);

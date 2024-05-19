@@ -1,0 +1,124 @@
+{
+    "name": "ICPRegistration",
+    "nickname": "ICP",
+    "category": "diffCheck",
+    "subcategory": "Registrations",
+    "description": "Use this to refine a registration between two point clouds.",
+    "exposure": 4,
+    "instanceGuid": "9f52f795-a865-455e-b975-417375c72ece",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_recompute",
+                "nickname": "i_recompute",
+                "description": "Connect a button to recompute the registration.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_use_generalized_icp",
+                "nickname": "i_use_generalized_icp",
+                "description": "Insert a toggle. If set to true, it will use the generalized ICP algorithm. If false, it will use the standard ICP algorithm.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_cloud_source",
+                "nickname": "i_cloud_source",
+                "description": "The source point cloud.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_cloud_target",
+                "nickname": "i_cloud_target",
+                "description": "The target cloud.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_max_corrspondence_dist",
+                "nickname": "i_max_corrspondence_dist",
+                "description": "Maximum relative correspondence distance. 0.01 means 1% of the bounding box diagonal.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_max_iteration",
+                "nickname": "i_max_iteration",
+                "description": "Maximum number of ICP iterations to use in the p2p transformation estimation.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "is_t_estimate_pt2pt",
+                "nickname": "is_t_estimate_pt2pt",
+                "description": "(NB: only valid for ICP generalized) If true it deforms the cloud to match. The transformation estimation method to use. By default, it uses a point to point transformation estimation. If true it will scale and deform the cloud.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_use_point_to_plane",
+                "nickname": "i_use_point_to_plane",
+                "description": "(NB: only valid for ICP generalized) Use point-to-plane ICP instead of point-to-point. This replaces the p2p with the point-to-plane transformation estimation.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_x_form",
+                "nickname": "o_x_form",
+                "description": "The computed transformation.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

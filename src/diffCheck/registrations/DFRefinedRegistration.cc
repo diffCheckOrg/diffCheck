@@ -3,7 +3,7 @@
 
 namespace diffCheck::registrations
 {
-    diffCheck::transformation::DFTransformation RefinedRegistration::O3DICP(
+    diffCheck::transformation::DFTransformation DFRefinedRegistration::O3DICP(
         std::shared_ptr<geometry::DFPointCloud> source, 
         std::shared_ptr<geometry::DFPointCloud> target,
         double maxCorrespondenceDistance,
@@ -57,7 +57,7 @@ namespace diffCheck::registrations
             = diffCheck::transformation::DFTransformation(result.transformation_);
         return transformation;
     }
-    diffCheck::transformation::DFTransformation RefinedRegistration::O3DGeneralizedICP(
+    diffCheck::transformation::DFTransformation DFRefinedRegistration::O3DGeneralizedICP(
         std::shared_ptr<geometry::DFPointCloud> source,
         std::shared_ptr<geometry::DFPointCloud> target,
          double maxCorrespondenceDistance,

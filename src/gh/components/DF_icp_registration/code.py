@@ -16,26 +16,29 @@ from diffCheck import df_cvt_bindings
 import diffCheck.df_util
 
 
-class DFFastGlobalRegistration(component):
+class ICPRegistration(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
         i_cloud_target: rg.PointCloud,
-        i_radius_kd_search: float,
-        i_neighbours_kd_search: int,
+
+        i_use_generalized_icp: bool,
+
         i_max_corrspondence_dist: float,
-        i_iteration_number: int,
-        i_max_tuple_count: int
+        i_max_iteration: int,
+
+        is_t_estimate_pt2pt: bool,  # valid only for 03dicp
+        i_use_point_to_plane: bool  # valid only for 03dicp
     ) -> rg.Transform:
         """
             The global registration component aligns two point clouds in a rough way.
 
             :param i_cloud_source: source point cloud
             :param i_cloud_target: target point cloud to align to
-            :param i_radius_kd_search: radius for the kd search
-            :param i_neighbours_kd_search: number of neighbours to consider
+            :param i_use_generalized_icp: if true, it uses the generalized ICP algorithm
             :param i_max_corrspondence_dist: maximum correspondence distance
-            :param i_iteration_number: number of iterations
-            :param i_max_tuple_count: maximum tuple count
+            :param i_max_iteration: maximum number of iterations
+            :param is_t_estimate_pt2pt: (valid only for 03dicp) if true, it deforms the point cloud
+            :param i_use_point_to_plane: (valid only for 03dicp) if true, it uses point to plane registration
 
             :return o_x_form : transformation matrix
         """
@@ -44,31 +47,44 @@ class DFFastGlobalRegistration(component):
             return None
 
         # set default values
-        if i_radius_kd_search is None: i_radius_kd_search = 0.8
-        if i_neighbours_kd_search is None: i_neighbours_kd_search = 50
-        if i_max_corrspondence_dist is None: i_max_corrspondence_dist = 0.05
-        if i_iteration_number is None: i_iteration_number = 128
-        if i_max_tuple_count is None: i_max_tuple_count = 1000
+        if i_use_generalized_icp is None: i_use_generalized_icp = True
+        if i_max_corrspondence_dist is None: i_max_corrspondence_dist = 5
+        if i_max_iteration is None: i_max_iteration = 50
 
         # get the working unit of the Rhino document, if other than meters, set a multiplier factor
         scalef = diffCheck.df_util.get_doc_2_meters_unitf()
-        i_radius_kd_search *= scalef
         i_max_corrspondence_dist *= scalef
 
+        # conversion
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
         df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
 
-        df_xform = diffcheck_bindings.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(
-            source=df_cloud_source,
-            target=df_cloud_target,
-            voxelize=False,  # set as default
-            voxel_size=0.1,  # set as default
-            radius_kd_tree_search=i_radius_kd_search,
-            max_neighbor_kd_tree_search=i_neighbours_kd_search,
-            max_correspondence_distance=i_max_corrspondence_dist,
-            iteration_number=i_iteration_number,
-            max_tuple_count=i_max_tuple_count
-        )
+        # fast registration
+        # these are the only hardcoded values since it will get the best result
+        RELATIVE_FITNESS = 1e-6
+        RELATIVE_RMSE = 1e-6
+
+        df_xform = None
+        if i_use_generalized_icp:
+            df_xform = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(
+                source=df_cloud_source,
+                target=df_cloud_target,
+                max_correspondence_distance=i_max_corrspondence_dist,
+                max_iteration=i_max_iteration,
+                relative_fitness=RELATIVE_FITNESS,
+                relative_rmse=RELATIVE_RMSE
+            )
+        else:
+            df_xform = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DICP(
+                source=df_cloud_source,
+                target=df_cloud_target,
+                max_correspondence_distance=i_max_corrspondence_dist,
+                is_t_estimate_pt2pt=is_t_estimate_pt2pt,
+                relative_fitness=RELATIVE_FITNESS,
+                relative_rmse=RELATIVE_RMSE,
+                max_iteration=i_max_iteration,
+                use_point_to_plane=i_use_point_to_plane
+            )
         print("-------------------")
         print("Estimated transformation matrix:")
         print(df_xform.transformation_matrix)
@@ -83,20 +99,23 @@ class DFFastGlobalRegistration(component):
         if rh_form == rg.Transform.Identity:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")
             return None
-            
+        
         o_x_form = rh_form
 
         return o_x_form
 
 
 if __name__ == "__main__":
-    com = DFFastGlobalRegistration()
+    com = ICPRegistration()
     o_x_form = com.RunScript(
         i_cloud_source,
         i_cloud_target,
-        i_radius_kd_search,
-        i_neighbours_kd_search,
+
+        i_use_generalized_icp,
+
         i_max_corrspondence_dist,
-        i_iteration_number,
-        i_max_tuple_count
+        i_max_iteration,
+
+        is_t_estimate_pt2pt,
+        i_use_point_to_plane
         )

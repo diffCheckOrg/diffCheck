@@ -18,7 +18,7 @@ int main()
 
   // global registration
   diffCheck::transformation::DFTransformation xform = 
-    diffCheck::registrations::DFGlobalRegistrations::O3DFastGlobalRegistrationFeatureMatching(
+    diffCheck::registrations::DFGlobalRegistrations::O3DRansacOnFeatureMatching(
         pcdSrc, pcdTgt);
 
   pcdTgt->ApplyTransformation(xform);

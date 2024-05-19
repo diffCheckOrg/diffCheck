@@ -15,16 +15,19 @@ from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
 import diffCheck.df_util
 
-
-class DFFastGlobalRegistration(component):
+class DFRANSACGlobalRegistration(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
         i_cloud_target: rg.PointCloud,
         i_radius_kd_search: float,
         i_neighbours_kd_search: int,
         i_max_corrspondence_dist: float,
-        i_iteration_number: int,
-        i_max_tuple_count: int
+        is_t_estimate_pt2pt: bool,
+        i_ransac_n: int,
+        i_checker_dist: float,
+        i_similarity_threshold: float,
+        i_max_iterations: int,
+        i_confidence_threshold: float
     ) -> rg.Transform:
         """
             The global registration component aligns two point clouds in a rough way.
@@ -34,8 +37,12 @@ class DFFastGlobalRegistration(component):
             :param i_radius_kd_search: radius for the kd search
             :param i_neighbours_kd_search: number of neighbours to consider
             :param i_max_corrspondence_dist: maximum correspondence distance
-            :param i_iteration_number: number of iterations
-            :param i_max_tuple_count: maximum tuple count
+            :param is_t_estimate_pt2pt: if true, it deforms the point cloud
+            :param i_ransac_n: number of ransac iterations
+            :param i_checker_dist: correspondence checker distance
+            :param i_similarity_threshold: similarity threshold for the correspondence
+            :param i_max_iterations: maximum number of iterations
+            :param i_confidence_threshold: confidence threshold for RANSAC
 
             :return o_x_form : transformation matrix
         """
@@ -44,21 +51,28 @@ class DFFastGlobalRegistration(component):
             return None
 
         # set default values
-        if i_radius_kd_search is None: i_radius_kd_search = 0.8
+        if i_radius_kd_search is None: i_radius_kd_search = 1
         if i_neighbours_kd_search is None: i_neighbours_kd_search = 50
-        if i_max_corrspondence_dist is None: i_max_corrspondence_dist = 0.05
-        if i_iteration_number is None: i_iteration_number = 128
-        if i_max_tuple_count is None: i_max_tuple_count = 1000
+        if i_max_corrspondence_dist is None: i_max_corrspondence_dist = 0.5
+        if is_t_estimate_pt2pt is None: is_t_estimate_pt2pt = False
+        if i_ransac_n is None: i_ransac_n = 3
+        if i_checker_dist is None: i_checker_dist = 0.5
+        if i_similarity_threshold is None: i_similarity_threshold = 1.5
+        if i_max_iterations is None: i_max_iterations = 5000
+        if i_confidence_threshold is None: i_confidence_threshold = 0.999
 
         # get the working unit of the Rhino document, if other than meters, set a multiplier factor
         scalef = diffCheck.df_util.get_doc_2_meters_unitf()
         i_radius_kd_search *= scalef
         i_max_corrspondence_dist *= scalef
+        i_checker_dist *= scalef
 
+        # conversion
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
         df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
 
-        df_xform = diffcheck_bindings.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(
+        # fast registration
+        df_xform = diffcheck_bindings.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(
             source=df_cloud_source,
             target=df_cloud_target,
             voxelize=False,  # set as default
@@ -66,8 +80,12 @@ class DFFastGlobalRegistration(component):
             radius_kd_tree_search=i_radius_kd_search,
             max_neighbor_kd_tree_search=i_neighbours_kd_search,
             max_correspondence_distance=i_max_corrspondence_dist,
-            iteration_number=i_iteration_number,
-            max_tuple_count=i_max_tuple_count
+            is_t_estimate_pt2pt=is_t_estimate_pt2pt,
+            ransac_n=i_ransac_n,
+            correspondence_checker_distance=i_checker_dist,
+            similarity_threshold=i_similarity_threshold,
+            ransac_max_iteration=i_max_iterations,
+            ransac_confidence_threshold=i_confidence_threshold
         )
         print("-------------------")
         print("Estimated transformation matrix:")
@@ -83,20 +101,24 @@ class DFFastGlobalRegistration(component):
         if rh_form == rg.Transform.Identity:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")
             return None
-            
+
         o_x_form = rh_form
 
         return o_x_form
 
 
 if __name__ == "__main__":
-    com = DFFastGlobalRegistration()
+    com = DFRANSACGlobalRegistration()
     o_x_form = com.RunScript(
         i_cloud_source,
         i_cloud_target,
         i_radius_kd_search,
         i_neighbours_kd_search,
         i_max_corrspondence_dist,
-        i_iteration_number,
-        i_max_tuple_count
+        is_t_estimate_pt2pt,
+        i_ransac_n,
+        i_checker_dist,
+        i_similarity_threshold,
+        i_max_iterations,
+        i_confidence_threshold
         )

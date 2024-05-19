@@ -73,10 +73,10 @@ namespace diffCheck::registrations
             double voxelSize = 0.005,
             double radiusKDTreeSearch = 0.8,
             int maxNeighborKDTreeSearch  = 50,
-            double maxCorrespondenceDistance = 0.05,
+            double maxCorrespondenceDistance = 0.5,
             bool isTEstimatePt2Pt = false,
             int ransacN = 3,
-            double correspondenceCheckerDistance = 0.05,
+            double correspondenceCheckerDistance = 0.5,
             double similarityThreshold = 0.9,
             int ransacMaxIteration = 100000,
             double ransacConfidenceThreshold = 0.999);
