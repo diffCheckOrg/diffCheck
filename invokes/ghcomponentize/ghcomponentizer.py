@@ -60,7 +60,6 @@ WIRE_DISPLAY = dict(
     valid=set([0, 1, 2]), map=dict(default=0, faint=1, hidden=2), default=0
 )
 
-
 def fetch_ghio_lib(target_folder="temp"):
     """Fetch the GH_IO.dll library from the NuGet packaging system."""
     ghio_dll = "GH_IO.dll"
@@ -76,7 +75,6 @@ def fetch_ghio_lib(target_folder="temp"):
 
     return dst_file
 
-
 def find_ghio_assembly(libdir):
     for root, _dirs, files in os.walk(libdir):
         for basename in files:
@@ -84,17 +82,14 @@ def find_ghio_assembly(libdir):
                 filename = os.path.join(root, basename)
                 return filename
 
-
 def bitmap_from_image_path(image_path):
     with open(image_path, "rb") as imageFile:
         # Ensure img_string is a string, not a bytes object
         img_string = base64.b64encode(imageFile.read())
         if isinstance(img_string, bytes):
             img_string = img_string.decode()
-
         # Now you can pass img_string to the FromBase64String method
         return System.Convert.FromBase64String(img_string)
-    # return System.Convert.FromBase64String(img_string)
 
 
 def validate_source_bundle(source):
@@ -164,9 +159,7 @@ def parse_param_access(access):
                 sorted(ACCESS["valid"])
             )
         )
-
     return access
-
 
 def parse_wire_display(wire_display):
     try:
@@ -180,9 +173,7 @@ def parse_wire_display(wire_display):
                 sorted(WIRE_DISPLAY["valid"])
             )
         )
-
     return wire_display
-
 
 def parse_param_type_hint(type_hint_id):
     type_hint_id = type_hint_id or PARAM_TYPE["default"]
@@ -213,7 +204,6 @@ def replace_templates(code, version, name, ghuser_name):
     code = TEMPLATE_GHUSER_NAME.sub(ghuser_name, code)
 
     return code
-
 
 def create_ghuser_component(source, target, version=None, prefix=None):
     from GH_IO.Serialization import GH_LooseChunk
@@ -255,9 +245,6 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     ghpython_root.SetString("Name", data["name"])
     ghpython_root.SetString("NickName", data["nickname"])
     ghpython_root.SetBoolean("MarshalGuids", ghpython_data.get("marshalGuids", True))
-
-    # ghpython_root.CreateChunk('Attributes')
-    # for mf in ('Bounds', 'Pivot', 'Selected'):
 
     params = ghpython_root.CreateChunk("ParameterData")
     inputParam = ghpython_data.get("inputParameters", [])
@@ -329,7 +316,6 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     language_spec.SetString("Taxon", "*.*.python")
     language_spec.SetString("Version", CPY_VER)
 
-    # xml_serialized = ghpython_root.Serialize_Xml()
     root.SetByteArray("Object", ghpython_root.Serialize_Binary())
     System.IO.File.WriteAllBytes(target, root.Serialize_Binary())
 

@@ -105,17 +105,17 @@ class ICPRegistration(component):
         return o_x_form
 
 
-if __name__ == "__main__":
-    com = ICPRegistration()
-    o_x_form = com.RunScript(
-        i_cloud_source,
-        i_cloud_target,
+# if __name__ == "__main__":
+#     com = ICPRegistration()
+#     o_x_form = com.RunScript(
+#         i_cloud_source,
+#         i_cloud_target,
 
-        i_use_generalized_icp,
+#         i_use_generalized_icp,
 
-        i_max_corrspondence_dist,
-        i_max_iteration,
+#         i_max_corrspondence_dist,
+#         i_max_iteration,
 
-        is_t_estimate_pt2pt,
-        i_use_point_to_plane
-        )
+#         is_t_estimate_pt2pt,
+#         i_use_point_to_plane
+#         )

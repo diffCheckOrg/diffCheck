@@ -107,18 +107,18 @@ class DFRANSACGlobalRegistration(component):
         return o_x_form
 
 
-if __name__ == "__main__":
-    com = DFRANSACGlobalRegistration()
-    o_x_form = com.RunScript(
-        i_cloud_source,
-        i_cloud_target,
-        i_radius_kd_search,
-        i_neighbours_kd_search,
-        i_max_corrspondence_dist,
-        is_t_estimate_pt2pt,
-        i_ransac_n,
-        i_checker_dist,
-        i_similarity_threshold,
-        i_max_iterations,
-        i_confidence_threshold
-        )
+# if __name__ == "__main__":
+#     com = DFRANSACGlobalRegistration()
+#     o_x_form = com.RunScript(
+#         i_cloud_source,
+#         i_cloud_target,
+#         i_radius_kd_search,
+#         i_neighbours_kd_search,
+#         i_max_corrspondence_dist,
+#         is_t_estimate_pt2pt,
+#         i_ransac_n,
+#         i_checker_dist,
+#         i_similarity_threshold,
+#         i_max_iterations,
+#         i_confidence_threshold
+#         )

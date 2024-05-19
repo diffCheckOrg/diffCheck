@@ -83,20 +83,20 @@ class DFFastGlobalRegistration(component):
         if rh_form == rg.Transform.Identity:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")
             return None
-            
+
         o_x_form = rh_form
 
         return o_x_form
 
 
-if __name__ == "__main__":
-    com = DFFastGlobalRegistration()
-    o_x_form = com.RunScript(
-        i_cloud_source,
-        i_cloud_target,
-        i_radius_kd_search,
-        i_neighbours_kd_search,
-        i_max_corrspondence_dist,
-        i_iteration_number,
-        i_max_tuple_count
-        )
+# if __name__ == "__main__":
+#     com = DFFastGlobalRegistration()
+#     o_x_form = com.RunScript(
+#         i_cloud_source,
+#         i_cloud_target,
+#         i_radius_kd_search,
+#         i_neighbours_kd_search,
+#         i_max_corrspondence_dist,
+#         i_iteration_number,
+#         i_max_tuple_count
+#         )
