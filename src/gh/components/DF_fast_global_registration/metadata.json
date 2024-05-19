@@ -1,9 +1,9 @@
 {
-    "name": "DFMeshToCloud",
-    "nickname": "Geo2Pcd",
+    "name": "FastGlobalRegistration",
+    "nickname": "FastGReg",
     "category": "diffCheck",
     "subcategory": "Registrations",
-    "description": "Register two point clouds together if a fast global registration.",
+    "description": "Register two point clouds together in a fast manner.",
     "exposure": 4,
     "instanceGuid": "cacd1868-5e8f-451c-b89a-51a075f332cd",
     "ghpython": {
