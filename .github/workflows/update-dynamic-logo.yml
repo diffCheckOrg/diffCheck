@@ -1,8 +1,12 @@
 name: "Update Logo"
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'  # Run this workflow every 5 minutes
+push:
+    branches: ["main"]
+    pull_request:
+    branches: ["main"]
+#   schedule:
+#     - cron: '*/5 * * * *'  # Run this workflow every 5 minutes
 
 jobs:
   update-logo:
