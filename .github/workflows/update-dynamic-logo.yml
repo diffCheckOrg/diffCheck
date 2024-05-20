@@ -2,7 +2,7 @@ name: "Update Logo"
 
 on:
   schedule:
-    - cron: '*/1 * * * *'  # Run this workflow every 5 minutes
+    - cron: '*/5 * * * *'  # Run this workflow every 5 minutes
 
 jobs:
   update-logo:
