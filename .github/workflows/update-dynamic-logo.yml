@@ -1,0 +1,21 @@
+name: "Update Logo"
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'  # Run this workflow every 5 minutes
+
+jobs:
+  update-logo:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - uses: ./.github/actions/dynamic-logo
+    - run: |
+        git diff
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git commit -am "Logo updated"
+        git push

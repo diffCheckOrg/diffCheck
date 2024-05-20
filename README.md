@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./assets/logo/logo_pixelized_bwvioelt.png" width="150">
+    <img src="assets\logo\dynamic_icon_dc\dynamic_logo_pool\0904.png" width="170">
 </p>
 <p align="center">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/cpp-build.yml/badge.svg">

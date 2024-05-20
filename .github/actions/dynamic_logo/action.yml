@@ -1,0 +1,8 @@
+name: 'Update Logo Python'
+
+description: 'Updates the logo image through python'
+runs:
+  using: 'composite'
+  steps:
+    - run: python script.py
+      shell: bash
