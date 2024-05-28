@@ -40,11 +40,8 @@ namespace diffCheck::registrations
         // voxelize at the scale of the point cloud
         if (voxelise)
         {
-            double absoluteVoxelSize = 
-            voxelSize * std::abs(sourceO3D->GetMaxBound().norm() - sourceO3D->GetMinBound().norm());
-
-            sourceO3D->VoxelDownSample(absoluteVoxelSize);
-            targetO3D->VoxelDownSample(absoluteVoxelSize);
+            sourceO3D->VoxelDownSample(voxelSize);
+            targetO3D->VoxelDownSample(voxelSize);
         }
 
         if (sourceO3D->normals_.size() == 0)
@@ -57,18 +54,15 @@ namespace diffCheck::registrations
             targetO3D->EstimateNormals();
         }
 
-        double absoluteRadiusKDTreeSearch = 
-        radiusKDTreeSearch * std::abs(sourceO3D->GetMaxBound().norm() - sourceO3D->GetMinBound().norm());
-
         std::shared_ptr<open3d::pipelines::registration::Feature> sourceFPFHFeatures = 
         open3d::pipelines::registration::ComputeFPFHFeature(
             *sourceO3D,
-            open3d::geometry::KDTreeSearchParamHybrid(absoluteRadiusKDTreeSearch, maxNeighborKDTreeSearch));
+            open3d::geometry::KDTreeSearchParamHybrid(radiusKDTreeSearch, maxNeighborKDTreeSearch));
 
         std::shared_ptr<open3d::pipelines::registration::Feature> targetFPFHFeatures =
         open3d::pipelines::registration::ComputeFPFHFeature(
             *targetO3D,
-            open3d::geometry::KDTreeSearchParamHybrid(absoluteRadiusKDTreeSearch, maxNeighborKDTreeSearch));
+            open3d::geometry::KDTreeSearchParamHybrid(radiusKDTreeSearch, maxNeighborKDTreeSearch));
 
         std::shared_ptr<open3d::pipelines::registration::FastGlobalRegistrationOption> option = 
         std::make_shared<open3d::pipelines::registration::FastGlobalRegistrationOption>();
@@ -115,11 +109,8 @@ namespace diffCheck::registrations
         // voxelize at the scale of the point cloud
         if (voxelise)
         {
-            double absoluteVoxelSize = 
-            voxelSize * std::abs(sourceO3D->GetMaxBound().norm() - sourceO3D->GetMinBound().norm());
-
-            sourceO3D->VoxelDownSample(absoluteVoxelSize);
-            targetO3D->VoxelDownSample(absoluteVoxelSize);
+            sourceO3D->VoxelDownSample(voxelSize);
+            targetO3D->VoxelDownSample(voxelSize);
         }
         
         if (sourceO3D->normals_.size() == 0)
@@ -132,30 +123,20 @@ namespace diffCheck::registrations
             targetO3D->EstimateNormals();
         }
 
-        // convert the relative values to absolute ones
-        double absoluteRadiusKDTreeSearch = 
-        radiusKDTreeSearch * std::abs(sourceO3D->GetMaxBound().norm() - sourceO3D->GetMinBound().norm());
-
-        double absoluteCorrespodenceCheckerDistance = 
-        correspondenceCheckerDistance * std::abs(sourceO3D->GetMaxBound().norm() - sourceO3D->GetMinBound().norm());
-
-        double absoluteMaxCorrespondenceDistance =
-        maxCorrespondenceDistance * std::abs(sourceO3D->GetMaxBound().norm() - sourceO3D->GetMinBound().norm());
-
         std::shared_ptr<open3d::pipelines::registration::Feature> sourceFPFHFeatures = 
         open3d::pipelines::registration::ComputeFPFHFeature(
             *sourceO3D,
-            open3d::geometry::KDTreeSearchParamHybrid(absoluteRadiusKDTreeSearch, maxNeighborKDTreeSearch));
+            open3d::geometry::KDTreeSearchParamHybrid(radiusKDTreeSearch, maxNeighborKDTreeSearch));
 
         std::shared_ptr<open3d::pipelines::registration::Feature> targetFPFHFeatures = 
         open3d::pipelines::registration::ComputeFPFHFeature(
             *targetO3D,
-            open3d::geometry::KDTreeSearchParamHybrid(absoluteRadiusKDTreeSearch, maxNeighborKDTreeSearch));
+            open3d::geometry::KDTreeSearchParamHybrid(radiusKDTreeSearch, maxNeighborKDTreeSearch));
 
         std::vector<std::reference_wrapper<const open3d::pipelines::registration::CorrespondenceChecker>> correspondanceChecker;
         
         open3d::pipelines::registration::CorrespondenceCheckerBasedOnDistance checkerOnDistance = 
-        open3d::pipelines::registration::CorrespondenceCheckerBasedOnDistance(absoluteCorrespodenceCheckerDistance);
+        open3d::pipelines::registration::CorrespondenceCheckerBasedOnDistance(correspondenceCheckerDistance);
 
         open3d::pipelines::registration::CorrespondenceCheckerBasedOnEdgeLength checkerOnEdgeLength = 
         open3d::pipelines::registration::CorrespondenceCheckerBasedOnEdgeLength(similarityThreshold);
@@ -168,7 +149,7 @@ namespace diffCheck::registrations
             *sourceFPFHFeatures,
             *targetFPFHFeatures,
             true,
-            absoluteMaxCorrespondenceDistance,
+            maxCorrespondenceDistance,
             transformationEstimation,
             ransacN,
             correspondanceChecker,

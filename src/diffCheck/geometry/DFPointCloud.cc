@@ -53,7 +53,60 @@ namespace diffCheck::geometry
         extremePoints.push_back(boundingBox.GetMinBound());
         extremePoints.push_back(boundingBox.GetMaxBound());
         return extremePoints;
-    }   
+    }
+
+    void DFPointCloud::VoxelDownsample(double voxelSize)
+    {
+        if (voxelSize <= 0)
+            throw std::invalid_argument("Voxel size must be greater than 0.");
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudDown = O3DPointCloud->VoxelDownSample(voxelSize);
+        this->Points.clear();
+        for (auto &point : O3DPointCloudDown->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudDown->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudDown->normals_)
+            this->Normals.push_back(normal);
+    }
+
+    void DFPointCloud::UniformDownsample(int everyKPoints)
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudDown = O3DPointCloud->UniformDownSample(everyKPoints);
+        this->Points.clear();
+        for (auto &point : O3DPointCloudDown->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudDown->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudDown->normals_)
+            this->Normals.push_back(normal);
+    }
+
+    void DFPointCloud::DownsampleBySize(int targetSize)
+    {
+        // get the number of points and confront it with the targetSize and find the corresponding ratio (0 to 1) to downsample
+        int numPoints = this->Points.size();
+        if (numPoints <= targetSize)
+            throw std::invalid_argument("The target size must be smaller than the number of points in the cloud.");
+        double ratio = (double)targetSize / (double)numPoints;
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudDown = O3DPointCloud->RandomDownSample(ratio);
+        this->Points.clear();
+        for (auto &point : O3DPointCloudDown->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudDown->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudDown->normals_)
+            this->Normals.push_back(normal);
+    }
+
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();

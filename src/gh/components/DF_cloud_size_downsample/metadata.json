@@ -1,0 +1,52 @@
+{
+    "name": "DFCloudSizeDownsample",
+    "nickname": "SizeDown",
+    "category": "diffCheck",
+    "subcategory": "Downsample",
+    "description": "Downsample a point cloud by giving the target size of the downsampled cloud.",
+    "exposure": 4,
+    "instanceGuid": "64f506fa-04f3-4195-b68b-06a538e85687",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud",
+                "nickname": "i_cloud",
+                "description": "The point cloud to reduce the size.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_size",
+                "nickname": "i_size",
+                "description": "The size of the wished downsampled cloud.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The downsampled cloud.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

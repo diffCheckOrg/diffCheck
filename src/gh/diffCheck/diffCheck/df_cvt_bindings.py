@@ -165,3 +165,25 @@ def cvt_rhmesh_2_dfmesh(rh_mesh: rg.Mesh) -> diffcheck_bindings.dfb_geometry.DFM
         df_mesh.colors_vertex = colors_vertex
 
     return df_mesh
+
+def cvt_dfxform_2_rhxform(df_xform : diffcheck_bindings.dfb_transformation.DFTransformation) -> rg.Transform:
+    """
+        Convert a diffCheck transformation to a Rhino transformation.
+
+        :param df_xform: diffCheck transformation
+        :return rh_xform: rhino transformation
+    """
+    if not isinstance(df_xform, diffcheck_bindings.dfb_transformation.DFTransformation):
+        raise ValueError("df_xform should be a DFTransformation")
+
+    rh_xform = rg.Transform()
+
+    # translation
+    translation = df_xform.translation_vector
+    rh_xform = rg.Transform.Translation(translation[0], translation[1], translation[2])
+
+    # rotation
+    rotation = df_xform.rotation_matrix
+    rh_xform = rh_xform * rg.Transform.Rotation(rotation[0], rg.Vector3d(rotation[1], rotation[2], rotation[3]), rg.Point3d(0, 0, 0))
+
+    return rh_xform

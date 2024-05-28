@@ -58,6 +58,28 @@ namespace diffCheck::geometry
         */
         std::vector<Eigen::Vector3d> ComputeBoundingBox();
 
+    public:  ///< Downsamplers
+        /**
+         * @brief Downsample the point cloud with voxel grid
+         * 
+         * @param voxelSize the size of the voxel grid
+         */
+        void VoxelDownsample(double voxelSize);
+
+        /**
+         * @brief Downsample uniformly the point cloud
+         * 
+         * @param everyKPoints the index of the points to delete
+         */
+        void UniformDownsample(int everyKPoints);
+
+        /**
+         * @brief Downsample a cloud by a size target
+         * 
+         * @param targetSize the target size of the cloud
+         */
+        void DownsampleBySize(int targetSize);
+
     public:  ///< Transformers
         /**
          * @brief Apply a transformation to the point cloud

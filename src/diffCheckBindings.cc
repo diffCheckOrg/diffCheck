@@ -20,7 +20,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
     submodule_test.def("test", &test, "Simple function testing a vanilla python bindings.");
 
     //#################################################################################################
-    // df_geometry namespace
+    // dfb_geometry namespace
     //#################################################################################################
 
     py::module_ submodule_geometry = m.def_submodule("dfb_geometry", "A submodule for the geometry classes.");
@@ -31,6 +31,13 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         
         .def("compute_P2PDistance", &diffCheck::geometry::DFPointCloud::ComputeP2PDistance)
         .def("compute_BoundingBox", &diffCheck::geometry::DFPointCloud::ComputeBoundingBox)
+        
+        .def("voxel_downsample", &diffCheck::geometry::DFPointCloud::VoxelDownsample,
+            py::arg("voxel_size"))
+        .def("uniform_downsample", &diffCheck::geometry::DFPointCloud::UniformDownsample,
+            py::arg("every_k_points"))
+        .def("downsample_by_size", &diffCheck::geometry::DFPointCloud::DownsampleBySize,
+            py::arg("target_size"))
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
 
@@ -83,8 +90,64 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             [](diffCheck::geometry::DFMesh &self, const std::vector<Eigen::Vector3d>& value) { self.ColorsFace = value; });
     
     //#################################################################################################
-    // df_registration namespace
+    // dfb_transformation namespace
     //#################################################################################################
 
-    // py::module_ submodule_geometry = m.def_submodule("df_registration", "A submodule for the registration methods.");
+    py::module_ submodule_transformation = m.def_submodule("dfb_transformation", "A submodule for the transformation classes.");
+
+    py::class_<diffCheck::transformation::DFTransformation>(submodule_transformation, "DFTransformation")
+        .def(py::init<>())
+        .def(py::init<const Eigen::Matrix4d&>())
+
+        .def_readwrite("transformation_matrix", &diffCheck::transformation::DFTransformation::TransformationMatrix);
+
+    //#################################################################################################
+    // dfb_registrations namespace
+    //#################################################################################################
+
+    py::module_ submodule_registrations = m.def_submodule("dfb_registrations", "A submodule for the registration methods.");
+
+    py::class_<diffCheck::registrations::DFGlobalRegistrations>(submodule_registrations, "DFGlobalRegistrations")
+        .def_static("O3DFastGlobalRegistrationFeatureMatching", &diffCheck::registrations::DFGlobalRegistrations::O3DFastGlobalRegistrationFeatureMatching,
+            py::arg("source"),
+            py::arg("target"),
+            py::arg("voxelize") = false,
+            py::arg("voxel_size") = 0.005,
+            py::arg("radius_kd_tree_search") = 0.8,
+            py::arg("max_neighbor_kd_tree_search") = 50,
+            py::arg("max_correspondence_distance") = 0.05,
+            py::arg("iteration_number") = 128,
+            py::arg("max_tuple_count") = 1000)
+        .def_static("O3DRansacOnFeatureMatching", &diffCheck::registrations::DFGlobalRegistrations::O3DRansacOnFeatureMatching,
+            py::arg("source"),
+            py::arg("target"),
+            py::arg("voxelize") = false,
+            py::arg("voxel_size") = 0.005,
+            py::arg("radius_kd_tree_search") = 1.0,
+            py::arg("max_neighbor_kd_tree_search") = 50,
+            py::arg("max_correspondence_distance") = 0.5,
+            py::arg("is_t_estimate_pt2pt") = false,
+            py::arg("ransac_n") = 3,
+            py::arg("correspondence_checker_distance") = 0.05,
+            py::arg("similarity_threshold") = 1.5,
+            py::arg("ransac_max_iteration") = 5000,
+            py::arg("ransac_confidence_threshold") = 0.999);
+
+    py::class_<diffCheck::registrations::DFRefinedRegistration>(submodule_registrations, "DFRefinedRegistration")
+        .def_static("O3DICP", &diffCheck::registrations::DFRefinedRegistration::O3DICP,
+            py::arg("source"),
+            py::arg("target"),
+            py::arg("max_correspondence_distance") = 0.1,
+            py::arg("is_t_estimate_pt2pt") = false,
+            py::arg("relative_fitness") = 1e-6,
+            py::arg("relative_rmse") = 1e-6,
+            py::arg("max_iteration") = 30,
+            py::arg("use_point_to_plane") = false)
+        .def_static("O3DGeneralizedICP", &diffCheck::registrations::DFRefinedRegistration::O3DGeneralizedICP,
+            py::arg("source"),
+            py::arg("target"),
+            py::arg("max_correspondence_distance") = 0.1,
+            py::arg("max_iteration") = 30,
+            py::arg("relative_fitness") = 1e-6,
+            py::arg("relative_rmse") = 1e-6);
 }

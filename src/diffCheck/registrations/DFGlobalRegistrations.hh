@@ -20,8 +20,9 @@ namespace diffCheck::registrations
         * 
         * @param source the source diffCheck point cloud
         * @param target the target diffCheck point cloud
+        * @param voxelize whether to voxelize the point clouds before computing the FPFHFeatures. A higher value will result in a more coarse point cloud (less resulting points).
         * @param voxelSize the size of the voxels used to downsample the point clouds. It is expressed relative to the point cloud size (0.01 means voxelSize = 1% of maxSize(pointCloud). A higher value will result in a more coarse point cloud (less resulting points).
-        * @param radiusKDTreeSearch  the radius used to search for neighbors in the KDTree.it is expressed relative to the point cloud size (0.01 means radiusKDTreeSearch = 1% of maxSize(pointCloud). It is used for the calculation of FPFHFeatures
+        * @param radiusKDTreeSearch the radius used to search for neighbors in the KDTree.it is expressed relative to the point cloud size (0.01 means radiusKDTreeSearch = 1% of maxSize(pointCloud). It is used for the calculation of FPFHFeatures
         * @param maxNeighborKDTreeSearch the maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures. A higher value will result in heavier computation but potentially more precise.
         * @param maxCorrespondenceDistance the maximum distance between correspondences. A higher value will result in more correspondences, but potentially include wrong ones.
         * @param iterationNumber the number of iterations to run the RanSaC registration algorithm. A higher value will take more time to compute but increases the chances of finding a good transformation. As parameter of the FastGlobalRegistrationOption options 
@@ -36,9 +37,9 @@ namespace diffCheck::registrations
         static diffCheck::transformation::DFTransformation O3DFastGlobalRegistrationFeatureMatching(
             std::shared_ptr<geometry::DFPointCloud> source, 
             std::shared_ptr<geometry::DFPointCloud> target,
-            bool voxelize = true,
+            bool voxelize = false,
             double voxelSize = 0.005,
-            double radiusKDTreeSearch = 0.1,
+            double radiusKDTreeSearch = 0.8,
             int maxNeighborKDTreeSearch = 50,
             double maxCorrespondenceDistance = 0.05,
             int iterationNumber = 128,
@@ -68,14 +69,14 @@ namespace diffCheck::registrations
         static diffCheck::transformation::DFTransformation O3DRansacOnFeatureMatching(
             std::shared_ptr<geometry::DFPointCloud> source,
             std::shared_ptr<geometry::DFPointCloud> target,
-            bool voxelize = true,
+            bool voxelize = false,
             double voxelSize = 0.005,
-            double radiusKDTreeSearch = 0.1,
+            double radiusKDTreeSearch = 0.8,
             int maxNeighborKDTreeSearch  = 50,
-            double maxCorrespondenceDistance = 0.05,
+            double maxCorrespondenceDistance = 0.5,
             bool isTEstimatePt2Pt = false,
             int ransacN = 3,
-            double correspondenceCheckerDistance = 0.05,
+            double correspondenceCheckerDistance = 0.5,
             double similarityThreshold = 0.9,
             int ransacMaxIteration = 100000,
             double ransacConfidenceThreshold = 0.999);

@@ -1,0 +1,52 @@
+{
+    "name": "DFCloudVoxelDownsample",
+    "nickname": "VoxelDown",
+    "category": "diffCheck",
+    "subcategory": "Downsample",
+    "description": "Downsample a point cloud using a voxel grid filter.",
+    "exposure": 4,
+    "instanceGuid": "e7050cc2-26c7-4330-ac1f-cf3935b23f65",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud",
+                "nickname": "i_cloud",
+                "description": "The point cloud to reduce the size.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_voxel_size",
+                "nickname": "i_voxel_size",
+                "description": "The size of the voxel.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The downsampled cloud.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

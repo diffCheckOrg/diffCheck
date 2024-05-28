@@ -137,3 +137,26 @@ def compute_ordered_vertices(brep_face) -> typing.List[Rhino.Geometry.Point3d]:
         sorted_vertices.append(edge.PointAtStart)
 
     return sorted_vertices
+
+def get_doc_2_meters_unitf():
+    """ 
+        Retrieve the document unit system and get the multiplier factor to
+        be multiplied to all the component's inputs for df functions since they
+        are all based in meters.
+
+        :return: the multiplier factor to be multiplied to the inputs to convert them to meters
+    """
+    RhinoDoc = sc.doc
+    if RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Meters:
+        unit_scale = 1
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Centimeters:
+        unit_scale = 0.01
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Millimeters:
+        unit_scale = 0.001
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Inches:
+        unit_scale = 0.0254
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Feet:
+        unit_scale = 0.3048
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Yards:
+        unit_scale = 0.9144
+    return unit_scale
