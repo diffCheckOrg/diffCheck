@@ -14,3 +14,4 @@ const diffCheck::Log LOG = diffCheck::Log();
 #include "diffCheck/transformation/DFTransformation.hh"
 #include "diffCheck/registrations/DFGlobalRegistrations.hh"
 #include "diffCheck/registrations/DFRefinedRegistration.hh"
+#include "diffCheck/segmentation/DFSegmentation.hh"
