@@ -52,10 +52,20 @@ class JointDetector:
         ############################################################################
         # [*] If the timber has 6 faces, it is a box, return the faces
         ############################################################################
-        if len(self.brep.Faces) == 6:
-            pass
-            # get the two smallest faces as the cuts
+        if self.brep.Faces.Count == 6:
+            # order the faces by surface area
+            faces = sorted(
+                self.brep.Faces,
+                key=lambda x: rg.AreaMassProperties.Compute(x).Area, reverse=False)
 
+            # the the smallest faces are the sides
+            self._faces = [[faces[0], 0], [faces[1], 1]]
+
+            # add the rest of the faces as sides
+            for f in faces[2:]:
+                self._faces.append([f, None])
+            
+            return self._faces
 
         ############################################################################
         # 1. Bring to XY, mamke AABB and get negative boolean difference
