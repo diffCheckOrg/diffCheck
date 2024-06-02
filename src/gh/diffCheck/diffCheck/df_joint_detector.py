@@ -43,14 +43,27 @@ class JointDetector:
 
     def run(self) :
         """
-            Run the joint detector
+            Run the joint detector. We use a dictionary to store the faces of the cuts based wethear they are cuts or holes.
+            - for cuts: If it is a cut we return the face, and the id of the joint the faces belongs to.
+            - for sides: If it is a face from the sides, we return the face and None.
+
             :return: a list of faces from joins and faces
         """
+        ############################################################################
+        # [*] If the timber has 6 faces, it is a box, return the faces
+        ############################################################################
+        if len(self.brep.Faces) == 6:
+            pass
+            # get the two smallest faces as the cuts
+
+
         ############################################################################
         # 1. Bring to XY, mamke AABB and get negative boolean difference
         ############################################################################
         # bring to plane xy
         x_form = diffCheck.df_transformations.pln_2_pln_world_transform(self.brep)
+        if x_form is None:
+            return None
 
         # reverse the transformation
         x_form_back = diffCheck.df_transformations.get_inverse_transformation(x_form)
