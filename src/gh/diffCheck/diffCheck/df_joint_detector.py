@@ -1,3 +1,4 @@
+
 import Rhino
 import scriptcontext as sc
 import Rhino.Geometry as rg
@@ -9,8 +10,6 @@ import diffCheck.df_util
 import diffCheck.df_transformations
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
-
-# import numpy as np
 
 
 @dataclass
@@ -31,29 +30,12 @@ class JointDetector:
         # list of DFFaces from joints and sides
         self._faces = []
 
-        # debug list of various geometries
-        self._debug = []
-
     def _compute_mass_center(self, b_face: rg.BrepFace) -> rg.Point3d:
         """
-        Compute the mass center of a brep face in 3d space
-
+        Compute the mass center of a brep face
         :param b_face: The brep face to compute the mass center from
         :return mass_center: The mass center of the brep face
         """
-        # vertices = b_face.DuplicateFace(False).DuplicateVertices()
-
-        # points_x = [v.X for v in vertices]
-        # points_y = [v.Y for v in vertices]
-        # points_z = [v.Z for v in vertices]
-        # points_xyz = np.array([points_x, points_y, points_z])
-
-
-        # centroid = np.mean(points_xyz, axis=1)
-
-        # return rg.Point3d(centroid[0], centroid[1], centroid[2])
-
-
         amp = rg.AreaMassProperties.Compute(b_face)
         if amp:
             return amp.Centroid
@@ -62,7 +44,6 @@ class JointDetector:
     def run(self) :
         """
             Run the joint detector
-
             :return: a list of faces from joins and faces
         """
         ############################################################################
@@ -104,6 +85,7 @@ class JointDetector:
                 if not f.IsPlanar():
                     is_cut = False
                     is_hole = True
+
                     b_faces = diffCheck.df_util.explode_brep(b)
                     for b_face in b_faces:
                         if b_face.Faces[0].IsPlanar():
@@ -129,7 +111,7 @@ class JointDetector:
             is_hole = False
             is_cut = False
             is_mix = False
-        
+
         # deal with mix
         candidate_cuts = []
         candidate_holes = []
@@ -152,10 +134,10 @@ class JointDetector:
                     flat_faces_b.append(f_b)
                 else:
                     non_flat_faces_b.append(f_b)
-    
+
             # (*) cap the cylinders
             non_flat_faces_b = [f_b.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance) for f_b in non_flat_faces_b]
-            
+
             # (4) boolunion every object in both lists
             flat_faces_b = Rhino.Geometry.Brep.CreateBooleanUnion(flat_faces_b, sc.doc.ModelAbsoluteTolerance)
             non_flat_faces_b = Rhino.Geometry.Brep.CreateBooleanUnion(non_flat_faces_b, sc.doc.ModelAbsoluteTolerance)
@@ -184,17 +166,13 @@ class JointDetector:
         # 3. Sort faces from joints and faces from sides
         ############################################################################
         # retransform back everything
-        # for b in self._holes:
-        #     b.Transform(x_form_back)
-        # for b in self._cuts:
-        #     b.Transform(x_form_back)
-        # for b in self._mix:
-        #     b.Transform(x_form_back)
-        # self.brep.Transform(x_form_back)
-
-        # TODO: get rid debugging
-        # bbox_b.Transform(x_form_back)
-        self._debug.append(bbox_b)
+        for b in self._holes:
+            b.Transform(x_form_back)
+        for b in self._cuts:
+            b.Transform(x_form_back)
+        for b in self._mix:
+            b.Transform(x_form_back)
+        self.brep.Transform(x_form_back)
 
         # get all the medians of the faces of cuts only
         cuts_faces_centroids : typing.Dict[int, typing.List[rg.Point3d]] = {}
@@ -204,7 +182,6 @@ class JointDetector:
             for f in b.Faces:
                 centroid = self._compute_mass_center(f)
                 temp_face_centroids.append(centroid)
-                self._debug.append(centroid)
             cuts_faces_centroids[idx] = temp_face_centroids
 
         # compare with the brep medians faces to get the joint/sides's faces
@@ -225,4 +202,4 @@ class JointDetector:
         if self._faces is None or len(self._faces) == 0:
             ghenv.Component.AddRuntimeMessage(RML.Error, "No faces found after joint detection.")
 
-        return self._faces, self._debug
+        return self._faces

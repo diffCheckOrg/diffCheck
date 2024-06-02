@@ -46,9 +46,9 @@ class DFLoadMeshFromFile(component):
         return rh_mesh
 
 
-# if __name__ == "__main__":
-#     com = DFLoadMeshFromFile()
-#     o_rh_mesh = com.RunScript(
-#         i_path,n
-#         i_scalef
-#     )
+if __name__ == "__main__":
+    com = DFLoadMeshFromFile()
+    o_rh_mesh = com.RunScript(
+        i_path,
+        i_scalef
+    )
