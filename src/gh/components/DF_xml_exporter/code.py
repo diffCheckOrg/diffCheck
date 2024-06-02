@@ -33,8 +33,6 @@ class DFXMLExporter(component):
         # beams
         beams: typing.List[DFBeam] = []
         for brep in i_breps:
-            print(f"Processing brep {brep}")
-            print(f"Type: {type(brep)}")
             beam = DFBeam.from_brep(brep)
             beams.append(beam)
 
@@ -50,26 +48,6 @@ class DFXMLExporter(component):
         # show the joint/side faces
         o_joints = [jf.to_brep() for jf in assembly1.all_joint_faces]
         o_sides = [sf.to_brep() for sf in assembly1.all_side_faces]
-
-        ###########################
-
-        # faces, o_debug = diffCheck.df_joint_detector.JointDetector(i_breps[0]).run()
-
-        # # o_joints = [f.to_brep() for f in faces]
-        # # o_sides = [f.to_brep() for f in faces]
-
-        # o_xml = ""
-        # o_joints = []
-        # o_sides = []
-
-        # for f in faces:
-        #     if f[1] != None:
-        #         o_joints.append(f[0])
-        #     else:
-        #         o_sides.append(f[0])
-
-
-
 
         return o_xml, o_joints, o_sides, o_debug
 
