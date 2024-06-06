@@ -17,12 +17,12 @@ from diffCheck import df_error_estimation
 
 import diffCheck.df_util
 
-class CloudToMeshDistance(component):
+class CloudToCloudDistance(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
         i_cloud_target: rg.PointCloud,
         
-    ) -> [float]:
+    )
         """
             The cloud-to-cloud component computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.
 
@@ -52,7 +52,7 @@ class CloudToMeshDistance(component):
 
 
 if __name__ == "__main__":
-    com = CloudToMeshDistance(component)
+    com = CloudToCloudDistance(component)
     o_distances = com.RunScript(
         i_cloud_source,
         i_cloud_target
