@@ -53,7 +53,15 @@ namespace diffCheck::geometry
         extremePoints.push_back(boundingBox.GetMinBound());
         extremePoints.push_back(boundingBox.GetMaxBound());
         return extremePoints;
-    }   
+    }
+
+    std::vector<Eigen::Vector3d> DFPointCloud::GetTightBoundingBox()
+    {
+        open3d::geometry::OrientedBoundingBox tightOOBB = this->Cvt2O3DPointCloud()->GetMinimalOrientedBoundingBox();
+        std::vector<Eigen::Vector3d> bboxPts = tightOOBB.GetBoxPoints();
+        return bboxPts;
+    }
+
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();

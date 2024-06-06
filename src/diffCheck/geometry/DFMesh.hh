@@ -62,6 +62,15 @@ namespace diffCheck::geometry
          */
         void ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation);
 
+    public:  ///< Utils
+        /**
+         * @brief Get the mesh tight bounding box
+         * 
+         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum
+         * point and the second one the maximum point of the bounding box.
+         */
+        std::vector<Eigen::Vector3d> GetTightBoundingBox();
+
     public:  ///< I/O loader
         /**
          * @brief Read a mesh from a file

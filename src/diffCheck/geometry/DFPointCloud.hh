@@ -58,6 +58,14 @@ namespace diffCheck::geometry
         */
         std::vector<Eigen::Vector3d> ComputeBoundingBox();
 
+        /**
+         * @brief Get the tight bounding box of the point cloud
+         * 
+         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum
+         * point and the second one the maximum point of the bounding box.
+        */
+        std::vector<Eigen::Vector3d> GetTightBoundingBox();
+
     public:  ///< Transformers
         /**
          * @brief Apply a transformation to the point cloud
