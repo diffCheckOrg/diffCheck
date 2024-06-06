@@ -4,8 +4,6 @@
     Rhino, the basic diffCheck data structures and the diffCheck bindings.
 """
 
-import Rhino
-import Rhino.Geometry as rg
 import numpy as np
 from diffCheck import diffcheck_bindings
 
@@ -35,23 +33,20 @@ def compute_max_deviation(source, target):
 
     return max_deviation
 
-
-
 def compute_min_deviation(source, target):
     """
         Calculate min deviation of distances
     """
 
-    max_deviation = np.min(cloud_2_cloud_distance(source, target))
+    min_deviation = np.min(cloud_2_cloud_distance(source, target))
 
     return min_deviation
-
 
 def compute_standard_deviation(source, target):
     """
         Calculate standard deviation of distances
     """
      
-    std_deviation = np.std(cloud_2_cloud_distance(source, target))
+    standard_deviation = np.std(cloud_2_cloud_distance(source, target))
 
     return standard_deviation
