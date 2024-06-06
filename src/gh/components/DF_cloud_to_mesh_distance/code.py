@@ -43,9 +43,9 @@ class CloudToCloudDistance(component):
         return o_distances
 
 
-if __name__ == "__main__":
-    com = CloudToCloudDistance(component)
-    o_distances = com.RunScript(
-        i_cloud_source,
-        i_cloud_target
-        )
+# if __name__ == "__main__":
+#     com = CloudToCloudDistance(component)
+#     o_distances = com.RunScript(
+#         i_cloud_source,
+#         i_cloud_target
+#         )

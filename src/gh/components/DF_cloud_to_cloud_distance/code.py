@@ -20,9 +20,7 @@ import diffCheck.df_util
 class CloudToCloudDistance(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
-        i_cloud_target: rg.PointCloud,
-        
-    )
+        i_cloud_target: rg.PointCloud):
         """
             The cloud-to-cloud component computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.
 
@@ -34,6 +32,7 @@ class CloudToCloudDistance(component):
             :return o_max_deviation: the max deviation between source and target (Hausdorff Distance)
             :return o_min_deviation: the min deviation between source and target
         """
+        print ("yes")
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to compare")
             return None
@@ -48,7 +47,7 @@ class CloudToCloudDistance(component):
         o_max_deviation = df_error_estimation.compute_max_deviation(df_cloud_source, df_cloud_target)
         o_min_deviation = df_error_estimation.compute_min_deviation(df_cloud_source, df_cloud_target)
 
-        return o_distances, o_mse, o_max_deviation, o_min_deviation
+        return o_distances
 
 
 if __name__ == "__main__":
