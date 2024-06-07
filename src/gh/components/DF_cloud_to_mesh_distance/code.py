@@ -13,39 +13,43 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
-import diffCheck.df_util
+from diffCheck import df_error_estimation
 
-class CloudToCloudDistance(component):
+class CloudToMeshDistance(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
-        i_cloud_target: rg.PointCloud,
-        
-    ) -> [float]:
+        i_mesh_target: rg.PointCloud):
         """
             The cloud-to-cloud component computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.
 
             :param i_cloud_source: source point cloud
-            :param i_cloud_target: target point cloud to align to
+            :param i_mesh_target: target point cloud to align to
 
             :return o_distances : list of calculated distances for each point
+            :return o_mse: the average squared difference between corresponding points of source and target
+            :return o_max_deviation: the max deviation between source and target (Hausdorff Distance)
+            :return o_min_deviation: the min deviation between source and target
         """
-        if i_cloud_source is None or i_cloud_target is None:
-            ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to compare")
+        if i_cloud_source is None or i_mesh_target is None:
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide an object of type point cloud and an object of type mesh to compare")
             return None
 
         # conversion
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
-        df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
+        df_mesh_target = df_cvt_bindings.cvt_rhmesh_2_dfmesh(i_mesh_target)
 
         # calculate distances
-        o_distances = cloud_2_cloud_distance(df_cloud_source, df_cloud_target)
+        o_distances = df_error_estimation.cloud_2_mesh_distance(df_cloud_source, df_mesh_target)
+        o_mse = df_error_estimation.compute_mse(o_distances)
+        o_max_deviation = df_error_estimation.compute_max_deviation(o_distances)
+        o_min_deviation = df_error_estimation.compute_min_deviation(o_distances)
 
-        return o_distances
+        return o_distances, o_mse, o_max_deviation, o_min_deviation
 
 
-# if __name__ == "__main__":
-#     com = CloudToCloudDistance(component)
-#     o_distances = com.RunScript(
-#         i_cloud_source,
-#         i_cloud_target
-#         )
+if __name__ == "__main__":
+    com = CloudToMeshDistance()
+    o_distances, o_mse, o_max_deviation, o_min_deviation = com.RunScript(
+        i_cloud_source,
+        i_mesh_target
+        )

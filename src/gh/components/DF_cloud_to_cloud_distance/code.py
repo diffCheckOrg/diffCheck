@@ -32,7 +32,6 @@ class CloudToCloudDistance(component):
             :return o_max_deviation: the max deviation between source and target (Hausdorff Distance)
             :return o_min_deviation: the min deviation between source and target
         """
-        print ("yes")
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to compare")
             return None
@@ -43,16 +42,16 @@ class CloudToCloudDistance(component):
 
         # calculate distances
         o_distances = df_error_estimation.cloud_2_cloud_distance(df_cloud_source, df_cloud_target)
-        o_mse = df_error_estimation.compute_mse(df_cloud_source, df_cloud_target)
-        o_max_deviation = df_error_estimation.compute_max_deviation(df_cloud_source, df_cloud_target)
-        o_min_deviation = df_error_estimation.compute_min_deviation(df_cloud_source, df_cloud_target)
+        o_mse = df_error_estimation.compute_mse(o_distances)
+        o_max_deviation = df_error_estimation.compute_max_deviation(o_distances)
+        o_min_deviation = df_error_estimation.compute_min_deviation(o_distances)
 
-        return o_distances
+        return o_distances, o_mse, o_max_deviation, o_min_deviation
 
 
 if __name__ == "__main__":
-    com = CloudToCloudDistance(component)
-    o_distances = com.RunScript(
+    com = CloudToCloudDistance()
+    o_distances, o_mse, o_max_deviation, o_min_deviation = com.RunScript(
         i_cloud_source,
         i_cloud_target
         )

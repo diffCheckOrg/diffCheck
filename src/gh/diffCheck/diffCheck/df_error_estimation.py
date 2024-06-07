@@ -14,39 +14,44 @@ def cloud_2_cloud_distance(source, target):
 
     return distances
 
-def compute_mse(source, target):
+def cloud_2_mesh_distance(source, target):
+
+    distances = np.ones(len(source.points), dtype=float)
+
+    return distances
+
+def compute_mse(distances):
     """
         Calculate mean squared distance
     """
      
-    distances = cloud_2_cloud_distance(source, target)
     mse = np.sqrt(np.mean(distances ** 2))
 
     return mse
 
-def compute_max_deviation(source, target):
+def compute_max_deviation(distances):
     """
         Calculate max deviation of distances
     """
      
-    max_deviation = np.max(cloud_2_cloud_distance(source, target))
+    max_deviation = np.max(distances)
 
     return max_deviation
 
-def compute_min_deviation(source, target):
+def compute_min_deviation(distances):
     """
         Calculate min deviation of distances
     """
 
-    min_deviation = np.min(cloud_2_cloud_distance(source, target))
+    min_deviation = np.min(distances)
 
     return min_deviation
 
-def compute_standard_deviation(source, target):
+def compute_standard_deviation(distances):
     """
         Calculate standard deviation of distances
     """
      
-    standard_deviation = np.std(cloud_2_cloud_distance(source, target))
+    standard_deviation = np.std(distances)
 
     return standard_deviation
