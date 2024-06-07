@@ -46,7 +46,7 @@ class CloudToCloudDistance(component):
         o_max_deviation = df_error_estimation.compute_max_deviation(o_distances)
         o_min_deviation = df_error_estimation.compute_min_deviation(o_distances)
 
-        return o_distances, o_mse, o_max_deviation, o_min_deviation
+        return o_distances.tolist(), o_mse, o_max_deviation, o_min_deviation
 
 
 if __name__ == "__main__":
