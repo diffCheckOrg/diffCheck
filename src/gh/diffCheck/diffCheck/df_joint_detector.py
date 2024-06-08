@@ -73,21 +73,22 @@ class JointDetector:
         # bring to plane xy
         x_form = diffCheck.df_transformations.pln_2_pln_world_transform(self.brep)
         if x_form is None:
+            raise ValueError("The brep is not planar, cannot bring to XY plane.")
             return None
 
         # reverse the transformation
         x_form_back = diffCheck.df_transformations.get_inverse_transformation(x_form)
 
         # compute the bounding box and inflate to include butt joints typo
-        bbox = self.brep.GetBoundingBox(True)
-        diagonal = bbox.Diagonal
+        aabb = self.brep.GetBoundingBox(True)
+        diagonal = aabb.Diagonal
         scaling_factor = diagonal.Length / 10
-        bbox.Inflate(scaling_factor, 0, 0)
-        bbox_b = bbox.ToBrep()
+        aabb.Inflate(scaling_factor, -0.01, -0.01)
+        aabb_b = aabb.ToBrep()
 
         # boolean difference between the bounding box and the brep transformed
         breps_from_booldiff = Rhino.Geometry.Brep.CreateBooleanDifference(
-            bbox_b, self.brep, sc.doc.ModelAbsoluteTolerance)
+            aabb_b, self.brep, sc.doc.ModelAbsoluteTolerance)
         if breps_from_booldiff is None or len(breps_from_booldiff) == 0:
             ghenv.Component.AddRuntimeMessage(RML.Error, "No breps found after boolean difference.")
 
