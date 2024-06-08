@@ -15,6 +15,7 @@ from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
 
+
 class CloudToMeshDistance(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,

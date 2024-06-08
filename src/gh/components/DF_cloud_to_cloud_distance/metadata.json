@@ -5,7 +5,7 @@
     "subcategory": "Analysis",
     "description": "Computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.",
     "exposure": 4,
-    "instanceGuid": "805911b9-7ea9-4bbf-be34-00f9f225b9b3",
+    "instanceGuid": "ad21f438-b953-464b-8332-04f4074f3bd0",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
