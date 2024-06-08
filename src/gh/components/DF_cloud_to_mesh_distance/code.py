@@ -18,7 +18,8 @@ from diffCheck import df_error_estimation
 class CloudToMeshDistance(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
-        i_mesh_target: rg.PointCloud):
+        i_mesh_target: rg.PointCloud,
+        i_signed_flag: bool):
         """
             The cloud-to-cloud component computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.
 
@@ -39,7 +40,7 @@ class CloudToMeshDistance(component):
         df_mesh_target = df_cvt_bindings.cvt_rhmesh_2_dfmesh(i_mesh_target)
 
         # calculate distances
-        o_distances = df_error_estimation.cloud_2_mesh_distance(df_cloud_source, df_mesh_target)
+        o_distances = df_error_estimation.cloud_2_mesh_distance(df_cloud_source, df_mesh_target, i_signed_flag)
         o_mse = df_error_estimation.compute_mse(o_distances)
         o_max_deviation = df_error_estimation.compute_max_deviation(o_distances)
         o_min_deviation = df_error_estimation.compute_min_deviation(o_distances)

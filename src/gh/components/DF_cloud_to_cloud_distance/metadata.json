@@ -1,9 +1,9 @@
 {
-    "name": "RANSACGlobalRegistration",
-    "nickname": "RANSACGReg",
+    "name": "CloudToCloudDistance",
+    "nickname": "C2CDistance",
     "category": "diffCheck",
-    "subcategory": "Registrations",
-    "description": "Register two point clouds together with a feature matching based on RANSAC.",
+    "subcategory": "Analysis",
+    "description": "Computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.",
     "exposure": 4,
     "instanceGuid": "805911b9-7ea9-4bbf-be34-00f9f225b9b3",
     "ghpython": {
@@ -13,18 +13,6 @@
         "marshalOutGuids": true,
         "iconDisplay": 2,
         "inputParameters": [
-            {
-                "name": "i_recompute",
-                "nickname": "i_recompute",
-                "description": "Connect a button to recompute the registration.",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
             {
                 "name": "i_cloud_source",
                 "nickname": "i_cloud_source",
@@ -50,107 +38,11 @@
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_radius_kd_search",
-                "nickname": "i_radius_kd_search",
-                "description": "The radius used to search for neighbors in the KDTree.it is expressed relative to the point cloud size (0.01 means radiusKDTreeSearch = 1% of maxSize(pointCloud). It is used for the calculation of FPFHFeatures.",
+                "name": "i_signed_flag",
+                "nickname": "i_signed_flag",
+                "description": "whether to take normals into account",
                 "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "float"
-            },
-            {
-                "name": "i_neighbours_kd_search",
-                "nickname": "i_neighbours_kd_search",
-                "description": "The maximum number of neighbors to search for in the KDTree. It is used for the calculation of FPFHFeatures. A higher value will result in heavier computation but potentially more precise.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "int"
-            },
-            {
-                "name": "i_max_corrspondence_dist",
-                "nickname": "i_max_corrspondence_dist",
-                "description": "The maximum distance between correspondences. A higher value will result in more correspondences, but potentially include wrong ones.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "float"
-            },
-            {
-                "name": "is_t_estimate_pt2pt",
-                "nickname": "is_t_estimate_pt2pt",
-                "description": "If true it deforms the cloud to match. The transformation estimation method to use. By default, it uses a point to point transformation estimation. If true it will scale and deform the cloud.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
-            {
-                "name": "i_ransac_n",
-                "nickname": "i_ransac_n",
-                "description": "The number of points to sample in the source point cloud. A higher value can result in a more precise transformation, but will take more time to compute.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "int"
-            },
-            {
-                "name": "i_checker_dist",
-                "nickname": "i_checker_dist",
-                "description": "The maximum distance between correspondances in the FPFH space before testing a RanSaC model. It is exprimed in relative values (it is scaled by the size of the bounding box of the poinnt cloud).",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "float"
-            },
-            {
-                "name": "i_similarity_threshold",
-                "nickname": "i_similarity_threshold",
-                "description": "The threshold for the ransac check based on edge length to consider a model as inlier. A higher value will be stricter, discarding more ransac models.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "float"
-            },
-            {
-                "name": "i_max_iterations",
-                "nickname": "i_max_iterations",
-                "description": "The maximum number of iterations to run the Ransac algorithm. A higher value will take more time to compute but increases the chances of finding a good transformation.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "int"
-            },
-            {
-                "name": "i_confidence_threshold",
-                "nickname": "i_confidence_threshold",
-                "description": "The threshold for the convergence criteria of the ransac models. A higher value will be stricter, discarding more ransac models.",
-                "optional": false,
-                "allowTreeAccess": true,
+                "allowTreeAccess": false,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
@@ -160,9 +52,41 @@
         ],
         "outputParameters": [
             {
-                "name": "o_x_form",
-                "nickname": "o_x_form",
-                "description": "The computed transformation.",
+                "name": "o_distance",
+                "nickname": "o_distance",
+                "description": "list of calculated distances for each point of the source.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_mse",
+                "nickname": "o_mse",
+                "description": "average squared difference between source and target.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_max_deviation",
+                "nickname": "o_max_deviation",
+                "description": "max deviation between source and target",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_min_deviation",
+                "nickname": "o_min_deviation",
+                "description": "min deviation between source and target",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_std_deviation",
+                "nickname": "o_std_deviation",
+                "description": "standard deviation between source and target.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
