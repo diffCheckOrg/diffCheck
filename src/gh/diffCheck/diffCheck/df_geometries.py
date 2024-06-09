@@ -7,6 +7,8 @@ import uuid
 import Rhino
 import Rhino.Geometry as rg
 
+from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
+
 import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 
@@ -77,6 +79,11 @@ class DFFace:
         self.__is_joint = False
         self.__id = uuid.uuid4().int
 
+        # if df_face is created from a rhino brep face, we store the rhino brep face
+        self._rh_brepface = None
+
+        self.is_cylinder = False
+
     def __repr__(self):
         return f"Face id: {len(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
 
@@ -93,11 +100,12 @@ class DFFace:
 
     def __eq__(self, other):
         if isinstance(other, DFFace):
+            # check if 
             return self.all_loops == other.all_loops
         return False
 
     @classmethod
-    def from_brep(cls, brep_face: rg.BrepFace, joint_id: int = None):
+    def from_brep_face(cls, brep_face: rg.BrepFace, joint_id: int = None):
         """
         Create a DFFace from a Rhino Brep face
 
@@ -106,6 +114,11 @@ class DFFace:
         :return face: The DFFace object
         """
         all_loops = []
+
+        if brep_face.IsCylinder():
+            cls.is_cylinder = True
+            df_face._rh_brepface = brep_face
+            return df_face
 
         for idx, loop in enumerate(brep_face.Loops):
             loop_trims = loop.Trims
@@ -119,16 +132,24 @@ class DFFace:
             all_loops.append(loop)
 
         df_face = cls(all_loops, joint_id)
-        df_face._brepface = brep_face
+        df_face._rh_brepface = brep_face
 
         return df_face
 
-    def to_brep(self):
+    def to_brep_face(self):
         """
         Convert the face to a Rhino Brep planar face
 
         :return brep_face: The Rhino Brep planar face
         """
+        if self._rh_brepface is not None:
+            return self._rh_brepface
+
+        if self.is_cylinder:
+            ghenv.Component.AddRuntimeMessage(
+                RML.Warning, "The DFFace was a cylinder created from scratch \n \
+                 , it cannot convert to brep.")
+
         brep_curves = []
 
         for loop in self.all_loops:
@@ -151,7 +172,15 @@ class DFFace:
 
         :return mesh: The Rhino Mesh object
         """
-        mesh = rg.Mesh.CreateFromBrep(self.to_brep())[0]
+        mesh = Rhino.Geometry.Mesh()
+        mesh_parts = Rhino.Geometry.Mesh.CreateFromBrep(
+                self.to_brep_face().ToBrep(),
+                Rhino.Geometry.MeshingParameters.Coarse)
+        for mesh_part in mesh_parts: mesh.Append(mesh_part)
+        mesh.Compact()
+
+
+        # mesh = rg.Mesh.CreateFromBrep(self.to_brep_face())[0]
         return mesh
 
     @property
@@ -185,7 +214,7 @@ class DFBeam:
         self.__id = uuid.uuid4().int
 
     @classmethod
-    def from_brep(cls, brep):
+    def from_brep_face(cls, brep):
         """
         Create a DFBeam from a RhinoBrep object.
         It also removes duplicates and creates a list of unique faces.
@@ -193,7 +222,7 @@ class DFBeam:
         faces : typing.List[DFFace] = []
         data_faces = diffCheck.df_joint_detector.JointDetector(brep).run()
         for data in data_faces:
-            face = DFFace.from_brep(data[0], data[1])
+            face = DFFace.from_brep_face(data[0], data[1])
             faces.append(face)
         beam = cls("Beam", faces)
         return beam
