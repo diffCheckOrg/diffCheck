@@ -1,0 +1,52 @@
+{
+    "name": "DFBuildAssembly",
+    "nickname": "DFBuildAssembly",
+    "category": "diffCheck",
+    "subcategory": "Structure",
+    "description": "This component parse a series of breps representing a timber structure or a timber elements into a DFAssembly object.",
+    "exposure": 4,
+    "instanceGuid": "bf6f47fe-2a7e-47b5-b1c4-c716c524d245",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_assembly_name",
+                "nickname": "i_assembly_name",
+                "description": "The name of the assembly to export.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_breps",
+                "nickname": "i_breps",
+                "description": "The breps of the structure.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "brep"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_assembly",
+                "nickname": "o_assembly",
+                "description": "The create DFAssembly object representing the timber elements.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

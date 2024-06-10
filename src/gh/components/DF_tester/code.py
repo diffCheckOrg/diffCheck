@@ -12,7 +12,7 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 import diffCheck
 from diffCheck import diffcheck_bindings
 
-class DFBindTester(component):
+class DFTester(component):
     def RunScript(self):
         """
             The component test and import bind module for diffCheck.

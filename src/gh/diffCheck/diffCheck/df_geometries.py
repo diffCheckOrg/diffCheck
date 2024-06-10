@@ -227,6 +227,17 @@ class DFBeam:
         beam = cls("Beam", faces)
         return beam
 
+    def to_brep(self):
+        """
+        Convert the beam to a Rhino Brep object
+        """
+        brep = rg.Brep()
+        for face in self.faces:
+            brep.Append(face.to_brep_face())
+        brep.Compact()
+
+        return brep
+
     def __repr__(self):
         return f"Beam: {self.name}, Faces: {len(self.faces)}"
 
