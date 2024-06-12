@@ -44,6 +44,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("get_num_points", &diffCheck::geometry::DFPointCloud::GetNumPoints)
         .def("get_num_colors", &diffCheck::geometry::DFPointCloud::GetNumColors)
         .def("get_num_normals", &diffCheck::geometry::DFPointCloud::GetNumNormals)
+        .def("get_center_point", &diffCheck::geometry::DFPointCloud::GetCenterPoint)
 
         .def("has_points", &diffCheck::geometry::DFPointCloud::HasPoints)
         .def("has_colors", &diffCheck::geometry::DFPointCloud::HasColors)
@@ -150,4 +151,17 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("max_iteration") = 30,
             py::arg("relative_fitness") = 1e-6,
             py::arg("relative_rmse") = 1e-6);
+
+    //#################################################################################################
+    // dfb_segmentation namespace
+    //#################################################################################################
+
+    py::module_ submodule_segmentation = m.def_submodule("dfb_segmentation", "A submodule for the `semantic` segmentation methods.");
+
+    py::class_<diffCheck::segmentation::DFSegmentation>(submodule_segmentation, "DFSegmentation")
+        .def_static("segmentation_point_cloud", &diffCheck::segmentation::DFSegmentation::SegmentationPointCloud,
+            py::arg("point_cloud"),
+            py::arg("voxel_size") = 1,
+            py::arg("normal_threshold_degree") = 20,
+            py::arg("min_cluster_size") = 10);
 }
