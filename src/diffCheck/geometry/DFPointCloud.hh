@@ -103,6 +103,8 @@ namespace diffCheck::geometry
         int GetNumColors() const { return this->Colors.size(); }
         /// @brief Number of normals in the point cloud
         int GetNumNormals() const { return this->Normals.size(); }
+        /// @brief Get the center point of the point cloud
+        Eigen::Vector3d GetCenterPoint();
 
         /// @brief Check if the cloud has points
         bool HasPoints() const { return this->Points.size() > 0; }

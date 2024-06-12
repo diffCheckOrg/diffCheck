@@ -125,4 +125,15 @@ namespace diffCheck::geometry
         this->Colors = cloud->Colors;
         this->Normals = cloud->Normals;
     }
+
+    Eigen::Vector3d DFPointCloud::GetCenterPoint()
+    {
+        if (this->Points.size() == 0)
+            throw std::invalid_argument("The point cloud is empty.");
+        Eigen::Vector3d center = Eigen::Vector3d::Zero();
+        for (auto &point : this->Points)
+            center += point;
+        center /= this->Points.size();
+        return center;
+    }
 }
