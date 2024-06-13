@@ -39,6 +39,9 @@ def cloud_2_mesh_distance(source, target):
 
     distances = np.ones(len(source.points), dtype=float)
 
+    for i in range(len(source.points)):
+        distances[i] = point_2_mesh_distance(target, source.points[i])
+
     return distances
 
 
@@ -79,34 +82,6 @@ def point_2_mesh_distance(geo, query_point):
             shortest_distance = pt_face_dist
     
     return shortest_distance
-
-    # Find the distance to the adjacent faces
-    if squared_distances:
-        least_squared_distance = min(squared_distances)
-    else:
-        print("No neighbors found within the specified radius.")
-
-
-
-    # create a box centered around the query point with an edge length equal to two times the distance to the nearest vertex
-    search_distance = dist * 2
-
-    search_box_min = query_point - search_distance
-    search_box_max = query_point + search_distance
-
-    # query a kd tree for all the faces that intersect this box
-    def face_in_box(face):
-        v0, v1, v2 = face
-        vertices = np.asarray(geo.vertices)
-        return (np.all(vertices[v0] >= search_box_min) and np.all(vertices[v0] <= search_box_max) or
-                np.all(vertices[v1] >= search_box_min) and np.all(vertices[v1] <= search_box_max) or
-                np.all(vertices[v2] >= search_box_min) and np.all(vertices[v2] <= search_box_max))
-    
-    candidate_faces = [face for face in np.asarray(geo.triangles) if face_in_box(face)]
-    
-
-    # compute the closest point for the faces that we get back
-    pass
 
 
 def point_2_face_distance(face,  point):
