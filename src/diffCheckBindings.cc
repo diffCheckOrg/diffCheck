@@ -41,6 +41,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
 
+        .def("get_tight_bounding_box", &diffCheck::geometry::DFPointCloud::GetTightBoundingBox)
+
         .def("get_num_points", &diffCheck::geometry::DFPointCloud::GetNumPoints)
         .def("get_num_colors", &diffCheck::geometry::DFPointCloud::GetNumColors)
         .def("get_num_normals", &diffCheck::geometry::DFPointCloud::GetNumNormals)
@@ -66,6 +68,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("load_from_PLY", &diffCheck::geometry::DFMesh::LoadFromPLY)
 
         .def("sample_points_uniformly", &diffCheck::geometry::DFMesh::SampleCloudUniform)
+
+        .def("get_tight_bounding_box", &diffCheck::geometry::DFMesh::GetTightBoundingBox)
 
         .def("get_num_vertices", &diffCheck::geometry::DFMesh::GetNumVertices)
         .def("get_num_faces", &diffCheck::geometry::DFMesh::GetNumFaces)

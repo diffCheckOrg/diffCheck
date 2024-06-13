@@ -1,0 +1,57 @@
+{
+    "name": "DFDeconstructBeam",
+    "nickname": "DFDeconstructBeam",
+    "category": "diffCheck",
+    "subcategory": "Structure",
+    "description": "Deconstruct the DFBeam objects into semantic Rhino objects.",
+    "exposure": 4,
+    "instanceGuid": "c052b02b-87f2-44ed-8fe7-e2b1f34edcf0",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_beams",
+                "nickname": "i_beams",
+                "description": "The DFBeam objects to deconstruct.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc",
+                "graft": true
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_side_faces",
+                "nickname": "o_side_faces",
+                "description": "The side faces of as Breps of the beam.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_joint_faces",
+                "nickname": "o_joint_faces",
+                "description": "The faces as Breps belonging to joints of the beam.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_joint_ids",
+                "nickname": "o_joint_ids",
+                "description": "An integer indicating to which joint the joint faces are belonging to.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
