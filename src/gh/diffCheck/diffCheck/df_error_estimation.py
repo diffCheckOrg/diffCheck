@@ -45,15 +45,43 @@ def point_2_mesh_distance(mesh, point):
     """
     pass
     # make a kdtree of the vertices to get the relevant vertices indexes
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = mesh.vertices
+    kd_tree = o3d.geometry.KDTreeFlann(pcd)
 
     # assume smallest distance is the distance to the closest vertex
+    [_, idx, _] = kd_tree.search_knn_vector_3d(query_point, 1)
+    if idx>=0:
+        nearest_vertex_idx = idx[0]
+    else:
+        raise ValueError("The mesh has no vertices. Please provide a mesh.")
+    nearest_vertex = np.asarray(mesh.vertices)[nearest_vertex_idx]
+    dist = np.linalg.norm(query_point - nearest_vertex)
 
+    
     # create a box centered around the query point with an edge length equal to two times the distance to the nearest vertex
+    search_distance = dist * 2
+        if dist > search_distance:
+            return dist
+
+    search_box_min = query_point - search_distance
+    search_box_max = query_point + search_distance
+
+    def face_in_box(face):
+        v0, v1, v2 = face
+        vertices = np.asarray(mesh.vertices)
+        return (np.all(vertices[v0] >= search_box_min) and np.all(vertices[v0] <= search_box_max) or
+                np.all(vertices[v1] >= search_box_min) and np.all(vertices[v1] <= search_box_max) or
+                np.all(vertices[v2] >= search_box_min) and np.all(vertices[v2] <= search_box_max))
+    
+    candidate_faces = [face for face in np.asarray(mesh.triangles) if face_in_box(face)]
+    
+
     # query a kd tree for all the faces that intersect this box
 
     # compute the closest point for the faces that we get back
-
-
+        
+    
 def point_2_face_distance(face,  point):
     """
         Calculate the closest distance between a point and a face
