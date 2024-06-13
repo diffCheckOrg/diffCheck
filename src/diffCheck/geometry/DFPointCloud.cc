@@ -105,6 +105,11 @@ namespace diffCheck::geometry
         this->Normals.clear();
         for (auto &normal : O3DPointCloudDown->normals_)
             this->Normals.push_back(normal);
+    std::vector<Eigen::Vector3d> DFPointCloud::GetTightBoundingBox()
+    {
+        open3d::geometry::OrientedBoundingBox tightOOBB = this->Cvt2O3DPointCloud()->GetMinimalOrientedBoundingBox();
+        std::vector<Eigen::Vector3d> bboxPts = tightOOBB.GetBoxPoints();
+        return bboxPts;
     }
 
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)

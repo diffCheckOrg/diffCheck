@@ -3,7 +3,7 @@
     "nickname": "XMLout",
     "category": "diffCheck",
     "subcategory": "Utility",
-    "description": "This component reads breps, convert them to DFBeams and DFAssemblies and export it to XML.",
+    "description": "This component reads a DFAssembly object to export it to XML.",
     "exposure": 4,
     "instanceGuid": "cdae4bd5-d18e-4b06-9367-791b6b1f6837",
     "ghpython": {
@@ -16,7 +16,7 @@
             {
                 "name": "i_dump",
                 "nickname": "i_dump",
-                "description": "Press button to export xml",
+                "description": "Button to export the xml.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -26,21 +26,9 @@
                 "typeHintID": "bool"
             },
             {
-                "name": "i_assembly_name",
-                "nickname": "i_assembly_name",
-                "description": "The name of the assembly to export.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "str"
-            },
-            {
                 "name": "i_export_dir",
                 "nickname": "i_export_dir",
-                "description": "The directors where to export the xml file.",
+                "description": "The folder where to export the xml.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -50,16 +38,16 @@
                 "typeHintID": "str"
             },
             {
-                "name": "i_breps",
-                "nickname": "i_breps",
-                "description": "The breps of the structure.",
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The assembly object",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "list",
+                "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "brep"
+                "typeHintID": "ghdoc"
             }
         ],
         "outputParameters": [
@@ -67,22 +55,6 @@
                 "name": "o_xml",
                 "nickname": "o_xml",
                 "description": "The string of xml to be exported.",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_joints",
-                "nickname": "o_joints",
-                "description": "The breps of the faces belonging to joints.",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_sides",
-                "nickname": "o_sides",
-                "description": "The breps of the faces belonging to sides.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

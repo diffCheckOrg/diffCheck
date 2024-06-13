@@ -6,6 +6,7 @@
 
 import Rhino
 import Rhino.Geometry as rg
+import scriptcontext as sc
 
 from diffCheck import diffcheck_bindings
 
@@ -187,3 +188,32 @@ def cvt_dfxform_2_rhxform(df_xform : diffcheck_bindings.dfb_transformation.DFTra
     rh_xform = rh_xform * rg.Transform.Rotation(rotation[0], rg.Vector3d(rotation[1], rotation[2], rotation[3]), rg.Point3d(0, 0, 0))
 
     return rh_xform
+def cvt_dfOBB_2_rhbrep(df_OBB) -> rg.Box:
+    """ Convert a diffCheck OBB to a Rhino Brep.
+
+        :param df_OBB: diffCheck OBB
+
+        :return rh_obb_brep: the brep box object
+    """
+    rh_pts = []
+    for pt in df_OBB:
+        rh_pts.append(rg.Point3d(pt[0], pt[1], pt[2]))
+
+    surfaces = []
+    surfaces.append(rg.NurbsSurface.CreateFromCorners(rh_pts[0], rh_pts[1], rh_pts[7], rh_pts[2]))
+    surfaces.append(rg.NurbsSurface.CreateFromCorners(rh_pts[0], rh_pts[1], rh_pts[6], rh_pts[3]))
+    surfaces.append(rg.NurbsSurface.CreateFromCorners(rh_pts[3], rh_pts[6], rh_pts[4], rh_pts[5]))
+    surfaces.append(rg.NurbsSurface.CreateFromCorners(rh_pts[2], rh_pts[7], rh_pts[4], rh_pts[5]))
+    surfaces.append(rg.NurbsSurface.CreateFromCorners(rh_pts[1], rh_pts[6], rh_pts[4], rh_pts[7]))
+    surfaces.append(rg.NurbsSurface.CreateFromCorners(rh_pts[0], rh_pts[3], rh_pts[5], rh_pts[2]))
+
+    rh_obb_brep = rg.Brep.JoinBreps([rg.Brep.CreateFromSurface(srf) for srf in surfaces], sc.doc.ModelAbsoluteTolerance)[0]
+
+    if rh_obb_brep is None:
+        raise ValueError("The OBB could not be converted to a Rhino Brep")
+    if not rh_obb_brep.IsValid:
+        raise ValueError("The OBB Rhino Brep is not valid")
+    if not rh_obb_brep.IsSolid:
+        raise ValueError("The OBB Rhino Brep is not solid")
+
+    return rh_obb_brep

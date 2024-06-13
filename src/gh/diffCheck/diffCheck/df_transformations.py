@@ -82,8 +82,8 @@ def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Trans
 
     # get the plane of the biggest face
     if biggest_face.TryGetPlane()[0] is False:
-        log.error("Could not find plane for longest edge. Exiting...")
-        return
+        raise ValueError("The face is not planar")
+        return None
     plane_src = biggest_face.TryGetPlane()[1]
     plane_tgt = Rhino.Geometry.Plane.WorldXY
 
