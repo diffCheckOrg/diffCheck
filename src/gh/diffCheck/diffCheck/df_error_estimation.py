@@ -4,7 +4,10 @@
 """
 
 import numpy as np
+import open3d as o3d
 
+from diffcheck_bindings.dfb_geometry import DFPointCloud, DFMesh
+# from diffCheck.df_geometries import DFPointCoud, DFMesh, DFBeam, DFAssembly
 
 def cloud_2_cloud_distance(source, target, signed=False):
     """
@@ -39,44 +42,68 @@ def cloud_2_mesh_distance(source, target):
     return distances
 
 
-def point_2_mesh_distance(mesh, point):
+def point_2_mesh_distance(geo, query_point):
     """
-        Calculate the closest distance between a point and a mesh
+        Calculate the closest distance between a point and a target geometry
     """
     # make a kdtree of the vertices to get the relevant vertices indexes
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = mesh.vertices
+    pcd = DFPointCloud()
+    pcd.points = geo.vertices
     kd_tree = o3d.geometry.KDTreeFlann(pcd)
 
     # assume smallest distance is the distance to the closest vertex
-    [_, idx, _] = kd_tree.search_knn_vector_3d(query_point, 1)
-    if idx>=0:
+    _, idx, _ = kd_tree.search_knn_vector_3d(query_point, 1)
+    if idx:
         nearest_vertex_idx = idx[0]
     else:
-        raise ValueError("The mesh has no vertices. Please provide a mesh.")
-    nearest_vertex = np.asarray(mesh.vertices)[nearest_vertex_idx]
+        raise ValueError("The mesh or brep has no vertices. Please provide a valid geometry.")
+    nearest_vertex = np.asarray(geo.vertices)[nearest_vertex_idx]
     dist = np.linalg.norm(query_point - nearest_vertex)
 
+    # Find its neighbors with distance less than _dist_ multiplied by two.
+    search_distance = dist * 2
+    _, v_indices, _ = kd_tree.search_radius_vector_3d(query_point, search_distance)
     
+    # Find the faces that belong to these filtered vertices.
+    geo_triangles = np.asarray(geo.triangles)
+    candidate_mask = np.isin(geo_triangles, v_indices)
+    candidate_faces = geo_triangles[np.any(candidate_mask, axis=1)]
+
+    # Step 4: Loop over candidate faces
+    shortest_distance = float('inf')
+    
+    for face in candidate_faces:
+        #v0, v1, v2 = np.asarray(geo.vertices)[face]
+        pt_face_dist = point_2_face_distance(face, query_point)
+        if pt_face_dist < shortest_distance:
+            shortest_distance = pt_face_dist
+    
+    return shortest_distance
+
+    # Find the distance to the adjacent faces
+    if squared_distances:
+        least_squared_distance = min(squared_distances)
+    else:
+        print("No neighbors found within the specified radius.")
+
+
+
     # create a box centered around the query point with an edge length equal to two times the distance to the nearest vertex
     search_distance = dist * 2
-        if dist > search_distance:
-            return dist
 
     search_box_min = query_point - search_distance
     search_box_max = query_point + search_distance
 
+    # query a kd tree for all the faces that intersect this box
     def face_in_box(face):
         v0, v1, v2 = face
-        vertices = np.asarray(mesh.vertices)
+        vertices = np.asarray(geo.vertices)
         return (np.all(vertices[v0] >= search_box_min) and np.all(vertices[v0] <= search_box_max) or
                 np.all(vertices[v1] >= search_box_min) and np.all(vertices[v1] <= search_box_max) or
                 np.all(vertices[v2] >= search_box_min) and np.all(vertices[v2] <= search_box_max))
     
-    candidate_faces = [face for face in np.asarray(mesh.triangles) if face_in_box(face)]
+    candidate_faces = [face for face in np.asarray(geo.triangles) if face_in_box(face)]
     
-
-    # query a kd tree for all the faces that intersect this box
 
     # compute the closest point for the faces that we get back
     pass
