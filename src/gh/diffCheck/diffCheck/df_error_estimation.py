@@ -28,10 +28,99 @@ def cloud_2_cloud_distance(source, target, signed=False):
 
 
 def cloud_2_mesh_distance(source, target):
+    """
+        Calculate the distance between every point of a source pcd to its closest point on a target mesh
+    """
+
+    # for every point on the PCD compute the point_2_mesh_distance
 
     distances = np.ones(len(source.points), dtype=float)
 
     return distances
+
+
+def point_2_mesh_distance(mesh, point):
+     """
+        Calculate the closest distance between a point and a mesh
+    """
+    pass
+    # make a kdtree of the vertices to get the relevant vertices indexes
+
+    # assume smallest distance is the distance to the closest vertex
+
+    # create a box centered around the query point with an edge length equal to two times the distance to the nearest vertex
+    # query a kd tree for all the faces that intersect this box
+
+    # compute the closest point for the faces that we get back
+
+
+def point_2_face_distance(face,  point):
+    """
+        Calculate the closest distance between a point and a face
+    """
+
+    if len(face.vertices) == 3:
+        return point_2_triangle_distance(point, face)
+    elif len(face.vertices) == 4:
+        return point_2_quad_distance(point, face)
+    else:
+        raise ValueError("Face must be a triangle or quadrilateral")
+
+
+def point_2_triangle_distance(point, triangle):
+    """
+        Calculate the shortest distance from a point to a triangle.
+    """
+    a, b, c = triangle
+
+    bary_coords = barycentric_coordinates(point, a, b, c)
+
+    # If the point is inside or on the triangle, use the barycentric coordinates to find the closest point
+    if np.all(bary_coords >= 0):
+        closest_point = bary_coords[0] * a + bary_coords[1] * b + bary_coords[2] * c
+    
+    # If the point is outside the triangle, project it onto the triangle edges and find the closest point
+    else:
+        proj = np.array([np.dot(point - a, b - a) / np.dot(b - a, b - a), 
+                         np.dot(point - b, c - b) / np.dot(c - b, c - b), 
+                         np.dot(point - c, a - c) / np.dot(a - c, a - c)])
+        proj = np.clip(proj, 0, 1)
+        closest_point = np.array([a + proj[0] * (b - a), b + proj[1] * (c - b), c + proj[2] * (a - c)]).min(axis=0)
+    
+    return np.linalg.norm(closest_point - point)
+
+
+def barycentric_coordinates(p, a, b, c):
+    """
+        Calculate the barycentric coordinates of point p with respect to the triangle defined by points a, b, and c.
+    """
+    v0 = b - a
+    v1 = c - a
+    v2 = p - a
+
+    d00 = np.dot(v0, v0)
+    d01 = np.dot(v0, v1)
+    d11 = np.dot(v1, v1)
+    d20 = np.dot(v2, v0)
+    d21 = np.dot(v2, v1)
+
+    denom = d00 * d11 - d01 * d01
+    v = (d11 * d20 - d01 * d21) / denom
+    w = (d00 * d21 - d01 * d20) / denom
+    u = 1.0 - v - w
+
+    return np.array([u, v, w])
+
+
+def point_2_quad_distance(point, quad):
+    """
+        Calculate the shortest distance from a point to a quadrilateral.
+    """
+    a, b, c, d = quad.vertices
+    
+    # Calculate the distance to the two triangles that form the quadrilateral
+    return min(point_2_triangle_distance(point, [a, b, c]), 
+               point_2_triangle_distance(point, [c, d, a]))
 
 
 def compute_mse(distances):
