@@ -1,9 +1,9 @@
 {
-    "name": "DFBindTester",
-    "nickname": "BindT",
+    "name": "DFTester",
+    "nickname": "DFT",
     "category": "diffCheck",
     "subcategory": "Utility",
-    "description": "This component is testing the binding import of diffCheck.",
+    "description": "This component is testing diffCheck imports and bindings.",
     "exposure": 4,
     "instanceGuid": "7a600924-29bb-4682-8b95-a37752cefdbc",
     "ghpython": {
