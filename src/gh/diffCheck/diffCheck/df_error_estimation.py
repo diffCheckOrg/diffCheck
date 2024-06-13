@@ -40,10 +40,9 @@ def cloud_2_mesh_distance(source, target):
 
 
 def point_2_mesh_distance(mesh, point):
-     """
+    """
         Calculate the closest distance between a point and a mesh
     """
-    pass
     # make a kdtree of the vertices to get the relevant vertices indexes
     pcd = o3d.geometry.PointCloud()
     pcd.points = mesh.vertices
@@ -80,8 +79,9 @@ def point_2_mesh_distance(mesh, point):
     # query a kd tree for all the faces that intersect this box
 
     # compute the closest point for the faces that we get back
-        
-    
+    pass
+
+
 def point_2_face_distance(face,  point):
     """
         Calculate the closest distance between a point and a face
