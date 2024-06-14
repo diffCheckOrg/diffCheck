@@ -17,7 +17,9 @@ def cloud_2_cloud_distance(source, target, signed=False):
     if signed:
 
         # Build a KD-tree for the target points
-        kdtree = o3d.geometry.KDTreeFlann(np.asarray(target.points))
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(target.points)
+        kdtree = o3d.geometry.KDTreeFlann(pcd)
         print("KD-tree built successfully.")
 
         for i in range(len(source.points)):
