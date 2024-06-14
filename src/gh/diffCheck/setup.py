@@ -12,6 +12,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "numpy",
+        "open3d",
         "pybind11>=2.5.0"
         # other dependencies...
     ],

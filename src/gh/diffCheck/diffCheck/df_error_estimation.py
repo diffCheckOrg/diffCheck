@@ -6,26 +6,38 @@
 import numpy as np
 import open3d as o3d
 
-from diffcheck_bindings.dfb_geometry import DFPointCloud, DFMesh
-# from diffCheck.df_geometries import DFPointCoud, DFMesh, DFBeam, DFAssembly
+from diffCheck import diffcheck_bindings
 
 def cloud_2_cloud_distance(source, target, signed=False):
     """
         Compute the Euclidean distance for every point of a source pcd to its closest point on a target pointcloud
     """
-    distances = np.full(len(source.points), np.inf)
+    distances = np.asarray(source.compute_P2PDistance(target))
 
-    for i in range(len(source.points)):
+    if signed:
 
-        dists = np.linalg.norm(np.asarray(target.points) - np.asarray(source.points)[i], axis=1)
-        distances[i] = np.min(dists)
+        # Build a KD-tree for the target points
+        kdtree = o3d.geometry.KDTreeFlann(np.asarray(target.points))
+        print("KD-tree built successfully.")
 
-        # determine whether the point on the source cloud is in the same direction as the normal of the corresponding point on the target pcd
-        if signed:
-            closest_idx = np.argmin(dists)
-            # direction from target to source
+        for i in range(len(source.points)):
+
+            query = np.asarray(source.points[i], dtype=np.float64).reshape(3)
+            # Query the KD-tree to find the nearest neighbor
+            try:
+                _, idx, _ = kdtree.search_knn_vector_3d(query, 1)
+            except Exception as e:
+                print(f"Error querying KD-tree for point {i}: {e}")
+                continue
+            
+            closest_idx = idx[0]
+            # Calculate the direction from target to source
             direction = source.points[i] - target.points[closest_idx]
-            distances[i] *= np.sign(np.dot(direction, target.normals[closest_idx]))
+
+            # Calculate the signed distance
+            dot_product = np.dot(direction, target.normals[closest_idx])
+            if dot_product < 0:
+                distances[i] = -distances[i]
 
     return distances
 
@@ -50,7 +62,7 @@ def point_2_mesh_distance(geo, query_point):
         Calculate the closest distance between a point and a target geometry
     """
     # make a kdtree of the vertices to get the relevant vertices indexes
-    pcd = DFPointCloud()
+    pcd = diffcheck_bindings.dfb_geometry.DFPointCloud()
     pcd.points = geo.vertices
     kd_tree = o3d.geometry.KDTreeFlann(pcd)
 

@@ -2,6 +2,7 @@ README.md
 setup.py
 diffCheck/__init__.py
 diffCheck/df_cvt_bindings.py
+diffCheck/df_error_estimation.py
 diffCheck/df_geometries.py
 diffCheck/df_joint_detector.py
 diffCheck/df_transformations.py
