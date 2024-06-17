@@ -1,6 +1,8 @@
 #pragma once
 
 #include <open3d/Open3D.h>
+#include <open3d/t/geometry/RaycastingScene.h>
+
 #include <loguru.hpp>
 
 // diffCheck includes
