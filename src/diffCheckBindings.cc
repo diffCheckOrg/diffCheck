@@ -30,8 +30,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def(py::init<std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>>())
         
         .def("compute_distance", &diffCheck::geometry::DFPointCloud::ComputeDistance,
-            py::arg("targetCloud"),
-            py::arg("isAbs") = true)
+            py::arg("target_cloud"),
+            py::arg("is_abs") = true)
         .def("compute_BoundingBox", &diffCheck::geometry::DFPointCloud::ComputeBoundingBox)
         
         .def("voxel_downsample", &diffCheck::geometry::DFPointCloud::VoxelDownsample,
@@ -68,8 +68,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def(py::init<std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3i>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>>())
 
         .def("compute_distance", &diffCheck::geometry::DFMesh::ComputeDistance,
-            py::arg("targetCloud"),
-            py::arg("isAbs") = true)
+            py::arg("target_cloud"),
+            py::arg("is_abs") = true)
             
         .def("load_from_PLY", &diffCheck::geometry::DFMesh::LoadFromPLY)
 
