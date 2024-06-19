@@ -34,6 +34,7 @@ gantt
     Fabrication of CNC Prototype        :crit, fabcnc, 2024-07-01, 2024-08-30
     Fabrication of Robot Prototype      :crit, fabrob, 2024-07-01, 2024-08-30
     Data collection and evaluation      :dataeval, after fabrob, 4w
+```
 
 ## 3rd party libraries
 
