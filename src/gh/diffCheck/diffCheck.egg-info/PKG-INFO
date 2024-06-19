@@ -10,7 +10,6 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.9
 Description-Content-Type: text/markdown
 Requires-Dist: numpy
-Requires-Dist: open3d
 Requires-Dist: pybind11>=2.5.0
 
 # DiffCheck Grasshopper Plugin

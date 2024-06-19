@@ -19,7 +19,7 @@ from diffCheck import df_error_estimation
 class CloudToMeshDistance(component):
     def RunScript(self,
         i_cloud_source: rg.PointCloud,
-        i_mesh_target: rg.PointCloud,
+        i_beam,
         i_signed_flag: bool):
         """
             The cloud-to-cloud component computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.
@@ -32,12 +32,13 @@ class CloudToMeshDistance(component):
             :return o_max_deviation: the max deviation between source and target (Hausdorff Distance)
             :return o_min_deviation: the min deviation between source and target
         """
-        if i_cloud_source is None or i_mesh_target is None:
+        if i_cloud_source is None or i_beam is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide an object of type point cloud and an object of type mesh to compare")
             return None
 
         # conversion
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
+        i_mesh_target = i_beam.to_mesh()
         df_mesh_target = df_cvt_bindings.cvt_rhmesh_2_dfmesh(i_mesh_target)
 
         # calculate distances
@@ -53,5 +54,6 @@ if __name__ == "__main__":
     com = CloudToMeshDistance()
     o_distances, o_mse, o_max_deviation, o_min_deviation = com.RunScript(
         i_cloud_source,
-        i_mesh_target
+        i_mesh_target,
+        i_signed_flag
         )

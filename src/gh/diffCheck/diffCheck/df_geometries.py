@@ -238,6 +238,18 @@ class DFBeam:
 
         return brep
 
+    def to_mesh(self):
+        """
+        Convert the beam to a Rhino Mesh object
+        """
+        mesh = rg.Mesh()
+        for face in self.faces:
+            mesh_part = face.to_mesh()
+            mesh.Append(mesh_part)
+            mesh.Compact()
+
+        return mesh
+
     def __repr__(self):
         return f"Beam: {self.name}, Faces: {len(self.faces)}"
 
