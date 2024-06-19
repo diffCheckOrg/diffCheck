@@ -26,3 +26,7 @@ class DFTester(component):
             ghenv.Component.AddRuntimeMessage(RML.Remark, "Bindings imported.")
 
         return is_binding_imported
+
+# if __name__ == "__main__":
+#     tester = DFTester()
+#     tester.RunScript()

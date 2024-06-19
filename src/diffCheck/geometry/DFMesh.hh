@@ -3,8 +3,8 @@
 #include <Eigen/Core>
 #include <open3d/Open3D.h>
 
-#include <diffCheck/geometry/DFPointCloud.hh>
-#include <diffCheck/transformation/DFTransformation.hh>
+#include "diffCheck/geometry/DFPointCloud.hh"
+#include "diffCheck/transformation/DFTransformation.hh"
 
 namespace diffCheck::geometry
 {
@@ -84,6 +84,18 @@ namespace diffCheck::geometry
         int GetNumVertices() const { return this->Vertices.size(); }
         /// @brief Number of faces in the mesh
         int GetNumFaces() const { return this->Faces.size(); }
+
+    public:  ///< Distance calculations
+        /**
+         * @brief Compute the distance between the df mesh and a df point cloud. It
+         * can be considered as a point to plane distance.
+         * 
+         * @param target the target cloud in format df
+         * @param useAbs if true, the absolute value of the distance is returned
+         * @return std::vector<float> the distance between the point cloud and the mesh
+         */
+        std::vector<float> ComputeDistance(const diffCheck::geometry::DFPointCloud &targetMesh, bool useAbs = true);
+
 
     public:  ///< Basic mesh data
         /// @brief Eigen vector of 3D vertices
