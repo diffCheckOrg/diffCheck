@@ -148,6 +148,7 @@ if (BUILD_PYTHON_MODULE)
         )
 
     # get all the files -dlls in the bin directory and copy them one by one to the pypi directory
+    message(STATUS "Copying dlls to ${TARGET_DLL_PYPI_DIR}")
     file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
     foreach(file ${files})
         message(STATUS "Copying ${file} to ${TARGET_DLL_PYPI_DIR}")

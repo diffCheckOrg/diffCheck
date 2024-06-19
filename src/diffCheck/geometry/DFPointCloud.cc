@@ -120,16 +120,13 @@ namespace diffCheck::geometry
         this->Normals = cloud->Normals;
     }
 
-    std::vector<double> DFPointCloud::ComputeDistance(const diffCheck::geometry::DFPointCloud &targetCloud, bool useAbs)
+    std::vector<double> DFPointCloud::ComputeDistance(const diffCheck::geometry::DFPointCloud &targetCloud)
     {
         auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
         auto targetCloudCopy = targetCloud;
         auto O3DTargetPointCloud = targetCloudCopy.Cvt2O3DPointCloud();
         std::vector<double> distances;
         distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
-        if (useAbs)
-            for (auto &dist : distances)
-                dist = std::abs(dist);
         return distances;
     }
 }
