@@ -2,7 +2,6 @@
 
 #include "diffCheck/IOManager.hh"
 
-
 namespace diffCheck::geometry
 {
     void DFPointCloud::Cvt2DFPointCloud(const std::shared_ptr<open3d::geometry::PointCloud> &O3DPointCloud)
@@ -31,18 +30,6 @@ namespace diffCheck::geometry
             for (auto &normal : this->Normals)
                 O3DPointCloud->normals_.push_back(normal);
         return O3DPointCloud;
-    }
-
-    std::vector<double> DFPointCloud::ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> target)
-    {
-        std::vector<double> errors;
-        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
-        auto O3DTargetPointCloud = target->Cvt2O3DPointCloud();
-        
-        std::vector<double> distances;
-
-        distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
-        return distances;
     }
 
     std::vector<Eigen::Vector3d> DFPointCloud::ComputeBoundingBox()
@@ -131,5 +118,18 @@ namespace diffCheck::geometry
         this->Points = cloud->Points;
         this->Colors = cloud->Colors;
         this->Normals = cloud->Normals;
+    }
+
+    std::vector<double> DFPointCloud::ComputeDistance(const diffCheck::geometry::DFPointCloud &targetCloud, bool useAbs)
+    {
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto targetCloudCopy = targetCloud;
+        auto O3DTargetPointCloud = targetCloudCopy.Cvt2O3DPointCloud();
+        std::vector<double> distances;
+        distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
+        if (useAbs)
+            for (auto &dist : distances)
+                dist = std::abs(dist);
+        return distances;
     }
 }
