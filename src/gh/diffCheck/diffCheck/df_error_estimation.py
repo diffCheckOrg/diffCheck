@@ -11,10 +11,7 @@ def cloud_2_cloud_distance(source, target, signed=False):
     """
         Compute the Euclidean distance for every point of a source pcd to its closest point on a target pointcloud
     """
-    if signed:
-        distances = np.asarray(source.compute_distance(target, is_abs=False))
-    else:
-        distances = np.asarray(source.compute_distance(target, is_abs=True))
+    distances = np.asarray(source.compute_distance(target))
 
     return distances
 

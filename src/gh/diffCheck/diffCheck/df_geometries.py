@@ -233,7 +233,7 @@ class DFBeam:
         """
         brep = rg.Brep()
         for face in self.faces:
-            brep.Append(face.to_brep_face())
+            brep.Append(face.to_brep_face().ToBrep())
         brep.Compact()
 
         return brep
@@ -242,13 +242,21 @@ class DFBeam:
         """
         Convert the beam to a Rhino Mesh object
         """
-        mesh = rg.Mesh()
-        for face in self.faces:
-            mesh_part = face.to_mesh()
-            mesh.Append(mesh_part)
-            mesh.Compact()
+        # mesh = rg.Mesh()
+        o_side_faces = [f.to_brep_face() for f in self.side_faces]
+        o_joint_faces = [f.to_brep_face() for f in self.joint_faces]
+        rhino_brep_faces = o_side_faces + o_joint_faces
 
-        return mesh
+        brep = rg.Brep()
+
+        for f in rhino_brep_faces:
+            #from dfbeam face to mesh
+            brep.Faces.Add(f)
+            #mesh_part = rg.CreateFromBrep(face.ToBrep(), rg.MeshingParameters.Coarse)
+            #mesh.Append(mesh_part)
+            #mesh.Compact()
+
+        return rhino_brep_faces
 
     def __repr__(self):
         return f"Beam: {self.name}, Faces: {len(self.faces)}"
