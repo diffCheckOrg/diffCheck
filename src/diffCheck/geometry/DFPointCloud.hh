@@ -116,12 +116,11 @@ namespace diffCheck::geometry
          * It returns a vector of distances, one for each point in the source point cloud.
          * 
          * @param target the target point cloud in format df
-         * @param useAbs if true, the absolute value of the distance is returned
          * @return std::vector<double> the distance between the two point clouds
          * 
          * @see https://github.com/isl-org/Open3D/blob/main/cpp/open3d/geometry/PointCloud.cpp
          */
-        std::vector<double> ComputeDistance(const DFPointCloud &targetCloud, bool useAbs = true);
+        std::vector<double> ComputeDistance(const DFPointCloud &targetCloud);
 
     public:  ///< Getters
         /// @brief Number of points in the point cloud
