@@ -243,21 +243,19 @@ class DFBeam:
         Convert the beam to a Rhino Mesh object
         """
         rhino_brep_faces = [f.to_brep_face() for f in self.faces]
-        # mesh = rg.Mesh()
-        #o_side_faces = [f.to_brep_face() for f in self.side_faces]
-        #o_joint_faces = [f.to_brep_face() for f in self.joint_faces]
-        #rhino_brep_faces = o_side_faces + o_joint_faces
-
-        new_faces = []
         mesh = rg.Mesh()
 
         new_faces = [f.DuplicateFace(True) for f in rhino_brep_faces]  # .DuplicateFace bypasses the problem of untrimmed faces that appear in f.to_brep_face
 
         for f in new_faces:
-            mesh_part = rg.Mesh.CreateFromBrep(f, rg.MeshingParameters.Coarse)[0] #returns a list of meshes with one element
-            mesh.Append(mesh_part)
-        mesh.Compact()
 
+            param = rg.MeshingParameters()
+            scalef = diffCheck.df_util.get_doc_2_meters_unitf()
+            param.MaximumEdgeLength = 0.01 / scalef
+            mesh_part = rg.Mesh.CreateFromBrep(f, param)[0] #returns a list of meshes with one element
+            mesh.Append(mesh_part)
+
+        mesh.Compact()
         return mesh
 
     def __repr__(self):

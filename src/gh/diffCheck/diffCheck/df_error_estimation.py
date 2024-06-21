@@ -6,6 +6,7 @@
 import numpy as np
 import open3d as o3d
 from diffCheck import diffcheck_bindings
+import Rhino.Geometry as rg
 
 def cloud_2_cloud_distance(source, target, signed=False):
     """
@@ -18,7 +19,7 @@ def cloud_2_cloud_distance(source, target, signed=False):
 
 def cloud_2_mesh_distance(source, target, signed=False):
     """
-        Calculate the distance between every point of a source pcd to its closest point on a target beam
+        Calculate the distance between every point of a source pcd to its closest point on a target DFMesh
     """
 
     # for every point on the PCD compute the point_2_mesh_distance
@@ -28,6 +29,35 @@ def cloud_2_mesh_distance(source, target, signed=False):
         distances = np.asarray(target.compute_distance(source, is_abs=True))
 
     return distances
+
+def cloud_2_rhino_mesh_distance(source, target, signed=False):
+    """
+        Calculate the distance between every point of a source pcd to its closest point on a target Rhino Mesh
+    """
+
+    #for every point on the point cloud find distance to mesh
+    distances = []
+
+    for p in source.points:
+
+        rhp = rg.Point3d(p[0], p[1], p[2])
+        closest_meshPoint = target.ClosestMeshPoint(rhp, 1000)
+        closest_point = closest_meshPoint.Point
+        face_Index = closest_meshPoint.FaceIndex
+        distance = rhp.DistanceTo(closest_point)
+
+        if signed:
+            # Calculate the direction from target to source
+            direction = rhp - closest_point
+            # Calculate the signed distance
+            normal = target.NormalAt(closest_meshPoint)
+            dot_product = direction * normal
+            if dot_product < 0:
+                distance = -distance
+
+        distances.append(distance)
+
+    return np.asarray(distances)
 
 
 def compute_mse(distances):
