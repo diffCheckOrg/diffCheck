@@ -35,7 +35,8 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
 
     # colors
     if rh_cloud.ContainsColors:
-        df_cloud.colors = [c for c in rh_cloud.GetColors()]
+        # df_cloud.colors = [c for c in rh_cloud.GetColors()]
+        df_cloud.colors = [[c.R, c.G, c.B] for c in rh_cloud.GetColors()]   
 
     return df_cloud
 

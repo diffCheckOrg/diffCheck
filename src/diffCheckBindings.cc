@@ -165,6 +165,6 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("normal_threshold_degree") = 20,
             py::arg("min_cluster_size") = 10,
             py::arg("use_knn_neighborhood") = false,
-            py::arg("radius_neighborhood_size") = 10,
-            py::arg("knn_neighborhood_size") = 10);
+            py::arg("knn_neighborhood_size") = 10,
+            py::arg("radius_neighborhood_size") = 10);
 }
