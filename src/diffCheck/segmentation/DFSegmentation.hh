@@ -22,7 +22,7 @@ namespace diffCheck::segmentation
             float normalThresholdDegree = 20,
             int minClusterSize = 10,
             bool useKnnNeighborhood = true,
-            int radiusNeighborhoodSize = 10,
-            int knnNeighborhoodSize = 10);
+            int knnNeighborhoodSize = 10,
+            int radiusNeighborhoodSize = 10);
     };
 } // namespace diffCheck::segmentation

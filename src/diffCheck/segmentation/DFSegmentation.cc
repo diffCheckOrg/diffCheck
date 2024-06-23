@@ -12,8 +12,8 @@ namespace diffCheck::segmentation
         float normalThresholdDegree,
         int minClusterSize,
         bool useKnnNeighborhood,
-        int radiusNeighborhoodSize,
-        int knnNeighborhoodSize)
+        int knnNeighborhoodSize,
+        int radiusNeighborhoodSize)
     {
         std::vector<std::shared_ptr<geometry::DFPointCloud>> segments;
         cilantro::PointCloud3f cilantroPointCloud;
