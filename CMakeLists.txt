@@ -94,7 +94,9 @@ target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
 
 # Cilantro (header-only) --------------------------------------------------
-target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cilantro/include)
+download_submodule_project(cilantro)
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/submodule-cilantro/include)
+
 # loguru (header-only) ----------------------------------------------------
 download_submodule_project(loguru)
 add_subdirectory(deps/loguru)
