@@ -10,24 +10,7 @@ def main(model, voxel_size, normal_threshold, min_cluster_size):
     print(len(res))
     for pc in res:
         a.append(pc)
-    
-    
-
-    for brep in model:
-        brep_faces = brep.Faces
-        center_points = []
-        for i in range(brep_faces.Count):
-            brep_face = brep_faces.ExtractFace(i)
-            face_vertices = brep_face.Vertices
-            center_point = Rhino.Geometry.Point3d(0, 0, 0)
-            for j in range(face_vertices.Count):
-                vertex = face_vertices[j]
-                center_point += vertex.Location
-            center_point /= face_vertices.Count
-            for face in a:
-                initial_distance = center_point - face.get_center_point()
-                print(initial_distance)
-    return a, center_points
+    return a
 
 if __name__ == "__main__":
-    a, center_points = main(model, voxel_size, normal_threshold, min_cluster_size)
+    a = main(model, voxel_size, normal_threshold, min_cluster_size)
