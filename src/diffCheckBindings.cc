@@ -159,7 +159,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
     py::module_ submodule_segmentation = m.def_submodule("dfb_segmentation", "A submodule for the `semantic` segmentation methods.");
 
     py::class_<diffCheck::segmentation::DFSegmentation>(submodule_segmentation, "DFSegmentation")
-        .def_static("smooth_segmentation", &diffCheck::segmentation::DFSegmentation::SmoothSegmentation,
+        .def_static("smooth_segmentation", &diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation,
             py::arg("point_cloud"),
             py::arg("voxel_size") = 1,
             py::arg("normal_threshold_degree") = 20,

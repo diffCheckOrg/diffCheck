@@ -16,7 +16,7 @@ namespace diffCheck::segmentation
          * @param radiusNeighborhoodSize the radius of the neighborhood size for the "radius search". This is used when useKnnNeighborhood is false. A higher number will result in smoother segmentation, but at the cost of computation time.
          * @return std::vector<std::shared_ptr<geometry::DFPointCloud>> the segmented point clouds
          */
-        static std::vector<std::shared_ptr<geometry::DFPointCloud>> SmoothSegmentation(
+        static std::vector<std::shared_ptr<geometry::DFPointCloud>> NormalBasedSegmentation(
             geometry::DFPointCloud &pointCloud,
             float voxelSize = 0.2,
             float normalThresholdDegree = 20,

@@ -6,7 +6,7 @@
 
 namespace diffCheck::segmentation
 {   
-    std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::SmoothSegmentation(
+    std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::NormalBasedSegmentation(
         geometry::DFPointCloud &pointCloud,
         float voxelSize,
         float normalThresholdDegree,
