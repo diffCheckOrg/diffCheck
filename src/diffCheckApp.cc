@@ -15,7 +15,7 @@ int main()
   pcdSrc->LoadFromPLY(pathPcdSrc);
   meshSrc->LoadFromPLY(pathMeshSrc);
 
-  segments = diffCheck::segmentation::DFSegmentation::SegmentationPointCloud(*pcdSrc, 0.01, 1, 30, true, 50, 30);
+  segments = diffCheck::segmentation::DFSegmentation::SmoothSegmentation(*pcdSrc, 0.01, 1, 30, true, 50, 30);
   std::cout << "number of segments:" << segments.size()<< std::endl;
 
   diffCheck::visualizer::Visualizer vis;

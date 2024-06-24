@@ -6,7 +6,7 @@ namespace diffCheck::segmentation
     class DFSegmentation
     {
         public:
-        /** @brief Downsamples and segments the point cloud using Cilantro's ConnectedComponentExtraction3f method
+        /** @brief Downsamples and segments the point cloud using Cilantro's ConnectedComponentExtraction3f method. It uses the normals' variations to detect different parts in the point cloud.
          * @param pointCloud the point cloud to segment
          * @param voxelSize the voxel size for the downsampling of the point cloud. The point cloud is downsampled after the normal calculation. A lower number will result in a denser point cloud
          * @param normalThresholdDegree the normal threshold in degrees do differentiate segments. The higher the number, the more tolerent the segmentation will be to normal differences
@@ -14,9 +14,9 @@ namespace diffCheck::segmentation
          * @param useKnnNeighborhood if true, the neighborhood search will be done using the knnNeighborhoodSize, otherwise it will be done using radiusNeighborhoodSize
          * @param knnNeighborhoodSize the k nearest neighbors size for the "neighborhood search". This is used when useKnnNeighborhood is true. a higher number will result in smoother segmentation, but at the cost of computation time
          * @param radiusNeighborhoodSize the radius of the neighborhood size for the "radius search". This is used when useKnnNeighborhood is false. A higher number will result in smoother segmentation, but at the cost of computation time.
-         * @return std::vector<geometry::DFPointCloud> the segmented point clouds
+         * @return std::vector<std::shared_ptr<geometry::DFPointCloud>> the segmented point clouds
          */
-        static std::vector<std::shared_ptr<geometry::DFPointCloud>> SegmentationPointCloud(
+        static std::vector<std::shared_ptr<geometry::DFPointCloud>> SmoothSegmentation(
             geometry::DFPointCloud &pointCloud,
             float voxelSize = 0.2,
             float normalThresholdDegree = 20,
