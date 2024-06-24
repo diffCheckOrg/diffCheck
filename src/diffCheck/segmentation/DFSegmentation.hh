@@ -24,5 +24,16 @@ namespace diffCheck::segmentation
             bool useKnnNeighborhood = true,
             int knnNeighborhoodSize = 10,
             int radiusNeighborhoodSize = 10);
+        
+        /**
+         * @brief From a vector of mesh faces, finds in a vector of cloud segments the corresponding segments as a unified point cloud
+         * @param meshFaces the mesh faces to compare
+         * @param segments the segments to compare
+         * @return std::tuple<std::shared_ptr<geometry::DFPointCloud>, std::vector<std::shared_ptr<geometry::DFPointCloud>> > the unified point cloud and the corresponding segments as a tuple
+        */
+        static std::tuple<std::shared_ptr<geometry::DFPointCloud>, std::vector<std::shared_ptr<geometry::DFPointCloud>>> AssociateSegments(
+            std::vector<std::shared_ptr<geometry::DFMesh>> meshFaces,
+            std::vector<std::shared_ptr<geometry::DFPointCloud>> segments,
+            double associationThreshold);
     };
 } // namespace diffCheck::segmentation
