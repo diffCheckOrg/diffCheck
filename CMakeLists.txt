@@ -120,15 +120,6 @@ target_include_directories(${APP_NAME_EXE}
     )
 
 #--------------------------------------------------------------------------
-# Tests
-#--------------------------------------------------------------------------
-
-# include(CTest)
-# enable_testing()
-
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/global_registrations)
-
-#--------------------------------------------------------------------------
 # pybind11
 #--------------------------------------------------------------------------
 if (BUILD_PYTHON_MODULE)
@@ -172,3 +163,41 @@ if (BUILD_PYTHON_MODULE)
     endforeach()
 
 endif()
+
+#--------------------------------------------------------------------------
+# Tests
+#--------------------------------------------------------------------------
+
+# include(CTest)
+# enable_testing()
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
+# set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/tests/)
+
+
+# # Unit testing ------------------------------------------------------------
+# set(UNIT_TESTS unit_tests)
+# add_executable(${UNIT_TESTS} tests/unit_tests/DFPointCloudTest.cc)
+# set_target_properties(${UNIT_TESTS} PROPERTIES
+#     RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
+#     )
+
+# target_link_libraries(${UNIT_TESTS} gtest gtest_main)
+# target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
+
+# add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
+
+# Integration testing -----------------------------------------------------
+# Component testing -------------------------------------------------------
+# etc ---------------------------------------------------------------------
+
+# # TODO: a better way to copy the dlls to the tests directory for the tests
+# # get all the files -dlls in the bin directory and copy them one by one to tests dir
+# file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
+# foreach(file ${files})
+#     message(STATUS "Copying ${file} to ${TESTS_OUT_DIR}")
+#     add_custom_command(TARGET ${UNIT_TESTS} POST_BUILD
+#         COMMAND ${CMAKE_COMMAND} -E copy
+#         ${file}
+#         ${TESTS_OUT_DIR}/Release
+#         )
+# endforeach()

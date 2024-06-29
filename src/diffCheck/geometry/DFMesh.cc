@@ -71,6 +71,14 @@ namespace diffCheck::geometry
         this->Cvt2DFMesh(O3DTriangleMesh);
     }
 
+    std::vector<Eigen::Vector3d> DFMesh::GetTightBoundingBox()
+    {
+        auto O3DTriangleMesh = this->Cvt2O3DTriangleMesh();
+        open3d::geometry::OrientedBoundingBox tightOOBB = O3DTriangleMesh->GetMinimalOrientedBoundingBox();
+        std::vector<Eigen::Vector3d> bboxPts = tightOOBB.GetBoxPoints();
+        return bboxPts;
+    }
+
     void DFMesh::LoadFromPLY(const std::string &path)
     {
         std::shared_ptr<diffCheck::geometry::DFMesh> tempMesh_ptr = diffCheck::io::ReadPLYMeshFromFile(path);

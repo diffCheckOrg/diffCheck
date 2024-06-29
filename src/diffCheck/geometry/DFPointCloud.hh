@@ -78,7 +78,33 @@ namespace diffCheck::geometry
          * 
          * @param targetSize the target size of the cloud
          */
+        
         void DownsampleBySize(int targetSize);
+        /**
+         * @brief Get the tight bounding box of the point cloud
+         * 
+         * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum
+         * point and the second one the maximum point of the bounding box.
+         *  ///      ------- x
+         *  ///     /|
+         *  ///    / |
+         *  ///   /  | z
+         *  ///  y
+         *  ///      0 ------------------- 1
+         *  ///       /|                /|
+         *  ///      / |               / |
+         *  ///     /  |              /  |
+         *  ///    /   |             /   |
+         *  /// 2 ------------------- 7  |
+         *  ///   |    |____________|____| 6
+         *  ///   |   /3            |   /
+         *  ///   |  /              |  /
+         *  ///   | /               | /
+         *  ///   |/                |/
+         *  /// 5 ------------------- 4
+         *  /// 
+        */
+        std::vector<Eigen::Vector3d> GetTightBoundingBox();
 
     public:  ///< Transformers
         /**
