@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <Eigen/Core>
 #include <open3d/Open3D.h>
 
@@ -57,6 +58,18 @@ namespace diffCheck::geometry
          *  point and the second one the maximum point of the bounding box.
         */
         std::vector<Eigen::Vector3d> ComputeBoundingBox();
+
+        /**
+         * @brief Estimate the normals of the point cloud by either knn or if the radius
+         * is provided by hybrid search.
+         * 
+         * <a href=https://www.open3d.org/html/cpp_api/classopen3d_1_1t_1_1geometry_1_1_point_cloud.html#a4937528c4b6194092631f002bccc44d0> Reference from Open3d</a>.
+         * @param knn the number of nearest neighbors to consider (by default 30)
+         * @param searchRadius the radius of the search, by default deactivated
+         */
+        void EstimateNormals(
+            std::optional<int> knn = 30,
+            std::optional<double> searchRadius = std::nullopt);
 
     public:  ///< Downsamplers
         /**

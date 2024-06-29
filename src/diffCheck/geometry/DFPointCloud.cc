@@ -1,4 +1,5 @@
 #include "DFPointCloud.hh"
+#include "diffCheck/log.hh"
 
 #include "diffCheck/IOManager.hh"
 
@@ -53,6 +54,37 @@ namespace diffCheck::geometry
         extremePoints.push_back(boundingBox.GetMinBound());
         extremePoints.push_back(boundingBox.GetMaxBound());
         return extremePoints;
+    }
+
+    void DFPointCloud::EstimateNormals(
+        std::optional<int> knn,
+        std::optional<double> searchRadius
+    )
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        O3DPointCloud->EstimateNormals();
+
+        if (knn.value() != 30 && searchRadius.has_value() == false)
+        {
+            open3d::geometry::KDTreeSearchParamKNN knnSearchParam(knn.value());
+            O3DPointCloud->EstimateNormals(knnSearchParam);
+            DIFFCHECK_INFO(("Estimating normals with knn = " + std::to_string(knn.value())).c_str());
+        }
+        else if (searchRadius.has_value())
+        {
+            open3d::geometry::KDTreeSearchParamHybrid hybridSearchParam(searchRadius.value(), knn.value());
+            O3DPointCloud->EstimateNormals(hybridSearchParam);
+            DIFFCHECK_INFO(("Estimating normals with hybrid search radius = " + std::to_string(searchRadius.value()) + "and knn = " + std::to_string(knn.value())).c_str());
+        }
+        else
+        {
+            O3DPointCloud->EstimateNormals();
+            DIFFCHECK_INFO("Default estimation of normals with knn = 30");
+        }
+
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloud->normals_)
+            this->Normals.push_back(normal);
     }
 
     void DFPointCloud::VoxelDownsample(double voxelSize)
