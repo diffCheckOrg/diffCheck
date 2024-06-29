@@ -3,6 +3,8 @@
 #include <open3d/Open3D.h>
 #include <loguru.hpp>
 
+#include <cilantro/cilantro.hpp>
+
 // diffCheck includes
 #include "diffCheck/log.hh"
 const diffCheck::Log LOG = diffCheck::Log();

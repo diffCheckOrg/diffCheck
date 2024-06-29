@@ -21,7 +21,7 @@ namespace diffCheck::visualizer
             int height = 800,
             int posX = 50,
             int posY = 50,
-            bool showNormals = false,
+            bool showNormals = true,
             bool showWireframe = true
             ) : Title(title), Width(width), Height(height),
                 PosX(posX), PosY(posY),

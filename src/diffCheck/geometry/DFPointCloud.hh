@@ -6,6 +6,8 @@
 
 #include <diffCheck/transformation/DFTransformation.hh>
 
+#include <cilantro/utilities/point_cloud.hpp>
+#include <cilantro/core/nearest_neighbors.hpp>
 
 namespace diffCheck::geometry
 {
@@ -29,13 +31,21 @@ namespace diffCheck::geometry
          * @param pointCloud the open3d point cloud
          */
         void Cvt2DFPointCloud(const std::shared_ptr<open3d::geometry::PointCloud> &O3DPointCloud);
-        
+        void Cvt2DFPointCloud(const std::shared_ptr<cilantro::PointCloud3f> &cilantroPointCloud);
+
         /**
          * @brief Convert the DFPointCloud to open3d point cloud
          * 
          * @return std::shared_ptr<open3d::geometry::PointCloud> the open3d point cloud
          */
         std::shared_ptr<open3d::geometry::PointCloud> Cvt2O3DPointCloud();
+
+        /**
+         * @brief Convert DFPointCloud to cilantro point cloud
+         * 
+         * @return std::shared_ptr<cilantro::PointCloud3f> the cilantro point cloud
+         */
+        std::shared_ptr<cilantro::PointCloud3f> Cvt2CilantroPointCloud();
 
     public:  ///< Utilities
         /** 
@@ -64,11 +74,14 @@ namespace diffCheck::geometry
          * is provided by hybrid search.
          * 
          * <a href=https://www.open3d.org/html/cpp_api/classopen3d_1_1t_1_1geometry_1_1_point_cloud.html#a4937528c4b6194092631f002bccc44d0> Reference from Open3d</a>.
+         *
+         * @param useCilantroEvaluator if true, the cilantro evaluator will be used, otherwise the open3d one
          * @param knn the number of nearest neighbors to consider (by default 30)
-         * @param searchRadius the radius of the search, by default deactivated
+         * @param searchRadius the radius of the search, by default deactivated (only if useCilantroEvaluator is false)
          */
         void EstimateNormals(
-            std::optional<int> knn = 30,
+            bool useCilantroEvaluator = false,
+            std::optional<int> knn = 10,
             std::optional<double> searchRadius = std::nullopt);
 
     public:  ///< Downsamplers

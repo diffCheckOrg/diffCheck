@@ -3,23 +3,38 @@
 #include <iostream>
 #include <fstream>
 
+#include <cilantro/utilities/point_cloud.hpp>
+#include <cilantro/core/nearest_neighbors.hpp>
+
 
 int main()
 {
   std::shared_ptr<diffCheck::geometry::DFPointCloud> pcdSrc = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  std::shared_ptr<diffCheck::geometry::DFMesh> meshSrc = std::make_shared<diffCheck::geometry::DFMesh>();
   std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>> segments;
-  std::string pathMeshSrc = R"(C:\Users\localuser\Downloads\02_mesh.ply)";
-  std::string pathPcdSrc = R"(C:\Users\localuser\Downloads\02_points_with_errors_1e6_pts.ply)";
+  std::string pathPcdSrc = R"(C:\Users\andre\Downloads\moved_04.ply)";
 
   pcdSrc->LoadFromPLY(pathPcdSrc);
-  meshSrc->LoadFromPLY(pathMeshSrc);
 
-  segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(*pcdSrc, 0.01, 1, 30, true, 50, 30);
+  segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(
+    pcdSrc,
+    10.f,
+    10,
+    true,
+    50,
+    30,
+    true);
   std::cout << "number of segments:" << segments.size()<< std::endl;
+  // print the last 5 colors
+  for (auto segment : segments)
+  {
+    for (int i = 0; i < 5; i++)
+    {
+      std::cout << segment->Colors[i].transpose() << std::endl;
+    }
+  }
 
   diffCheck::visualizer::Visualizer vis;
-  vis.AddMesh(meshSrc);
+  // vis.AddPointCloud(pcdSrc);
   for (auto segment : segments)
   {
     // colorize the segments with random colors
@@ -31,7 +46,6 @@ int main()
       segment->Colors.push_back(Eigen::Vector3d(r, g, b));
     }
     vis.AddPointCloud(segment);
-
   }
   vis.Run();
   return 0;

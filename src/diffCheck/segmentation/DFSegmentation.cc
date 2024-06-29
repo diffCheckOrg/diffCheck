@@ -7,54 +7,55 @@
 namespace diffCheck::segmentation
 {   
     std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::NormalBasedSegmentation(
-        geometry::DFPointCloud &pointCloud,
-        float voxelSize,
+        std::shared_ptr<geometry::DFPointCloud> &pointCloud,
         float normalThresholdDegree,
         int minClusterSize,
         bool useKnnNeighborhood,
         int knnNeighborhoodSize,
-        int radiusNeighborhoodSize)
+        int radiusNeighborhoodSize,
+        bool colorClusters)
     {
-        std::vector<std::shared_ptr<geometry::DFPointCloud>> segments;
-        cilantro::PointCloud3f cilantroPointCloud;
-        
-        // Convert the point cloud to cilantro point cloud
-        for (int i = 0; i < pointCloud.Points.size();  i++)
-        {
-            cilantroPointCloud.points.conservativeResize(3, cilantroPointCloud.points.cols() + 1);
-            cilantroPointCloud.points.rightCols(1) = pointCloud.Points[i].cast<float>();
-        }
+        std::shared_ptr<cilantro::PointCloud3f> cilantroPointCloud = pointCloud->Cvt2CilantroPointCloud();
 
-        // segment the point cloud using knn or radius neighborhood
+        std::vector<std::shared_ptr<geometry::DFPointCloud>> segments;
         if (useKnnNeighborhood)
         {
             cilantro::KNNNeighborhoodSpecification<int> neighborhood(knnNeighborhoodSize);
 
-            // conpute the normals and downsample
-            cilantroPointCloud.estimateNormals(neighborhood, false);
-            cilantroPointCloud.gridDownsample(voxelSize);
+            cilantroPointCloud->estimateNormals(neighborhood);
 
-            // Similarity evaluator
             cilantro::NormalsProximityEvaluator<float, 3> similarityEvaluator(
-            cilantroPointCloud.normals, 
+            cilantroPointCloud->normals, 
             normalThresholdDegree*M_PI/180.0f);
 
-            // Segment the point cloud
-            cilantro::ConnectedComponentExtraction3f<> segmenter(cilantroPointCloud.points);
+            cilantro::ConnectedComponentExtraction3f<> segmenter(cilantroPointCloud->points);
             segmenter.segment(neighborhood, similarityEvaluator, minClusterSize);
             auto clusterToPointMap = segmenter.getClusterToPointIndicesMap();
             int nSegments = segmenter.getNumberOfClusters();
 
-            // Get the segments
+            // FIXME: painting color not working (see paint_uniform?)
             for (int indice = 0; indice<nSegments; indice++)
             {
                 std::shared_ptr<geometry::DFPointCloud> segment = std::make_shared<geometry::DFPointCloud>();
+                
+                // random rgb color in format Eigen::Vector3d from 0 to 1
+                Eigen::Vector3d color = Eigen::Vector3d::Random();
                 for (auto pointIndice : clusterToPointMap[indice])
                 {
-                    Eigen::Vector3d point = cilantroPointCloud.points.col(pointIndice).cast<double>();
-                    Eigen::Vector3d normal = cilantroPointCloud.normals.col(pointIndice).cast<double>();
+                    Eigen::Vector3d point = cilantroPointCloud->points.col(pointIndice).cast<double>();
+                    Eigen::Vector3d normal = cilantroPointCloud->normals.col(pointIndice).cast<double>();
                     segment->Points.push_back(point);
                     segment->Normals.push_back(normal);
+                    if (colorClusters)
+                        segment->Colors.push_back(color);
+                    else
+                    {
+                        if (cilantroPointCloud->colors.cols() > 0)
+                        {
+                            Eigen::Vector3d color = cilantroPointCloud->colors.col(pointIndice).cast<double>();
+                            segment->Colors.push_back(color);
+                        }
+                    }
                 }
                 segments.push_back(segment);
             }
@@ -63,37 +64,43 @@ namespace diffCheck::segmentation
         {
             cilantro::RadiusNeighborhoodSpecification<float> neighborhood(radiusNeighborhoodSize);
 
-            // conpute the normals and downsample
-            cilantroPointCloud.estimateNormals(neighborhood, false);
-            cilantroPointCloud.gridDownsample(voxelSize);
-            
-            // Similarity evaluator
+            cilantroPointCloud->estimateNormals(neighborhood);
+
             cilantro::NormalsProximityEvaluator<float, 3> similarityEvaluator(
-            cilantroPointCloud.normals, 
+            cilantroPointCloud->normals,
             normalThresholdDegree*M_PI/180.0f);
 
-            // Segment the point cloud
-            cilantro::ConnectedComponentExtraction3f<> segmenter(cilantroPointCloud.points);
+            cilantro::ConnectedComponentExtraction3f<> segmenter(cilantroPointCloud->points);
             segmenter.segment(neighborhood, similarityEvaluator, minClusterSize);
 
             auto clusterToPointMap = segmenter.getClusterToPointIndicesMap();
             int nSegments = segmenter.getNumberOfClusters();
 
-            // Get the segments
+            // FIXME: painting color not working (see paint_uniform?)
             for (int indice = 0; indice<nSegments; indice++)
             {
                 std::shared_ptr<geometry::DFPointCloud> segment = std::make_shared<geometry::DFPointCloud>();
+                Eigen::Vector3d color = Eigen::Vector3d::Random();
                 for (auto pointIndice : clusterToPointMap[indice])
                 {
-                    Eigen::Vector3d point = cilantroPointCloud.points.col(pointIndice).cast<double>();
-                    Eigen::Vector3d normal = cilantroPointCloud.normals.col(pointIndice).cast<double>();
+                    Eigen::Vector3d point = cilantroPointCloud->points.col(pointIndice).cast<double>();
+                    Eigen::Vector3d normal = cilantroPointCloud->normals.col(pointIndice).cast<double>();
                     segment->Points.push_back(point);
                     segment->Normals.push_back(normal);
+                    if (colorClusters)
+                        segment->Colors.push_back(color);
+                    else
+                    {
+                        if (cilantroPointCloud->colors.cols() > 0)
+                        {
+                            Eigen::Vector3d color = cilantroPointCloud->colors.col(pointIndice).cast<double>();
+                            segment->Colors.push_back(color);
+                        }
+                    }
                 }
                 segments.push_back(segment);
             }
         }
-        
 
         return segments;
     }

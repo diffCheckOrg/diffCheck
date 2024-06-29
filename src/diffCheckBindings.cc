@@ -165,10 +165,10 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
     py::class_<diffCheck::segmentation::DFSegmentation>(submodule_segmentation, "DFSegmentation")
         .def_static("smooth_segmentation", &diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation,
             py::arg("point_cloud"),
-            py::arg("voxel_size") = 1,
             py::arg("normal_threshold_degree") = 20,
             py::arg("min_cluster_size") = 10,
             py::arg("use_knn_neighborhood") = false,
             py::arg("knn_neighborhood_size") = 10,
-            py::arg("radius_neighborhood_size") = 10);
+            py::arg("radius_neighborhood_size") = 10,
+            py::arg("color_clusters") = false);
 }

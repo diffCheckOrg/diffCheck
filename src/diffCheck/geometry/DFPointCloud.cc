@@ -8,6 +8,10 @@ namespace diffCheck::geometry
 {
     void DFPointCloud::Cvt2DFPointCloud(const std::shared_ptr<open3d::geometry::PointCloud> &O3DPointCloud)
     {
+        this->Points.clear();
+        this->Colors.clear();
+        this->Normals.clear();
+
         if (O3DPointCloud->points_.size() != 0)
             for (auto &point : O3DPointCloud->points_)
                 this->Points.push_back(point);
@@ -17,6 +21,44 @@ namespace diffCheck::geometry
         if (O3DPointCloud->HasNormals())
             for (auto &normal : O3DPointCloud->normals_)
                 this->Normals.push_back(normal);
+    }
+
+    void DFPointCloud::Cvt2DFPointCloud(const std::shared_ptr<cilantro::PointCloud3f> &cilantroPointCloud)
+    {
+        this->Points.clear();
+        this->Colors.clear();
+        this->Normals.clear();
+        
+        auto ptt = cilantroPointCloud->points;
+        int n_pt = (int)ptt.cols();
+        auto col = cilantroPointCloud->colors;
+        auto nor = cilantroPointCloud->normals;
+
+        if (n_pt == 0)
+            throw std::invalid_argument("The point cloud is empty.");
+        for (int i = 0; i < n_pt; i++)
+        {
+            Eigen::Vector3d pt_d = ptt.col(i).cast<double>();
+            this->Points.push_back(pt_d);
+        }
+
+        if (cilantroPointCloud->hasColors())
+        {
+            for (int i = 0; i < n_pt; i++)
+            {
+                Eigen::Vector3d cl_d = col.col(i).cast <double>();
+                this->Colors.push_back(cl_d);
+            }
+        }
+
+        if (cilantroPointCloud->hasNormals())
+        {
+            for (int i = 0; i < n_pt; i++)
+            {
+                Eigen::Vector3d no_d = nor.col(i).cast <double>();
+                this->Normals.push_back(no_d);
+            }
+        }
     }
 
     std::shared_ptr<open3d::geometry::PointCloud> DFPointCloud::Cvt2O3DPointCloud()
@@ -32,6 +74,46 @@ namespace diffCheck::geometry
             for (auto &normal : this->Normals)
                 O3DPointCloud->normals_.push_back(normal);
         return O3DPointCloud;
+    }
+
+    std::shared_ptr<cilantro::PointCloud3f> DFPointCloud::Cvt2CilantroPointCloud()
+    {
+        std::shared_ptr<cilantro::PointCloud3f> cilantroPointCloud = std::make_shared<cilantro::PointCloud3f>();
+
+        cilantro::VectorSet3f points;
+        for (auto& pt : this->Points)
+        {
+            Eigen::Vector3f pt_f = pt.cast <float>();
+            points.conservativeResize(points.rows(), points.cols() + 1);
+            points.col(points.cols() - 1) = pt_f;
+        }
+        cilantroPointCloud->points = points;
+
+        cilantro::VectorSet3f colors;
+        if (this->HasColors())
+        {
+            for (auto& color : this->Colors)
+            {
+                Eigen::Vector3f color_f = color.cast <float>();
+                colors.conservativeResize(colors.rows(), colors.cols() + 1);
+                colors.col(colors.cols() - 1) = color_f;
+            }
+        }
+        cilantroPointCloud->colors = colors;
+
+        cilantro::VectorSet3f normals;
+        if (this->HasNormals())
+        {
+            for (auto& normal : this->Normals)
+            {
+                Eigen::Vector3f normal_f = normal.cast <float>();
+                normals.conservativeResize(normals.rows(), normals.cols() + 1);
+                normals.col(normals.cols() - 1) = normal_f;
+            }
+        }
+        cilantroPointCloud->normals = normals;
+
+        return cilantroPointCloud;
     }
 
     std::vector<double> DFPointCloud::ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> target)
@@ -57,34 +139,49 @@ namespace diffCheck::geometry
     }
 
     void DFPointCloud::EstimateNormals(
+        bool useCilantroEvaluator,
         std::optional<int> knn,
         std::optional<double> searchRadius
     )
     {
-        auto O3DPointCloud = this->Cvt2O3DPointCloud();
-        O3DPointCloud->EstimateNormals();
+        if (!useCilantroEvaluator)
+        {
+            auto O3DPointCloud = this->Cvt2O3DPointCloud();
 
-        if (knn.value() != 30 && searchRadius.has_value() == false)
-        {
-            open3d::geometry::KDTreeSearchParamKNN knnSearchParam(knn.value());
-            O3DPointCloud->EstimateNormals(knnSearchParam);
-            DIFFCHECK_INFO(("Estimating normals with knn = " + std::to_string(knn.value())).c_str());
-        }
-        else if (searchRadius.has_value())
-        {
-            open3d::geometry::KDTreeSearchParamHybrid hybridSearchParam(searchRadius.value(), knn.value());
-            O3DPointCloud->EstimateNormals(hybridSearchParam);
-            DIFFCHECK_INFO(("Estimating normals with hybrid search radius = " + std::to_string(searchRadius.value()) + "and knn = " + std::to_string(knn.value())).c_str());
+            if (knn.value() != 30 && searchRadius.has_value() == false)
+            {
+                open3d::geometry::KDTreeSearchParamKNN knnSearchParam(knn.value());
+                O3DPointCloud->EstimateNormals(knnSearchParam);
+                DIFFCHECK_INFO(("Estimating normals with knn = " + std::to_string(knn.value())).c_str());
+            }
+            else if (searchRadius.has_value())
+            {
+                open3d::geometry::KDTreeSearchParamHybrid hybridSearchParam(searchRadius.value(), knn.value());
+                O3DPointCloud->EstimateNormals(hybridSearchParam);
+                DIFFCHECK_INFO(("Estimating normals with hybrid search radius = " + std::to_string(searchRadius.value()) + "and knn = " + std::to_string(knn.value())).c_str());
+            }
+            else
+            {
+                O3DPointCloud->EstimateNormals();
+                DIFFCHECK_INFO("Default estimation of normals with knn = 30");
+            }
+
+            this->Normals.clear();
+            for (auto &normal : O3DPointCloud->normals_)
+                this->Normals.push_back(normal);
         }
         else
         {
-            O3DPointCloud->EstimateNormals();
-            DIFFCHECK_INFO("Default estimation of normals with knn = 30");
+            std::shared_ptr<cilantro::PointCloud3f> cilantroPointCloud = this->Cvt2CilantroPointCloud();
+            cilantro::KNNNeighborhoodSpecification<int> neighborhood(knn.value());
+            cilantroPointCloud->estimateNormals(neighborhood, false);
+
+            this->Normals.clear();
+            for (int i = 0; i < cilantroPointCloud->normals.cols(); i++)
+                this->Normals.push_back(cilantroPointCloud->normals.col(i).cast<double>());
+            DIFFCHECK_INFO(("Estimating normals with cilantro evaluator with knn = " + std::to_string(knn.value())).c_str());
         }
 
-        this->Normals.clear();
-        for (auto &normal : O3DPointCloud->normals_)
-            this->Normals.push_back(normal);
     }
 
     void DFPointCloud::VoxelDownsample(double voxelSize)
