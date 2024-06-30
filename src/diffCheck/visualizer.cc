@@ -24,7 +24,10 @@ namespace diffCheck::visualizer
         {
             vis.AddGeometry(geometry);
         }
-        vis.GetRenderOption().point_color_option_ = open3d::visualization::RenderOption::PointColorOption::Color;
+        if (this->RenderPcdColorNormals)
+            vis.GetRenderOption().point_color_option_ = open3d::visualization::RenderOption::PointColorOption::Normal;
+        else
+            vis.GetRenderOption().point_color_option_ = open3d::visualization::RenderOption::PointColorOption::Color;
         if (this->ShowNormals)
             vis.GetRenderOption().TogglePointShowNormal();
         vis.Run();

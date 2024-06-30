@@ -1,4 +1,5 @@
 #include "diffCheck.hh"
+#include "diffCheck/log.hh"
 
 #include <iostream>
 #include <fstream>
@@ -15,27 +16,23 @@ int main()
 
   pcdSrc->LoadFromPLY(pathPcdSrc);
 
-  // pcdSrc->EstimateNormals(false, 50);
-
-  // pcdSrc->ApplyColor(255, 0 , 0);
-
-
+  pcdSrc->EstimateNormals(100);
   segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(
     pcdSrc,
     20.f,
     10,
     true,
     50,
-    30,
+    10,
     true);
   std::cout << "number of segments:" << segments.size()<< std::endl;
 
-  diffCheck::visualizer::Visualizer vis;
+  std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();
+  vis->RenderPcdColorNormals = false;
   
   for (auto segment : segments)
-    vis.AddPointCloud(segment);
+    vis->AddPointCloud(segment);
 
-  // vis.AddPointCloud(pcdSrc);
-  vis.Run();
+  vis->Run();
   return 0;
 }

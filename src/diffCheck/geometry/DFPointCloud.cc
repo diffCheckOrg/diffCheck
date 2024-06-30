@@ -146,6 +146,7 @@ namespace diffCheck::geometry
     {
         if (!useCilantroEvaluator)
         {
+            this->Normals.clear();
             auto O3DPointCloud = this->Cvt2O3DPointCloud();
 
             if (knn.value() != 30 && searchRadius.has_value() == false)
@@ -165,8 +166,6 @@ namespace diffCheck::geometry
                 O3DPointCloud->EstimateNormals();
                 DIFFCHECK_INFO("Default estimation of normals with knn = 30");
             }
-
-            this->Normals.clear();
             for (auto &normal : O3DPointCloud->normals_)
                 this->Normals.push_back(normal);
         }

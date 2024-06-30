@@ -15,15 +15,18 @@ namespace diffCheck::segmentation
         int radiusNeighborhoodSize,
         bool colorClusters)
     {
+        if (!pointCloud->HasNormals())
+        {
+            DIFFCHECK_WARN("The point cloud does not have normals. Estimating normals with 50 neighbors.");
+            pointCloud->EstimateNormals(true, 50);
+        }
+
         std::shared_ptr<cilantro::PointCloud3f> cilantroPointCloud = pointCloud->Cvt2CilantroPointCloud();
 
         std::vector<std::shared_ptr<geometry::DFPointCloud>> segments;
         if (useKnnNeighborhood)
         {
             cilantro::KNNNeighborhoodSpecification<int> neighborhood(knnNeighborhoodSize);
-
-            // FIXME: not clear why this is needed all the time
-            cilantroPointCloud->estimateNormals(neighborhood);
 
             cilantro::NormalsProximityEvaluator<float, 3> similarityEvaluator(
             cilantroPointCloud->normals, 
@@ -58,8 +61,6 @@ namespace diffCheck::segmentation
         {
             cilantro::RadiusNeighborhoodSpecification<float> neighborhood(radiusNeighborhoodSize);
 
-            // cilantroPointCloud->estimateNormals(neighborhood);
-
             cilantro::NormalsProximityEvaluator<float, 3> similarityEvaluator(
             cilantroPointCloud->normals,
             normalThresholdDegree*M_PI/180.0f);
@@ -79,7 +80,14 @@ namespace diffCheck::segmentation
                     Eigen::Vector3d normal = cilantroPointCloud->normals.col(pointIndice).cast<double>();
                     segment->Points.push_back(point);
                     segment->Normals.push_back(normal);
+                    if (cilantroPointCloud->hasColors())
+                    {
+                        Eigen::Vector3d color = cilantroPointCloud->colors.col(pointIndice).cast<double>();
+                        segment->Colors.push_back(color);
+                    }
                 }
+                if (colorClusters)
+                    segment->ApplyColor(Eigen::Vector3d::Random());
                 segments.push_back(segment);
             }
         }
