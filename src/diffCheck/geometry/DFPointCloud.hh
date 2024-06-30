@@ -84,6 +84,14 @@ namespace diffCheck::geometry
             std::optional<int> knn = 10,
             std::optional<double> searchRadius = std::nullopt);
 
+        /**
+         * @brief Paint the point cloud with a uniform color
+         * 
+         * @param color the color to paint the point cloud
+         */
+        void ApplyColor(const Eigen::Vector3d &color);
+        void ApplyColor(int r, int g, int b);
+
     public:  ///< Downsamplers
         /**
          * @brief Downsample the point cloud with voxel grid

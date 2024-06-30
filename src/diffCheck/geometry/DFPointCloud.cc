@@ -201,6 +201,18 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    void DFPointCloud::ApplyColor(const Eigen::Vector3d &color)
+    {
+        this->Colors.clear();
+        for (auto &point : this->Points)
+            this->Colors.push_back(color);
+    }
+    void DFPointCloud::ApplyColor(int r, int g, int b)
+    {
+        Eigen::Vector3d color = Eigen::Vector3d(r / 255.0, g / 255.0, b / 255.0);
+        this->ApplyColor(color);
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();

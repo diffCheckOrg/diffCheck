@@ -22,6 +22,7 @@ namespace diffCheck::segmentation
         {
             cilantro::KNNNeighborhoodSpecification<int> neighborhood(knnNeighborhoodSize);
 
+            // FIXME: not clear why this is needed all the time
             cilantroPointCloud->estimateNormals(neighborhood);
 
             cilantro::NormalsProximityEvaluator<float, 3> similarityEvaluator(
@@ -33,30 +34,23 @@ namespace diffCheck::segmentation
             auto clusterToPointMap = segmenter.getClusterToPointIndicesMap();
             int nSegments = segmenter.getNumberOfClusters();
 
-            // FIXME: painting color not working (see paint_uniform?)
             for (int indice = 0; indice<nSegments; indice++)
             {
                 std::shared_ptr<geometry::DFPointCloud> segment = std::make_shared<geometry::DFPointCloud>();
-                
-                // random rgb color in format Eigen::Vector3d from 0 to 1
-                Eigen::Vector3d color = Eigen::Vector3d::Random();
                 for (auto pointIndice : clusterToPointMap[indice])
                 {
                     Eigen::Vector3d point = cilantroPointCloud->points.col(pointIndice).cast<double>();
                     Eigen::Vector3d normal = cilantroPointCloud->normals.col(pointIndice).cast<double>();
                     segment->Points.push_back(point);
                     segment->Normals.push_back(normal);
-                    if (colorClusters)
-                        segment->Colors.push_back(color);
-                    else
+                    if (cilantroPointCloud->hasColors())
                     {
-                        if (cilantroPointCloud->colors.cols() > 0)
-                        {
-                            Eigen::Vector3d color = cilantroPointCloud->colors.col(pointIndice).cast<double>();
-                            segment->Colors.push_back(color);
-                        }
+                        Eigen::Vector3d color = cilantroPointCloud->colors.col(pointIndice).cast<double>();
+                        segment->Colors.push_back(color);
                     }
                 }
+                if (colorClusters)
+                    segment->ApplyColor(Eigen::Vector3d::Random());
                 segments.push_back(segment);
             }
         }
@@ -64,7 +58,7 @@ namespace diffCheck::segmentation
         {
             cilantro::RadiusNeighborhoodSpecification<float> neighborhood(radiusNeighborhoodSize);
 
-            cilantroPointCloud->estimateNormals(neighborhood);
+            // cilantroPointCloud->estimateNormals(neighborhood);
 
             cilantro::NormalsProximityEvaluator<float, 3> similarityEvaluator(
             cilantroPointCloud->normals,
@@ -76,27 +70,15 @@ namespace diffCheck::segmentation
             auto clusterToPointMap = segmenter.getClusterToPointIndicesMap();
             int nSegments = segmenter.getNumberOfClusters();
 
-            // FIXME: painting color not working (see paint_uniform?)
             for (int indice = 0; indice<nSegments; indice++)
             {
                 std::shared_ptr<geometry::DFPointCloud> segment = std::make_shared<geometry::DFPointCloud>();
-                Eigen::Vector3d color = Eigen::Vector3d::Random();
                 for (auto pointIndice : clusterToPointMap[indice])
                 {
                     Eigen::Vector3d point = cilantroPointCloud->points.col(pointIndice).cast<double>();
                     Eigen::Vector3d normal = cilantroPointCloud->normals.col(pointIndice).cast<double>();
                     segment->Points.push_back(point);
                     segment->Normals.push_back(normal);
-                    if (colorClusters)
-                        segment->Colors.push_back(color);
-                    else
-                    {
-                        if (cilantroPointCloud->colors.cols() > 0)
-                        {
-                            Eigen::Vector3d color = cilantroPointCloud->colors.col(pointIndice).cast<double>();
-                            segment->Colors.push_back(color);
-                        }
-                    }
                 }
                 segments.push_back(segment);
             }
