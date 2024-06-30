@@ -1,5 +1,6 @@
 #include "visualizer.hh"
 
+#include <open3d/visualization/visualizer/RenderOption.h>
 
 namespace diffCheck::visualizer
 {
@@ -17,13 +18,19 @@ namespace diffCheck::visualizer
 
     void Visualizer::Run()
     {
-        open3d::visualization::DrawGeometries(
-            this->m_Geometries,
-            this->Title,
-            this->Width,
-            this->Height,
-            this->PosX, this->PosY,
-            this->ShowNormals,
-            this->ShowWireframe);
+        auto vis = open3d::visualization::Visualizer();
+        vis.CreateVisualizerWindow(this->Title, this->Width, this->Height, this->PosX, this->PosY);
+        for (auto geometry : this->m_Geometries)
+        {
+            vis.AddGeometry(geometry);
+        }
+        if (this->RenderPcdColorNormals)
+            vis.GetRenderOption().point_color_option_ = open3d::visualization::RenderOption::PointColorOption::Normal;
+        else
+            vis.GetRenderOption().point_color_option_ = open3d::visualization::RenderOption::PointColorOption::Color;
+        if (this->ShowNormals)
+            vis.GetRenderOption().TogglePointShowNormal();
+        vis.Run();
+        vis.DestroyVisualizerWindow();
     }
 } // namespace diffCheck::visualizer

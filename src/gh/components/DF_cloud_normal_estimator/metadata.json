@@ -1,0 +1,76 @@
+{
+    "name": "DFCloudNormalEstimator",
+    "nickname": "DFCNormEstim",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Evaluate the normals of a point cloud.",
+    "exposure": 4,
+    "instanceGuid": "9dbd7326-edf4-42ca-960e-818ab22dabfc",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud",
+                "nickname": "i_cloud",
+                "description": "The point cloud to evaluate.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_knn",
+                "nickname": "i_knn",
+                "description": "The knn search value (by default 100).",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "i_radius",
+                "nickname": "i_radius",
+                "description": "The radius search. If value is provided the search will be hybrid.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "i_bool",
+                "nickname": "i_bool",
+                "description": "Switch between Open3d (true) or Cilantro (false) library. Default is Open3d.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The cloud with normals computed.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

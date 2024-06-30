@@ -1,0 +1,1 @@
+.\cmake\build.bat ; if ($?) { .\build\bin\Release\diffCheckApp.exe }
