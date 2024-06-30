@@ -16,14 +16,14 @@ int main()
 
   pcdSrc->LoadFromPLY(pathPcdSrc);
 
-  pcdSrc->EstimateNormals(100);
+  pcdSrc->EstimateNormals();
   segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(
     pcdSrc,
     20.f,
     10,
     true,
     50,
-    10,
+    0.5f,
     true);
   std::cout << "number of segments:" << segments.size()<< std::endl;
 

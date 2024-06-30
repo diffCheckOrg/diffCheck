@@ -18,11 +18,11 @@ namespace diffCheck::segmentation
          */
         static std::vector<std::shared_ptr<geometry::DFPointCloud>> NormalBasedSegmentation(
             std::shared_ptr<geometry::DFPointCloud> &pointCloud,
-            float normalThresholdDegree = 20,
+            float normalThresholdDegree = 20.f,
             int minClusterSize = 10,
             bool useKnnNeighborhood = true,
             int knnNeighborhoodSize = 10,
-            int radiusNeighborhoodSize = 10,
+            float radiusNeighborhoodSize = 10.f,
             bool colorClusters = false);
     };
 } // namespace diffCheck::segmentation

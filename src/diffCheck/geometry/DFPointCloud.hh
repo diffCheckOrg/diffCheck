@@ -81,7 +81,7 @@ namespace diffCheck::geometry
          */
         void EstimateNormals(
             bool useCilantroEvaluator = false,
-            std::optional<int> knn = 50,
+            std::optional<int> knn = 100,
             std::optional<double> searchRadius = std::nullopt);
 
         /**

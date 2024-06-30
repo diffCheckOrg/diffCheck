@@ -36,8 +36,7 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
 
     # colors
     if rh_cloud.ContainsColors:
-        # df_cloud.colors = [c for c in rh_cloud.GetColors()]
-        df_cloud.colors = [[c.R, c.G, c.B] for c in rh_cloud.GetColors()]   
+        df_cloud.colors = [[c.R / 255.0, c.G / 255.0, c.B / 255.0] for c in rh_cloud.GetColors()]   
 
     return df_cloud
 
@@ -65,6 +64,12 @@ def cvt_dfcloud_2_rhcloud(df_cloud):
     df_cloud_points = [rg.Point3d(pt[0], pt[1], pt[2]) for pt in df_cloud_points]
     df_cloud_normals = [rg.Vector3d(n[0], n[1], n[2]) for n in df_cloud_normals]
     df_cloud_colors = [Rhino.Display.Color4f(c[0], c[1], c[2], 1.0) for c in df_cloud_colors]
+    
+    
+    # df_cloud_colors = []
+    # # convert the colors from 0-1 to 0-255
+    # for c in df_cloud_colors:
+    #     df_cloud_colors.append(Rhino.Display.Color4f(c[0] * 255, c[1] * 255, c[2] * 255, 255))
 
     rh_cloud = rg.PointCloud()
 

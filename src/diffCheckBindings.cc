@@ -39,6 +39,14 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("downsample_by_size", &diffCheck::geometry::DFPointCloud::DownsampleBySize,
             py::arg("target_size"))
 
+        .def("estimate_normals", &diffCheck::geometry::DFPointCloud::EstimateNormals,
+            py::arg("use_cilantro_evaluator") = false,
+            py::arg("knn") = 100,
+            py::arg("search_radius") = std::nullopt)
+
+        .def("apply_color", (void (diffCheck::geometry::DFPointCloud::*)(int, int, int)) &diffCheck::geometry::DFPointCloud::ApplyColor,
+            py::arg("r"), py::arg("g"), py::arg("b"))
+
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
 
         .def("get_tight_bounding_box", &diffCheck::geometry::DFPointCloud::GetTightBoundingBox)
@@ -163,12 +171,12 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
     py::module_ submodule_segmentation = m.def_submodule("dfb_segmentation", "A submodule for the `semantic` segmentation methods.");
 
     py::class_<diffCheck::segmentation::DFSegmentation>(submodule_segmentation, "DFSegmentation")
-        .def_static("smooth_segmentation", &diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation,
+        .def_static("segment_by_normal", &diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation,
             py::arg("point_cloud"),
-            py::arg("normal_threshold_degree") = 20,
+            py::arg("normal_threshold_degree") = 20.0,
             py::arg("min_cluster_size") = 10,
-            py::arg("use_knn_neighborhood") = false,
+            py::arg("use_knn_neighborhood") = true,
             py::arg("knn_neighborhood_size") = 10,
-            py::arg("radius_neighborhood_size") = 10,
+            py::arg("radius_neighborhood_size") = 0.1,
             py::arg("color_clusters") = false);
 }

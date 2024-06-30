@@ -104,6 +104,7 @@
         "cwctype": "cpp",
         "memory_resource": "cpp",
         "scoped_allocator": "cpp",
-        "strstream": "cpp"
+        "strstream": "cpp",
+        "core": "cpp"
     }
 }

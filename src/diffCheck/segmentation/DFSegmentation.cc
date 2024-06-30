@@ -12,7 +12,7 @@ namespace diffCheck::segmentation
         int minClusterSize,
         bool useKnnNeighborhood,
         int knnNeighborhoodSize,
-        int radiusNeighborhoodSize,
+        float radiusNeighborhoodSize,
         bool colorClusters)
     {
         if (!pointCloud->HasNormals())
