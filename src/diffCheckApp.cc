@@ -27,12 +27,32 @@ int main()
     true);
   std::cout << "number of segments:" << segments.size()<< std::endl;
 
-  std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();
-  vis->RenderPcdColorNormals = false;
-  
+  std::tuple<std::shared_ptr<diffCheck::geometry::DFPointCloud>, std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>>> unifiedSegments = 
+    diffCheck::segmentation::DFSegmentation::AssociateSegments(meshSrc, segments, 0.15);
+
+  diffCheck::visualizer::Visualizer vis;
+  vis.AddMesh(meshSrc);
   for (auto segment : segments)
     vis->AddPointCloud(segment);
 
-  vis->Run();
+  }
+  }
+  for(auto mesh : meshSrc)
+  {
+    vis.AddMesh(mesh);
+  }
+
+  auto unified = std::get<0>(unifiedSegments);
+  for (int i = 0; i < unified->Points.size(); i++)
+  {
+    unified->Colors.push_back(Eigen::Vector3d(0, 0, 0));
+  }
+  vis.AddPointCloud(unified);
+
+  auto endTime = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - initTime);
+  std::cout << "Computation time:" << duration.count() << std::endl;
+
+  vis.Run();
   return 0;
 }
