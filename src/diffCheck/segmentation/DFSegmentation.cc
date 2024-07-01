@@ -60,7 +60,6 @@ namespace diffCheck::segmentation
         else
         {
             cilantro::RadiusNeighborhoodSpecification<float> neighborhood(radiusNeighborhoodSize);
-
             cilantro::NormalsProximityEvaluator<float, 3> similarityEvaluator(
             cilantroPointCloud->normals,
             normalThresholdDegree*M_PI/180.0f);
