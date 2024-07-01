@@ -31,8 +31,6 @@ int main()
   vis.AddMesh(meshSrc);
   for (auto segment : segments)
     vis->AddPointCloud(segment);
-
-  }
   
   for(auto mesh : meshSrc)
   {
