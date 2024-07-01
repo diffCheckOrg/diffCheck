@@ -3,10 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-
-#include <cilantro/utilities/point_cloud.hpp>
-#include <cilantro/core/nearest_neighbors.hpp>
-
+#include <chrono>
 
 int main()
 {
@@ -36,7 +33,7 @@ int main()
     vis->AddPointCloud(segment);
 
   }
-  }
+  
   for(auto mesh : meshSrc)
   {
     vis.AddMesh(mesh);
