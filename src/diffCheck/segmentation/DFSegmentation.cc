@@ -94,16 +94,16 @@ namespace diffCheck::segmentation
         return segments;
     }
 
-    std::tuple<std::shared_ptr<geometry::DFPointCloud>, std::vector<std::shared_ptr<geometry::DFPointCloud>>> DFSegmentation::AssociateSegments(
-        std::vector<std::shared_ptr<geometry::DFMesh>> meshFaces,
-        std::vector<std::shared_ptr<geometry::DFPointCloud>> segments,
+    std::shared_ptr<geometry::DFPointCloud> DFSegmentation::AssociateClusters(
+        std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
+        std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
         double associationThreshold)
     {
         std::shared_ptr<geometry::DFPointCloud> unifiedPointCloud = std::make_shared<geometry::DFPointCloud>();
         std::vector<std::shared_ptr<geometry::DFPointCloud>> segmentsRemainder;
 
         // iterate through the mesh faces given as function argument
-        for (std::shared_ptr<diffCheck::geometry::DFMesh> face : meshFaces)
+        for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
         {
             std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
             std::shared_ptr<open3d::geometry::TriangleMesh> o3dFace;
@@ -131,7 +131,7 @@ namespace diffCheck::segmentation
             Eigen::Vector3d segmentCenter;
             Eigen::Vector3d segmentNormal;
             double faceDistance = std::numeric_limits<double>::max();
-            for (auto segment : segments)
+            for (auto segment : clusters)
             {
                 for (auto point : segment->Points)
                 {
@@ -154,7 +154,7 @@ namespace diffCheck::segmentation
                 }
             }
             
-            // get the triangles of the face. This is to check if the point is in the face
+            // get the triangles of the face.
             std::vector<Eigen::Vector3i> faceTriangles = o3dFace->triangles_;
 
             for (Eigen::Vector3d point : correspondingSegment->Points)
@@ -197,15 +197,36 @@ namespace diffCheck::segmentation
                 if (pointInFace)
                 {
                     unifiedPointCloud->Points.push_back(point);
+                    unifiedPointCloud->Normals.push_back(
+                        correspondingSegment->Normals[std::distance(
+                            correspondingSegment->Points.begin(), 
+                            std::find(correspondingSegment->Points.begin(), 
+                            correspondingSegment->Points.end(), 
+                            point))]
+                        );
                 }
             }
             // removing points from the segment that are in the face
             for(Eigen::Vector3d point : unifiedPointCloud->Points)
             {
-                correspondingSegment->Points.erase(std::remove(correspondingSegment->Points.begin(), correspondingSegment->Points.end(), point), correspondingSegment->Points.end());
+                correspondingSegment->Points.erase(
+                    std::remove(
+                        correspondingSegment->Points.begin(), 
+                        correspondingSegment->Points.end(), 
+                        point), 
+                    correspondingSegment->Points.end());
+            }
+            if (correspondingSegment->GetNumPoints() == 0)
+            {
+                clusters.erase(
+                    std::remove(
+                        clusters.begin(), 
+                        clusters.end(), 
+                        correspondingSegment), 
+                    clusters.end());
             }
         }
-        return std::make_tuple(unifiedPointCloud, segments);
+        return unifiedPointCloud;
     }
 
 } // namespace diffCheck::segmentation

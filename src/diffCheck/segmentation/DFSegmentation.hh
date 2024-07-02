@@ -24,5 +24,16 @@ namespace diffCheck::segmentation
             int knnNeighborhoodSize = 10,
             float radiusNeighborhoodSize = 10.f,
             bool colorClusters = false);
+
+        /** @brief Associates point cloud segments to mesh faces. It uses the center of mass of the segments and the mesh faces to find correspondances. For each mesh face it then iteratively associate the points of the segment that are actually on the mesh face.
+         * @param referenceMesh the vector of mesh faces to associate with the segments
+         * @param clusters the vector of clusters from cilantro to associate with the mesh faces of the reference mesh
+         * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
+         * @return std::shared_ptr<geometry::DFPointCloud> The unified segments
+         */
+        static std::shared_ptr<geometry::DFPointCloud> DFSegmentation::AssociateClusters(
+            std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
+            std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
+            double associationThreshold);
     };
 } // namespace diffCheck::segmentation

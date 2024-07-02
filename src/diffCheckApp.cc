@@ -33,49 +33,31 @@ int main()
   pcdSrc->EstimateNormals();
   segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(
     pcdSrc,
-    20.f,
-    10,
+    2.0f,
+    100,
     true,
-    50,
+    30,
     0.5f,
-    true);
+    false);
   std::cout << "number of segments:" << segments.size()<< std::endl;
 
-  std::tuple<std::shared_ptr<diffCheck::geometry::DFPointCloud>, std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>>> unifiedSegments = 
-    diffCheck::segmentation::DFSegmentation::AssociateSegments(meshSrc, segments, 0.15);
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> unifiedSegments = 
+    diffCheck::segmentation::DFSegmentation::AssociateSegments(meshSrc, segments, .1);
 
   diffCheck::visualizer::Visualizer vis;
-  for (auto segment : std::get<1>(unifiedSegments))
+  for (auto segment : segments)
   {
     // colorize the segments with random colors
     double r = static_cast<double>(rand()) / RAND_MAX;
     double g = static_cast<double>(rand()) / RAND_MAX;
     double b = static_cast<double>(rand()) / RAND_MAX;
 
+    segment->Colors.clear();
     for (int i = 0; i < segment->Points.size(); i++)
     {
       segment->Colors.push_back(Eigen::Vector3d(r, g, b));
     }
-    vis.AddPointCloud(segment);
-
-    // // colorize the segments with random colors
-    // double r = static_cast<double>(rand()) / RAND_MAX;
-    // double g = static_cast<double>(rand()) / RAND_MAX;
-    // double b = static_cast<double>(rand()) / RAND_MAX;    
-    // for (int i = 0; i < std::get<0>(unifiedSegments)->Points.size(); i++)
-    // {
-    //   std::get<0>(unifiedSegments)->Colors.push_back(Eigen::Vector3d(r, g, b));
-    // }
-    // vis.AddPointCloud(std::get<0>(unifiedSegments));
-
-    // for (auto segemt : std::get<1>(unifiedSegments))
-    // {
-    //   for (int i = 0; i < segemt->Points.size(); i++)
-    //   {
-    //     segemt->Colors.push_back(Eigen::Vector3d(0, 0, 1));
-    //   }
-    //   vis.AddPointCloud(segemt);
-    // }
+    // vis.AddPointCloud(segment);
 
   }
   for(auto mesh : meshSrc)
@@ -83,12 +65,11 @@ int main()
     vis.AddMesh(mesh);
   }
 
-  auto unified = std::get<0>(unifiedSegments);
-  for (int i = 0; i < unified->Points.size(); i++)
+  for (int i = 0; i < unifiedSegments->Points.size(); i++)
   {
-    unified->Colors.push_back(Eigen::Vector3d(0, 0, 0));
+    unifiedSegments->Colors.push_back(Eigen::Vector3d(0, 0, 0));
   }
-  vis.AddPointCloud(unified);
+  vis.AddPointCloud(unifiedSegments);
 
   auto endTime = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - initTime);
