@@ -10,6 +10,7 @@ import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
+import diffCheck.df_cvt_bindings
 from diffCheck import diffcheck_bindings
 
 class DFTester(component):
