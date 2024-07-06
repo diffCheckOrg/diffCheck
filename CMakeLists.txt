@@ -164,23 +164,42 @@ endif()
 # Tests
 #--------------------------------------------------------------------------
 
-# include(CTest)
-# enable_testing()
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
-# set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/tests/)
+include(CTest)
+enable_testing()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
+set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/df_tests/)
 
 
-# # Unit testing ------------------------------------------------------------
-# set(UNIT_TESTS unit_tests)
-# add_executable(${UNIT_TESTS} tests/unit_tests/DFPointCloudTest.cc)
-# set_target_properties(${UNIT_TESTS} PROPERTIES
-#     RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
-#     )
+# Unit testing ------------------------------------------------------------
+set(UNIT_TESTS df_test_suites)
+add_executable(${UNIT_TESTS}
+    tests/unit_tests/DFPointCloudTest.cc
+    tests/entryTest.cc
+    )
+set_target_properties(${UNIT_TESTS} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
+    )
 
-# target_link_libraries(${UNIT_TESTS} gtest gtest_main)
-# target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
+target_link_libraries(${UNIT_TESTS} gtest gtest_main)
+target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
 
-# add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
+add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
+
+
+
+
+
+
+
+# # post build recipe
+# add_test(NAME ${UNIT_TEST} COMMAND ${UNIT_TEST})
+# add_custom_command(
+#      TARGET ${UNIT_TEST}
+#      COMMENT "Run tests"
+#      POST_BUILD 
+#      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#      COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> -R "^${UNIT_TEST}$" --output-on-failures
+# )
 
 # Integration testing -----------------------------------------------------
 # Component testing -------------------------------------------------------
