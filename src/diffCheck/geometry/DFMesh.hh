@@ -71,6 +71,13 @@ namespace diffCheck::geometry
          */
         std::vector<Eigen::Vector3d> GetTightBoundingBox();
 
+        /**
+         * @brief Get the first normal of the mesh. Meant for planar meshes
+         * 
+         * @return Eigen::Vector3d the normal
+         */
+        Eigen::Vector3d GetFirstNormal();
+
     public:  ///< I/O loader
         /**
          * @brief Read a mesh from a file

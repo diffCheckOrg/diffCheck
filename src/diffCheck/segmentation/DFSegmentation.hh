@@ -5,7 +5,7 @@ namespace diffCheck::segmentation
 {
     class DFSegmentation
     {
-        public:
+        public: ///< main segmentation methods
         /** @brief Downsamples and segments the point cloud using Cilantro's ConnectedComponentExtraction3f method. It uses the normals' variations to detect different parts in the point cloud.
          * @param pointCloud the point cloud to segment
          * @param normalThresholdDegree the normal threshold in degrees do differentiate segments. The higher the number, the more tolerent the segmentation will be to normal differences
@@ -25,15 +25,28 @@ namespace diffCheck::segmentation
             float radiusNeighborhoodSize = 10.f,
             bool colorClusters = false);
 
-        /** @brief Associates point cloud segments to mesh faces. It uses the center of mass of the segments and the mesh faces to find correspondances. For each mesh face it then iteratively associate the points of the segment that are actually on the mesh face.
+        public: ///< segmentation refinement methods
+        /** @brief Associates point cloud segments to mesh faces and merges them. It uses the center of mass of the segments and the mesh faces to find correspondances. For each mesh face it then iteratively associate the points of the segment that are actually on the mesh face.
          * @param referenceMesh the vector of mesh faces to associate with the segments
          * @param clusters the vector of clusters from cilantro to associate with the mesh faces of the reference mesh
-         * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
+         * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
          * @return std::shared_ptr<geometry::DFPointCloud> The unified segments
          */
-        static std::shared_ptr<geometry::DFPointCloud> DFSegmentation::AssociateClusters(
+        static std::shared_ptr<geometry::DFPointCloud> DFSegmentation::AssociateClustersToMeshes(
             std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
+            double associationThreshold);
+
+        /** @brief Iterated through clusters and finds the corresponding mesh face. It then associates the points of the cluster that are on the mesh face to the segment already associated with the mesh face.
+         * @param unassociatedClusters the clusters from the normal-based segmentatinon that haven't been associated yet.
+         * @param existingPointCloudSegments the already associated segments
+         * @param Meshes the mesh faces for all the model. This is used to associate the clusters to the mesh faces.
+         * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.   
+         */
+        static void DFSegmentation::CleanUnassociatedClusters(
+            std::vector<std::shared_ptr<geometry::DFPointCloud>> &unassociatedClusters,
+            std::vector<std::shared_ptr<geometry::DFPointCloud>> &existingPointCloudSegments,
+            std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> Meshes,
             double associationThreshold);
     };
 } // namespace diffCheck::segmentation

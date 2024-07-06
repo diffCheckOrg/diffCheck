@@ -178,5 +178,14 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("use_knn_neighborhood") = true,
             py::arg("knn_neighborhood_size") = 10,
             py::arg("radius_neighborhood_size") = 0.1,
-            py::arg("color_clusters") = false);
+            py::arg("color_clusters") = false)
+        .def_static("associate_clusters", &diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes,
+            py::arg("reference_mesh"),
+            py::arg("clusters"),
+            py::arg("association_threshold") = 0.1)
+        .def_static("clean_unassociated_clusters", &diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters,
+            py::arg("unassociated_clusters"),
+            py::arg("existing_point_cloud_segments"),
+            py::arg("meshes"),
+            py::arg("association_threshold") = 0.1);
 }
