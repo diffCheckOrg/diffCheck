@@ -7,6 +7,7 @@
 import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
+import numpy as np
 
 from diffCheck import diffcheck_bindings
 
@@ -36,7 +37,7 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
 
     # colors
     if rh_cloud.ContainsColors:
-        df_cloud.colors = [c for c in rh_cloud.GetColors()]
+        df_cloud.colors = [[rh_c.R, rh_c.G, rh_c.B] for rh_c in rh_cloud.GetColors()]
 
     return df_cloud
 
@@ -63,7 +64,7 @@ def cvt_dfcloud_2_rhcloud(df_cloud):
 
     df_cloud_points = [rg.Point3d(pt[0], pt[1], pt[2]) for pt in df_cloud_points]
     df_cloud_normals = [rg.Vector3d(n[0], n[1], n[2]) for n in df_cloud_normals]
-    df_cloud_colors = [Rhino.Display.Color4f(c[0], c[1], c[2], 1.0) for c in df_cloud_colors]
+    df_cloud_colors = [Rhino.Geometry.Vector3d(c[0], c[1], c[2]) for c in df_cloud_colors]
 
     rh_cloud = rg.PointCloud()
 
@@ -188,6 +189,7 @@ def cvt_dfxform_2_rhxform(df_xform : diffcheck_bindings.dfb_transformation.DFTra
     rh_xform = rh_xform * rg.Transform.Rotation(rotation[0], rg.Vector3d(rotation[1], rotation[2], rotation[3]), rg.Point3d(0, 0, 0))
 
     return rh_xform
+
 def cvt_dfOBB_2_rhbrep(df_OBB) -> rg.Box:
     """ Convert a diffCheck OBB to a Rhino Brep.
 
