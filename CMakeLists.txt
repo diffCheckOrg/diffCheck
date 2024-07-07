@@ -7,6 +7,12 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(external_tools)
 include(options)
 
+# check that the -DCMAKE_BUILD_TYPE is set
+if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "Setting build type to 'Release' as none was specified.")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+endif()
+
 # do a submodule init if not done already
 execute_process(COMMAND git submodule update --init --recursive
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -48,7 +54,7 @@ target_include_directories(${SHARED_LIB_NAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
-    #set the MD_DynamicRelease flag for MSVC since we are compiling with /MD for py wrap
+#set the MD_DynamicRelease flag for MSVC since we are compiling with /MD for py wrap
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 
@@ -146,31 +152,20 @@ if (BUILD_PYTHON_MODULE)
         $<TARGET_FILE:${PYBINDMODULE_NAME}>
         ${PYPI_DIR}
         )
-
-    # get all the files -dlls in the bin directory and copy them one by one to the pypi directory
-    file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
-    foreach(file ${files})
-        message(STATUS "Copying ${file} to ${TARGET_DLL_PYPI_DIR}")
-        add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${file}
-            ${TARGET_DLL_PYPI_DIR}
-            )
-    endforeach()
+    copy_dlls(${TARGET_DLL_PYPI_DIR} ${PYBINDMODULE_NAME})
 
 endif()
 
 #--------------------------------------------------------------------------
 # Tests
 #--------------------------------------------------------------------------
-
 include(CTest)
 enable_testing()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
 set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/df_tests/)
+set(TEST_OUT_DIR_BINARY ${TESTS_OUT_DIR}/${CMAKE_BUILD_TYPE})
 
-
-# Unit testing ------------------------------------------------------------
+# add new test suites .cc here
 set(UNIT_TESTS df_test_suites)
 add_executable(${UNIT_TESTS}
     tests/unit_tests/DFPointCloudTest.cc
@@ -179,40 +174,8 @@ add_executable(${UNIT_TESTS}
 set_target_properties(${UNIT_TESTS} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
     )
-
 target_link_libraries(${UNIT_TESTS} gtest gtest_main)
 target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
 
 add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
-
-
-
-
-
-
-
-# # post build recipe
-# add_test(NAME ${UNIT_TEST} COMMAND ${UNIT_TEST})
-# add_custom_command(
-#      TARGET ${UNIT_TEST}
-#      COMMENT "Run tests"
-#      POST_BUILD 
-#      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-#      COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> -R "^${UNIT_TEST}$" --output-on-failures
-# )
-
-# Integration testing -----------------------------------------------------
-# Component testing -------------------------------------------------------
-# etc ---------------------------------------------------------------------
-
-# # TODO: a better way to copy the dlls to the tests directory for the tests
-# # get all the files -dlls in the bin directory and copy them one by one to tests dir
-# file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
-# foreach(file ${files})
-#     message(STATUS "Copying ${file} to ${TESTS_OUT_DIR}")
-#     add_custom_command(TARGET ${UNIT_TESTS} POST_BUILD
-#         COMMAND ${CMAKE_COMMAND} -E copy
-#         ${file}
-#         ${TESTS_OUT_DIR}/Release
-#         )
-# endforeach()
+copy_dlls(${TEST_OUT_DIR_BINARY} ${UNIT_TESTS})
