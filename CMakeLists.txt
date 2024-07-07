@@ -84,7 +84,7 @@ target_link_libraries(${SHARED_LIB_NAME} PUBLIC Open3D::Open3D)
 if(WIN32)
     get_target_property(open3d_type Open3D::Open3D TYPE)
     if(open3d_type STREQUAL "SHARED_LIBRARY")
-        message(STATUS "Copying Open3D.dll to ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
+        message(STATUS "Copying Open3D.dll to ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
         add_custom_command(TARGET ${SHARED_LIB_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:Open3D::Open3D>
