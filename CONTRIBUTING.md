@@ -320,43 +320,11 @@ dfVisualizerPtr->Run();
 
 
 ### CTesting (TO BE UPDATED)
-When necessary, c++ testing is done by using CTest. Important/critical features (e.g., correcting functioning of graphics with OpenGL and Glfw) needs testing to be written (this is usefull for e.g., GitHub Actions). Such tests can be extracted from the main source code and integrated in a seperate section: cmake testing.
+Tests in df are all `.cc` files added to the `tests` source files, all the data needs to be contained in `tests/test_data`. Finally add your `.cc` files in the cmake:
 
-To add a new test do as follow.
+https://github.com/diffCheckOrg/diffCheck/blob/efb10e0b5685a1ef1537d0309388f642075d3244/CMakeLists.txt#L170-L173
 
-First create a new sub-folder in the folder `./test` as `./test/exampletest`.
-Here add a console cpp file called `tester.cpp` which returns 0 or 1 and add a new `CMakeLists.txt` as such:
-```cmake
-add_executable(example_test tester.cpp)
-
-/* <-- 
-Insert here linking necessary for the executable
-Note that if you already found packages in the head CMakeLists file
-you can simply use the macros here.
---> */
-
-add_test(NAME "ExampleTest" COMMAND "example_test" <argv-here> WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+To run the tests from terminal
 ```
-In the `./test`'s `CMakeLists.txt` add the created sub-directory:
-```cmake
-if (TEST_EXAMPLE)
-    add_subdirectory(exampletest)
-endif()
-```
-Finally add an option in the main `CMakeLists.txt` describing the test:
-```cmake
-include(CTest)
-# ...
-option(TEST_EXAMPLE "Test to test something important." ON)
-# ...
-if(TEST_EXAMPLE)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests/exampletest)
-endif()
-```
-
-Next, `./configure.sh -c` and `./build.sh` and:
-```bash
-cd ./build
-ctest -N    # <--- to see how many tests there are
-ctest -V    # <--- run the tests
+ctest --test-dir .\build\ -C Release -V
 ```
