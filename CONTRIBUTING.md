@@ -328,3 +328,7 @@ To run the tests from terminal
 ```
 ctest --test-dir .\build\ -C Release -V
 ```
+or
+```
+.\build\df_tests\<config>\df_tests.exe
+```
