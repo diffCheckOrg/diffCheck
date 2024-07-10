@@ -104,37 +104,37 @@ namespace diffCheck::segmentation
         std::vector<std::shared_ptr<geometry::DFPointCloud>> segmentsRemainder;
 
         // iterate through the mesh faces given as function argument
+        if (referenceMesh.size() == 0)
+        {
+            DIFFCHECK_WARN("No mesh faces to associate with the clusters. Returning the first clusters untouched.");
+            return clusters[0];
+        }
         for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
         {
             std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
-            std::shared_ptr<open3d::geometry::TriangleMesh> o3dFace;
-            o3dFace = face->Cvt2O3DTriangleMesh();
 
             // Getting the center of the mesh face
-            Eigen::Vector3d faceCenter;
-            faceCenter = o3dFace->GetCenter();
+            Eigen::Vector3d faceCenter = face->Cvt2O3DTriangleMesh()->GetCenter();
 
             // Getting the normal of the mesh face
-            
             Eigen::Vector3d faceNormal = face->GetFirstNormal();
             faceNormal.normalize();
 
-            // iterate through the segments to find the closest ones compared to the face center taking the normals into account
+            // iterate through the segments to find the closest one compared to the face center taking the normals into account
             Eigen::Vector3d segmentCenter;
             Eigen::Vector3d segmentNormal;
             double faceDistance = std::numeric_limits<double>::max();
+            if (clusters.size() == 0)
+            {
+                DIFFCHECK_WARN("No clusters to associate with the mesh faces. Returning the first mesh face untouched.");
+                return clusters[0];
+            }
             for (auto segment : clusters)
             {
-                for (auto point : segment->Points)
-                {
-                    segmentCenter += point;
-                }
+                for (auto point : segment->Points){segmentCenter += point;}
                 segmentCenter /= segment->GetNumPoints();
 
-                for (auto normal : segment->Normals)
-                {
-                    segmentNormal += normal;
-                }
+                for (auto normal : segment->Normals){segmentNormal += normal;}
                 segmentNormal.normalize();
 
                 double currentDistance = (faceCenter - segmentCenter).norm() / std::abs(segmentNormal.dot(faceNormal));
@@ -149,6 +149,11 @@ namespace diffCheck::segmentation
             // get the triangles of the face.
             std::vector<Eigen::Vector3i> faceTriangles = face->Faces;
 
+            if (correspondingSegment == nullptr)
+            {
+                DIFFCHECK_WARN("No segment found for the face. Skipping the face.");
+                continue;
+            }
             for (Eigen::Vector3d point : correspondingSegment->Points)
             {
                 bool pointInFace = false;
@@ -165,6 +170,11 @@ namespace diffCheck::segmentation
                 }
             }
             // removing points from the segment that are in the face
+            if (unifiedPointCloud->GetNumPoints() == 0)
+            {
+                DIFFCHECK_WARN("No point was associated to this segment. Skipping the segment.");
+                continue;
+            }
             for(Eigen::Vector3d point : unifiedPointCloud->Points)
             {
                 correspondingSegment->Points.erase(
@@ -174,6 +184,7 @@ namespace diffCheck::segmentation
                         point), 
                     correspondingSegment->Points.end());
             }
+            // removing the corresponding segment if it is empty after the point transfer
             if (correspondingSegment->GetNumPoints() == 0)
             {
                 clusters.erase(
@@ -194,10 +205,21 @@ namespace diffCheck::segmentation
         double angleThreshold,
         double associationThreshold)
     {
+        if (unassociatedClusters.size() == 0)
+        {
+            DIFFCHECK_WARN("No unassociated clusters. Nothing is done");
+            return;
+        }
         for (std::shared_ptr<geometry::DFPointCloud> cluster : unassociatedClusters)
         {
             Eigen::Vector3d clusterCenter;
             Eigen::Vector3d clusterNormal;
+
+            if (cluster->GetNumPoints() == 0)
+            {
+                DIFFCHECK_WARN("Empty cluster. Skipping the cluster.");
+                continue;
+            }
             for (Eigen::Vector3d point : cluster->Points)
             {
                 clusterCenter += point;
@@ -213,8 +235,19 @@ namespace diffCheck::segmentation
             int meshIndex;
             int faceIndex ;
             double distance = std::numeric_limits<double>::max();
+
+            if (meshes.size() == 0)
+            {
+                DIFFCHECK_WARN("No meshes to associate with the clusters. Skipping the cluster.");
+                continue;
+            }
             for (std::vector<std::shared_ptr<geometry::DFMesh>> piece : meshes)
             {
+                if (piece.size() == 0)
+                {
+                    DIFFCHECK_WARN("Empty piece in the meshes vector. Skipping the mesh face vector.");
+                    continue;
+                }
                 for (std::shared_ptr<geometry::DFMesh> meshFace : piece)
                 {
                     Eigen::Vector3d faceCenter;
@@ -259,7 +292,7 @@ namespace diffCheck::segmentation
                 }
             }
             std::vector<int> indicesToRemove;
-            
+
             for (int i = 0; i < cluster->Points.size(); ++i) 
             {
                 if (std::find(completed_segment->Points.begin(), completed_segment->Points.end(), cluster->Points[i]) != completed_segment->Points.end()) 
