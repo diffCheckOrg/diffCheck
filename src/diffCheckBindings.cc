@@ -182,10 +182,12 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def_static("associate_clusters", &diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes,
             py::arg("reference_mesh"),
             py::arg("clusters"),
+            py::arg("angle_threshold") = 0.95,
             py::arg("association_threshold") = 0.1)
         .def_static("clean_unassociated_clusters", &diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters,
             py::arg("unassociated_clusters"),
             py::arg("existing_point_cloud_segments"),
             py::arg("meshes"),
+            py::arg("angle_threshold") = 0.95,
             py::arg("association_threshold") = 0.1);
 }

@@ -3,6 +3,7 @@
 #include <cilantro/utilities/point_cloud.hpp>
 #include <cilantro/core/nearest_neighbors.hpp>
 #include <cilantro/clustering/connected_component_extraction.hpp>
+#include <cmath>
 
 namespace diffCheck::segmentation
 {   
@@ -101,7 +102,6 @@ namespace diffCheck::segmentation
         double associationThreshold)
     {
         std::shared_ptr<geometry::DFPointCloud> unifiedPointCloud = std::make_shared<geometry::DFPointCloud>();
-        std::vector<std::shared_ptr<geometry::DFPointCloud>> segmentsRemainder;
 
         // iterate through the mesh faces given as function argument
         if (referenceMesh.size() == 0)
@@ -139,7 +139,7 @@ namespace diffCheck::segmentation
 
                 double currentDistance = (faceCenter - segmentCenter).norm() / std::abs(segmentNormal.dot(faceNormal));
                 // if the distance is smaller than the previous one, update the distance and the corresponding segment
-                if (std::abs(faceNormal.dot(segmentNormal)) > angleThreshold  && currentDistance < faceDistance)
+                if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance < faceDistance)
                 {
                     correspondingSegment = segment;
                     faceDistance = currentDistance;
@@ -231,9 +231,8 @@ namespace diffCheck::segmentation
             }
             clusterNormal.normalize();
 
-            std::shared_ptr<diffCheck::geometry::DFMesh> testMesh;
-            int meshIndex;
-            int faceIndex ;
+            int meshIndex = std::numeric_limits<int>::max();
+            int faceIndex = std::numeric_limits<int>::max() ;
             double distance = std::numeric_limits<double>::max();
 
             if (meshes.size() == 0)
@@ -270,17 +269,21 @@ namespace diffCheck::segmentation
 
                     double clusterNormalToJunctionLineAngle = std::abs(std::acos(clusterNormal.dot((clusterCenter - faceCenter).normalized())));
                     
-                    double currentDistance = (clusterCenter - faceCenter).norm()   * std::pow(std::cos(clusterNormalToJunctionLineAngle), 2) / std::pow(clusterNormal.dot(faceNormal), 2);
-                    if (std::abs(faceNormal.dot(clusterNormal)) > angleThreshold && currentDistance < distance)
+                    double currentDistance = (clusterCenter - faceCenter).norm() * std::pow(std::cos(clusterNormalToJunctionLineAngle), 2) / std::pow(clusterNormal.dot(faceNormal), 2);
+                    if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < distance)
                     {
                         distance = currentDistance;
                         meshIndex = std::distance(meshes.begin(), std::find(meshes.begin(), meshes.end(), piece));
                         faceIndex = std::distance(piece.begin(), std::find(piece.begin(), piece.end(), meshFace));
-                        testMesh = meshFace;
                     }
                 }
             }
-
+            if (meshIndex >= meshes.size() || faceIndex >= meshes[meshIndex].size())
+            {
+                // this one generates a lot of warnings
+                DIFFCHECK_WARN("No mesh face found for the cluster. Skipping the cluster.");
+                continue;
+            }
             std::shared_ptr<geometry::DFPointCloud> completed_segment = existingPointCloudSegments[meshIndex];
             for (Eigen::Vector3d point : cluster->Points)
             {

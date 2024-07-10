@@ -29,28 +29,28 @@ namespace diffCheck::segmentation
         /** @brief Associates point cloud segments to mesh faces and merges them. It uses the center of mass of the segments and the mesh faces to find correspondances. For each mesh face it then iteratively associate the points of the segment that are actually on the mesh face.
          * @param referenceMesh the vector of mesh faces to associate with the segments
          * @param clusters the vector of clusters from cilantro to associate with the mesh faces of the reference mesh
-         * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum cosine of the angles. A value of 0.99 requires perfect alignment, while a value of 0.8 is more permissive. A value of 0 allows any angle between the normal of the cluster and the normal of the mesh face.
+         * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees.
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
          * @return std::shared_ptr<geometry::DFPointCloud> The unified segments
          */
         static std::shared_ptr<geometry::DFPointCloud> DFSegmentation::AssociateClustersToMeshes(
             std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
-            double angleThreshold = 0.95,
+            double angleThreshold = 0.1,
             double associationThreshold = 0.1);
 
         /** @brief Iterated through clusters and finds the corresponding mesh face. It then associates the points of the cluster that are on the mesh face to the segment already associated with the mesh face.
          * @param unassociatedClusters the clusters from the normal-based segmentatinon that haven't been associated yet.
          * @param existingPointCloudSegments the already associated segments
          * @param Meshes the mesh faces for all the model. This is used to associate the clusters to the mesh faces.
-         * * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum cosine of the angles. A value of 0.99 requires perfect alignment, while a value of 0.8 is more permissive. A value of 0 allows any angle between the normal of the cluster and the normal of the mesh face.
+         * * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees. 
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.   
          */
         static void DFSegmentation::CleanUnassociatedClusters(
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &unassociatedClusters,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &existingPointCloudSegments,
             std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> Meshes,
-            double angleThreshold = 0.95,
+            double angleThreshold = 0.1,
             double associationThreshold = 0.1);
         
         private: ///< helper methods

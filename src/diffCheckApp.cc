@@ -16,9 +16,9 @@ int main()
   std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>> segments;
   std::vector<std::string> meshPaths;
 
-  std::string meshesFolderPath = R"(C:\Users\localuser\Desktop\again_other_meshes_for_diffCheck\6\)";
+  std::string meshesFolderPath = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\9\)";
 
-  for (int i = 1; i <= 4; i++)
+  for (int i = 1; i <= 7; i++)
   {
     std::string meshPath = meshesFolderPath + std::to_string(i) + ".ply";
     std::shared_ptr<diffCheck::geometry::DFMesh> mesh = std::make_shared<diffCheck::geometry::DFMesh>();
@@ -26,26 +26,37 @@ int main()
     meshSrc.push_back(mesh);
   }
 
-  std::string pathPcdSrc = R"(C:\Users\localuser\Desktop\again_other_meshes_for_diffCheck\source_pc.ply)";
+  std::string pathPcdSrc = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\source_pc_2.ply)";
 
   pcdSrc->LoadFromPLY(pathPcdSrc);
 
-  pcdSrc->EstimateNormals(false, 40);
+  pcdSrc->EstimateNormals(false, 100);
+  pcdSrc->VoxelDownsample(0.01);
   auto intermediateTime = std::chrono::high_resolution_clock::now();
   segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(
     pcdSrc,
-    2.0f,
-    200,
+    6.0f,
+    25,
     true,
-    100,
+    20,
     0.5f,
     false);
   std::cout << "number of segments:" << segments.size()<< std::endl;
 
   std::shared_ptr<diffCheck::geometry::DFPointCloud> unifiedSegments = 
-    diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes(meshSrc, segments, .15);
+    diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes(
+      meshSrc, 
+      segments, 
+      .1, 
+      .9);
   
-  diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters(segments, std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>>{unifiedSegments}, std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>>{meshSrc}, .15);
+  std::cout << "Association done. refinement in progress" << std::endl;
+
+  diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters(segments, 
+    std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>>{unifiedSegments}, 
+    std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>>{meshSrc},
+    .1, 
+    .9);
   
   std::cout << "number of points in unified segments:" << unifiedSegments->Points.size() << std::endl;
   
@@ -67,7 +78,7 @@ int main()
   }
   for(auto mesh : meshSrc)
   {
-    vis.AddMesh(mesh);
+    //vis.AddMesh(mesh);
   }
 
   for (int i = 0; i < unifiedSegments->Points.size(); i++)
