@@ -7,6 +7,12 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(external_tools)
 include(options)
 
+# check that the -DCMAKE_BUILD_TYPE is set
+if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "Setting build type to 'Release' as none was specified.")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+endif()
+
 # do a submodule init if not done already
 execute_process(COMMAND git submodule update --init --recursive
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -48,7 +54,7 @@ target_include_directories(${SHARED_LIB_NAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
-    #set the MD_DynamicRelease flag for MSVC since we are compiling with /MD for py wrap
+#set the MD_DynamicRelease flag for MSVC since we are compiling with /MD for py wrap
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 
@@ -78,7 +84,7 @@ target_link_libraries(${SHARED_LIB_NAME} PUBLIC Open3D::Open3D)
 if(WIN32)
     get_target_property(open3d_type Open3D::Open3D TYPE)
     if(open3d_type STREQUAL "SHARED_LIBRARY")
-        message(STATUS "Copying Open3D.dll to ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
+        message(STATUS "Copying Open3D.dll to ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
         add_custom_command(TARGET ${SHARED_LIB_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:Open3D::Open3D>
@@ -150,54 +156,30 @@ if (BUILD_PYTHON_MODULE)
         $<TARGET_FILE:${PYBINDMODULE_NAME}>
         ${PYPI_DIR}
         )
-
-    # get all the files -dlls in the bin directory and copy them one by one to the pypi directory
-    file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
-    foreach(file ${files})
-        message(STATUS "Copying ${file} to ${TARGET_DLL_PYPI_DIR}")
-        add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${file}
-            ${TARGET_DLL_PYPI_DIR}
-            )
-    endforeach()
+    copy_dlls(${TARGET_DLL_PYPI_DIR} ${PYBINDMODULE_NAME})
 
 endif()
 
 #--------------------------------------------------------------------------
 # Tests
 #--------------------------------------------------------------------------
+include(CTest)
+enable_testing()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
+set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/df_tests/)
+set(TEST_OUT_DIR_BINARY ${TESTS_OUT_DIR}/${CMAKE_BUILD_TYPE})
 
-# include(CTest)
-# enable_testing()
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
-# set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/tests/)
+# add new test suites .cc here
+set(UNIT_TESTS df_test_suites)
+add_executable(${UNIT_TESTS}
+    tests/unit_tests/DFPointCloudTest.cc
+    tests/entryTest.cc
+    )
+set_target_properties(${UNIT_TESTS} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
+    )
+target_link_libraries(${UNIT_TESTS} gtest gtest_main)
+target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
 
-
-# # Unit testing ------------------------------------------------------------
-# set(UNIT_TESTS unit_tests)
-# add_executable(${UNIT_TESTS} tests/unit_tests/DFPointCloudTest.cc)
-# set_target_properties(${UNIT_TESTS} PROPERTIES
-#     RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
-#     )
-
-# target_link_libraries(${UNIT_TESTS} gtest gtest_main)
-# target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
-
-# add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
-
-# Integration testing -----------------------------------------------------
-# Component testing -------------------------------------------------------
-# etc ---------------------------------------------------------------------
-
-# # TODO: a better way to copy the dlls to the tests directory for the tests
-# # get all the files -dlls in the bin directory and copy them one by one to tests dir
-# file(GLOB files ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
-# foreach(file ${files})
-#     message(STATUS "Copying ${file} to ${TESTS_OUT_DIR}")
-#     add_custom_command(TARGET ${UNIT_TESTS} POST_BUILD
-#         COMMAND ${CMAKE_COMMAND} -E copy
-#         ${file}
-#         ${TESTS_OUT_DIR}/Release
-#         )
-# endforeach()
+add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
+copy_dlls(${TEST_OUT_DIR_BINARY} ${UNIT_TESTS})
