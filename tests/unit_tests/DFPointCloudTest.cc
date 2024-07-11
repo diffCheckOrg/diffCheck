@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include <gtest/gtest.h>
 #include "diffCheck.hh"
 
@@ -11,13 +13,11 @@ protected:
     DFPointCloudTestFixture() : dfPointCloud(points, colors, normals) {}
 
     void SetUp() override {
-        // Initialize your objects and variables here
-        points = {Eigen::Vector3d(1, 2, 3)};
-        colors = {Eigen::Vector3d(255, 255, 255)};
-        normals = {Eigen::Vector3d(0, 0, 1)};
+        std::filesystem::path path = std::filesystem::path(__FILE__).parent_path();
+        std::filesystem::path pathCloud = path / "test_data" / "cloud.ply";
 
-        // Reinitialize dfPointCloud in case you need to reset its state
-        dfPointCloud = diffCheck::geometry::DFPointCloud(points, colors, normals);
+        dfPointCloud = diffCheck::geometry::DFPointCloud();
+        dfPointCloud.LoadFromPLY(pathCloud.string());
     }
 
     void TearDown() override {
@@ -25,7 +25,30 @@ protected:
     }
 };
 
-TEST_F(DFPointCloudTestFixture, GetNumPoints) {
+TEST_F(DFPointCloudTestFixture, ConvertionO3dPointCloud) {
+    std::shared_ptr<open3d::geometry::PointCloud> o3dPointCloud = dfPointCloud.Cvt2O3DPointCloud();
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloud2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+
+    dfPointCloud2->Cvt2DFPointCloud(o3dPointCloud);
+
+    EXPECT_EQ(dfPointCloud.GetNumPoints(), dfPointCloud2->GetNumPoints());
+    EXPECT_EQ(dfPointCloud.GetNumColors(), dfPointCloud2->GetNumColors());
+    EXPECT_EQ(dfPointCloud.GetNumNormals(), dfPointCloud2->GetNumNormals());
+}
+
+// TODO: cilantro cloud convertion test + new methods
+
+TEST_F(DFPointCloudTestFixture, ComputeAABB) {
+    std::vector<Eigen::Vector3d> bbox = dfPointCloud.ComputeBoundingBox();
+    EXPECT_EQ(bbox.size(), 2);
+}
+
+TEST_F(DFPointCloudTestFixture, ComputeOBB) {
+    std::vector<Eigen::Vector3d> obb = dfPointCloud.GetTightBoundingBox();
+    EXPECT_EQ(obb.size(), 8);
+}
+
+TEST_F(DFPointCloudTestFixture, GetNumPoints){
     EXPECT_EQ(dfPointCloud.GetNumPoints(), 1);
 }
 
@@ -48,8 +71,3 @@ TEST_F(DFPointCloudTestFixture, HasColors) {
 TEST_F(DFPointCloudTestFixture, HasNormals) {
     EXPECT_TRUE(dfPointCloud.HasNormals());
 }
-
-// int main(int argc, char **argv) {
-//     ::testing::InitGoogleTest(&argc, argv);
-//     return RUN_ALL_TESTS();
-// }
