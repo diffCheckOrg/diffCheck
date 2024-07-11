@@ -79,6 +79,22 @@ namespace diffCheck::geometry
         return bboxPts;
     }
 
+    Eigen::Vector3d DFMesh::GetFirstNormal()
+    {
+        if (this->NormalsFace.size() == 0)
+        {
+            std::shared_ptr<open3d::geometry::TriangleMesh> O3DTriangleMesh = this->Cvt2O3DTriangleMesh();
+            O3DTriangleMesh->ComputeTriangleNormals();
+            this->NormalsFace.resize(O3DTriangleMesh->triangle_normals_.size());
+            for (size_t i = 0; i < O3DTriangleMesh->triangle_normals_.size(); i++)
+            {
+                this->NormalsFace[i] = O3DTriangleMesh->triangle_normals_[i];
+            }
+
+        }
+        return this->NormalsFace[0];
+    }
+
     void DFMesh::LoadFromPLY(const std::string &path)
     {
         std::shared_ptr<diffCheck::geometry::DFMesh> tempMesh_ptr = diffCheck::io::ReadPLYMeshFromFile(path);
