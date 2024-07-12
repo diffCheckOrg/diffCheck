@@ -28,14 +28,14 @@ class Vizualization(component):
             sth sth
         """
 
-        i_viz_settings = []
-
         if i_results.source is None or i_results.target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to compare")
             return None
 
         if i_target_flag == False:
-            o_target = i_results.target
+            #if user doesn't want to vizualize results on the target return the original geo
+            #now only implemented for PCD
+            o_target = df_cvt_bindings.cvt_dfcloud_2_rhcloud(i_results.target)
             o_target_legend = []
         else:
             #color the target pointcloud based on viz_settings
@@ -45,15 +45,16 @@ class Vizualization(component):
             pass
 
         if i_source_flag == False:
-            o_source = i_results.source
+            #if user doesn't want to vizualize results on the target return the original geo
+            #now only implemented for PCD
+            o_source = df_cvt_bindings.cvt_dfcloud_2_rhcloud(i_results.source)
             o_source_legend = []
         else:
             #color the source pointcloud based on viz_settings
-            pass
-        
-        #df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
-        #df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
 
+            #make a legend
+
+            pass
 
         return o_source, o_target, o_source_legend, o_target_legend
 
