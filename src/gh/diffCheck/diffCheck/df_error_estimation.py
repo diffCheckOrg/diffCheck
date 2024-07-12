@@ -12,9 +12,10 @@ def cloud_2_cloud_distance(source, target, signed=False):
     """
         Compute the Euclidean distance for every point of a source pcd to its closest point on a target pointcloud
     """
-    distances = np.asarray(source.compute_distance(target))
+    distances_to_target = np.asarray(source.compute_distance(target))
+    distances_to_source = np.asarray(target.compute_distance(source))
 
-    return distances
+    return DFVizResults(source, target, distances_to_target, distances_to_source)
 
 
 def cloud_2_mesh_distance(source, target, signed=False):
@@ -60,38 +61,61 @@ def cloud_2_rhino_mesh_distance(source, target, signed=False):
     return np.asarray(distances)
 
 
-def compute_mse(distances):
+# def compute_mse(distances):
+#     """
+#         Calculate mean squared distance
+#     """
+#     mse = np.sqrt(np.mean(distances ** 2))
+
+#     return mse
+
+
+# def compute_max_deviation(distances):
+#     """
+#         Calculate max deviation of distances
+#     """
+#     max_deviation = np.max(distances)
+
+#     return max_deviation
+
+
+# def compute_min_deviation(distances):
+#     """
+#         Calculate min deviation of distances
+#     """
+
+#     min_deviation = np.min(distances)
+
+#     return min_deviation
+
+
+# def compute_standard_deviation(distances):
+#     """
+#         Calculate standard deviation of distances
+#     """
+#     standard_deviation = np.std(distances)
+
+#     return standard_deviation
+
+class DFVizResults:
     """
-        Calculate mean squared distance
-    """
-    mse = np.sqrt(np.mean(distances ** 2))
-
-    return mse
-
-
-def compute_max_deviation(distances):
-    """
-        Calculate max deviation of distances
-    """
-    max_deviation = np.max(distances)
-
-    return max_deviation
-
-
-def compute_min_deviation(distances):
-    """
-        Calculate min deviation of distances
+    This class compiles the resluts of the error estimation into one object
     """
 
-    min_deviation = np.min(distances)
+    def __init__(self, source, target, distances_to_target, distances_to_source):
 
-    return min_deviation
+        self.source = source
+        self.target = target
 
+        self.distances_to_target_mse = np.sqrt(np.mean(distances_to_target ** 2))
+        self.distances_to_target_max_deviation = np.max(distances_to_target)
+        self.distances_to_target_min_deviation = np.min(distances_to_target)
+        self.distances_to_target_sd_deviation = np.std(distances_to_target)
+        self.distances_to_target = distances_to_target.tolist()
 
-def compute_standard_deviation(distances):
-    """
-        Calculate standard deviation of distances
-    """
-    standard_deviation = np.std(distances)
+        self.distances_to_source_mse = np.sqrt(np.mean(distances_to_source ** 2))
+        self.distances_to_source_max_deviation = np.max(distances_to_source)
+        self.distances_to_source_min_deviation = np.min(distances_to_source)
+        self.distances_to_source_sd_deviation = np.std(distances_to_source)
+        self.distances_to_source = distances_to_source.tolist()
 
-    return standard_deviation

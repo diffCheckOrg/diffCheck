@@ -42,10 +42,7 @@ class CloudToMeshDistance(component):
         df_mesh_target = df_cvt_bindings.cvt_rhmesh_2_dfmesh(rhino_mesh_target)
 
         # calculate distances
-        o_distances = df_error_estimation.cloud_2_mesh_distance(df_cloud_source, df_mesh_target, i_signed_flag)
-        o_mse = df_error_estimation.compute_mse(o_distances)
-        o_max_deviation = df_error_estimation.compute_max_deviation(o_distances)
-        o_min_deviation = df_error_estimation.compute_min_deviation(o_distances)
+        o_results = df_error_estimation.cloud_2_mesh_distance(df_cloud_source, df_mesh_target, i_signed_flag)
 
         o_mesh = rhino_mesh_target
 
