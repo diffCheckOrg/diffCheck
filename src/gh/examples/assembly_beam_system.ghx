@@ -70,6 +70,7 @@
         <chunk name="ValueTable">
           <items count="3">
             <item name="script-sync::path::0d4dd012-3cd5-4d46-aca2-051524e54d16" type_name="gh_string" type_code="10">not_found</item>
+            <item name="script-sync::path::0df2764c-3033-4fab-86d6-451bf0095450" type_name="gh_string" type_code="10">F:\diffCheck\temp\test.py</item>
             <item name="script-sync::path::aae64754-94d4-48e0-9706-275c7e6e3249" type_name="gh_string" type_code="10">not_found</item>
             <item name="script-sync::path::bce95668-a73d-4866-8978-ed68a47ddbd2" type_name="gh_string" type_code="10">F:\diffCheck\temp\test.py</item>
           </items>
