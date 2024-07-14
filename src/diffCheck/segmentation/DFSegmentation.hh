@@ -27,7 +27,7 @@ namespace diffCheck::segmentation
 
         public: ///< segmentation refinement methods
         /** @brief Associates point cloud segments to mesh faces and merges them. It uses the center of mass of the segments and the mesh faces to find correspondances. For each mesh face it then iteratively associate the points of the segment that are actually on the mesh face.
-         * @param referenceMesh the vector of mesh faces to associate with the segments
+         * @param referenceMesh the vector of mesh faces to associate with the segments. It is a representation of a beam and its faces.
          * @param clusters the vector of clusters from cilantro to associate with the mesh faces of the reference mesh
          * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees.
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
@@ -42,17 +42,18 @@ namespace diffCheck::segmentation
         /** @brief Iterated through clusters and finds the corresponding mesh face. It then associates the points of the cluster that are on the mesh face to the segment already associated with the mesh face.
          * @param unassociatedClusters the clusters from the normal-based segmentatinon that haven't been associated yet.
          * @param existingPointCloudSegments the already associated segments
-         * @param Meshes the mesh faces for all the model. This is used to associate the clusters to the mesh faces.
+         * @param meshes the mesh faces for all the model. This is used to associate the clusters to the mesh faces.
          * * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees. 
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.   
          */
         static void DFSegmentation::CleanUnassociatedClusters(
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &unassociatedClusters,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &existingPointCloudSegments,
-            std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> Meshes,
+            std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
             double angleThreshold = 0.1,
             double associationThreshold = 0.1);
         
+        // FIXME: this one should go into DFMesh
         private: ///< helper methods
         /** @brief private  method to check if a point is on a face of a triangle mesh triangle, within a certain  association threshold. This takes into account the fact that, in 3D, a point can be "above" a triangle of a triangle mesh but still considered as being on the mesh face.
          * @param face the triangle mesh face to check the point against
