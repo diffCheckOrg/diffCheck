@@ -1,11 +1,11 @@
 {
-    "name": "DFNormalSegmentator",
-    "nickname": "DFCNorSeg",
+    "name": "DFCADSegmentator",
+    "nickname": "DFCADSeg",
     "category": "diffCheck",
     "subcategory": "Segmentation",
     "description": "Cluster a point cloud based on normals.",
     "exposure": 4,
-    "instanceGuid": "8f732cef-771c-41b8-acca-562211fd3a80",
+    "instanceGuid": "e8b77b13-e441-4fbe-ae07-44dfe5cc3768",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -14,21 +14,33 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_cloud",
-                "nickname": "i_cloud",
-                "description": "The point cloud to reduce the size.",
+                "name": "i_clouds",
+                "nickname": "i_clouds",
+                "description": "The point cloud clusters already segmented by normals.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "item",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_normal_threshold_degree",
-                "nickname": "i_normal_threshold_degree",
-                "description": "The normal threshold in degrees (under that it consider to the same cluster).",
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The DFAssembly object.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            },
+            {
+                "name": "i_angle_threshold",
+                "nickname": "i_angle_threshold",
+                "description": "From 0 to 1, it's the sin value. The closer to 0 the less permissive and viceversa to 1.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -38,45 +50,9 @@
                 "typeHintID": "float"
             },
             {
-                "name": "i_min_cluster_size",
-                "nickname": "i_min_cluster_size",
-                "description": "The smallest cluster allowed.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "int"
-            },
-            {
-                "name": "i_use_knn_neighborhood",
-                "nickname": "i_use_knn_neighborhood",
-                "description": "If true use knn, otherwise radius search.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
-            {
-                "name": "i_knn_neighborhood_size",
-                "nickname": "i_knn_neighborhood_size",
-                "description": "The knn size.",
-                "optional": false,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "int"
-            },
-            {
-                "name": "i_radius_neighborhood_size",
-                "nickname": "i_radius_neighborhood_size",
-                "description": "The size of the radius.",
+                "name": "i_association_threshold",
+                "nickname": "i_association_threshold",
+                "description": "From 0 to infinite. By default 0.5. The closer to 0 the less permissive your point.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -90,7 +66,7 @@
             {
                 "name": "o_clusters",
                 "nickname": "o_clusters",
-                "description": "The segmented clouds.",
+                "description": "The clouds associated to each beam.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

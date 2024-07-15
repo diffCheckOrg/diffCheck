@@ -34,41 +34,51 @@ class DFCADSegmentator(component):
 
         @return o_clusters : the clusters of the beams
         """
+        # the final rhino cloud clusters associated to the beams
         o_clusters = []
-
-        df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud) for cloud in i_clouds]
-        # df_meshes = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(mesh) for mesh in i_meshes]
+        # the df cloud clusters
+        df_clusters = []
+        # we make a deepcopy of the input clouds because 
+        df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
 
         df_beams = i_assembly.beams
-        rh_beams_meshes = []
+        df_beams_meshes = []
+
         for df_b in df_beams:
-            #TODO: check this function to have a better triangluation of the mesh with the parameters
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
-            # rh_b_mesh_faces = [df_b_f.to_brep_face() for df_b_f in df_b.side_faces]
+            df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
+            df_beams_meshes.append(df_b_mesh_faces)
 
-            # df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
-            
-            
-            # _ = [rh_beams_meshes.append(m) for m in rh_b_mesh_faces]
+            df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
+                reference_mesh=df_b_mesh_faces,
+                unassociated_clusters=df_clouds,
+                angle_threshold=i_angle_threshold,
+                association_threshold=i_association_threshold
+            )
 
-            for m in rh_b_mesh_faces:
-                # print(type(m))
-                rh_beams_meshes.append(m)
+            # TODO: get rid, this is for debugging
+            # nbr_total_df_clouds_pts = 0
+            # for df_cloud in df_clouds:
+            #     nbr_total_df_clouds_pts += df_cloud.get_num_points()
+            # print("Total number of points in all clouds: ", nbr_total_df_clouds_pts)
 
-            # # convert df_b_mesh_faces to numpy array
-            # # get the point clouds corresponding to the beams
-            # df_asssociated_clusters : List[dfCloud] = dfb_segmentation.DFSegmentation.associate_clusters(
-            #     reference_mesh=df_b_mesh_faces,
-            #     unassociated_clusters=df_clouds,
-            #     angle_threshold=i_angle_threshold,
-            #     association_threshold=i_association_threshold
-            # )
+            # FIXME: this is returing empty clusters
+            # print(df_asssociated_cluster.has_points())
+            if df_asssociated_cluster.has_points():
+                df_clusters.append(df_asssociated_cluster)
 
-            # break
+        # FIXME: the refiner is crashing the script
+        # dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
+        #         unassociated_clusters=df_clouds,
+        #         associated_clusters=df_clusters,
+        #         reference_mesh=df_beams_meshes,
+        #         angle_threshold=i_angle_threshold,
+        #         association_threshold=i_association_threshold
+        #     )
 
-        print("test2")
+        o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
-        return rh_beams_meshes
+        return o_clusters
 
 if __name__ == "__main__":
     com = DFCADSegmentator()
