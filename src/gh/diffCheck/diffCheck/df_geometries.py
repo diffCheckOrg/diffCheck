@@ -177,11 +177,12 @@ class DFFace:
 
         mesh_parts = Rhino.Geometry.Mesh.CreateFromBrep(
                 self.to_brep_face().DuplicateFace(True),
-                Rhino.Geometry.MeshingParameters.Coarse)
+                Rhino.Geometry.MeshingParameters.QualityRenderMesh)
+        
         for mesh_part in mesh_parts:
             mesh.Append(mesh_part)
-
-        mesh.Compact()
+        mesh.Faces.ConvertQuadsToTriangles()
+        # mesh.Compact()
 
         return mesh
 
