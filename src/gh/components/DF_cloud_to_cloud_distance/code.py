@@ -20,13 +20,13 @@ import diffCheck.df_util
 
 class CloudToCloudDistance(component):
     def RunScript(self,
-        i_cloud_source: rg.PointCloud,
-        i_cloud_target: rg.PointCloud):
+        i_cloud_source:  typing.List[rg.PointCloud],
+        i_cloud_target: typing.List[rg.PointCloud]):
         """
             The cloud-to-cloud component computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.
 
-            :param i_cloud_source: source point cloud
-            :param i_cloud_target: target point cloud to align to
+            :param i_cloud_source: a list of source point cloud
+            :param i_cloud_target: a list of target point cloud to align to
 
             :return o_distances : list of calculated distances for each point
             :return o_mse: the average squared difference between corresponding points of source and target
@@ -34,18 +34,19 @@ class CloudToCloudDistance(component):
             :return o_min_deviation: the min deviation between source and target
             :return o_std_deviation: the standard deviation between source and target
         """
+
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to compare")
             return None
 
         # conversion
-        df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
-        df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
+        df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_s) for i_cl_s in i_cloud_source]
+        df_cloud_target_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_t) for i_cl_t in i_cloud_target]
 
         # calculate distances
-        o_results = df_error_estimation.cloud_2_cloud_distance(df_cloud_source, df_cloud_target)
+        o_results = df_error_estimation.cloud_2_cloud_comparison(df_cloud_source_list, df_cloud_target_list)
 
-        return o_results.distances_to_target, o_results.distances_to_target_mse, o_results.distances_to_target_max_deviation, o_results.distances_to_target_min_deviation, o_results.distances_to_target_sd_deviation, o_results
+        return o_results.distances, o_results.distances_mse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
 
 
 if __name__ == "__main__":

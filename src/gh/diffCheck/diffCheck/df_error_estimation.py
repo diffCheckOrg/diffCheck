@@ -8,14 +8,31 @@ import open3d as o3d
 from diffCheck import diffcheck_bindings
 import Rhino.Geometry as rg
 
-def cloud_2_cloud_distance(source, target, signed=False):
-    """
-        Compute the Euclidean distance for every point of a source pcd to its closest point on a target pointcloud
-    """
-    distances_to_target = np.asarray(source.compute_distance(target))
-    distances_to_source = np.asarray(target.compute_distance(source))
 
-    return DFVizResults(source, target, distances_to_target, distances_to_source)
+def cloud_2_cloud_distance(source, target, invert=False):
+    """
+        Compute the Euclidean distance for every point of a source pcd to its
+        closest point on a target pointcloud
+    """
+    if invert:
+        distances = np.asarray(target.compute_distance(source))
+    else:
+        distances = np.asarray(source.compute_distance(target))
+
+    return distances
+
+
+def cloud_2_cloud_comparison(source_list, target_list, invert=False):
+    """
+        Compute the Euclidean distance for every point of a source pcd to its
+        closest point on a target pointcloud
+    """
+    results = DFVizResults()
+    for source, target in zip(source_list, target_list):
+        distances = cloud_2_cloud_distance(source, target, invert)
+        results.add(source, target, distances)
+
+    return results
 
 
 def cloud_2_mesh_distance(source, target, signed=False):
@@ -102,20 +119,24 @@ class DFVizResults:
     This class compiles the resluts of the error estimation into one object
     """
 
-    def __init__(self, source, target, distances_to_target, distances_to_source):
+    def __init__(self):
 
-        self.source = source
-        self.target = target
+        self.source = []
+        self.target = []
 
-        self.distances_to_target_mse = np.sqrt(np.mean(distances_to_target ** 2))
-        self.distances_to_target_max_deviation = np.max(distances_to_target)
-        self.distances_to_target_min_deviation = np.min(distances_to_target)
-        self.distances_to_target_sd_deviation = np.std(distances_to_target)
-        self.distances_to_target = distances_to_target.tolist()
+        self.distances_mse = []
+        self.distances_max_deviation = []
+        self.distances_min_deviation = []
+        self.distances_sd_deviation = []
+        self.distances = []
 
-        self.distances_to_source_mse = np.sqrt(np.mean(distances_to_source ** 2))
-        self.distances_to_source_max_deviation = np.max(distances_to_source)
-        self.distances_to_source_min_deviation = np.min(distances_to_source)
-        self.distances_to_source_sd_deviation = np.std(distances_to_source)
-        self.distances_to_source = distances_to_source.tolist()
+    def add(self, source, target, distances):
 
+        self.source.append(source)
+        self.target.append(target)
+
+        self.distances_mse.append(np.sqrt(np.mean(distances ** 2)))
+        self.distances_max_deviation.append(np.max(distances))
+        self.distances_min_deviation.append(np.min(distances))
+        self.distances_sd_deviation.append(np.std(distances))
+        self.distances.append(distances.tolist())
