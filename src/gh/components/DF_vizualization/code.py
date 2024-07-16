@@ -13,7 +13,7 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
-from diffCheck import df_error_estimation
+from diffCheck import df_error_estimation, df_vizualization
 
 import diffCheck.df_util
 
@@ -30,18 +30,22 @@ class Vizualization(component):
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to compare")
             return None
 
-        #temp
-        o_source = []
-        o_target = []
-
+        # check if target is a pcl
         o_source = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(src) for src in i_results.source]
+
+        # by default we color the target
+        min_value = min(min(sublist) for sublist in i_results.distances)
+        max_value = max(max(sublist) for sublist in i_results.distances)
+        
+        o_source = [df_vizualization.add_color(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
+
         o_target = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(trg) for trg in i_results.target]
 
         o_legend = []
-    
-        #color the source pointcloud based on viz_settings
 
-        #make a legend
+        # color the source pointcloud based on viz_settings
+
+         #make a legend
 
         return o_source, o_target, o_legend
 
