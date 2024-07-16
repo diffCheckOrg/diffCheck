@@ -119,10 +119,7 @@ namespace diffCheck::segmentation
             // Getting the normal of the mesh face
             Eigen::Vector3d faceNormal = face->GetFirstNormal();
             faceNormal.normalize();
-
-            // iterate through the segments to find the closest one compared to the face center taking the normals into account
-            Eigen::Vector3d segmentCenter;
-            Eigen::Vector3d segmentNormal;
+            
             double faceDistance = std::numeric_limits<double>::max();
             if (clusters.size() == 0)
             {
@@ -130,24 +127,33 @@ namespace diffCheck::segmentation
                 return clusters[0];
             }
             for (auto segment : clusters)
-            {
+            {   
+                Eigen::Vector3d segmentCenter;
+                Eigen::Vector3d segmentNormal;
+
                 for (auto point : segment->Points){segmentCenter += point;}
-                segmentCenter /= segment->GetNumPoints();
+                if (segment->GetNumPoints() > 0)
+                {
+                    segmentCenter /= segment->GetNumPoints();
+                }
+                else
+                {
+                    DIFFCHECK_WARN("Empty segment. Skipping the segment.");
+                    continue;
+                }
 
                 for (auto normal : segment->Normals){segmentNormal += normal;}
                 segmentNormal.normalize();
 
-                double currentDistance = (faceCenter - segmentCenter).norm() / std::abs(segmentNormal.dot(faceNormal));
+                double currentDistance = (faceCenter - segmentCenter).norm();
                 // if the distance is smaller than the previous one, update the distance and the corresponding segment
                 if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance < faceDistance)
                 {
                     correspondingSegment = segment;
                     faceDistance = currentDistance;
                 }
+                
             }
-            
-            // get the triangles of the face.
-            std::vector<Eigen::Vector3i> faceTriangles = face->Faces;
 
             if (correspondingSegment == nullptr)
             {
@@ -185,15 +191,15 @@ namespace diffCheck::segmentation
                     correspondingSegment->Points.end());
             }
             // removing the corresponding segment if it is empty after the point transfer
-            if (correspondingSegment->GetNumPoints() == 0)
-            {
-                clusters.erase(
-                    std::remove(
-                        clusters.begin(), 
-                        clusters.end(), 
-                        correspondingSegment), 
-                    clusters.end());
-            }
+            // if (correspondingSegment->GetNumPoints() == 0)
+            // {
+            //     clusters.erase(
+            //         std::remove(
+            //             clusters.begin(), 
+            //             clusters.end(), 
+            //             correspondingSegment), 
+            //         clusters.end());
+            // }
         }
         return unifiedPointCloud;
     }
@@ -269,7 +275,7 @@ namespace diffCheck::segmentation
 
                     double clusterNormalToJunctionLineAngle = std::abs(std::acos(clusterNormal.dot((clusterCenter - faceCenter).normalized())));
                     
-                    double currentDistance = (clusterCenter - faceCenter).norm() * std::pow(std::cos(clusterNormalToJunctionLineAngle), 2) / std::pow(clusterNormal.dot(faceNormal), 2);
+                    double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle)) / std::abs(clusterNormal.dot(faceNormal));
                     if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < distance)
                     {
                         distance = currentDistance;
@@ -294,22 +300,22 @@ namespace diffCheck::segmentation
                     completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
                 }
             }
-            std::vector<int> indicesToRemove;
+            // std::vector<int> indicesToRemove;
 
-            for (int i = 0; i < cluster->Points.size(); ++i) 
-            {
-                if (std::find(completed_segment->Points.begin(), completed_segment->Points.end(), cluster->Points[i]) != completed_segment->Points.end()) 
-                {
-                    indicesToRemove.push_back(i);
-                }
-            }
-            for (auto it = indicesToRemove.rbegin(); it != indicesToRemove.rend(); ++it) 
-            {
-                std::swap(cluster->Points[*it], cluster->Points.back());
-                cluster->Points.pop_back();
-                std::swap(cluster->Normals[*it], cluster->Normals.back());
-                cluster->Normals.pop_back();
-            }
+            // for (int i = 0; i < cluster->Points.size(); ++i) 
+            // {
+            //     if (std::find(completed_segment->Points.begin(), completed_segment->Points.end(), cluster->Points[i]) != completed_segment->Points.end()) 
+            //     {
+            //         indicesToRemove.push_back(i);
+            //     }
+            // }
+            // for (auto it = indicesToRemove.rbegin(); it != indicesToRemove.rend(); ++it) 
+            // {
+            //     std::swap(cluster->Points[*it], cluster->Points.back());
+            //     cluster->Points.pop_back();
+            //     std::swap(cluster->Normals[*it], cluster->Normals.back());
+            //     cluster->Normals.pop_back();
+            // }
         }
     };
 
@@ -331,18 +337,22 @@ namespace diffCheck::segmentation
             Eigen::Vector3d v1 = face->Vertices[triangle[1]];
             Eigen::Vector3d v2 = face->Vertices[triangle[2]];
             Eigen::Vector3d n = (v1 - v0).cross(v2 - v0);
-            double referenceTriangleArea = n.norm()*0.5;
-            Eigen::Vector3d n1 = (v1 - v0).cross(point - v0);
+            double normOfNormal = n.norm();
+            n.normalize();
+
+            Eigen::Vector3d projectedPoint = point - n * (n.dot(point - v0)) ;
+
+            double referenceTriangleArea = normOfNormal*0.5;
+            Eigen::Vector3d n1 = (v1 - v0).cross(projectedPoint - v0);
             double area1 = n1.norm()*0.5;
-            Eigen::Vector3d n2 = (v2 - v1).cross(point - v1);
+            Eigen::Vector3d n2 = (v2 - v1).cross(projectedPoint - v1);
             double area2 = n2.norm()*0.5;
-            Eigen::Vector3d n3 = (v0 - v2).cross(point - v2);
+            Eigen::Vector3d n3 = (v0 - v2).cross(projectedPoint - v2);
             double area3 = n3.norm()*0.5;
-            double res = ( area1 + area2 + area3 - referenceTriangleArea) / referenceTriangleArea;
-            if (res < associationThreshold)
+            double res = (area1 + area2 + area3 - referenceTriangleArea) / referenceTriangleArea;
+            if (std::abs(res) < associationThreshold)
             {
                 return true;
-                break;
             }
         }
         return false;
