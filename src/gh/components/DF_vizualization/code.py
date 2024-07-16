@@ -36,16 +36,12 @@ class Vizualization(component):
         # by default we color the target
         min_value = min(min(sublist) for sublist in i_results.distances)
         max_value = max(max(sublist) for sublist in i_results.distances)
-        
-        o_source = [df_vizualization.add_color(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
+
+        o_source = [df_vizualization.color_pcd(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
 
         o_target = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(trg) for trg in i_results.target]
 
-        o_legend = []
-
-        # color the source pointcloud based on viz_settings
-
-         #make a legend
+        o_legend = df_vizualization.create_legend(min_value, max_value)
 
         return o_source, o_target, o_legend
 

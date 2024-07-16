@@ -66,9 +66,60 @@ def value_to_color(value, min_value, max_value):
     return interpolate_color(color1, color2, t)
 
 
-def add_color(pcd, values, min_value, max_values):
+def color_pcd(pcd, values, min_value, max_values):
 
     for i, p in enumerate(pcd):
         mapped_color = value_to_color(values[i], min_value, max_values)
         p.Color = mapped_color
     return pcd
+
+
+def create_legend(min_value, max_value, steps=10, base_point=rg.Point3d(0, 0, 0), width=0.5, height=1, spacing=0):
+    """
+    Create a legend in Rhino with colored hatches and text labels.
+    
+    Parameters:
+    min_value (float): Minimum value for the legend.
+    max_value (float): Maximum value for the legend.
+    steps (int): Number of steps in the legend.
+    base_point (rg.Point3d): The base point where the legend starts.
+    width (float): Width of each rectangle.
+    height (float): Height of each rectangle.
+    spacing (float): Spacing between rectangles.
+    """
+    x, y, z = base_point.X, base_point.Y, base_point.Z
+    
+    legend_geometry = []
+
+    for i in range(steps + 1):
+        value = min_value + (max_value - min_value) * i / steps
+        color = value_to_color(value, min_value, max_value)
+        
+        rect_pts = [
+            rg.Point3d(x, y + i * (height + spacing), z),
+            rg.Point3d(x + width, y + i * (height + spacing), z),
+            rg.Point3d(x + width, y + (i + 1) * height + i * spacing, z),
+            rg.Point3d(x, y + (i + 1) * height + i * spacing, z),
+            rg.Point3d(x, y + i * (height + spacing), z)
+        ]
+        
+        mesh = rg.Mesh()
+        for pt in rect_pts:
+            mesh.Vertices.Add(pt)
+        mesh.Faces.AddFace(0, 1, 2, 3)
+        mesh.VertexColors.CreateMonotoneMesh(color)
+
+        polyline = rg.Polyline(rect_pts)
+        
+        legend_geometry.append(mesh)
+        
+        legend_geometry.append(polyline.ToPolylineCurve())
+        
+        text_pt = rg.Point3d(x + width + spacing, y + i * (height + spacing) + height / 2, z)
+        text_entity = rg.TextEntity()
+        text_entity.Plane = rg.Plane(text_pt, rg.Vector3d.ZAxis)
+        text_entity.Text = f"{value:.2f}"
+        text_entity.TextHeight = height / 2
+        legend_geometry.append(text_entity)
+    
+    return legend_geometry
