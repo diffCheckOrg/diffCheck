@@ -106,8 +106,6 @@ def create_legend(min_value, max_value, steps=10, base_point=rg.Point3d(0, 0, 0)
             mesh.VertexColors.Add(previous_color.R, previous_color.G, previous_color.B)
             mesh.VertexColors.Add(color.R, color.G, color.B)
             mesh.VertexColors.Add(color.R, color.G, color.B)
-            mesh.VertexColors.Add(color.R, color.G, color.B)
-
 
             polyline = rg.Polyline(rect_pts)
 
@@ -133,7 +131,7 @@ def create_legend(min_value, max_value, steps=10, base_point=rg.Point3d(0, 0, 0)
     return legend_geometry
 
 
-def create_histogram(values, min_value, max_value, steps=10, base_point=rg.Point3d(0,0,0), height=0.1, spacing=0.1):
+def create_histogram(values, min_value, max_value, steps=100, base_point=rg.Point3d(0, 0, 0), height=0.1, spacing=0):
     """
     Create a histogram in Rhino with a polyline representing value frequencies.
 
@@ -159,21 +157,20 @@ def create_histogram(values, min_value, max_value, steps=10, base_point=rg.Point
         if min_value <= value and value <= max_value:
             bin_index = (value - min_value) // bin_size
             bin_index = int(bin_index)
-            if bin_index == steps:
-                bin_index -= 1
             frequencies[bin_index] += 1
 
     x, y, z = base_point.X, base_point.Y, base_point.Z
 
     # Create points for the polyline representing the histogram
-    points = [rg.Point3d(x, y, z)]
-    for i in range(int(steps)):
-        
-        bar_height = frequencies[i] * height
-        points.append(rg.Point3d(x + bar_height, y + i * (spacing + height), z))
-        points.append(rg.Point3d(x, y + (i + 1) * (spacing + height), z))
+    points = []
+    for i in range(steps+1):
+
+        bar_height = frequencies[i] * 0.01 * height
+        print(bar_height)
+        points.append(rg.Point3d(x - bar_height - 0.15 , y + i * (spacing + height), z))
+
     # Create the polyline and add it to the histogram geometry
-    polyline = rg.Polyline(points)
-    histogram_geometry.append(points)
+    polyline = rg.Curve.CreateInterpolatedCurve(points, 1)
+    histogram_geometry.append(polyline)
 
     return histogram_geometry
