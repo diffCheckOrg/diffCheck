@@ -35,8 +35,16 @@ class Vizualization(component):
 
         # by default we color the target
         distances_flattened = [item for sublist in i_results.distances for item in sublist]
+
         min_value = min(min(sublist) for sublist in i_results.distances)
-        max_value = max(max(sublist) for sublist in i_results.distances)
+
+        if i_viz_settings.lower_threshold is not None:
+            min_value = i_viz_settings.lower_threshold
+
+        if i_viz_settings.upper_threshold is not None:
+            max_value = i_viz_settings.upper_threshold
+        else:
+            max_value = max(max(sublist) for sublist in i_results.distances)
 
         o_source = [df_vizualization.color_pcd(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
 

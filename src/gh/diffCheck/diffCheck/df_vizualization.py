@@ -35,6 +35,11 @@ def interpolate_color(color1, color2, t):
 def value_to_color(value, min_value, max_value):
     """Map a value to a color based on a spectral colormap."""
 
+    if value < min_value:
+        value = min_value
+    elif value > max_value:
+        value = max_value
+
     # Define the spectral colormap (simplified)
     colormap = [
         Color.FromArgb(0, 0, 255),  # Blue
@@ -110,7 +115,7 @@ def create_legend(min_value, max_value, steps=10, base_point=rg.Point3d(0, 0, 0)
             polyline = rg.Polyline(rect_pts)
 
             legend_geometry.append(mesh)
-            # legend_geometry.append(polyline.ToPolylineCurve())
+            legend_geometry.append(polyline.ToPolylineCurve())
 
         text_pt = rg.Point3d(x + 1.25 * width + spacing, y + i * (height + spacing) + height / 10, z)
         text_entity = rg.TextEntity()
@@ -154,10 +159,13 @@ def create_histogram(values, min_value, max_value, steps=100, base_point=rg.Poin
 
     # Count the frequencies of values in each bin
     for value in values:
-        if min_value <= value and value <= max_value:
-            bin_index = (value - min_value) // bin_size
-            bin_index = int(bin_index)
-            frequencies[bin_index] += 1
+        if value < min_value:
+            value = min_value
+        elif value > max_value:
+            value = max_value
+        bin_index = (value - min_value) // bin_size
+        bin_index = int(bin_index)
+        frequencies[bin_index] += 1
 
     x, y, z = base_point.X, base_point.Y, base_point.Z
 
