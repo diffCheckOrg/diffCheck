@@ -4,49 +4,95 @@
 """
 
 import numpy as np
-import open3d as o3d
 from diffCheck import diffcheck_bindings
 import Rhino.Geometry as rg
 
 
-def cloud_2_cloud_distance(source, target, invert=False):
-    """
-        Compute the Euclidean distance for every point of a source pcd to its
-        closest point on a target pointcloud
-    """
-    if invert:
-        distances = np.asarray(target.compute_distance(source))
-    else:
-        distances = np.asarray(source.compute_distance(target))
-
-    return distances
-
-
-def cloud_2_cloud_comparison(source_list, target_list, invert=False):
+def cloud_2_cloud_comparison(source_list, target_list):
     """
         Compute the Euclidean distance for every point of a source pcd to its
         closest point on a target pointcloud
     """
     results = DFVizResults()
     for source, target in zip(source_list, target_list):
-        distances = cloud_2_cloud_distance(source, target, invert)
+        distances = cloud_2_cloud_distance(source, target)
         results.add(source, target, distances)
 
     return results
 
 
-def cloud_2_mesh_distance(source, target, signed=False):
+def cloud_2_cloud_distance(source, target):
     """
-        Calculate the distance between every point of a source pcd to its closest point on a target DFMesh
+        Compute the Euclidean distance for every point of a source pcd to its
+        closest point on a target pointcloud
     """
 
-    # for every point on the PCD compute the point_2_mesh_distance
+    return np.asarray(source.compute_distance(target))
+
+
+def cloud_2_rhino_mesh_comparison(cloud_source_list, rhino_mesh_target_list, signed_flag, swap):
+    """
+        Compute the Euclidean distance for every point of a source pcd to its
+        closest point on a target pointcloud
+    """
+    results = DFVizResults()
+
+    for source, target in zip(cloud_source_list, rhino_mesh_target_list):
+        if swap:
+            # this mean we want to vizualize the result on the target mesh
+            distances = rhino_mesh_2_cloud_distance(target, source, signed_flag)
+        else:
+            # this means we want to vizualize the result on the source pcd
+            distances = cloud_2_rhino_mesh_distance(source, target, signed_flag)
+
+        if swap:
+            results.add(target, source, distances)
+        else:
+            results.add(source, target, distances)
+
+    return results
+
+
+# def cloud_2_mesh_distance(source, target, signed=False):
+#     """
+#         Calculate the distance between every point of a source pcd to its closest point on a target DFMesh
+#     """
+
+#     # for every point on the PCD compute the point_2_mesh_distance
+#     if signed:
+#         distances = np.asarray(target.compute_distance(source, is_abs=False))
+#     else:
+#         distances = np.asarray(target.compute_distance(source, is_abs=True))
+
+#     return distances
+
+def rhino_mesh_2_cloud_distance(source, target, signed=False):
+    """
+        Calculate the distance between every vertex of a Rhino Mesh to its closest point on a PCD
+    """
+    #make a Df point cloud containing all the vertices of the source rhino mesh
+    df_pcd_from_mesh_vertices = diffcheck_bindings.dfb_geometry.DFPointCloud()
+    df_pcd_from_mesh_vertices.points = [[pt.X, pt.Y, pt.Z] for pt in source.Vertices]
+    #calculate the distances
+    distances = np.asarray(df_pcd_from_mesh_vertices.compute_distance(target))
+
     if signed:
-        distances = np.asarray(target.compute_distance(source, is_abs=False))
-    else:
-        distances = np.asarray(target.compute_distance(source, is_abs=True))
+        for p in target.points:
 
-    return distances
+            rhp = rg.Point3d(p[0], p[1], p[2])
+            closest_meshPoint = source.ClosestMeshPoint(rhp, 1000)
+            closest_point = closest_meshPoint.Point
+            distance = rhp.DistanceTo(closest_point)
+            # Calculate the direction from target to source
+            direction = rhp - closest_point
+            # Calculate the signed distance
+            normal = source.NormalAt(closest_meshPoint)
+            dot_product = direction * normal
+            if dot_product < 0:
+                distance = - distance
+
+    return np.asarray(distances)
+
 
 def cloud_2_rhino_mesh_distance(source, target, signed=False):
     """
@@ -61,7 +107,6 @@ def cloud_2_rhino_mesh_distance(source, target, signed=False):
         rhp = rg.Point3d(p[0], p[1], p[2])
         closest_meshPoint = target.ClosestMeshPoint(rhp, 1000)
         closest_point = closest_meshPoint.Point
-        face_Index = closest_meshPoint.FaceIndex
         distance = rhp.DistanceTo(closest_point)
 
         if signed:
@@ -77,42 +122,6 @@ def cloud_2_rhino_mesh_distance(source, target, signed=False):
 
     return np.asarray(distances)
 
-
-# def compute_mse(distances):
-#     """
-#         Calculate mean squared distance
-#     """
-#     mse = np.sqrt(np.mean(distances ** 2))
-
-#     return mse
-
-
-# def compute_max_deviation(distances):
-#     """
-#         Calculate max deviation of distances
-#     """
-#     max_deviation = np.max(distances)
-
-#     return max_deviation
-
-
-# def compute_min_deviation(distances):
-#     """
-#         Calculate min deviation of distances
-#     """
-
-#     min_deviation = np.min(distances)
-
-#     return min_deviation
-
-
-# def compute_standard_deviation(distances):
-#     """
-#         Calculate standard deviation of distances
-#     """
-#     standard_deviation = np.std(distances)
-
-#     return standard_deviation
 
 class DFVizResults:
     """

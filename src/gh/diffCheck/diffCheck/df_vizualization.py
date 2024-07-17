@@ -67,12 +67,22 @@ def value_to_color(value, min_value, max_value):
     return interpolate_color(color1, color2, t)
 
 
-def color_pcd(pcd, values, min_value, max_values):
+def color_pcd(pcd, values, min_value, max_value):
 
     for i, p in enumerate(pcd):
-        mapped_color = value_to_color(values[i], min_value, max_values)
+        mapped_color = value_to_color(values[i], min_value, max_value)
         p.Color = mapped_color
     return pcd
+
+
+def color_mesh(mesh, values, min_value, max_value):
+    mesh.VertexColors.Clear()
+    for i, vertex in enumerate(mesh.Vertices):
+
+        mapped_color = value_to_color(values[i], min_value, max_value)
+        mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
+
+    return mesh
 
 
 def create_legend(min_value, max_value, steps=10, base_point=rg.Point3d(0, 0, 0),
@@ -172,7 +182,6 @@ def create_histogram(values, min_value, max_value, steps=100, base_point=rg.Poin
     for i in range(steps+1):
 
         bar_height = frequencies[i] * 0.01 * height
-        print(bar_height)
         points.append(rg.Point3d(x - bar_height - 0.15 , y + i * (spacing + height), z))
 
     # Create the polyline and add it to the histogram geometry

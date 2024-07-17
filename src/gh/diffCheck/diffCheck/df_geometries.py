@@ -251,7 +251,7 @@ class DFBeam:
 
             param = rg.MeshingParameters()
             scalef = diffCheck.df_util.get_doc_2_meters_unitf()
-            param.MaximumEdgeLength = 0.01 / scalef
+            param.MaximumEdgeLength = 0.1 / scalef
             mesh_part = rg.Mesh.CreateFromBrep(f, param)[0] #returns a list of meshes with one element
             mesh.Append(mesh_part)
 

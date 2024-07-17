@@ -11,16 +11,17 @@ import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
-from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
+from diffCheck.df_geometries import DFBeam
 
 
 class CloudToMeshDistance(component):
     def RunScript(self,
-        i_cloud_source: rg.PointCloud,
-        i_beam,
-        i_signed_flag: bool):
+        i_cloud_source: typing.List[rg.PointCloud],
+        i_beam: typing.List[DFBeam],
+        i_signed_flag: bool,
+        i_swap: bool):
         """
             The cloud-to-cloud component computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.
 
@@ -35,25 +36,23 @@ class CloudToMeshDistance(component):
         if i_cloud_source is None or i_beam is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide an object of type point cloud and an object of type mesh to compare")
             return None
+        
 
         # conversion
-        df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
-        rhino_mesh_target = i_beam.to_mesh()
-        df_mesh_target = df_cvt_bindings.cvt_rhmesh_2_dfmesh(rhino_mesh_target)
+        df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_s) for i_cl_s in i_cloud_source]
+        df_mesh_target_list = [beam.to_mesh() for beam in i_beam]
 
         # calculate distances
-        o_results = df_error_estimation.cloud_2_mesh_distance(df_cloud_source, df_mesh_target, i_signed_flag)
+        o_results = df_error_estimation.cloud_2_rhino_mesh_comparison(df_cloud_source_list, df_mesh_target_list, i_signed_flag, i_swap)
 
-        o_mesh = rhino_mesh_target
-
-        return o_distances.tolist(), o_mse, o_max_deviation, o_min_deviation, o_mesh
-
+        return o_results.distances, o_results.distances_mse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
 
 
 if __name__ == "__main__":
     com = CloudToMeshDistance()
-    o_distances, o_mse, o_max_deviation, o_min_deviation, o_mesh = com.RunScript(
+    o_distances, o_mse, o_max_deviation, o_min_deviation, o_std_deviation, o_results = com.RunScript(
         i_cloud_source,
-        i_mesh_target,
-        i_signed_flag
+        i_beam,
+        i_signed_flag,
+        i_swap
         )
