@@ -36,30 +36,30 @@ class Vizualization(component):
         # by default we color the target
         distances_flattened = [item for sublist in i_results.distances for item in sublist]
 
-        min_value = min(min(sublist) for sublist in i_results.distances)
-
         if i_viz_settings.lower_threshold is not None:
             min_value = i_viz_settings.lower_threshold
+        else:
+            min_value = min(min(sublist) for sublist in i_results.distances)
 
         if i_viz_settings.upper_threshold is not None:
             max_value = i_viz_settings.upper_threshold
         else:
             max_value = max(max(sublist) for sublist in i_results.distances)
 
-        o_source = [df_vizualization.color_pcd(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
-
-        o_target = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(trg) for trg in i_results.target]
+        # we always color the source
+        # check if source is a pcd
+        o_colored_geo = [df_vizualization.color_pcd(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
 
         o_legend = df_vizualization.create_legend(min_value, max_value)
         
         o_histogram = df_vizualization.create_histogram(distances_flattened, min_value, max_value)
 
-        return o_source, o_target, o_legend, o_histogram
+        return o_source, o_colored_geo, o_legend, o_histogram
 
 
 if __name__ == "__main__":
     com = Vizualization()
-    o_source, o_target, o_legend, o_histogram  = com.RunScript(
+    o_source, o_colored_geo, o_legend, o_histogram  = com.RunScript(
         i_results,
         i_viz_settings
         )
