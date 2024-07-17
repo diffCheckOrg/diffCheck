@@ -12,11 +12,9 @@ class DFVizSettings:
     This class compiles the settings for the vizualization into one object
     """
 
-    def __init__(self, source_valueType, target_valueType, upper_threshold,
-                 lower_threshold, palette):
+    def __init__(self, valueType, upper_threshold, lower_threshold, palette):
 
-        self.source_valueType = source_valueType
-        self.target_valueType = target_valueType
+        self.valueType = valueType
 
         self.upper_threshold = upper_threshold
         self.lower_threshold = lower_threshold
