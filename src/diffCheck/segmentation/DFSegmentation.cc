@@ -106,8 +106,8 @@ namespace diffCheck::segmentation
         // iterate through the mesh faces given as function argument
         if (referenceMesh.size() == 0)
         {
-            DIFFCHECK_WARN("No mesh faces to associate with the clusters. Returning the first clusters untouched.");
-            return clusters[0];
+            DIFFCHECK_WARN("No mesh faces to associate with the clusters. Returning an empty point cloud.");
+            return unifiedPointCloud;
         }
         for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
         {
@@ -123,8 +123,8 @@ namespace diffCheck::segmentation
             double faceDistance = std::numeric_limits<double>::max();
             if (clusters.size() == 0)
             {
-                DIFFCHECK_WARN("No clusters to associate with the mesh faces. Returning the first mesh face untouched.");
-                return clusters[0];
+                DIFFCHECK_WARN("No clusters to associate with the mesh faces. Returning an empty point cloud.");
+                return unifiedPointCloud;
             }
             for (auto segment : clusters)
             {   
@@ -163,7 +163,7 @@ namespace diffCheck::segmentation
             for (Eigen::Vector3d point : correspondingSegment->Points)
             {
                 bool pointInFace = false;
-                if (DFSegmentation::IsPointOnFace(face, point, associationThreshold))
+                if (face->IsPointOnFace(point, associationThreshold))
                 {
                     unifiedPointCloud->Points.push_back(point);
                     unifiedPointCloud->Normals.push_back(
@@ -190,16 +190,6 @@ namespace diffCheck::segmentation
                         point), 
                     correspondingSegment->Points.end());
             }
-            // removing the corresponding segment if it is empty after the point transfer
-            // if (correspondingSegment->GetNumPoints() == 0)
-            // {
-            //     clusters.erase(
-            //         std::remove(
-            //             clusters.begin(), 
-            //             clusters.end(), 
-            //             correspondingSegment), 
-            //         clusters.end());
-            // }
         }
         return unifiedPointCloud;
     }
@@ -218,8 +208,9 @@ namespace diffCheck::segmentation
         }
         for (std::shared_ptr<geometry::DFPointCloud> cluster : unassociatedClusters)
         {
+            std::shared_ptr<geometry::DFMesh> correspondingMeshFace;
             Eigen::Vector3d clusterCenter;
-            Eigen::Vector3d clusterNormal;
+            Eigen::Vector3d clusterNormal = Eigen::Vector3d::Zero();
 
             if (cluster->GetNumPoints() == 0)
             {
@@ -231,14 +222,21 @@ namespace diffCheck::segmentation
                 clusterCenter += point;
             }
             clusterCenter /= cluster->GetNumPoints();
+            if (cluster->GetNumNormals() == 0)
+            {
+                DIFFCHECK_WARN("Empty normals in the cluster. Skipping the cluster.");
+                continue;
+            }
             for (Eigen::Vector3d normal : cluster->Normals)
             {
                 clusterNormal += normal;
             }
             clusterNormal.normalize();
 
-            int meshIndex = std::numeric_limits<int>::max();
-            int faceIndex = std::numeric_limits<int>::max() ;
+            int meshIndex = 0;
+            int faceIndex = 0 ;
+            int goodMeshIndex = 0;
+            int goodFaceIndex = 0;
             double distance = std::numeric_limits<double>::max();
 
             if (meshes.size() == 0)
@@ -246,18 +244,18 @@ namespace diffCheck::segmentation
                 DIFFCHECK_WARN("No meshes to associate with the clusters. Skipping the cluster.");
                 continue;
             }
-            for (std::vector<std::shared_ptr<geometry::DFMesh>> piece : meshes)
+            for (std::vector<std::shared_ptr<geometry::DFMesh>> mesh : meshes)
             {
-                if (piece.size() == 0)
+                if (mesh.size() == 0)
                 {
                     DIFFCHECK_WARN("Empty piece in the meshes vector. Skipping the mesh face vector.");
                     continue;
                 }
-                for (std::shared_ptr<geometry::DFMesh> meshFace : piece)
+                for (std::shared_ptr<geometry::DFMesh> meshFace : mesh)
                 {
-                    Eigen::Vector3d faceCenter;
-                    Eigen::Vector3d faceNormal;
-
+                    Eigen::Vector3d faceCenter = Eigen::Vector3d::Zero();
+                    Eigen::Vector3d faceNormal = Eigen::Vector3d::Zero();
+  
                     std::shared_ptr<open3d::geometry::TriangleMesh> o3dFace = meshFace->Cvt2O3DTriangleMesh();
                     
                     faceNormal = meshFace->GetFirstNormal();
@@ -273,88 +271,103 @@ namespace diffCheck::segmentation
                     The following two lines are not super optimized but more readable than the optimized version
                     */
 
-                    double clusterNormalToJunctionLineAngle = std::abs(std::acos(clusterNormal.dot((clusterCenter - faceCenter).normalized())));
+                    double dotProduct = clusterNormal.dot((clusterCenter - faceCenter).normalized());
+                    dotProduct = std::max(-1.0, std::min(1.0, dotProduct));
+                    double clusterNormalToJunctionLineAngle = std::acos(dotProduct);
                     
-                    double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle)) / std::abs(clusterNormal.dot(faceNormal));
+                    double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle))
+                    / std::min(std::abs(clusterNormal.dot(faceNormal)), 0.05) ;
                     if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < distance)
                     {
+                        goodMeshIndex = meshIndex;
+                        goodFaceIndex = faceIndex;
                         distance = currentDistance;
-                        meshIndex = std::distance(meshes.begin(), std::find(meshes.begin(), meshes.end(), piece));
-                        faceIndex = std::distance(piece.begin(), std::find(piece.begin(), piece.end(), meshFace));
+                        correspondingMeshFace = meshFace;
                     }
+                    faceIndex++;
                 }
+                meshIndex++;
             }
-            if (meshIndex >= meshes.size() || faceIndex >= meshes[meshIndex].size())
+
+            if (correspondingMeshFace == nullptr)
             {
-                // this one generates a lot of warnings
                 DIFFCHECK_WARN("No mesh face found for the cluster. Skipping the cluster.");
                 continue;
             }
-            std::shared_ptr<geometry::DFPointCloud> completed_segment = existingPointCloudSegments[meshIndex];
+            if (goodMeshIndex >= existingPointCloudSegments.size())
+            {
+                DIFFCHECK_WARN("No segment found for the face. Skipping the face.");
+                continue;
+            }
+            std::shared_ptr<geometry::DFPointCloud> completed_segment = existingPointCloudSegments[goodMeshIndex];
+
             for (Eigen::Vector3d point : cluster->Points)
             {
-                std::vector<Eigen::Vector3i> faceTriangles = meshes[meshIndex][faceIndex]->Faces;
-                if (IsPointOnFace(meshes[meshIndex][faceIndex], point, associationThreshold))
+                if (correspondingMeshFace->IsPointOnFace(point, associationThreshold))
                 {
                     completed_segment->Points.push_back(point);
                     completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
                 }
             }
-            // std::vector<int> indicesToRemove;
+            std::vector<int> indicesToRemove;
 
-            // for (int i = 0; i < cluster->Points.size(); ++i) 
-            // {
-            //     if (std::find(completed_segment->Points.begin(), completed_segment->Points.end(), cluster->Points[i]) != completed_segment->Points.end()) 
-            //     {
-            //         indicesToRemove.push_back(i);
-            //     }
-            // }
-            // for (auto it = indicesToRemove.rbegin(); it != indicesToRemove.rend(); ++it) 
-            // {
-            //     std::swap(cluster->Points[*it], cluster->Points.back());
-            //     cluster->Points.pop_back();
-            //     std::swap(cluster->Normals[*it], cluster->Normals.back());
-            //     cluster->Normals.pop_back();
-            // }
+            for (int i = 0; i < cluster->Points.size(); ++i) 
+            {
+                if (std::find(completed_segment->Points.begin(), completed_segment->Points.end(), cluster->Points[i]) != completed_segment->Points.end()) 
+                {
+                    indicesToRemove.push_back(i);
+                }
+            }
+            for (auto it = indicesToRemove.rbegin(); it != indicesToRemove.rend(); ++it) 
+            {
+                std::swap(cluster->Points[*it], cluster->Points.back());
+                cluster->Points.pop_back();
+                std::swap(cluster->Normals[*it], cluster->Normals.back());
+                cluster->Normals.pop_back();
+            }
         }
     };
 
-    bool DFSegmentation::IsPointOnFace(
-        std::shared_ptr<diffCheck::geometry::DFMesh> face,
-        Eigen::Vector3d point,
-        double associationThreshold)
-    {
-        /*
-        To check if the point is in the face, we take into account all the triangles forming the face.
-        We calculate the area of each triangle, then check if the sum of the areas of the tree triangles 
-        formed by two of the points of the referencr triangle and our point is equal to the reference triangle area 
-        (within a user-defined margin). If it is the case, the triangle is in the face.
-        */
-        std::vector<Eigen::Vector3i> faceTriangles = face->Faces;
-        for (Eigen::Vector3i triangle : faceTriangles)
-        {
-            Eigen::Vector3d v0 = face->Vertices[triangle[0]];
-            Eigen::Vector3d v1 = face->Vertices[triangle[1]];
-            Eigen::Vector3d v2 = face->Vertices[triangle[2]];
-            Eigen::Vector3d n = (v1 - v0).cross(v2 - v0);
-            double normOfNormal = n.norm();
-            n.normalize();
+    // bool DFSegmentation::IsPointOnFace(
+    //     std::shared_ptr<diffCheck::geometry::DFMesh> face,
+    //     Eigen::Vector3d point,
+    //     double associationThreshold)
+    // {
+    //     /*
+    //     To check if the point is in the face, we take into account all the triangles forming the face.
+    //     We calculate the area of each triangle, then check if the sum of the areas of the tree triangles 
+    //     formed by two of the points of the referencr triangle and our point is equal to the reference triangle area 
+    //     (within a user-defined margin). If it is the case, the triangle is in the face.
+    //     */
+    //     std::vector<Eigen::Vector3i> faceTriangles = face->Faces;
+    //     for (Eigen::Vector3i triangle : faceTriangles)
+    //     {
+    //         Eigen::Vector3d v0 = face->Vertices[triangle[0]];
+    //         Eigen::Vector3d v1 = face->Vertices[triangle[1]];
+    //         Eigen::Vector3d v2 = face->Vertices[triangle[2]];
+    //         Eigen::Vector3d n = (v1 - v0).cross(v2 - v0);
+    //         double normOfNormal = n.norm();
+    //         n.normalize();
 
-            Eigen::Vector3d projectedPoint = point - n * (n.dot(point - v0)) ;
+    //         Eigen::Vector3d projectedPoint = point - n * (n.dot(point - v0)) ;
 
-            double referenceTriangleArea = normOfNormal*0.5;
-            Eigen::Vector3d n1 = (v1 - v0).cross(projectedPoint - v0);
-            double area1 = n1.norm()*0.5;
-            Eigen::Vector3d n2 = (v2 - v1).cross(projectedPoint - v1);
-            double area2 = n2.norm()*0.5;
-            Eigen::Vector3d n3 = (v0 - v2).cross(projectedPoint - v2);
-            double area3 = n3.norm()*0.5;
-            double res = (area1 + area2 + area3 - referenceTriangleArea) / referenceTriangleArea;
-            if (std::abs(res) < associationThreshold)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //         double referenceTriangleArea = normOfNormal*0.5;
+    //         Eigen::Vector3d n1 = (v1 - v0).cross(projectedPoint - v0);
+    //         double area1 = n1.norm()*0.5;
+    //         Eigen::Vector3d n2 = (v2 - v1).cross(projectedPoint - v1);
+    //         double area2 = n2.norm()*0.5;
+    //         Eigen::Vector3d n3 = (v0 - v2).cross(projectedPoint - v2);
+    //         double area3 = n3.norm()*0.5;
+    //         double res = (area1 + area2 + area3 - referenceTriangleArea) / referenceTriangleArea;
+
+    //         // arbitrary value to avoid false positives (points that, when projected on the triangle, are in it, but that are actually located too far from the mesh to actually belong to it)
+    //         double maxProjectionDistance = std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()});
+
+    //         if (std::abs(res) < associationThreshold && (projectedPoint - point).norm() < maxProjectionDistance)
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 } // namespace diffCheck::segmentation

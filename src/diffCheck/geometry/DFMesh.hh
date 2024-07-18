@@ -78,6 +78,14 @@ namespace diffCheck::geometry
          */
         Eigen::Vector3d GetFirstNormal();
 
+        /**
+         * @brief Check if a point is on a face of the mesh
+         * 
+         * @param point the point to check
+         * @param associationThreshold the threshold to consider the point associable to the mesh. It is the ratio between the surface of the closest mesh triangle of the mesh face, and the sum of the areas of the three triangles described by the point projected on the mesh face and two of the mesh triangle vertices. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded. In theory, in a perfect case, a value of 0 could be used, but in practice, values of 0.05-0.2 are more realistic, depending on the application.
+         */
+        bool IsPointOnFace(Eigen::Vector3d point, double associationThreshold = 0.1);
+
     public:  ///< I/O loader
         /**
          * @brief Read a mesh from a file

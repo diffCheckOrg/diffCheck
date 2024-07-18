@@ -52,17 +52,5 @@ namespace diffCheck::segmentation
             std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
             double angleThreshold = 0.1,
             double associationThreshold = 0.1);
-        
-        // FIXME: this one should go into DFMesh
-        private: ///< helper methods
-        /** @brief private  method to check if a point is on a face of a triangle mesh triangle, within a certain  association threshold. This takes into account the fact that, in 3D, a point can be "above" a triangle of a triangle mesh but still considered as being on the mesh face.
-         * @param face the triangle mesh face to check the point against
-         * @param point the point to check
-         * @param associationThreshold the threshold to consider the point associable to the mesh. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
-         */
-        static bool DFSegmentation::IsPointOnFace(
-            std::shared_ptr<diffCheck::geometry::DFMesh> face,
-            Eigen::Vector3d point,
-            double associationThreshold);
     };
 } // namespace diffCheck::segmentation
