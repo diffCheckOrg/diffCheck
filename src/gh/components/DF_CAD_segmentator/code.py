@@ -57,19 +57,8 @@ class DFCADSegmentator(component):
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold
             )
+            df_clusters.append(df_asssociated_cluster)
 
-            # TODO: get rid, this is for debugging
-            # nbr_total_df_clouds_pts = 0
-            # for df_cloud in df_clouds:
-            #     nbr_total_df_clouds_pts += df_cloud.get_num_points()
-            # print("Total number of points in all clouds: ", nbr_total_df_clouds_pts)
-
-            # FIXME: this is returing empty clusters
-            # print(df_asssociated_cluster.has_points())
-            if df_asssociated_cluster.has_points():
-                df_clusters.append(df_asssociated_cluster)
-
-        # FIXME: the refiner is crashing the script
         dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
                 unassociated_clusters=df_clouds,
                 associated_clusters=df_clusters,
@@ -77,6 +66,8 @@ class DFCADSegmentator(component):
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold
             )
+        
+        
 
         o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
