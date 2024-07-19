@@ -5,7 +5,7 @@
 
 import Rhino.Geometry as rg
 from System.Drawing import Color
-
+from diffCheck import df_vizualization
 
 class DFVizSettings:
     """
@@ -18,8 +18,40 @@ class DFVizSettings:
 
         self.upper_threshold = upper_threshold
         self.lower_threshold = lower_threshold
-        self.palette = palette
+        self.palette = df_vizualization.DFColorMap(palette)
 
+
+class DFColorMap:
+    """
+    This class compiles the settings for the vizualization into one object
+    """
+
+    def __init__(self, name):
+        self.names = name
+        if name == "Jet":
+            self.colors = [
+                Color.FromArgb(0, 0, 255),  # Blue
+                Color.FromArgb(0, 255, 255),  # Cyan
+                Color.FromArgb(0, 255, 0),  # Green
+                Color.FromArgb(255, 255, 0),  # Yellow
+                Color.FromArgb(255, 0, 0),  # Red
+            ]
+        elif name == "Rainbow":
+            self.colors = [
+                Color.FromArgb(127, 0, 255),
+                Color.FromArgb(0, 180, 235),
+                Color.FromArgb(128, 254, 179),
+                Color.FromArgb(255, 178, 96),
+                Color.FromArgb(125, 3, 254)
+            ]
+        elif name == "RdPu":
+            self.colors = [
+                Color.FromArgb(254, 246, 242),
+                Color.FromArgb(251, 196, 191),
+                Color.FromArgb(246, 103, 160),
+                Color.FromArgb(172, 1, 125),
+                Color.FromArgb(254, 246, 242)
+            ]
 
 def interpolate_color(color1, color2, t):
     """Interpolate between two colors."""
@@ -30,7 +62,7 @@ def interpolate_color(color1, color2, t):
     return Color.FromArgb(r, g, b)
 
 
-def value_to_color(value, min_value, max_value):
+def value_to_color(value, min_value, max_value, palette):
     """Map a value to a color based on a spectral colormap."""
 
     if value < min_value:
@@ -39,13 +71,7 @@ def value_to_color(value, min_value, max_value):
         value = max_value
 
     # Define the spectral colormap (simplified)
-    colormap = [
-        Color.FromArgb(0, 0, 255),  # Blue
-        Color.FromArgb(0, 255, 255),  # Cyan
-        Color.FromArgb(0, 255, 0),  # Green
-        Color.FromArgb(255, 255, 0),  # Yellow
-        Color.FromArgb(255, 0, 0),  # Red
-    ]
+    colormap = palette.colors
 
     # Normalize the value within the range
     if min_value == max_value:
@@ -67,25 +93,25 @@ def value_to_color(value, min_value, max_value):
     return interpolate_color(color1, color2, t)
 
 
-def color_pcd(pcd, values, min_value, max_value):
+def color_pcd(pcd, values, min_value, max_value, palette):
 
     for i, p in enumerate(pcd):
-        mapped_color = value_to_color(values[i], min_value, max_value)
+        mapped_color = value_to_color(values[i], min_value, max_value, palette)
         p.Color = mapped_color
     return pcd
 
 
-def color_mesh(mesh, values, min_value, max_value):
+def color_mesh(mesh, values, min_value, max_value, palette):
     mesh.VertexColors.Clear()
     for i, vertex in enumerate(mesh.Vertices):
 
-        mapped_color = value_to_color(values[i], min_value, max_value)
+        mapped_color = value_to_color(values[i], min_value, max_value, palette)
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
 
     return mesh
 
 
-def create_legend(min_value, max_value, steps=10, base_point=rg.Point3d(0, 0, 0),
+def create_legend(min_value, max_value, palette, steps=10, base_point=rg.Point3d(0, 0, 0),
                   width=0.5, height=1, spacing=0):
     """
     Create a legend in Rhino with colored hatches and text labels.
@@ -106,7 +132,7 @@ def create_legend(min_value, max_value, steps=10, base_point=rg.Point3d(0, 0, 0)
     for i in range(steps+1):
 
         value = min_value + (max_value - min_value) * i / steps
-        color = value_to_color(value, min_value, max_value)
+        color = value_to_color(value, min_value, max_value, palette)
 
         if i > 0:
             mesh = rg.Mesh()

@@ -42,16 +42,16 @@ class Vizualization(component):
             o_source = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(src) for src in i_results.source]
 
             # color geometry
-            o_colored_geo = [df_vizualization.color_pcd(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
+            o_colored_geo = [df_vizualization.color_pcd(src, dist, min_value, max_value, i_viz_settings.palette) for src, dist in zip(o_source, i_results.distances)]
 
         elif type(i_results.source[0]) is rg.Mesh:
             # convert to Rhino Mesh
             o_source = i_results.source
 
             # color geometry
-            o_colored_geo = [df_vizualization.color_mesh(src, dist, min_value, max_value) for src, dist in zip(o_source, i_results.distances)]
+            o_colored_geo = [df_vizualization.color_mesh(src, dist, min_value, max_value, i_viz_settings.palette) for src, dist in zip(o_source, i_results.distances)]
 
-        o_legend = df_vizualization.create_legend(min_value, max_value)
+        o_legend = df_vizualization.create_legend(min_value, max_value, i_viz_settings.palette)
 
         o_histogram = df_vizualization.create_histogram(distances_flattened, min_value, max_value)
 

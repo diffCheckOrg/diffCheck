@@ -11,7 +11,6 @@ import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
-from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
 
