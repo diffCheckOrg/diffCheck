@@ -70,7 +70,7 @@ def interpolate_color(color1, color2, t):
     return Color.FromArgb(r, g, b)
 
 
-def value_to_color(value, min_value, max_value, palette):
+def value_to_color(value, min_value, max_value, settings):
     """Map a value to a color based on a spectral colormap."""
 
     if value < min_value:
@@ -79,7 +79,7 @@ def value_to_color(value, min_value, max_value, palette):
         value = max_value
 
     # Define the spectral colormap (simplified)
-    colormap = palette.colors
+    colormap = settings.palette.colors
 
     # Normalize the value within the range
     if min_value == max_value:
@@ -101,25 +101,32 @@ def value_to_color(value, min_value, max_value, palette):
     return interpolate_color(color1, color2, t)
 
 
-def color_pcd(pcd, values, min_value, max_value, palette):
+def color_pcd(pcd, values, min_value, max_value, settings):
 
     for i, p in enumerate(pcd):
-        mapped_color = value_to_color(values[i], min_value, max_value, palette)
+        if len(values) > 1:
+            mapped_color = value_to_color(values[i], min_value, max_value, settings)
+        else:
+            mapped_color = value_to_color(values[0], min_value, max_value, settings)
+
         p.Color = mapped_color
     return pcd
 
 
-def color_mesh(mesh, values, min_value, max_value, palette):
+def color_mesh(mesh, values, min_value, max_value, settings):
     mesh.VertexColors.Clear()
     for i, vertex in enumerate(mesh.Vertices):
-
-        mapped_color = value_to_color(values[i], min_value, max_value, palette)
+        # check the settings.
+        if len(values) > 1:
+            mapped_color = value_to_color(values[i], min_value, max_value, settings)
+        else:
+            mapped_color = value_to_color(values[i], min_value, max_value, settings)
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
 
     return mesh
 
 
-def create_legend(min_value, max_value, palette, steps=10, base_point=rg.Point3d(0, 0, 0),
+def create_legend(min_value, max_value, settings, steps=10, base_point=rg.Point3d(0, 0, 0),
                   width=0.5, height=1, spacing=0):
     """
     Create a legend in Rhino with colored hatches and text labels.
@@ -140,7 +147,7 @@ def create_legend(min_value, max_value, palette, steps=10, base_point=rg.Point3d
     for i in range(steps+1):
 
         value = min_value + (max_value - min_value) * i / steps
-        color = value_to_color(value, min_value, max_value, palette)
+        color = value_to_color(value, min_value, max_value, settings)
 
         if i > 0:
             mesh = rg.Mesh()
