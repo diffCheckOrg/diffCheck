@@ -18,7 +18,7 @@ class CsvExporter(component):
     def RunScript(self,
         i_dump: bool,
         i_export_dir: str,
-        i_values: System.Collections.Generic.IList[float]):
+        i_results):
         """
             The csv-exporter component exports a list of values to a .csv file
 
@@ -33,11 +33,13 @@ class CsvExporter(component):
             # Define the CSV file path
             file_path = os.path.join(i_export_dir, 'exported_values.csv')
 
+            print(file_path)
+
             # Write the values to the CSV file
             with open(file_path, mode='w', newline='') as file:
                 writer = csv.writer(file)
-                for value in i_values:
-                    writer.writerow([value])
+                for list_of_values in i_results.distances:
+                    writer.writerow([list_of_values])
 
 
 if __name__ == "__main__":
@@ -45,5 +47,5 @@ if __name__ == "__main__":
     o_cvs = com.RunScript(
         i_dump,
         i_export_dir,
-        i_values
+        i_results
     )
