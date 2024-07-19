@@ -42,7 +42,7 @@ class DFColorMap:
                 Color.FromArgb(0, 180, 235),
                 Color.FromArgb(128, 254, 179),
                 Color.FromArgb(255, 178, 96),
-                Color.FromArgb(125, 3, 254)
+                Color.FromArgb(255, 6, 3)
             ]
         elif name == "RdPu":
             self.colors = [
@@ -50,7 +50,15 @@ class DFColorMap:
                 Color.FromArgb(251, 196, 191),
                 Color.FromArgb(246, 103, 160),
                 Color.FromArgb(172, 1, 125),
-                Color.FromArgb(254, 246, 242)
+                Color.FromArgb(76, 0, 106)
+            ]
+        elif name == "Viridis":
+            self.colors = [
+                Color.FromArgb(68, 3, 87),
+                Color.FromArgb(58, 82, 139),
+                Color.FromArgb(32, 144, 140),
+                Color.FromArgb(94, 201, 97),
+                Color.FromArgb(248, 230, 33)
             ]
 
 def interpolate_color(color1, color2, t):
