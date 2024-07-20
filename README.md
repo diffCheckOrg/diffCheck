@@ -6,7 +6,6 @@
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/pypi-build.yml/badge.svg">
     <img href="https://pypi.org/project/diffCheck/" src="https://img.shields.io/pypi/v/diffCheck">
-    <img href="https://github.com/ellerbrock/open-source-badges/" src="https://badges.frapsoft.com/os/v2/open-source.svg?v=103">
 </p>
 
 
