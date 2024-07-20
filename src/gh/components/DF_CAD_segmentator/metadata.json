@@ -1,0 +1,76 @@
+{
+    "name": "DFCADSegmentator",
+    "nickname": "DFCADSeg",
+    "category": "diffCheck",
+    "subcategory": "Segmentation",
+    "description": "Cluster a point cloud based on normals.",
+    "exposure": 4,
+    "instanceGuid": "e8b77b13-e441-4fbe-ae07-44dfe5cc3768",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_clouds",
+                "nickname": "i_clouds",
+                "description": "The point cloud clusters already segmented by normals.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The DFAssembly object.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            },
+            {
+                "name": "i_angle_threshold",
+                "nickname": "i_angle_threshold",
+                "description": "From 0 to 1, it's the sin value. The closer to 0 the less permissive and viceversa to 1.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_association_threshold",
+                "nickname": "i_association_threshold",
+                "description": "From 0 to infinite. By default 0.5. The closer to 0 the less permissive your point.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_clusters",
+                "nickname": "o_clusters",
+                "description": "The clouds associated to each beam.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

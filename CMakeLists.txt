@@ -94,10 +94,14 @@ endif()
 
 # Boost (header only) -----------------------------------------------------
 download_submodule_project(boost)
-target_link_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/boost/win/1_89/include/boost-1_85)
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/boost/win/1_89/include/boost-1_85)
 
 # CGAL (header-only) ------------------------------------------------------
 target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/cgal/include)
+
+# Cilantro (header-only) --------------------------------------------------
+download_submodule_project(cilantro)
+target_include_directories(${SHARED_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/submodule-cilantro/include)
 
 # loguru (header-only) ----------------------------------------------------
 download_submodule_project(loguru)
