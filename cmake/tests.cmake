@@ -6,41 +6,48 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
 set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/df_tests/)
 set(TEST_OUT_DIR_BINARY ${TESTS_OUT_DIR}/${CMAKE_BUILD_TYPE})
 
+# ------------------------------------------------------------------------------
+# c++
+# ------------------------------------------------------------------------------
 # add new test suites .cc here
 # FIXME: change the name to SUITE_TEST
-set(UNIT_TESTS df_test_suites)
-add_executable(${UNIT_TESTS}
+set(CPP_UNIT_TESTS df_unit_tests)
+add_executable(${CPP_UNIT_TESTS}
     tests/unit_tests/DFPointCloudTest.cc
     tests/unit_tests/DFLog.cc
-    tests/allTests.cc
+    tests/allCppTests.cc
     )
-set_target_properties(${UNIT_TESTS} PROPERTIES
+set_target_properties(${CPP_UNIT_TESTS} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
     )
-target_link_libraries(${UNIT_TESTS} gtest gtest_main)
-target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
+target_link_libraries(${CPP_UNIT_TESTS} gtest gtest_main)
+target_link_libraries(${CPP_UNIT_TESTS} ${SHARED_LIB_NAME})
 
-add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
-copy_dlls(${TEST_OUT_DIR_BINARY} ${UNIT_TESTS})
+add_test(NAME ${CPP_UNIT_TESTS} COMMAND ${CPP_UNIT_TESTS})
+copy_dlls(${TEST_OUT_DIR_BINARY} ${CPP_UNIT_TESTS})
 
-# check if the tests should be run
+# ------------------------------------------------------------------------------
+# Python
+# ------------------------------------------------------------------------------
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
+set(PYTEST_FILE ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests/test_pybind_units.py)
+add_test(NAME PYBIND_UNIT_TESTS
+         COMMAND ${PYTHON_EXECUTABLE} -m pytest ${PYTEST_FILE}
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+         )
+# here we need to copy the dlls and the pyd file to the pypi directory
 
+# ------------------------------------------------------------------------------
+# Run all tests
+# ------------------------------------------------------------------------------
 # FIXME: the post build has some problems if the tests are failing MSB3073
-# wether or not to run the tests
-set(EXE_TESTS_NAME ${TEST_OUT_DIR_BINARY}/${UNIT_TESTS}.exe)
 if (RUN_TESTS)
-    # message(STATUS "Running tests..")
-    # add_custom_target(run_tests
-    #     COMMAND ${UNIT_TESTS}
-    #     DEPENDS ${UNIT_TESTS}
-    #     )
     add_custom_command(
-                   TARGET ${UNIT_TESTS}
-                   POST_BUILD
-                #    COMMAND ${EXE_TESTS_NAME}
-                #    WORKING_DIRECTORY ${TEST_OUT_DIR_BINARY}
-                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                   COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> -R "^${UNIT_TESTS}$" --output-on-failures
-                   COMMENT "Running ${UNIT_TESTS} after build")
+                    TARGET ${UNIT_TESTS}  #TODO: <== this should be set to the latest test suite
+                    POST_BUILD
+                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --output-on-failures --verbose
+                    COMMENT "Running all tests"
+                 )
 endif()
