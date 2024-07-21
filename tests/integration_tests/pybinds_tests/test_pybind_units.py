@@ -17,6 +17,7 @@ except ImportError as e:
         print(path)
     sys.exit(1)
 
+# FIXME: do real dfbindings unit tests
 def test_addition():
     result = 2 + 1
     assert result == 3, "Expected addition result to be 3"

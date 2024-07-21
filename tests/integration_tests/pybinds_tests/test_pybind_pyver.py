@@ -5,6 +5,8 @@ import sys
 import re
 sys.path.append('./pefile_py3-master')
 
+import pytest
+
 print("python env: v.%s.%s" % (sys.version_info.major, sys.version_info.minor))
 print("pefile lib: v.%s" % pefile.__version__)
 
@@ -35,4 +37,8 @@ if pe.is_dll():
 else:
     print("not a DLL file")
 
-print("pybind DLL python version: %s" % dll_py_ver)
+def test_same_py_ver():
+    assert dll_py_ver == f"{sys.version_info.major}.{sys.version_info.minor}", "Expected DLL to be built for the same Python version as the current environment"
+
+if __name__ == "__main__":
+    pytest.main()
