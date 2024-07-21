@@ -2,10 +2,6 @@
 #include "diffCheck.hh"
 #include "diffCheck/IOManager.hh"
 
-#include <filesystem>
-#include <iostream>
-#include <fstream>
-
 class DFPointCloudTestFixture : public ::testing::Test {
 protected:
     std::vector<Eigen::Vector3d> points;
