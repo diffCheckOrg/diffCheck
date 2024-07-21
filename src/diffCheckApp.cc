@@ -12,54 +12,94 @@ int main()
   auto initTime = std::chrono::high_resolution_clock::now();
 
   std::shared_ptr<diffCheck::geometry::DFPointCloud> pcdSrc = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>> meshSrc = std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>();
+  std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>> meshSrc = std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>>();
   std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>> segments;
   std::vector<std::string> meshPaths;
 
-  std::string meshesFolderPath = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\9\)";
+  std::string meshesFolderPath = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\joints\)";
 
-  for (int i = 1; i <= 7; i++)
+  for (int i = 1; i <= 3; i++)
   {
-    std::string meshPath = meshesFolderPath + std::to_string(i) + ".ply";
-    std::shared_ptr<diffCheck::geometry::DFMesh> mesh = std::make_shared<diffCheck::geometry::DFMesh>();
-    mesh->LoadFromPLY(meshPath);
-    meshSrc.push_back(mesh);
+    std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>> fullJoint;
+    for (int j = 1; j <= 3; j++)
+    {
+      std::string meshPath = meshesFolderPath + std::to_string(i) + "/" + std::to_string(j) + ".ply";
+      std::shared_ptr<diffCheck::geometry::DFMesh> mesh = std::make_shared<diffCheck::geometry::DFMesh>();
+      mesh->LoadFromPLY(meshPath);
+      fullJoint.push_back(mesh);
+    }
+    meshSrc.push_back(fullJoint);
   }
 
-  std::string pathPcdSrc = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\source_pc_2.ply)";
+  std::string pathPcdSrc = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\joints\full_beam.ply)";
 
   pcdSrc->LoadFromPLY(pathPcdSrc);
 
   pcdSrc->EstimateNormals(false, 100);
-  pcdSrc->VoxelDownsample(0.01);
+  pcdSrc->VoxelDownsample(0.007);
   auto intermediateTime = std::chrono::high_resolution_clock::now();
   segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(
     pcdSrc,
-    6.0f,
-    25,
+    15.0f,
+    15,
     true,
-    20,
+    50,
     0.5f,
     false);
   std::cout << "number of segments:" << segments.size()<< std::endl;
 
-  std::shared_ptr<diffCheck::geometry::DFPointCloud> unifiedSegments = 
-    diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes(
-      meshSrc, 
+  std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>> unifiedSegments;
+  for (int i = 0; i < meshSrc.size(); i++)
+  {
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> unifiedSegment = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    unifiedSegment = diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes(
+      meshSrc[i], 
       segments, 
-      .1, 
-      .9);
-  
-  std::cout << "Association done. refinement in progress" << std::endl;
+      .2, 
+      .05);
+    unifiedSegments.push_back(unifiedSegment);
+  }
 
   diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters(segments, 
-    std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>>{unifiedSegments}, 
-    std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>>{meshSrc},
-    .1, 
-    .9);
-  
-  std::cout << "number of points in unified segments:" << unifiedSegments->Points.size() << std::endl;
-  
+    unifiedSegments, 
+    meshSrc,
+    .2, 
+    .05);
+
+  // Perform a registration per joint
+  for (int i = 0; i < meshSrc.size(); i++)
+  {
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> referencePointCloud = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    for (auto jointFace : meshSrc[i])
+    {
+      std::shared_ptr<diffCheck::geometry::DFPointCloud> facePointCloud = jointFace->SampleCloudUniform(1000);
+      referencePointCloud->Points.insert(referencePointCloud->Points.end(), facePointCloud->Points.begin(), facePointCloud->Points.end());
+    }
+    referencePointCloud->EstimateNormals(false, 100);
+
+    diffCheck::transformation::DFTransformation transformation = diffCheck::registrations::DFRefinedRegistration::O3DICP(
+      unifiedSegments[i],
+      referencePointCloud);
+
+    std::cout << "Transformation matrix:" << std::endl;
+    std::cout << transformation.TransformationMatrix << std::endl;
+
+    diffCheck::visualizer::Visualizer deVisu = diffCheck::visualizer::Visualizer("DiffCheckApp", 1000, 800, 50, 50, false, true, false);
+    for (int i = 0; i < segments.size(); i++)
+    {
+      segments[i]->ApplyTransformation(transformation);
+      deVisu.AddPointCloud(segments[i]);
+    }
+    for (auto joint : meshSrc)
+    {
+      for (auto face : joint)
+      {
+        deVisu.AddMesh(face);
+      }
+    }
+    deVisu.Run();
+  }
+    
   diffCheck::visualizer::Visualizer vis(std::string("DiffCheckApp"), 1000, 800, 50, 50, false, true, false);
   for (auto segment : segments)
   {
@@ -74,18 +114,25 @@ int main()
       segment->Colors.push_back(Eigen::Vector3d(0, 0, 0));
     }
   vis.AddPointCloud(segment);
-
   }
-  for(auto mesh : meshSrc)
+  for(auto joint : meshSrc)
   {
-    //vis.AddMesh(mesh);
+    for(auto mesh : joint){vis.AddMesh(mesh);}
   }
 
-  for (int i = 0; i < unifiedSegments->Points.size(); i++)
+  int numSegments = unifiedSegments.size();
+
+  for (int i = 0; i < numSegments; i++)
   {
-    unifiedSegments->Colors.push_back(Eigen::Vector3d(0, 0, 1));
+    for (int j = 0; j < unifiedSegments[i]->Points.size(); j++)
+    {
+      unifiedSegments[i]->Colors.push_back(Eigen::Vector3d((double(numSegments) - double(i))/double(numSegments), 1, double(i) / double(numSegments)));
+    }
   }
-  vis.AddPointCloud(unifiedSegments);
+  for (auto seg : unifiedSegments)
+  {
+    vis.AddPointCloud(seg);
+  }
 
   auto endTime = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - initTime);
@@ -94,7 +141,6 @@ int main()
   std::cout << "Segmentation time:" << segmentationTime.count() << std::endl;
 
   vis.Run();
-
 
   return 0;
 }
