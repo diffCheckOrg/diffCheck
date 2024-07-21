@@ -26,4 +26,6 @@ class DFTester(component):
         else:
             ghenv.Component.AddRuntimeMessage(RML.Remark, "Bindings imported.")
 
+        print(f"diffCheck test: {diffCheck.df_cvt_bindings.test_bindings()}")
+
         return is_binding_imported

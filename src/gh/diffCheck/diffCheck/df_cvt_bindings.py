@@ -11,6 +11,13 @@ import numpy as np
 
 from diffCheck import diffcheck_bindings
 
+def test_bindings() -> bool:
+    """
+        Test the bindings import.
+
+        :return is_imported: True if the bindings are imported, False otherwise
+    """
+    return False
 
 def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCloud:
     """
@@ -20,6 +27,7 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
 
         :return df_cloud: diffCheck cloud
     """
+    
     if not isinstance(rh_cloud, rg.PointCloud):
         raise ValueError("rh_cloud for convertion should be a PointCloud")
 

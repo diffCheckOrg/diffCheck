@@ -163,23 +163,6 @@ endif()
 #--------------------------------------------------------------------------
 # Tests
 #--------------------------------------------------------------------------
-include(CTest)
-enable_testing()
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/googletest)
-set(TESTS_OUT_DIR ${CMAKE_BINARY_DIR}/df_tests/)
-set(TEST_OUT_DIR_BINARY ${TESTS_OUT_DIR}/${CMAKE_BUILD_TYPE})
-
-# add new test suites .cc here
-set(UNIT_TESTS df_test_suites)
-add_executable(${UNIT_TESTS}
-    tests/unit_tests/DFPointCloudTest.cc
-    tests/entryTest.cc
-    )
-set_target_properties(${UNIT_TESTS} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${TESTS_OUT_DIR}
-    )
-target_link_libraries(${UNIT_TESTS} gtest gtest_main)
-target_link_libraries(${UNIT_TESTS} ${SHARED_LIB_NAME})
-
-add_test(NAME ${UNIT_TESTS} COMMAND ${UNIT_TESTS})
-copy_dlls(${TEST_OUT_DIR_BINARY} ${UNIT_TESTS})
+if(BUILD_TESTS)
+    include(tests)
+endif()

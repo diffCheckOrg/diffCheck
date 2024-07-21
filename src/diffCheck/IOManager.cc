@@ -2,6 +2,11 @@
 
 #include <open3d/Open3D.h>
 
+#include "diffCheck/log.hh"
+
+#include <filesystem>
+#include <iostream>
+#include <fstream>
 
 namespace diffCheck::io
 {
@@ -20,5 +25,19 @@ namespace diffCheck::io
         mesh->Cvt2DFMesh(open3dMesh);
 
         return mesh;
+    }
+
+    std::string GetTestDataDir()
+    {
+        std::filesystem::path path = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
+        std::filesystem::path pathTestData = path / "tests" / "test_data";
+        return pathTestData.string();
+    }
+
+    std::string GetRoofQuarterPlyPath()
+    {
+        std::filesystem::path pathTestData = GetTestDataDir();
+        std::filesystem::path pathCloud = pathTestData / "roof_quarter.ply";
+        return pathCloud.string();
     }
 } // namespace diffCheck::io

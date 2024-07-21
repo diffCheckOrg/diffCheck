@@ -7,3 +7,7 @@ option(SILENT_LOGGING "Do not log messages in the terminal if on." OFF)
 
 # To build the python bindings
 option(BUILD_PYTHON_MODULE "Build the python bindings" ON)
+
+# Build/Run tests
+option(BUILD_TESTS "Build test suites" ON)
+option(RUN_TESTS "Run test suites" ON)
