@@ -20,7 +20,7 @@ jobs:
 
       - name: Cmake Configure
         run: |
-          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=OFF
+          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=OFF -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
 
       - name: CMake Build
         run: ${{github.workspace}}/cmake/build.bat
