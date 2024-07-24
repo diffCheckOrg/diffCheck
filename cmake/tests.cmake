@@ -55,7 +55,7 @@ if (RUN_TESTS)
     add_custom_command(
                     TARGET ${CPP_UNIT_TESTS} POST_BUILD  #TODO: <== this should be set to the latest test suite
                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --output-on-failures --verbose
+                    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --verbose
                     COMMENT "Running all tests"
                 )
 endif()
