@@ -157,12 +157,12 @@ if (BUILD_PYTHON_MODULE)
         ${PYPI_DIR}
         )
     copy_dlls(${TARGET_DLL_PYPI_DIR} ${PYBINDMODULE_NAME})
+endif()
 
 #--------------------------------------------------------------------------
 # Tests
 #--------------------------------------------------------------------------
-    if(BUILD_TESTS)
-        include(tests)
-    endif()
+if(BUILD_TESTS)
+    include(tests)
 endif()
 
