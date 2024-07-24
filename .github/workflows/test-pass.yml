@@ -28,11 +28,14 @@ jobs:
         run: conda env create -f environment.yml
       
       - name: Activate diff_check conda environment
-        run: conda activate diff_check
+        run: conda activate diff_check | "name:diff_check" >> $GITHUB_ENV
+
+      - name: Verify Python version
+        run: conda run --name diff_check python --version
 
       - name: Cmake Configure
         run: |
-          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=ON
+          conda run --name diff_check cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=ON
 
       - name: CMake Build
-        run: ${{github.workspace}}/cmake/build.bat
+        run: conda run --name diff_check ${{github.workspace}}/cmake/build.bat
