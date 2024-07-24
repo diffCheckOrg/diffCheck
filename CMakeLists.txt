@@ -196,7 +196,7 @@ if(BUILD_TESTS)
 
     # copying pyd and dlls
     set(TARGET_PYBIND_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests)
-    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+    add_custom_command(TARGET ${CPP_UNIT_TESTS} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:${PYBINDMODULE_NAME}>
             ${TARGET_PYBIND_TESTS_DIR}
