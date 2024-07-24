@@ -129,7 +129,7 @@ target_include_directories(${APP_NAME_EXE}
 # pybind11
 #--------------------------------------------------------------------------
 if (BUILD_PYTHON_MODULE)
-    set(PYBINDMODULE_NAME diffcheck_bindings)
+    set(PYBINDMODULE_NAME diffcheck_bindings CACHE STRING "Name of the python module")
     set(PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck)
     set(TARGET_DLL_PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck/dlls)
 
@@ -147,7 +147,7 @@ if (BUILD_PYTHON_MODULE)
 
     pybind11_add_module(${PYBINDMODULE_NAME} src/diffCheckBindings.cc)
 
-    target_link_libraries(${PYBINDMODULE_NAME} PRIVATE ${SHARED_LIB_NAME})
+    target_link_libraries(${PYBINDMODULE_NAME} PUBLIC ${SHARED_LIB_NAME})
     target_include_directories(${PYBINDMODULE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
     # copy the pyd file to the pypi directory
