@@ -4,8 +4,7 @@ import sys
 
 
 # Import the C++ bindings
-PATH_TO_DLL = "dlls"
-extra_dll_dir = os.path.join(os.path.dirname(__file__), PATH_TO_DLL)
+extra_dll_dir = os.path.join(os.path.dirname(__file__), "./")
 os.add_dll_directory(extra_dll_dir)  # For finding DLL dependencies on Windows
 sys.path.append(extra_dll_dir)  # Add this directory to the Python path
 try:

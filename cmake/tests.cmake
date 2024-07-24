@@ -39,12 +39,12 @@ add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
         )
 copy_dlls(${TARGET_PYBIND_TESTS_DIR} ${PYBINDMODULE_NAME})
 
-add_test(NAME PYBIND_UNIT_TEST
-         COMMAND ${PYTHON_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests/test_pybind_units.py
-         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-         )
 add_test(NAME PYBIND_PYVER_TEST
          COMMAND ${PYTHON_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests/test_pybind_pyver.py
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+         )
+add_test(NAME PYBIND_UNIT_TEST
+         COMMAND ${PYTHON_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests/test_pybind_units.py
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
          )
 
