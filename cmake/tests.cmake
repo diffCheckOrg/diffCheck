@@ -36,7 +36,7 @@ add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
         $<TARGET_FILE:${PYBINDMODULE_NAME}>
         ${TARGET_PYBIND_TESTS_DIR}
         )
-copy_dlls(${TARGET_PYBIND_TESTS_DIR} ${CPP_UNIT_TESTS})
+copy_dlls(${TARGET_PYBIND_TESTS_DIR} ${PYBINDMODULE_NAME})
 
 add_test(NAME PYBIND_PYVER_TEST
         COMMAND ${PYTHON_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests/test_pybind_pyver.py
