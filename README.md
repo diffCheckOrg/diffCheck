@@ -3,6 +3,7 @@
 </p>
 <p align="center">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/cpp-build.yml/badge.svg">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/test-pass.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/pypi-build.yml/badge.svg">
     <img href="https://pypi.org/project/diffCheck/" src="https://img.shields.io/pypi/v/diffCheck">

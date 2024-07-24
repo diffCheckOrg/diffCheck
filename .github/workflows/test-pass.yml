@@ -1,0 +1,26 @@
+name: "test-pass"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+
+env:
+  BUILD_TYPE: Release
+  VCPKG_FILE: c:/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cmake Configure
+        run: |
+          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=OFF -DBUILD_TESTS=ON -DRUN_TESTS=ON
+
+      - name: CMake Build
+        run: ${{github.workspace}}/cmake/build.bat
