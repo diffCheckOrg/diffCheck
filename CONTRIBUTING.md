@@ -319,7 +319,7 @@ dfVisualizerPtr->Run();
 ```
 
 
-### CTesting (TO BE UPDATED)
+### Test suite
 Tests in df are all `.cc` files added to the `tests` source files, all the data needs to be contained in `tests/test_data`. Finally add your `.cc` files in the cmake:
 
 https://github.com/diffCheckOrg/diffCheck/blob/efb10e0b5685a1ef1537d0309388f642075d3244/CMakeLists.txt#L170-L173
