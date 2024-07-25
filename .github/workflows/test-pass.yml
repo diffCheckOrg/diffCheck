@@ -35,7 +35,18 @@ jobs:
 
       - name: Cmake Configure
         run: |
-          conda run --name diff_check cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=ON
+          conda run --name diff_check cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=OFF
 
       - name: CMake Build
         run: conda run --name diff_check cmake --build build --config Release
+
+      - name: Copying the dlls
+        run: |
+          cp build/bin/Release/diffCheck.dll tests/integration_tests/pybinds_tests
+          cp build/bin/Release/Open3D.dll tests/integration_tests/pybinds_tests
+          cp build/Release/*.pyd tests/integration_tests/pybinds_tests
+
+      - name: Run tests with cmake
+        run: |
+          cd build/
+          ctest -C Release --verbose
