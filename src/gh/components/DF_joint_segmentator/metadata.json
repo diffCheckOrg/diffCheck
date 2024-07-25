@@ -18,7 +18,7 @@
                 "nickname": "i_recompute",
                 "description": "Connect a button to recompute the registration.",
                 "optional": true,
-                "allowTreeAccess": true,
+                "allowListAccess": false,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
@@ -26,35 +26,63 @@
                 "typeHintID": "bool"
             },
             {
-                "name": "i_cloud_source",
-                "nickname": "i_cloud_source",
-                "description": "The source point cloud.",
-                "optional": true,
-                "allowTreeAccess": true,
+                "name": "i_clusters",
+                "nickname": "i_clusters",
+                "description": "The cluster point clouds from normal segmentation.",
+                "optional": false,
+                "allowTreeAccess": false,
                 "showTypeHints": true,
-                "scriptParamAccess": "item",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_joints",
+                "name": "i_joint_faces",
                 "nickname": "i_joints",
                 "description": "The joints to extract and analyze",
-                "optional": true,
-                "allowTreeAccess": true,
+                "optional": false,
+                "allowTreeAccess": false,
                 "showTypeHints": true,
-                "scriptParamAccess": "item",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "mesh"
+            },
+            {
+                "name": "i_joint_ids",
+                "nickname": "i_joint_ids",
+                "description": "The joint ids of the assembly",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
             }
         ],
         "outputParameters": [
             {
-                "name": "o_joints",
-                "nickname": "o_joints",
+                "name": "o_joint_segments",
+                "nickname": "o_joint_segments",
                 "description": "The extracted joints.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_transforms",
+                "nickname": "o_transforms",
+                "description": "The transformations for each joint.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_reference_point_clouds",
+                "nickname": "o_reference_point_clouds",
+                "description": "The reference point clouds of the joints. They are generated from the ",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
