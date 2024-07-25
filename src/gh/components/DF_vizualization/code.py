@@ -17,8 +17,8 @@ from diffCheck import df_vizualization
 
 class Vizualization(component):
     def RunScript(self,
-        i_results,
-        i_viz_settings):
+                  i_results,
+                  i_viz_settings):
         """
         Adds color to the mesh or point cloud and generates a corresponding legend and histogram
         """
@@ -32,20 +32,30 @@ class Vizualization(component):
             o_source = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(src) for src in i_results.source]
 
             # color geometry
-            o_colored_geo = [df_vizualization.color_pcd(src, dist, min_value, max_value, i_viz_settings) for src, dist in zip(o_source, values)]
-
+            o_colored_geo = [df_vizualization.color_pcd(src, dist, min_value, max_value, i_viz_settings.palette) for src, dist in zip(o_source, values)]
 
         elif type(i_results.source[0]) is rg.Mesh:
             # convert to Rhino Mesh
             o_source = i_results.source
 
             # color geometry
-            o_colored_geo = [df_vizualization.color_mesh(src, dist, min_value, max_value, i_viz_settings) for src, dist in zip(o_source, values)]
+            o_colored_geo = [df_vizualization.color_mesh(src, dist, min_value, max_value, i_viz_settings.palette) for src, dist in zip(o_source, values)]
 
-        o_legend = df_vizualization.create_legend(min_value, max_value, i_viz_settings)
+        o_legend = df_vizualization.create_legend(min_value,
+                                                  max_value,
+                                                  i_viz_settings.palette,
+                                                  steps=10,
+                                                  plane=i_viz_settings.legend_plane,
+                                                  width=i_viz_settings.legend_width,
+                                                  total_height=i_viz_settings.legend_height)
 
-        o_histogram = df_vizualization.create_histogram(values, min_value, max_value)
-
+        o_histogram = df_vizualization.create_histogram(values,
+                                                        min_value,
+                                                        max_value,
+                                                        steps=100,
+                                                        plane=i_viz_settings.legend_plane,
+                                                        total_height=i_viz_settings.legend_height,
+                                                        scaling_factor=i_viz_settings.histogram_scale_factor)
         return o_source, o_colored_geo, o_legend, o_histogram
 
 

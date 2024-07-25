@@ -26,9 +26,17 @@ class VisualizationSettings(component):
         i_legend_width,
         i_legend_plane,
         i_histogram_scale_factor):
+
         """
-            sth
+        Compiles all the vizualization settings to feed to the vizualization component
         """
+
+        # set default values
+        if i_palette is None: i_palette = "Jet"
+        if i_legend_height is None: i_legend_height = 10
+        if i_legend_width is None: i_legend_width = 0.5
+        if i_legend_plane is None: i_legend_plane = rg.Plane.WorldXY
+        if i_histogram_scale_factor is None: i_histogram_scale_factor = 0.01
 
         # pack settings
         o_viz_settings = df_vizualization.DFVizSettings(i_value_type, 

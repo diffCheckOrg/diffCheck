@@ -77,7 +77,7 @@ def interpolate_color(color1, color2, t):
     return Color.FromArgb(r, g, b)
 
 
-def value_to_color(value, min_value, max_value, settings):
+def value_to_color(value, min_value, max_value, palette):
     """
     Map a value to a color based on a colormap.
     """
@@ -87,7 +87,7 @@ def value_to_color(value, min_value, max_value, settings):
     elif value > max_value:
         value = max_value
 
-    colormap = settings.palette.colors
+    colormap = palette.colors
 
     # Normalize the value within the range
     if min_value == max_value:
@@ -109,7 +109,7 @@ def value_to_color(value, min_value, max_value, settings):
     return interpolate_color(color1, color2, t)
 
 
-def color_pcd(pcd, values, min_value, max_value, settings):
+def color_pcd(pcd, values, min_value, max_value, palette):
     """
     Colors a point cloud data based on given values and palette.
     """
@@ -117,16 +117,16 @@ def color_pcd(pcd, values, min_value, max_value, settings):
     for i, p in enumerate(pcd):
         # check if values is a list
         if isinstance(values, list):
-            mapped_color = value_to_color(values[i], min_value, max_value, settings)
+            mapped_color = value_to_color(values[i], min_value, max_value, palette)
         else:
-            mapped_color = value_to_color(values, min_value, max_value, settings)
+            mapped_color = value_to_color(values, min_value, max_value, palette)
 
         p.Color = mapped_color
 
     return pcd
 
 
-def color_mesh(mesh, values, min_value, max_value, settings):
+def color_mesh(mesh, values, min_value, max_value, palette):
     """
     Colors a mesh based on given values and palette.
     """
@@ -136,15 +136,15 @@ def color_mesh(mesh, values, min_value, max_value, settings):
     for i, vertex in enumerate(mesh.Vertices):
         # check if values is a list
         if isinstance(values, list):
-            mapped_color = value_to_color(values[i], min_value, max_value, settings)
+            mapped_color = value_to_color(values[i], min_value, max_value, palette)
         else:
-            mapped_color = value_to_color(values, min_value, max_value, settings)
+            mapped_color = value_to_color(values, min_value, max_value, palette)
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
 
     return mesh
 
 
-def create_legend(min_value, max_value, settings, steps=10, plane = rg.Plane.WorldXY,
+def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldXY,
                   width=0.5, total_height=10, spacing=0):
     """
     Create a legend in Rhino with colored hatches and text labels.
@@ -157,7 +157,7 @@ def create_legend(min_value, max_value, settings, steps=10, plane = rg.Plane.Wor
     for i in range(steps+1):
 
         value = min_value + (max_value - min_value) * i / steps
-        color = value_to_color(value, min_value, max_value, settings)
+        color = value_to_color(value, min_value, max_value, palette)
 
         if i > 0:
             mesh = rg.Mesh()
@@ -193,17 +193,19 @@ def create_legend(min_value, max_value, settings, steps=10, plane = rg.Plane.Wor
         previous_color = color
 
     if plane != rg.Plane.WorldXY:
-        trans = rg.Transform.PlaneToPlane(rg.Plane.WorldXY,plane)
+        trans = rg.Transform.PlaneToPlane(rg.Plane.WorldXY, plane)
         for geo in legend_geometry:
             geo.Transform(trans)
 
     return legend_geometry
 
 
-def create_histogram(values, min_value, max_value, steps=100, plane=rg.Plane.WorldXY, height=0.1, spacing=0):
+def create_histogram(values, min_value, max_value, steps=100, plane=rg.Plane.WorldXY, total_height=10, scaling_factor = 0.01, spacing=0):
     """
     Create a histogram in Rhino with a polyline representing value frequencies.
     """
+
+    height = total_height/steps
 
     histogram_geometry = []
 
@@ -231,7 +233,7 @@ def create_histogram(values, min_value, max_value, steps=100, plane=rg.Plane.Wor
     points = []
     for i in range(steps+1):
 
-        bar_height = frequencies[i] * 0.01 * height
+        bar_height = frequencies[i] * scaling_factor
         points.append(rg.Point3d(- bar_height - (1.5 * height), i * (spacing + height), 0))
 
     # Create the polyline and add it to the histogram geometry
@@ -276,7 +278,6 @@ def filter_values_based_on_valuetype(results, settings):
         values = results.distances_sd_deviation
         min_value = min(values)
         max_value = max(values)
-
 
     # threshold values
     if settings.lower_threshold is not None:
