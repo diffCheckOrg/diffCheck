@@ -14,10 +14,10 @@ except ImportError as e:
     print("Current sys.path directories:")
     for path in sys.path:
         print(path)
-    sys.exit(1)
     print("Current files in the directory:")
     for file in os.listdir(extra_dll_dir):
         print(file)
+    sys.exit(1)
 
 def test_dfb_test_simple():
     assert dfb.dfb_test.test() == True, "The test function should return True"
