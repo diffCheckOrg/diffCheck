@@ -77,7 +77,7 @@ def rhino_mesh_2_cloud_distance(source, target, signed=False):
     distances = np.asarray(df_pcd_from_mesh_vertices.compute_distance(target))
 
     if signed:
-        for p in target.points:
+        for idx, p in enumerate(source.Vertices):
 
             rhp = rg.Point3d(p[0], p[1], p[2])
             closest_meshPoint = source.ClosestMeshPoint(rhp, 1000)
@@ -89,7 +89,7 @@ def rhino_mesh_2_cloud_distance(source, target, signed=False):
             normal = source.NormalAt(closest_meshPoint)
             dot_product = direction * normal
             if dot_product < 0:
-                distance = - distance
+                distances[idx] = - distance
 
     return np.asarray(distances)
 

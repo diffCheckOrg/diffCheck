@@ -21,13 +21,24 @@ class VisualizationSettings(component):
         i_value_type,
         i_upper_threshold,
         i_lower_threshold,
-        i_palette):
+        i_palette,
+        i_legend_height,
+        i_legend_width,
+        i_legend_plane,
+        i_histogram_scale_factor):
         """
             sth
         """
 
         # pack settings
-        o_viz_settings = df_vizualization.DFVizSettings(i_value_type, i_upper_threshold, i_lower_threshold, i_palette)
+        o_viz_settings = df_vizualization.DFVizSettings(i_value_type, 
+                                                        i_upper_threshold, 
+                                                        i_lower_threshold, 
+                                                        i_palette, 
+                                                        i_legend_height, 
+                                                        i_legend_width, 
+                                                        i_legend_plane, 
+                                                        i_histogram_scale_factor)
 
         return o_viz_settings
 
@@ -37,5 +48,9 @@ if __name__ == "__main__":
         i_value_type,
         i_upper_threshold,
         i_lower_threshold,
-        i_palette
+        i_palette,
+        i_legend_height,
+        i_legend_width,
+        i_legend_plane,
+        i_histogram_scale_factor
         )

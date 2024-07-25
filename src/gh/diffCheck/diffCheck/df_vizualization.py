@@ -12,18 +12,23 @@ class DFVizSettings:
     This class compiles the settings for the vizualization into one object
     """
 
-    def __init__(self, valueType, upper_threshold, lower_threshold, palette):
+    def __init__(self, valueType, upper_threshold, lower_threshold, palette, legend_height, legend_width, legend_plane, histogram_scale_factor):
 
         self.valueType = valueType
 
         self.upper_threshold = upper_threshold
         self.lower_threshold = lower_threshold
         self.palette = df_vizualization.DFColorMap(palette)
+        self.legend_height = legend_height
+        self.legend_width = legend_width
+        self.legend_plane = legend_plane
+        self.histogram_scale_factor = histogram_scale_factor
 
 
 class DFColorMap:
     """
-    This class compiles the settings for the vizualization into one object
+    This class defines different colormaps for visualization purposes
+    It allows selection of a colormap by name and initializes the corresponding color values.
     """
 
     def __init__(self, name):
@@ -62,7 +67,9 @@ class DFColorMap:
             ]
 
 def interpolate_color(color1, color2, t):
-    """Interpolate between two colors."""
+    """
+    Interpolate between two colors.
+    """
 
     r = int(color1.R + (color2.R - color1.R) * t)
     g = int(color1.G + (color2.G - color1.G) * t)
@@ -71,14 +78,15 @@ def interpolate_color(color1, color2, t):
 
 
 def value_to_color(value, min_value, max_value, settings):
-    """Map a value to a color based on a spectral colormap."""
+    """
+    Map a value to a color based on a colormap.
+    """
 
     if value < min_value:
         value = min_value
     elif value > max_value:
         value = max_value
 
-    # Define the spectral colormap (simplified)
     colormap = settings.palette.colors
 
     # Normalize the value within the range
@@ -88,7 +96,7 @@ def value_to_color(value, min_value, max_value, settings):
         t = (value - min_value) / (max_value - min_value)
 
     # Determine the segment in the colormap
-    n = len(colormap)-1
+    n = len(colormap)- 1
     idx = int(t * n)
     if idx >= n:
         idx = n - 1
@@ -102,45 +110,47 @@ def value_to_color(value, min_value, max_value, settings):
 
 
 def color_pcd(pcd, values, min_value, max_value, settings):
+    """
+    Colors a point cloud data based on given values and palette.
+    """
 
     for i, p in enumerate(pcd):
-        if len(values) > 1:
+        # check if values is a list
+        if isinstance(values, list):
             mapped_color = value_to_color(values[i], min_value, max_value, settings)
         else:
-            mapped_color = value_to_color(values[0], min_value, max_value, settings)
+            mapped_color = value_to_color(values, min_value, max_value, settings)
 
         p.Color = mapped_color
+
     return pcd
 
 
 def color_mesh(mesh, values, min_value, max_value, settings):
+    """
+    Colors a mesh based on given values and palette.
+    """
+
     mesh.VertexColors.Clear()
+    
     for i, vertex in enumerate(mesh.Vertices):
-        # check the settings.
-        if len(values) > 1:
+        # check if values is a list
+        if isinstance(values, list):
             mapped_color = value_to_color(values[i], min_value, max_value, settings)
         else:
-            mapped_color = value_to_color(values[i], min_value, max_value, settings)
+            mapped_color = value_to_color(values, min_value, max_value, settings)
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
 
     return mesh
 
 
-def create_legend(min_value, max_value, settings, steps=10, base_point=rg.Point3d(0, 0, 0),
-                  width=0.5, height=1, spacing=0):
+def create_legend(min_value, max_value, settings, steps=10, plane = rg.Plane.WorldXY,
+                  width=0.5, total_height=10, spacing=0):
     """
     Create a legend in Rhino with colored hatches and text labels.
-
-    Parameters:
-    min_value (float): Minimum value for the legend.
-    max_value (float): Maximum value for the legend.
-    steps (int): Number of steps in the legend.
-    base_point (rg.Point3d): The base point where the legend starts.
-    width (float): Width of each rectangle.
-    height (float): Height of each rectangle.
-    spacing (float): Spacing between rectangles.
     """
-    x, y, z = base_point.X, base_point.Y, base_point.Z
+
+    height = total_height/steps
 
     legend_geometry = []
 
@@ -166,7 +176,7 @@ def create_legend(min_value, max_value, settings, steps=10, base_point=rg.Point3
             legend_geometry.append(mesh)
             legend_geometry.append(polyline.ToPolylineCurve())
 
-        text_pt = rg.Point3d(x + 1.25 * width + spacing, y + i * (height + spacing) + height / 10, z)
+        text_pt = rg.Point3d(1.25 * width + spacing, i * (height + spacing) + height / 10, 0)
         text_entity = rg.TextEntity()
         text_entity.Plane = rg.Plane(text_pt, rg.Vector3d.ZAxis)
         text_entity.Text = f"{value:.2f}"
@@ -174,30 +184,27 @@ def create_legend(min_value, max_value, settings, steps=10, base_point=rg.Point3
         legend_geometry.append(text_entity)
 
         rect_pts = [
-            rg.Point3d(x, y + i * (height + spacing), z),
-            rg.Point3d(x + width, y + i * (height + spacing), z),
-            rg.Point3d(x + width, y + (i + 1) * height + i * spacing, z),
-            rg.Point3d(x, y + (i + 1) * height + i * spacing, z),
+            rg.Point3d(0, i * (height + spacing), 0),
+            rg.Point3d(0 + width, i * (height + spacing), 0),
+            rg.Point3d(0 + width, (i + 1) * height + i * spacing, 0),
+            rg.Point3d(0, (i + 1) * height + i * spacing, 0),
         ]
 
         previous_color = color
 
+    if plane != rg.Plane.WorldXY:
+        trans = rg.Transform.PlaneToPlane(rg.Plane.WorldXY,plane)
+        for geo in legend_geometry:
+            geo.Transform(trans)
+
     return legend_geometry
 
 
-def create_histogram(values, min_value, max_value, steps=100, base_point=rg.Point3d(0, 0, 0), height=0.1, spacing=0):
+def create_histogram(values, min_value, max_value, steps=100, plane=rg.Plane.WorldXY, height=0.1, spacing=0):
     """
     Create a histogram in Rhino with a polyline representing value frequencies.
-
-    Parameters:
-    values (list of float): List of values to calculate the histogram.
-    min_value (float): Minimum value for the histogram.
-    max_value (float): Maximum value for the histogram.
-    steps (int): Number of steps in the histogram.
-    base_point (rg.Point3d): The base point where the histogram starts.
-    height (float): Height of each bin in the histogram.
-    spacing (float): Spacing between bins.
     """
+
     histogram_geometry = []
 
     # Calculate the size of each bin
@@ -205,6 +212,10 @@ def create_histogram(values, min_value, max_value, steps=100, base_point=rg.Poin
 
     # Initialize the frequency counts for each bin
     frequencies = [0] * (steps + 1)
+
+    # if values is nested list, flatten it
+    if isinstance(values[0], list):
+        values = [item for sublist in values for item in sublist]
 
     # Count the frequencies of values in each bin
     for value in values:
@@ -216,17 +227,61 @@ def create_histogram(values, min_value, max_value, steps=100, base_point=rg.Poin
         bin_index = int(bin_index)
         frequencies[bin_index] += 1
 
-    x, y, z = base_point.X, base_point.Y, base_point.Z
-
     # Create points for the polyline representing the histogram
     points = []
     for i in range(steps+1):
 
         bar_height = frequencies[i] * 0.01 * height
-        points.append(rg.Point3d(x - bar_height - 0.15 , y + i * (spacing + height), z))
+        points.append(rg.Point3d(- bar_height - (1.5 * height), i * (spacing + height), 0))
 
     # Create the polyline and add it to the histogram geometry
     polyline = rg.Curve.CreateInterpolatedCurve(points, 1)
     histogram_geometry.append(polyline)
 
+    if plane != rg.Plane.WorldXY:
+        trans = rg.Transform.PlaneToPlane(rg.Plane.WorldXY, plane)
+        for geo in histogram_geometry:
+            geo.Transform(trans)
+
     return histogram_geometry
+
+
+def filter_values_based_on_valuetype(results, settings):
+
+    if settings.valueType == "Dist":
+
+        min_value = min(min(sublist) for sublist in results.distances)
+        max_value = max(max(sublist) for sublist in results.distances)
+        values = results.distances
+
+    elif settings.valueType == "MSE":
+
+        values = results.distances_mse
+        min_value = min(values)
+        max_value = max(values)
+        
+    elif settings.valueType == "MAX":
+
+        values = results.distances_max_deviation
+        min_value = min(values)
+        max_value = max(values)
+
+    elif settings.valueType == "MIN":
+        values = results.distances_min_deviation
+        min_value = min(values)
+        max_value = max(values)
+
+    elif settings.valueType == "STD":
+
+        values = results.distances_sd_deviation
+        min_value = min(values)
+        max_value = max(values)
+
+
+    # threshold values
+    if settings.lower_threshold is not None:
+        min_value = settings.lower_threshold
+    if settings.upper_threshold is not None:
+        max_value = settings.upper_threshold
+
+    return values, min_value, max_value

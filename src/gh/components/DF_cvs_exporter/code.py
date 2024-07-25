@@ -33,8 +33,6 @@ class CsvExporter(component):
             # Define the CSV file path
             file_path = os.path.join(i_export_dir, 'exported_values.csv')
 
-            print(file_path)
-
             # Write the values to the CSV file
             with open(file_path, mode='w', newline='') as file:
                 writer = csv.writer(file)
