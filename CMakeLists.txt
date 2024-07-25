@@ -7,6 +7,11 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(external_tools)
 include(options)
 
+# disabling warnings
+if (MSVC)
+    add_compile_options(/wd4003)
+endif()
+
 # check that the -DCMAKE_BUILD_TYPE is set
 if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "Setting build type to 'Release' as none was specified.")
