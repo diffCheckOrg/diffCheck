@@ -38,4 +38,4 @@ jobs:
           conda run --name diff_check cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=ON
 
       - name: CMake Build
-        run: conda run --name diff_check ${{github.workspace}}/cmake/build.bat
+        run: conda run --name diff_check cmake --build build --config Release
