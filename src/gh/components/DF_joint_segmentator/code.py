@@ -45,7 +45,6 @@ def main(i_clusters, i_joints, i_joint_ids):
 
         for face in joint:
             face_cloud = face.sample_points_uniformly(1000)
-            face_cloud.estimate_normals(knn=30)
             joint_cloud.add_points(face_cloud)
 
         joint_clouds.append(df_cvt.cvt_dfcloud_2_rhcloud(joint_cloud))
