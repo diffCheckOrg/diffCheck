@@ -29,8 +29,6 @@ jobs:
       
       - name: Activate diff_check conda environment
         run: conda activate diff_check
-      - name: Set up environment variable
-        run: echo "name: diff_check" >> $GITHUB_ENV
 
       - name: Verify Python version
         run: conda run --name diff_check python --version
