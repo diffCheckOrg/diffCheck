@@ -20,7 +20,8 @@ class Vizualization(component):
                   i_results,
                   i_viz_settings):
         """
-        Adds color to the mesh or point cloud and generates a corresponding legend and histogram
+        Adds color to the mesh or point cloud
+        and generates a corresponding legend and histogram
         """
 
         values, min_value, max_value = df_vizualization.filter_values_based_on_valuetype(i_results, i_viz_settings)

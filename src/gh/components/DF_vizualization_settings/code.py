@@ -10,11 +10,7 @@ from ghpythonlib.componentbase import executingcomponent as component
 import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
-import diffCheck
 from diffCheck import df_vizualization
-
-import diffCheck.df_util
-
 
 class VisualizationSettings(component):
     def RunScript(self,
@@ -39,13 +35,13 @@ class VisualizationSettings(component):
         if i_histogram_scale_factor is None: i_histogram_scale_factor = 0.01
 
         # pack settings
-        o_viz_settings = df_vizualization.DFVizSettings(i_value_type, 
-                                                        i_upper_threshold, 
-                                                        i_lower_threshold, 
-                                                        i_palette, 
-                                                        i_legend_height, 
-                                                        i_legend_width, 
-                                                        i_legend_plane, 
+        o_viz_settings = df_vizualization.DFVizSettings(i_value_type,
+                                                        i_upper_threshold,
+                                                        i_lower_threshold,
+                                                        i_palette,
+                                                        i_legend_height,
+                                                        i_legend_width,
+                                                        i_legend_plane,
                                                         i_histogram_scale_factor)
 
         return o_viz_settings

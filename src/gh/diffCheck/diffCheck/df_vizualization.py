@@ -7,6 +7,7 @@ import Rhino.Geometry as rg
 from System.Drawing import Color
 from diffCheck import df_vizualization
 
+
 class DFVizSettings:
     """
     This class compiles the settings for the vizualization into one object
@@ -66,6 +67,7 @@ class DFColorMap:
                 Color.FromArgb(248, 230, 33)
             ]
 
+
 def interpolate_color(color1, color2, t):
     """
     Interpolate between two colors.
@@ -74,6 +76,7 @@ def interpolate_color(color1, color2, t):
     r = int(color1.R + (color2.R - color1.R) * t)
     g = int(color1.G + (color2.G - color1.G) * t)
     b = int(color1.B + (color2.B - color1.B) * t)
+
     return Color.FromArgb(r, g, b)
 
 
@@ -96,7 +99,7 @@ def value_to_color(value, min_value, max_value, palette):
         t = (value - min_value) / (max_value - min_value)
 
     # Determine the segment in the colormap
-    n = len(colormap)- 1
+    n = len(colormap) - 1
     idx = int(t * n)
     if idx >= n:
         idx = n - 1
@@ -132,7 +135,7 @@ def color_mesh(mesh, values, min_value, max_value, palette):
     """
 
     mesh.VertexColors.Clear()
-    
+
     for i, vertex in enumerate(mesh.Vertices):
         # check if values is a list
         if isinstance(values, list):
@@ -163,9 +166,9 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
             mesh = rg.Mesh()
             for pt in rect_pts:
                 mesh.Vertices.Add(pt)
-            # color mesh
+
             mesh.Faces.AddFace(0, 1, 2, 3)
-            
+            # color mesh
             mesh.VertexColors.Add(previous_color.R, previous_color.G, previous_color.B)
             mesh.VertexColors.Add(previous_color.R, previous_color.G, previous_color.B)
             mesh.VertexColors.Add(color.R, color.G, color.B)
@@ -200,7 +203,9 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     return legend_geometry
 
 
-def create_histogram(values, min_value, max_value, steps=100, plane=rg.Plane.WorldXY, total_height=10, scaling_factor = 0.01, spacing=0):
+def create_histogram(values, min_value, max_value, steps=100,
+                     plane=rg.Plane.WorldXY, total_height=10,
+                     scaling_factor=0.01, spacing=0):
     """
     Create a histogram in Rhino with a polyline representing value frequencies.
     """
@@ -261,7 +266,7 @@ def filter_values_based_on_valuetype(results, settings):
         values = results.distances_mse
         min_value = min(values)
         max_value = max(values)
-        
+
     elif settings.valueType == "MAX":
 
         values = results.distances_max_deviation
