@@ -1,6 +1,6 @@
 {
-    "name": "Extract Joints",
-    "nickname": "Extract Joints",
+    "name": "DFJointSegmentator",
+    "nickname": "DFJointSegmentator",
     "category": "diffCheck",
     "subcategory": "Segmentation",
     "description": "Extracts the joints from a point cloud.",
@@ -13,18 +13,7 @@
         "marshalOutGuids": true,
         "iconDisplay": 2,
         "inputParameters": [
-            {
-                "name": "i_recompute",
-                "nickname": "i_recompute",
-                "description": "Connect a button to recompute the registration.",
-                "optional": true,
-                "allowListAccess": false,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
+            
             {
                 "name": "i_clusters",
                 "nickname": "i_clusters",
@@ -39,7 +28,7 @@
             },
             {
                 "name": "i_joint_faces",
-                "nickname": "i_joints",
+                "nickname": "i_joint_faces",
                 "description": "The joints to extract and analyze",
                 "optional": false,
                 "allowTreeAccess": false,
@@ -60,6 +49,30 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "int"
+            },
+            {
+                "name": "i_angle_threshold",
+                "nickname": "i_angle_threshold",
+                "description": "From 0 to 1, it's the sin value. By default 0.1. The closer to 0 the less permissive and viceversa to 1.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_association_threshold",
+                "nickname": "i_association_threshold",
+                "description": "From 0 to infinite. By default 0.1. The closer to 0 the less permissive your point.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
             }
         ],
         "outputParameters": [
