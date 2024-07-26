@@ -5,6 +5,8 @@
 
 #include <loguru.hpp>
 
+#include <cilantro/cilantro.hpp>
+
 // diffCheck includes
 #include "diffCheck/log.hh"
 const diffCheck::Log LOG = diffCheck::Log();
@@ -16,3 +18,4 @@ const diffCheck::Log LOG = diffCheck::Log();
 #include "diffCheck/transformation/DFTransformation.hh"
 #include "diffCheck/registrations/DFGlobalRegistrations.hh"
 #include "diffCheck/registrations/DFRefinedRegistration.hh"
+#include "diffCheck/segmentation/DFSegmentation.hh"

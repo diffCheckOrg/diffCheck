@@ -6,7 +6,6 @@
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/pypi-build.yml/badge.svg">
     <img href="https://pypi.org/project/diffCheck/" src="https://img.shields.io/pypi/v/diffCheck">
-    <img href="https://github.com/ellerbrock/open-source-badges/" src="https://badges.frapsoft.com/os/v2/open-source.svg?v=103">
 </p>
 
 
@@ -36,19 +35,6 @@ gantt
     Data collection and evaluation      :dataeval, after fabrob, 4w
 ```
 
-```mermaid
-gantt
-    dateFormat  YYYY-MM-DD
-    title       diffCheck - backend dev
-    excludes    weekends
-
-    data i/o                                 :active, dataio, 2024-03-15, 3w
-    global registration                      :glbreg, 2024-03-29, 2w
-    semantic seg. from 3D model              :semseg, after glbreg, 1w
-    local registration                       :locreg, after semseg, 2w
-    error computation + results              :errcomp, after locreg, 1w
-```
-
 ## 3rd party libraries
 
 The project uses the following 3rd party libraries:
@@ -63,22 +49,22 @@ To build and test the project, follow the following steps:
 ```terminal
 cmake/config.bat
 cmake/build.bat
-./build/bin/Release/diffCheckApp.exe <-- for prototyping
+./build/bin/Release/diffCheckApp.exe <-- for prototyping in c++
 ```
 
 ## Prototype diffCheck in C++
 To prototype:
 1) add a header/source file in `src/diffCheck` and include the header in `diffCheck.hh` interface
-1) test it in `diffCheckApp` (the cmake will output an executable in bin)
+2) test it in `diffCheckApp` (the cmake will output an executable in bin)
 
 See the [CONTRIBUTING.md](https://github.com/diffCheckOrg/diffCheck/blob/main/CONTRIBUTING.md) for more information on how to prototype with diffCheck (code guidelines, visualizer, utilities, etc).
 
 ## Component roadmap
 From the 3/5/2024 meeting, the architecture of the different grasshopper components was discussed as following:
-- [ ] PLY loader point cloud: @eleni: loads the pointcloud ply files and converts it into rg.PointCloud (+ cvt submodule)
-- [ ] PLY loader mesh: @eleni: loads the mesh ply files and converts it into rg.Mesh (+ cvt submodule)
-- [ ] Global registration: @andrea: to align the scan to the reference model
-- [ ] Refined registration: @andrea: to refine the alignement
+- [x] PLY loader point cloud: @eleni: loads the pointcloud ply files and converts it into rg.PointCloud (+ cvt submodule)
+- [x] PLY loader mesh: @eleni: loads the mesh ply files and converts it into rg.Mesh (+ cvt submodule)
+- [x] Global registration: @andrea: to align the scan to the reference model
+- [x] Refined registration: @andrea: to refine the alignement
 - [ ] Semantic segmentation additive: to identify the pieces or joints in the point cloud
 - [ ] Semantic segmentation subtractive: to identify the pieces or joints in the point cloud
 - [ ] Per-joint refinement to refine the global registration to each joints (only in the "substractive" case)

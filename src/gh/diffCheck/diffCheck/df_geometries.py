@@ -13,6 +13,7 @@ import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 
 import diffCheck.df_joint_detector
+import diffCheck.df_util
 
 
 @dataclass
@@ -173,14 +174,16 @@ class DFFace:
         :return mesh: The Rhino Mesh object
         """
         mesh = Rhino.Geometry.Mesh()
+
         mesh_parts = Rhino.Geometry.Mesh.CreateFromBrep(
-                self.to_brep_face().ToBrep(),
-                Rhino.Geometry.MeshingParameters.Coarse)
-        for mesh_part in mesh_parts: mesh.Append(mesh_part)
-        mesh.Compact()
+                self.to_brep_face().DuplicateFace(True),
+                Rhino.Geometry.MeshingParameters.QualityRenderMesh)
+        
+        for mesh_part in mesh_parts:
+            mesh.Append(mesh_part)
+        mesh.Faces.ConvertQuadsToTriangles()
+        # mesh.Compact()
 
-
-        # mesh = rg.Mesh.CreateFromBrep(self.to_brep_face())[0]
         return mesh
 
     @property

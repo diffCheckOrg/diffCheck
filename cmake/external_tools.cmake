@@ -229,3 +229,22 @@ function(download_submodule_project project_name)
     message(FATAL_ERROR "git submodule update --init --recursive --remote failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
   endif()
 endfunction()
+
+# ------------------------------------------------------------------------------
+function (copy_dlls directory_to_copy_dlls post_build_target)
+  message (STATUS "Erasing old DLLs and copy new ones to ${directory_to_copy_dlls}")
+  file(GLOB files ${directory_to_copy_dlls}/*.dll)
+  foreach(file ${files})
+      message(STATUS "Removing ${file}")
+      file(REMOVE ${file})
+  endforeach()
+  file(GLOB files ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/*.dll)
+  foreach(file ${files})
+      message(STATUS "Copying ${file} to ${directory_to_copy_dlls}")
+      add_custom_command(TARGET ${post_build_target} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy
+          ${file}
+          ${directory_to_copy_dlls}
+          )
+  endforeach()
+endfunction()

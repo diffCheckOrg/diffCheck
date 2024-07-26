@@ -21,11 +21,13 @@ namespace diffCheck::visualizer
             int height = 800,
             int posX = 50,
             int posY = 50,
-            bool showNormals = false,
-            bool showWireframe = true
+            bool showNormals = true,
+            bool showWireframe = true,
+            bool renderPcdColorNormals = false
             ) : Title(title), Width(width), Height(height),
                 PosX(posX), PosY(posY),
-                ShowNormals(showNormals), ShowWireframe(showWireframe)
+                ShowNormals(showNormals), ShowWireframe(showWireframe),
+                RenderPcdColorNormals(renderPcdColorNormals)
         {}
         ~Visualizer() = default;
 
@@ -62,6 +64,8 @@ namespace diffCheck::visualizer
         bool ShowNormals;
         /// @brief weither to show the wireframe
         bool ShowWireframe;
+        /// @brief weither to render the point cloud color normals
+        bool RenderPcdColorNormals;
 
     private:
         /// @brief the geometries to visualize

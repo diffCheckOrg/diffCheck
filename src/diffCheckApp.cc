@@ -1,103 +1,99 @@
 #include "diffCheck.hh"
+#include "diffCheck/log.hh"
 
 #include <iostream>
 #include <fstream>
 
-#include <open3d/Open3D.h>
-// #include <open3d/t/geometry/RaycastingScene.h>
+// checking computation time 
+#include <chrono>
 
 int main()
 {
-  // import clouds
-  std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPtr
-      = std::make_shared<diffCheck::geometry::DFPointCloud>();
-  std::shared_ptr<diffCheck::geometry::DFMesh> dfMeshPtr 
-      = std::make_shared<diffCheck::geometry::DFMesh>();
+  auto initTime = std::chrono::high_resolution_clock::now();
 
-  // create a sphere from o3d
-  std::string pathCloud = R"(C:\Users\andre\Downloads\moved_04.ply)";
-  std::string pathMesh = R"(C:\Users\andre\Downloads\meshtest.ply)";
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> pcdSrc = std::make_shared<diffCheck::geometry::DFPointCloud>();
+  std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>> meshSrc = std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>();
+  std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>> segments;
+  std::vector<std::string> meshPaths;
 
-  dfPointCloudPtr->LoadFromPLY(pathCloud);
-  dfMeshPtr->LoadFromPLY(pathMesh);
+  std::string meshesFolderPath = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\9\)";
 
-//   open3d::geometry::TriangleMesh meshO3d = *dfMeshPtr->Cvt2O3DTriangleMesh();
-//   open3d::geometry::PointCloud pointCloudO3d = *dfPointCloudPtr->Cvt2O3DPointCloud();
+  for (int i = 1; i <= 7; i++)
+  {
+    std::string meshPath = meshesFolderPath + std::to_string(i) + ".ply";
+    std::shared_ptr<diffCheck::geometry::DFMesh> mesh = std::make_shared<diffCheck::geometry::DFMesh>();
+    mesh->LoadFromPLY(meshPath);
+    meshSrc.push_back(mesh);
+  }
 
-//   auto rayCastingScene = open3d::t::geometry::RaycastingScene();
-//   // Get the vertices of the mesh
-//   std::vector<Eigen::Vector3d> vertices = meshO3d.vertices_;
+  std::string pathPcdSrc = R"(C:\Users\localuser\Desktop\meshes_for_diffCheck\source_pc_2.ply)";
 
-//   // Convert the vertices to a tensor
-//   std::vector<float> verticesPosition;
-//   for (const auto& vertex : vertices) {
-//       verticesPosition.insert(verticesPosition.end(), vertex.data(), vertex.data() + 3);
-//   }
-//   open3d::core::Tensor verticesPositionTensor(verticesPosition.data(), {static_cast<int64_t>(vertices.size()), 3}, open3d::core::Dtype::Float32);
+  pcdSrc->LoadFromPLY(pathPcdSrc);
 
-//   std::vector<uint32_t> triangles;
-//   for (int i = 0; i < meshO3d.triangles_.size(); i++) {
-//       triangles.push_back(static_cast<uint32_t>(meshO3d.triangles_[i].x()));
-//       triangles.push_back(static_cast<uint32_t>(meshO3d.triangles_[i].y()));
-//       triangles.push_back(static_cast<uint32_t>(meshO3d.triangles_[i].z()));
-//   }
-//   open3d::core::Tensor trianglesTensor(triangles.data(), {static_cast<int64_t>(meshO3d.triangles_.size()), 3}, open3d::core::Dtype::UInt32);
+  pcdSrc->EstimateNormals(false, 100);
+  pcdSrc->VoxelDownsample(0.01);
+  auto intermediateTime = std::chrono::high_resolution_clock::now();
+  segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(
+    pcdSrc,
+    6.0f,
+    25,
+    true,
+    20,
+    0.5f,
+    false);
+  std::cout << "number of segments:" << segments.size()<< std::endl;
+
+  std::shared_ptr<diffCheck::geometry::DFPointCloud> unifiedSegments = 
+    diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes(
+      meshSrc, 
+      segments, 
+      .1, 
+      .9);
   
-//   rayCastingScene.AddTriangles(verticesPositionTensor, trianglesTensor);
+  std::cout << "Association done. refinement in progress" << std::endl;
 
-//   // compute the cloud to mesh signed distance
-//   std::vector<float> cloudPoints;
-//   for (const auto& point : pointCloudO3d.points_) {
-//       cloudPoints.insert(cloudPoints.end(), point.data(), point.data() + 3);
-//   }
-//   open3d::core::Tensor cloudPointsTensor(cloudPoints.data(), {static_cast<int64_t>(pointCloudO3d.points_.size()), 3}, open3d::core::Dtype::Float32);
+  diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters(segments, 
+    std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>>{unifiedSegments}, 
+    std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>>{meshSrc},
+    .1, 
+    .9);
+  
+  std::cout << "number of points in unified segments:" << unifiedSegments->Points.size() << std::endl;
+  
+  diffCheck::visualizer::Visualizer vis(std::string("DiffCheckApp"), 1000, 800, 50, 50, false, true, false);
+  for (auto segment : segments)
+  {
+    // colorize the segments with random colors
+    double r = static_cast<double>(rand()) / RAND_MAX;
+    double g = static_cast<double>(rand()) / RAND_MAX;
+    double b = static_cast<double>(rand()) / RAND_MAX;
 
+    segment->Colors.clear();
+    for (int i = 0; i < segment->Points.size(); i++)
+    {
+      segment->Colors.push_back(Eigen::Vector3d(0, 0, 0));
+    }
+  vis.AddPointCloud(segment);
 
-//   open3d::core::Tensor sdf = rayCastingScene.ComputeSignedDistance(cloudPointsTensor);
+  }
+  for(auto mesh : meshSrc)
+  {
+    //vis.AddMesh(mesh);
+  }
 
-//   // FIXME: replace with bool parameter
-//   // if true, get the absolute value of the sdf
-//   if (true) {
-//       sdf = sdf.Abs();
-//   }
+  for (int i = 0; i < unifiedSegments->Points.size(); i++)
+  {
+    unifiedSegments->Colors.push_back(Eigen::Vector3d(0, 0, 1));
+  }
+  vis.AddPointCloud(unifiedSegments);
 
-  // convert sdf to a vector
-  std::vector<float> sdfVector = dfMeshPtr->ComputeDistance(*dfPointCloudPtr);
+  auto endTime = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - initTime);
+  auto segmentationTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - intermediateTime);
+  std::cout << "Total computation time:" << duration.count() << std::endl;
+  std::cout << "Segmentation time:" << segmentationTime.count() << std::endl;
 
-
-  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  // compute point cloud to point cloud distance
-  std::vector<double> distances = dfPointCloudPtr->ComputeDistance(*dfPointCloudPtr);
-//   for (auto &dist : distances)
-//   {
-//     std::cout << dist << std::endl;
-//   }
-
-
-
-  // // convert the sphere to a diffCheck point cloud
-  // // auto o3dPointCloud = meshO3d.SamplePointsUniformly(1000);
-
-  // std::shared_ptr<open3d::geometry::PointCloud> tightBBOX = std::make_shared<open3d::geometry::PointCloud>();
-
-  // // compute the bounding box
-  // open3d::geometry::OrientedBoundingBox bbox = meshO3d.GetMinimalOrientedBoundingBox();
-  // std::vector<Eigen::Vector3d> bboxPts = bbox.GetBoxPoints();
-  // for (auto &pt : bboxPts)
-  // {
-  //   tightBBOX->points_.push_back(pt);
-  // }
-
-
-  // dfPointCloudPtr->Cvt2DFPointCloud(tightBBOX);
-
-
-
-
-  // std::shared_ptr<diffCheck::visualizer::Visualizer> vis = std::make_shared<diffCheck::visualizer::Visualizer>();
-  // vis->AddPointCloud(dfPointCloudPtr);
-  // // vis->AddMesh(dfMeshPtr);
-  // vis->Run();
+  vis.Run();
 
 
   return 0;
