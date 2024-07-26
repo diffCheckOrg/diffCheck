@@ -5,7 +5,7 @@
     "subcategory": "Vizualization",
     "description": "Color input geometry according to the results of the distance calculation and settings",
     "exposure": 4,
-    "instanceGuid": "19fa413e-b8bf-4ca5-b295-1b116ff4a095",
+    "instanceGuid": "46b7026f-f453-4f27-979d-916af633b324",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,

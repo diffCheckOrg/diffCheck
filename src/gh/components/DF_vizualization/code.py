@@ -57,12 +57,13 @@ class Vizualization(component):
                                                         plane=i_viz_settings.legend_plane,
                                                         total_height=i_viz_settings.legend_height,
                                                         scaling_factor=i_viz_settings.histogram_scale_factor)
-        return o_source, o_colored_geo, o_legend, o_histogram
+
+        return o_colored_geo, o_legend, o_histogram
 
 
 # if __name__ == "__main__":
 #     com = Vizualization()
-#     o_source, o_colored_geo, o_legend, o_histogram  = com.RunScript(
+#     o_colored_geo, o_legend, o_histogram  = com.RunScript(
 #         i_results,
 #         i_viz_settings
 #         )
