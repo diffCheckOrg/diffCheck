@@ -247,3 +247,5 @@ cython_debug/
 
 # egg-info
 *.egg-info/
+deps/eigen
+deps/pybind11
