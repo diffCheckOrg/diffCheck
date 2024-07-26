@@ -64,6 +64,7 @@ def rhino_mesh_2_cloud_distance(source, target, signed=False):
     # make a Df point cloud containing all the vertices of the source rhino mesh
     df_pcd_from_mesh_vertices = diffcheck_bindings.dfb_geometry.DFPointCloud()
     df_pcd_from_mesh_vertices.points = [[pt.X, pt.Y, pt.Z] for pt in source.Vertices]
+    
     # calculate the distances
     distances = np.asarray(df_pcd_from_mesh_vertices.compute_distance(target))
 
@@ -77,12 +78,8 @@ def rhino_mesh_2_cloud_distance(source, target, signed=False):
 
             # find the index on the target that the vertex is closest to
             search_point = p
-            sphere = rg.Sphere(search_point, distances[idx]*1.0001)
+            sphere = rg.Sphere(search_point, distances[idx]*1.0001) #to change later, hack to avoid not finding the point
             found_indices = []
-
-            # what if we find 2 indices
-            if len(found_indices) > 1:
-                pass
 
             def search_callback(sender, e):
                 found_indices.append(e.Id)

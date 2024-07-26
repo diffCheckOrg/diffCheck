@@ -60,9 +60,9 @@ class Vizualization(component):
         return o_source, o_colored_geo, o_legend, o_histogram
 
 
-if __name__ == "__main__":
-    com = Vizualization()
-    o_source, o_colored_geo, o_legend, o_histogram  = com.RunScript(
-        i_results,
-        i_viz_settings
-        )
+# if __name__ == "__main__":
+#     com = Vizualization()
+#     o_source, o_colored_geo, o_legend, o_histogram  = com.RunScript(
+#         i_results,
+#         i_viz_settings
+#         )

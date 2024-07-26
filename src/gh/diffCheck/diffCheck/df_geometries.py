@@ -238,7 +238,7 @@ class DFBeam:
 
         return brep
 
-    def to_mesh(self):
+    def to_mesh(self, max_edge_length):
         """
         Convert the beam to a Rhino Mesh object
         """
@@ -250,8 +250,7 @@ class DFBeam:
         for f in new_faces:
 
             param = rg.MeshingParameters()
-            scalef = diffCheck.df_util.get_doc_2_meters_unitf()
-            param.MaximumEdgeLength = 0.1 / scalef
+            param.MaximumEdgeLength = max_edge_length
             mesh_part = rg.Mesh.CreateFromBrep(f, param)[0] #returns a list of meshes with one element
             mesh.Append(mesh_part)
 

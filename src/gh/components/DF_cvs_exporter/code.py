@@ -38,12 +38,16 @@ class CsvExporter(component):
                 writer = csv.writer(file)
                 for list_of_values in i_results.distances:
                     writer.writerow([list_of_values])
+            
+            o_success = "Successfully exported the values"
+            
+            return o_success
 
 
-if __name__ == "__main__":
-    com = CsvExporter()
-    o_cvs = com.RunScript(
-        i_dump,
-        i_export_dir,
-        i_results
-    )
+# if __name__ == "__main__":
+#     com = CsvExporter()
+#     o_cvs = com.RunScript(
+#         i_dump,
+#         i_export_dir,
+#         i_results
+#     )

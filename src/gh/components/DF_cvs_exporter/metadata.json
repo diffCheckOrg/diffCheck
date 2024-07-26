@@ -1,11 +1,11 @@
 {
-    "name": "CsvExporter",
-    "nickname": "CsvExporter",
+    "name": "DFCsvExporter",
+    "nickname": "DFCsvExporter",
     "category": "diffCheck",
     "subcategory": "Utility",
     "description": "Exports distance calculation to csv.",
     "exposure": 4,
-    "instanceGuid": "72ddcab2-af51-42a4-b2b3-4d64602c37e0",
+    "instanceGuid": "af1f921e-5d5b-4201-b4ea-7bca8b7b6fd1",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -38,23 +38,23 @@
                 "typeHintID": "str"
             },
             {
-                "name": "i_values",
-                "nickname": "i_values",
-                "description": "A list of values to be exported.",
+                "name": "i_results",
+                "nickname": "i_results",
+                "description": "The result of the distance calculation to export",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "list",
+                "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "float"
+                "typeHintID": "ghdoc"
             }
         ],
         "outputParameters": [
             {
-                "name": "o_x_form",
-                "nickname": "o_x_form",
-                "description": "The computed transformation.",
+                "name": "o_success",
+                "nickname": "o_success",
+                "description": "Whether the values exported successfully",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

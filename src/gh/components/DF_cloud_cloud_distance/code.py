@@ -56,10 +56,10 @@ class CloudCloudDistance(component):
         return o_results.distances, o_results.distances_mse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
 
 
-if __name__ == "__main__":
-    com = CloudCloudDistance()
-    o_distances, o_mse, o_max_deviation, o_min_deviation, o_std_deviation, o_results = com.RunScript(
-        i_cloud_source,
-        i_cloud_target,
-        i_swap
-        )
+# if __name__ == "__main__":
+#     com = CloudCloudDistance()
+#     o_distances, o_mse, o_max_deviation, o_min_deviation, o_std_deviation, o_results = com.RunScript(
+#         i_cloud_source,
+#         i_cloud_target,
+#         i_swap
+#         )

@@ -1,11 +1,11 @@
 {
-    "name": "CloudToCloudDistance",
-    "nickname": "C2CDistance",
+    "name": "DFVizualizationSettings",
+    "nickname": "DFVizSettings",
     "category": "diffCheck",
-    "subcategory": "Analysis",
-    "description": "Computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.",
+    "subcategory": "Vizualization",
+    "description": "Compiles all the settings to feed to the vizualization component.",
     "exposure": 4,
-    "instanceGuid": "ad21f438-b953-464b-8332-04f4074f3bd0",
+    "instanceGuid": "22325eeb-07ec-4f15-a1e0-dc01741d5464",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -14,33 +14,93 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_cloud_source",
-                "nickname": "i_cloud_source",
-                "description": "The source point cloud.",
+                "name": "i_value_type",
+                "nickname": "i_value_type",
+                "description": "Which values to display.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "pointcloud"
+                "typeHintID": "str"
             },
             {
-                "name": "i_cloud_target",
-                "nickname": "i_cloud_target",
-                "description": "The target cloud.",
+                "name": "i_upper_threshold",
+                "nickname": "i_upper_threshold",
+                "description": "Thresholds the values with a maximum value",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "pointcloud"
+                "typeHintID": "float"
             },
             {
-                "name": "i_signed_flag",
-                "nickname": "i_signed_flag",
-                "description": "whether to take normals into account",
+                "name": "i_lower_threshold",
+                "nickname": "i_lower_threshold",
+                "description": "Thresholds the values with a minimum value",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_palette",
+                "nickname": "i_palette",
+                "description": "Select a color palette to map the values to",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_legend_height",
+                "nickname": "i_legend_height",
+                "description": "Set the total height of the legend",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_legend_width",
+                "nickname": "i_legend_width",
+                "description": "Set the total width of the legend",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_legend_plane",
+                "nickname": "i_legend_plane",
+                "description": "A construction plane for the legend",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "plane"
+            },
+            {
+                "name": "i_histogram_scale_factor",
+                "nickname": "i_histogram_scale_factor",
+                "description": "Scales the height of the histogram with a factor",
                 "optional": false,
                 "allowTreeAccess": false,
                 "showTypeHints": true,
@@ -52,41 +112,9 @@
         ],
         "outputParameters": [
             {
-                "name": "o_distance",
-                "nickname": "o_distance",
-                "description": "list of calculated distances for each point of the source.",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_mse",
-                "nickname": "o_mse",
-                "description": "average squared difference between source and target.",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_max_deviation",
-                "nickname": "o_max_deviation",
-                "description": "max deviation between source and target",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_min_deviation",
-                "nickname": "o_min_deviation",
-                "description": "min deviation between source and target",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_std_deviation",
-                "nickname": "o_std_deviation",
-                "description": "standard deviation between source and target.",
+                "name": "o_viz_settings",
+                "nickname": "o_viz_settings",
+                "description": "Settings to be passed to the Vizualization component",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

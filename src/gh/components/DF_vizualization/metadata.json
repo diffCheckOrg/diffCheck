@@ -1,11 +1,11 @@
 {
-    "name": "CloudToCloudDistance",
-    "nickname": "C2CDistance",
+    "name": "DFVizualization",
+    "nickname": "DFViz",
     "category": "diffCheck",
-    "subcategory": "Analysis",
-    "description": "Computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.",
+    "subcategory": "Vizualization",
+    "description": "Color input geometry according to the results of the distance calculation and settings",
     "exposure": 4,
-    "instanceGuid": "ad21f438-b953-464b-8332-04f4074f3bd0",
+    "instanceGuid": "19fa413e-b8bf-4ca5-b295-1b116ff4a095",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -14,79 +14,51 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_cloud_source",
-                "nickname": "i_cloud_source",
-                "description": "The source point cloud.",
+                "name": "i_results",
+                "nickname": "i_results",
+                "description": "The result of the distance calculation",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "pointcloud"
+                "typeHintID": "ghdoc"
             },
             {
-                "name": "i_cloud_target",
-                "nickname": "i_cloud_target",
-                "description": "The target cloud.",
+                "name": "i_viz_settings",
+                "nickname": "i_viz_settings",
+                "description": "The settings of the vizualization",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "pointcloud"
-            },
-            {
-                "name": "i_signed_flag",
-                "nickname": "i_signed_flag",
-                "description": "whether to take normals into account",
-                "optional": false,
-                "allowTreeAccess": false,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "float"
+                "typeHintID": "ghdoc"
             }
         ],
         "outputParameters": [
             {
-                "name": "o_distance",
-                "nickname": "o_distance",
-                "description": "list of calculated distances for each point of the source.",
+                "name": "o_colored_geo",
+                "nickname": "o_colored_geo",
+                "description": "The geometry colored according to the distance results.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
             },
             {
-                "name": "o_mse",
-                "nickname": "o_mse",
-                "description": "average squared difference between source and target.",
+                "name": "o_legend",
+                "nickname": "_legend",
+                "description": "The legend of the vizualization",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
             },
             {
-                "name": "o_max_deviation",
-                "nickname": "o_max_deviation",
-                "description": "max deviation between source and target",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_min_deviation",
-                "nickname": "o_min_deviation",
-                "description": "min deviation between source and target",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            },
-            {
-                "name": "o_std_deviation",
-                "nickname": "o_std_deviation",
-                "description": "standard deviation between source and target.",
+                "name": "o_histogram",
+                "nickname": "o_histogram",
+                "description": "Histogram that shows the frequency of the values",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

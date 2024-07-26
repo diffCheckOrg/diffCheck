@@ -1,11 +1,11 @@
 {
-    "name": "CloudToCloudDistance",
-    "nickname": "C2CDistance",
+    "name": "DFCloudCloudDistance",
+    "nickname": "DFC2CDistance",
     "category": "diffCheck",
     "subcategory": "Analysis",
-    "description": "Computes the distance between each point in the source point cloud and its nearest neighbour in thr target point cloud.",
+    "description": "Computes the distance between 2 point clouds",
     "exposure": 4,
-    "instanceGuid": "ad21f438-b953-464b-8332-04f4074f3bd0",
+    "instanceGuid": "5e90284b-f932-4617-8740-e9c26a95410c",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -20,7 +20,7 @@
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "item",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "pointcloud"
@@ -32,28 +32,28 @@
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "item",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_signed_flag",
-                "nickname": "i_signed_flag",
-                "description": "whether to take normals into account",
+                "name": "i_swap",
+                "nickname": "i_swap",
+                "description": "whether to swap source and target",
                 "optional": false,
                 "allowTreeAccess": false,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "float"
+                "typeHintID": "bool"
             }
         ],
         "outputParameters": [
             {
-                "name": "o_distance",
-                "nickname": "o_distance",
+                "name": "o_distances",
+                "nickname": "o_distances",
                 "description": "list of calculated distances for each point of the source.",
                 "optional": false,
                 "sourceCount": 0,
@@ -87,6 +87,14 @@
                 "name": "o_std_deviation",
                 "nickname": "o_std_deviation",
                 "description": "standard deviation between source and target.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_results",
+                "nickname": "o_results",
+                "description": "The result of the distance calculation.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
