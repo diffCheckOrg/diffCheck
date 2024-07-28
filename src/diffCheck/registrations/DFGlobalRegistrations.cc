@@ -17,7 +17,7 @@ namespace diffCheck::registrations
 
             std::shared_ptr<geometry::DFPointCloud> dfPointCloudPtrAfterTrans = std::make_shared<geometry::DFPointCloud>();
             dfPointCloudPtrAfterTrans->Cvt2DFPointCloud(o3DPointCloudAfterTrans);
-            std::vector<double> registrationErrors = dfPointCloudPtrAfterTrans->ComputeDistance(*target);
+            std::vector<double> registrationErrors = dfPointCloudPtrAfterTrans->ComputeDistance(target);
             errors.push_back(std::accumulate(registrationErrors.begin(), registrationErrors.end(), 0.0) / registrationErrors.size());
         }
         return errors;
