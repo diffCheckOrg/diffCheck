@@ -38,7 +38,9 @@ def test_DFPointCloud_init():
 def test_DFPointCloud_load_from_PLY():
     pc = dfb.dfb_geometry.DFPointCloud()
     ply_file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "test_data", "roof_quarter.ply")
+    print(f"Loading PLY file from: {ply_file_path}")
     pc.load_from_PLY(ply_file_path)
+    
     assert pc.points.__len__() == 7379, "DFPointCloud should have 7379 points"
     assert pc.normals.__len__() == 7379, "DFPointCloud should have 7379 normals"
     assert pc.colors.__len__() == 7379, "DFPointCloud should have 7379 colors"
