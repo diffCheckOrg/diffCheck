@@ -65,4 +65,4 @@ jobs:
       - name: Run tests with cmake
         run: |
           cd build/
-          conda run --name diff_check --no-capture-output ctest --output-on-failure -C Release --verbose
+          conda run --name diff_check --no-capture-output ctest -C Release --verbose
