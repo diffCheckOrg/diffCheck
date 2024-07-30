@@ -22,6 +22,14 @@ except ImportError as e:
 def test_dfb_test_simple():
     assert dfb.dfb_test.test() == True, "The test function should return True"
 
+# getting the test data pahts
+def get_ply_cloud_roof_quarter_path():
+    base_test_data_dir = os.getenv('TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
+    ply_file_path = os.path.join(base_test_data_dir, "roof_quarter.ply")
+    if not os.path.exists(ply_file_path):
+        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    return ply_file_path
+
 #------------------------------------------------------------------------------
 # dfb_geometry namespace
 #------------------------------------------------------------------------------
@@ -37,11 +45,11 @@ def test_DFPointCloud_init():
 
 def test_DFPointCloud_load_from_PLY():
     pc = dfb.dfb_geometry.DFPointCloud()
-    test_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data'))
-    ply_file_path = os.path.join(test_data_dir, "roof_quarter.ply")
-    if not os.path.exists(ply_file_path):
-        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
-    pc.load_from_PLY(ply_file_path)
+    # test_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data'))
+    # ply_file_path = os.path.join(test_data_dir, "roof_quarter.ply")
+    # if not os.path.exists(ply_file_path):
+    #     raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    pc.load_from_PLY(get_ply_cloud_roof_quarter_path())
     
     assert pc.points.__len__() == 7379, "DFPointCloud should have 7379 points"
     assert pc.normals.__len__() == 7379, "DFPointCloud should have 7379 normals"
@@ -50,11 +58,11 @@ def test_DFPointCloud_load_from_PLY():
 @pytest.fixture
 def create_DFPointCloudSampleRoof():
     df_pcd = dfb.dfb_geometry.DFPointCloud()
-    test_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data'))
-    ply_file_path = os.path.join(test_data_dir, "roof_quarter.ply")
-    if not os.path.exists(ply_file_path):
-        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
-    df_pcd.load_from_PLY(ply_file_path)
+    # test_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data'))
+    # ply_file_path = os.path.join(test_data_dir, "roof_quarter.ply")
+    # if not os.path.exists(ply_file_path):
+    #     raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    df_pcd.load_from_PLY(get_ply_cloud_roof_quarter_path())
     yield df_pcd
 
 def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
