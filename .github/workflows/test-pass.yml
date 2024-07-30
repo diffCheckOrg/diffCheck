@@ -10,6 +10,7 @@ on:
 env:
   BUILD_TYPE: Release
   VCPKG_FILE: c:/vcpkg/scripts/buildsystems/vcpkg.cmake
+  TEST_DATA_DIR: ${{ github.workspace }}/tests/test_data
 
 jobs:
   windows:
