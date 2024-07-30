@@ -154,7 +154,7 @@ namespace diffCheck::geometry
          * 
          * @see https://github.com/isl-org/Open3D/blob/main/cpp/open3d/geometry/PointCloud.cpp
          */
-        std::vector<double> ComputeDistance(const DFPointCloud &targetCloud);
+        std::vector<double> ComputeDistance(std::shared_ptr<DFPointCloud> target);
 
     public:  ///< Getters
         /// @brief Number of points in the point cloud
