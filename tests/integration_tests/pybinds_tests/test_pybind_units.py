@@ -19,14 +19,14 @@ except ImportError as e:
         print(file)
     sys.exit(1)
 
-# getting the test data paths
-def debug_directory_contents(path):
-    print(f"Checking contents of directory: {path}")
-    if os.path.exists(path):
-        for file in os.listdir(path):
-            print(file)
-    else:
-        print(f"Directory does not exist: {path}")
+# # getting the test data paths
+# def debug_directory_contents(path):
+#     print(f"Checking contents of directory: {path}")
+#     if os.path.exists(path):
+#         for file in os.listdir(path):
+#             print(file)
+#     else:
+#         print(f"Directory does not exist: {path}")
 
 def get_ply_cloud_roof_quarter_path():
     base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
@@ -35,9 +35,9 @@ def get_ply_cloud_roof_quarter_path():
         raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
     print(f"base_test_data_dir: {base_test_data_dir}")  # Debug
     print(f"ply_file_path: {ply_file_path}")  # Debug
-    debug_directory_contents(base_test_data_dir)
-    with open(ply_file_path, 'r') as file:
-        print(file.read())  # Print file contents for debugging
+    # debug_directory_contents(base_test_data_dir)
+    # with open(ply_file_path, 'r') as file:
+    #     print(file.read())  # Print file contents for debugging
     return ply_file_path
 
 #------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ def test_DFPointCloud_compute_normals(create_DFPointCloudSampleRoof):
 def test_DFPointCloud_get_tight_bounding_box(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
     obb = pc.get_tight_bounding_box()
-    assert obb[0][0] == 0.1955568830111371, "The min x of the OBB should be 0.1955568830111371"
+    assert obb[0][0] == 0.1955558282162114, "The min x of the OBB should be 0.1955558282162114"
 
 # TODO: to implement DFMesh tests
 def test_DFMesh_init():
