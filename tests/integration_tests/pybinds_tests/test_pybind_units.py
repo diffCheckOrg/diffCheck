@@ -37,7 +37,8 @@ def test_DFPointCloud_init():
 
 def test_DFPointCloud_load_from_PLY():
     pc = dfb.dfb_geometry.DFPointCloud()
-    ply_file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "test_data", "roof_quarter.ply")
+    test_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data'))
+    ply_file_path = os.path.join(test_data_dir, "roof_quarter.ply")
     print(f"Loading PLY file from: {ply_file_path}")
     pc.load_from_PLY(ply_file_path)
     
@@ -48,7 +49,8 @@ def test_DFPointCloud_load_from_PLY():
 @pytest.fixture
 def create_DFPointCloudSampleRoof():
     df_pcd = dfb.dfb_geometry.DFPointCloud()
-    ply_file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "test_data", "roof_quarter.ply")
+    test_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data'))
+    ply_file_path = os.path.join(test_data_dir, "roof_quarter.ply")
     df_pcd.load_from_PLY(ply_file_path)
     yield df_pcd
 
