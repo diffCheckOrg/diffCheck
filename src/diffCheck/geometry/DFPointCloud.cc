@@ -273,6 +273,13 @@ namespace diffCheck::geometry
         this->Normals = cloud->Normals;
     }
 
+    void DFPointCloud::AddPoints(const DFPointCloud &pointCloud)
+    {
+        this->Points.insert(this->Points.end(), pointCloud.Points.begin(), pointCloud.Points.end());
+        this->Colors.insert(this->Colors.end(), pointCloud.Colors.begin(), pointCloud.Colors.end());
+        this->Normals.insert(this->Normals.end(), pointCloud.Normals.begin(), pointCloud.Normals.end());
+    }
+
     Eigen::Vector3d DFPointCloud::GetCenterPoint()
     {
         if (this->Points.size() == 0)

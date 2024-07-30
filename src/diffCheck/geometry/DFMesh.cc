@@ -125,7 +125,7 @@ namespace diffCheck::geometry
             double res = (area1 + area2 + area3 - referenceTriangleArea) / referenceTriangleArea;
 
             // arbitrary value to avoid false positives (points that, when projected on the triangle, are in it, but that are actually located too far from the mesh to actually belong to it)
-            double maxProjectionDistance = std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()});
+            double maxProjectionDistance = std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()}) / 2;
 
             if (std::abs(res) < associationThreshold && (projectedPoint - point).norm() < maxProjectionDistance)
             {

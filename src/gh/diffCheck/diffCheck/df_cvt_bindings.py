@@ -227,3 +227,31 @@ def cvt_dfOBB_2_rhbrep(df_OBB) -> rg.Box:
         raise ValueError("The OBB Rhino Brep is not solid")
 
     return rh_obb_brep
+
+def cvt_ndarray_2_rh_transform(matrix) -> rg.Transform:
+    """
+        Convert a numpy matrix to a Rhino transformation. 
+        Useful to transform a DFTransformation-transformation_matrix to a Rhino transformation.
+
+        :param matrix: the numpy matrix
+
+        :return transfo: the Rhino transformation
+    """
+    transfo = rg.Transform()
+    transfo.M00 = matrix[0, 0]
+    transfo.M01 = matrix[0, 1]
+    transfo.M02 = matrix[0, 2]
+    transfo.M03 = matrix[0, 3]
+    transfo.M10 = matrix[1, 0]
+    transfo.M11 = matrix[1, 1]
+    transfo.M12 = matrix[1, 2]
+    transfo.M13 = matrix[1, 3]
+    transfo.M20 = matrix[2, 0]
+    transfo.M21 = matrix[2, 1]
+    transfo.M22 = matrix[2, 2]
+    transfo.M23 = matrix[2, 3]
+    transfo.M30 = matrix[3, 0]
+    transfo.M31 = matrix[3, 1]
+    transfo.M32 = matrix[3, 2]
+    transfo.M33 = matrix[3, 3]
+    return transfo
