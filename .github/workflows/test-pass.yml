@@ -31,14 +31,14 @@ jobs:
         run: conda activate diff_check
 
       - name: Verify Python version
-        run: conda run --name diff_check python --version
+        run: conda run --name diff_check --no-capture-output python --version
 
       - name: Cmake Configure
         run: |
-          conda run --name diff_check cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=OFF
+          conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=OFF
 
       - name: CMake Build
-        run: conda run --name diff_check cmake --build build --config Release
+        run: conda run --name diff_check --no-capture-output cmake --build build --config Release
 
       - name: Copying the dlls
         run: |
@@ -49,4 +49,4 @@ jobs:
       - name: Run tests with cmake
         run: |
           cd build/
-          conda run --name diff_check ctest -C Release --verbose --output-on-failure
+          conda run --name diff_check --no-capture-output ctest -C Release --verbose --output-on-failure
