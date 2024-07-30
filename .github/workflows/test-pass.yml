@@ -42,9 +42,13 @@ jobs:
 
       - name: Copying the dlls
         run: |
-          cp build/bin/Release/diffCheck.dll tests/integration_tests/pybinds_tests
-          cp build/bin/Release/Open3D.dll tests/integration_tests/pybinds_tests
-          cp build/Release/*.pyd tests/integration_tests/pybinds_tests
+          cp ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          cp ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          cp ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/tests/integration_tests/pybinds_tests
+
+      - name: test if the dlls are copied
+        run: |
+          ls ${{github.workspace}}/tests/integration_tests/pybinds_tests
 
       - name: Run tests with cmake
         run: |
