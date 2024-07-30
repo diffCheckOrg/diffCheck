@@ -50,11 +50,11 @@ jobs:
         run: |
           ls ${{github.workspace}}/build/Release
 
-      # - name: Copying the dlls
-      #   run: |
-      #     cp ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
-      #     cp ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
-      #     cp ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/tests/integration_tests/pybinds_tests
+      - name: Copying the dlls
+        run: |
+          cp ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          cp ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          cp ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/tests/integration_tests/pybinds_tests
 
       # TODO: debug
       - name: test if the dlls are copied
