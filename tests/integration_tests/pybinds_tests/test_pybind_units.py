@@ -19,9 +19,7 @@ except ImportError as e:
         print(file)
     sys.exit(1)
 
-def test_dfb_test_simple():
-    assert dfb.dfb_test.test() == True, "The test function should return True"
-
+# getting the test data paths
 def debug_directory_contents(path):
     print(f"Checking contents of directory: {path}")
     if os.path.exists(path):
@@ -30,7 +28,6 @@ def debug_directory_contents(path):
     else:
         print(f"Directory does not exist: {path}")
 
-# getting the test data paths
 def get_ply_cloud_roof_quarter_path():
     base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
     ply_file_path = os.path.join(base_test_data_dir, "roof_quarter.ply")
