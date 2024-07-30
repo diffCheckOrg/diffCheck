@@ -34,7 +34,7 @@ jobs:
         run: |
           cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
       - name: CMake Build
-        run: ${{github.workspace}}/cmake/build.bat
+        run: cmake --build build --config Release
 
       - name: Build wheel
         run: |
