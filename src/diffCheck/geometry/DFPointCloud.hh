@@ -156,6 +156,13 @@ namespace diffCheck::geometry
          */
         void LoadFromPLY(const std::string &path);
 
+        /**
+         * @brief adds the points, colors and normals from another point cloud
+         * 
+         * @param pointCloud the other point cloud
+         */
+        void AddPoints(const DFPointCloud &pointCloud);
+
     public:  ///< Getters
         /// @brief Number of points in the point cloud
         int GetNumPoints() const { return this->Points.size(); }
