@@ -1,16 +1,16 @@
 #! python3
 """
-    This module contains the utility functions to vizualize differences
+    This module contains the utility functions to visualize differences
 """
 
 import Rhino.Geometry as rg
 from System.Drawing import Color
-from diffCheck import df_vizualization
+from diffCheck import df_visualization
 
 
 class DFVizSettings:
     """
-    This class compiles the settings for the vizualization into one object
+    This class compiles the settings for the visualization into one object
     """
 
     def __init__(self, valueType, upper_threshold, lower_threshold, palette, legend_height, legend_width, legend_plane, histogram_scale_factor):
@@ -19,7 +19,7 @@ class DFVizSettings:
 
         self.upper_threshold = upper_threshold
         self.lower_threshold = lower_threshold
-        self.palette = df_vizualization.DFColorMap(palette)
+        self.palette = df_visualization.DFColorMap(palette)
         self.legend_height = legend_height
         self.legend_width = legend_width
         self.legend_plane = legend_plane
@@ -112,7 +112,7 @@ def value_to_color(value, min_value, max_value, palette):
     return interpolate_color(color1, color2, t)
 
 
-def color_pcd(pcd, values, min_value, max_value, palette):
+def color_rh_pcd(pcd, values, min_value, max_value, palette):
     """
     Colors a point cloud data based on given values and palette.
     """
@@ -129,7 +129,7 @@ def color_pcd(pcd, values, min_value, max_value, palette):
     return pcd
 
 
-def color_mesh(mesh, values, min_value, max_value, palette):
+def color_rh_mesh(mesh, values, min_value, max_value, palette):
     """
     Colors a mesh based on given values and palette.
     """
@@ -251,43 +251,3 @@ def create_histogram(values, min_value, max_value, steps=100,
             geo.Transform(trans)
 
     return histogram_geometry
-
-
-def filter_values_based_on_valuetype(results, settings):
-
-    if settings.valueType == "Dist":
-
-        min_value = min(min(sublist) for sublist in results.distances)
-        max_value = max(max(sublist) for sublist in results.distances)
-        values = results.distances
-
-    elif settings.valueType == "MSE":
-
-        values = results.distances_mse
-        min_value = min(values)
-        max_value = max(values)
-
-    elif settings.valueType == "MAX":
-
-        values = results.distances_max_deviation
-        min_value = min(values)
-        max_value = max(values)
-
-    elif settings.valueType == "MIN":
-        values = results.distances_min_deviation
-        min_value = min(values)
-        max_value = max(values)
-
-    elif settings.valueType == "STD":
-
-        values = results.distances_sd_deviation
-        min_value = min(values)
-        max_value = max(values)
-
-    # threshold values
-    if settings.lower_threshold is not None:
-        min_value = settings.lower_threshold
-    if settings.upper_threshold is not None:
-        max_value = settings.upper_threshold
-
-    return values, min_value, max_value

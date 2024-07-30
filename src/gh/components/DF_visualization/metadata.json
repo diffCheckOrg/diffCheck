@@ -1,11 +1,11 @@
 {
-    "name": "DFVizualization",
+    "name": "DFVisualization",
     "nickname": "DFViz",
     "category": "diffCheck",
-    "subcategory": "Vizualization",
+    "subcategory": "Visualization",
     "description": "Color input geometry according to the results of the distance calculation and settings",
     "exposure": 4,
-    "instanceGuid": "46b7026f-f453-4f27-979d-916af633b324",
+    "instanceGuid": "3d20b6d2-fc3d-4faf-a554-fa4ae3ddcde9",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -14,8 +14,8 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_results",
-                "nickname": "i_results",
+                "name": "i_result",
+                "nickname": "i_result",
                 "description": "The result of the distance calculation",
                 "optional": true,
                 "allowTreeAccess": true,
@@ -28,7 +28,7 @@
             {
                 "name": "i_viz_settings",
                 "nickname": "i_viz_settings",
-                "description": "The settings of the vizualization",
+                "description": "The settings of the visualization",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -50,7 +50,7 @@
             {
                 "name": "o_legend",
                 "nickname": "_legend",
-                "description": "The legend of the vizualization",
+                "description": "The legend of the visualization",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

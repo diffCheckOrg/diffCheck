@@ -26,9 +26,9 @@
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_beam",
-                "nickname": "i_beam",
-                "description": "The target DFbeam",
+                "name": "i_beams",
+                "nickname": "i_beams",
+                "description": "The target DFbeams",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -84,8 +84,8 @@
                 "graft": false
             },
             {
-                "name": "o_mse",
-                "nickname": "o_mse",
+                "name": "o_rmse",
+                "nickname": "o_rmse",
                 "description": "average squared difference between source and target.",
                 "optional": false,
                 "sourceCount": 0,
@@ -116,8 +116,8 @@
                 "graft": false
             },
             {
-                "name": "o_results",
-                "nickname": "o_results",
+                "name": "o_result",
+                "nickname": "o_result",
                 "description": "The result of the distance calculation.",
                 "optional": false,
                 "sourceCount": 0,

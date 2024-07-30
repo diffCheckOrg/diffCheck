@@ -10,21 +10,32 @@ from ghpythonlib.componentbase import executingcomponent as component
 import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
-from diffCheck import df_vizualization
+from diffCheck import df_visualization
 
 class VisualizationSettings(component):
     def RunScript(self,
-        i_value_type,
-        i_upper_threshold,
-        i_lower_threshold,
-        i_palette,
-        i_legend_height,
-        i_legend_width,
-        i_legend_plane,
-        i_histogram_scale_factor):
+        i_value_type: str,
+        i_upper_threshold: float,
+        i_lower_threshold: float,
+        i_palette: str,
+        i_legend_height: float,
+        i_legend_width: float,
+        i_legend_plane: rg.Plane,
+        i_histogram_scale_factor: float):
 
         """
-        Compiles all the vizualization settings to feed to the vizualization component
+        Compiles all the visualization settings to feed to the visualization component
+
+        :param i_value_type: selected type indicates Which values to display. Possible values: "dist", "RMSE", "MAX", "MIN", "STD"
+        :param i_upper_threshold: Thresholds the values with a maximum value
+        :param i_lower_threshold: Thresholds the values with a minimum value
+        :param i_palette: Select a color palette to map the values to. Possible values: "Jet", "Rainbow", "RdPu", "Viridis"
+        :param i_legend_height: the total height of the legend
+        :param i_legend_width: the total width of the legend
+        :param i_legend_plane: the construction plane of the legend
+        :param i_histogram_scale_factor: Scales the height of the histogram with a factor
+
+        :returns o_viz_settings: the results of the comparison all in one object
         """
 
         # set default values
@@ -35,7 +46,7 @@ class VisualizationSettings(component):
         if i_histogram_scale_factor is None: i_histogram_scale_factor = 0.01
 
         # pack settings
-        o_viz_settings = df_vizualization.DFVizSettings(i_value_type,
+        o_viz_settings = df_visualization.DFVizSettings(i_value_type,
                                                         i_upper_threshold,
                                                         i_lower_threshold,
                                                         i_palette,

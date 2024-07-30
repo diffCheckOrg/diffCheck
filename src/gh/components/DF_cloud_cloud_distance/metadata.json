@@ -60,9 +60,9 @@
                 "graft": false
             },
             {
-                "name": "o_mse",
-                "nickname": "o_mse",
-                "description": "average squared difference between source and target.",
+                "name": "o_rmse",
+                "nickname": "o_rmse",
+                "description": "root mean squared error between source and target.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

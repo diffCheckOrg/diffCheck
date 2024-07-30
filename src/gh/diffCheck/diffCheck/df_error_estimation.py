@@ -29,10 +29,10 @@ def cloud_2_rhino_mesh_comparison(cloud_source_list, rhino_mesh_target_list, sig
 
     for source, target in zip(cloud_source_list, rhino_mesh_target_list):
         if swap:
-            # this mean we want to vizualize the result on the target mesh
+            # this mean we want to visualize the result on the target mesh
             distances = rhino_mesh_2_cloud_distance(target, source, signed_flag)
         else:
-            # this means we want to vizualize the result on the source pcd
+            # this means we want to visualize the result on the source pcd
             distances = cloud_2_rhino_mesh_distance(source, target, signed_flag)
 
         if swap:
@@ -41,20 +41,6 @@ def cloud_2_rhino_mesh_comparison(cloud_source_list, rhino_mesh_target_list, sig
             results.add(source, target, distances)
 
     return results
-
-
-# def cloud_2_mesh_distance(source, target, signed=False):
-#     """
-#         Calculate the distance between every point of a source pcd to its closest point on a target DFMesh
-#     """
-
-#     # for every point on the PCD compute the point_2_mesh_distance
-#     if signed:
-#         distances = np.asarray(target.compute_distance(source, is_abs=False))
-#     else:
-#         distances = np.asarray(target.compute_distance(source, is_abs=True))
-
-#     return distances
 
 
 def rhino_mesh_2_cloud_distance(source, target, signed=False):
@@ -138,7 +124,7 @@ class DFVizResults:
         self.source = []
         self.target = []
 
-        self.distances_mse = []
+        self.distances_rmse = []
         self.distances_max_deviation = []
         self.distances_min_deviation = []
         self.distances_sd_deviation = []
@@ -149,8 +135,47 @@ class DFVizResults:
         self.source.append(source)
         self.target.append(target)
 
-        self.distances_mse.append(np.sqrt(np.mean(distances ** 2)))
+        self.distances_rmse.append(np.sqrt(np.mean(distances ** 2)))
         self.distances_max_deviation.append(np.max(distances))
         self.distances_min_deviation.append(np.min(distances))
         self.distances_sd_deviation.append(np.std(distances))
         self.distances.append(distances.tolist())
+
+    def filter_values_based_on_valuetype(self, settings):
+
+        if settings.valueType == "Dist":
+
+            min_value = min(min(sublist) for sublist in self.distances)
+            max_value = max(max(sublist) for sublist in self.distances)
+            values = self.distances
+
+        elif settings.valueType == "RMSE":
+
+            values = self.distances_rmse
+            min_value = min(values)
+            max_value = max(values)
+
+        elif settings.valueType == "MAX":
+
+            values = self.distances_max_deviation
+            min_value = min(values)
+            max_value = max(values)
+
+        elif settings.valueType == "MIN":
+            values = self.distances_min_deviation
+            min_value = min(values)
+            max_value = max(values)
+
+        elif settings.valueType == "STD":
+
+            values = self.distances_sd_deviation
+            min_value = min(values)
+            max_value = max(values)
+
+        # threshold values
+        if settings.lower_threshold is not None:
+            min_value = settings.lower_threshold
+        if settings.upper_threshold is not None:
+            max_value = settings.upper_threshold
+
+        return values, min_value, max_value

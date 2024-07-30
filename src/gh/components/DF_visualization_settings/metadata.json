@@ -1,9 +1,9 @@
 {
-    "name": "DFVizualizationSettings",
+    "name": "DFVisualizationSettings",
     "nickname": "DFVizSettings",
     "category": "diffCheck",
-    "subcategory": "Vizualization",
-    "description": "Compiles all the settings to feed to the vizualization component.",
+    "subcategory": "Visualization",
+    "description": "Compiles all the settings to feed to the visualization component.",
     "exposure": 4,
     "instanceGuid": "22325eeb-07ec-4f15-a1e0-dc01741d5464",
     "ghpython": {
@@ -114,7 +114,7 @@
             {
                 "name": "o_viz_settings",
                 "nickname": "o_viz_settings",
-                "description": "Settings to be passed to the Vizualization component",
+                "description": "Settings to be passed to the Visualization component",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

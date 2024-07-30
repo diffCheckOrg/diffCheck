@@ -29,7 +29,7 @@ class CloudCloudDistance(component):
             :param i_cloud_target: a list of target point cloud to calculate distances to
 
             :return o_distances : list of calculated distances for each point
-            :return o_mse: the average squared difference between corresponding points of source and target
+            :return o_rmse: the root mean squared error between corresponding points of source and target
             :return o_max_deviation: the max deviation between source and target
             :return o_min_deviation: the min deviation between source and target
             :return o_std_deviation: the standard deviation between source and target
@@ -53,12 +53,12 @@ class CloudCloudDistance(component):
         # calculate distances
         o_results = df_error_estimation.cloud_2_cloud_comparison(df_cloud_source_list, df_cloud_target_list)
 
-        return o_results.distances, o_results.distances_mse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
+        return o_results.distances, o_results.distances_rmse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
 
 
 # if __name__ == "__main__":
 #     com = CloudCloudDistance()
-#     o_distances, o_mse, o_max_deviation, o_min_deviation, o_std_deviation, o_results = com.RunScript(
+#     o_distances, o_rmse, o_max_deviation, o_min_deviation, o_std_deviation, o_results = com.RunScript(
 #         i_cloud_source,
 #         i_cloud_target,
 #         i_swap
