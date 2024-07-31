@@ -92,8 +92,8 @@
                 "graft": false
             },
             {
-                "name": "o_results",
-                "nickname": "o_results",
+                "name": "o_result",
+                "nickname": "o_result",
                 "description": "The result of the distance calculation.",
                 "optional": false,
                 "sourceCount": 0,

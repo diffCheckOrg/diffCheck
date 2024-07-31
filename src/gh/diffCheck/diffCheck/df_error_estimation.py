@@ -8,7 +8,7 @@ from diffCheck import diffcheck_bindings
 import Rhino.Geometry as rg
 
 
-def cloud_2_cloud_comparison(source_list, target_list):
+def df_cloud_2_df_cloud_comparison(source_list, target_list):
     """
         Compute the Euclidean distance for every point of a source pcd to its
         closest point on a target pointcloud
@@ -21,7 +21,7 @@ def cloud_2_cloud_comparison(source_list, target_list):
     return results
 
 
-def cloud_2_rhino_mesh_comparison(cloud_source_list, rhino_mesh_target_list, signed_flag, swap):
+def df_cloud_2_rh_mesh_comparison(cloud_source_list, rhino_mesh_target_list, signed_flag, swap):
     """
         Computes distances between a pcd and a mesh
     """
@@ -30,10 +30,10 @@ def cloud_2_rhino_mesh_comparison(cloud_source_list, rhino_mesh_target_list, sig
     for source, target in zip(cloud_source_list, rhino_mesh_target_list):
         if swap:
             # this mean we want to visualize the result on the target mesh
-            distances = rhino_mesh_2_cloud_distance(target, source, signed_flag)
+            distances = rh_mesh_2_df_cloud_distance(target, source, signed_flag)
         else:
             # this means we want to visualize the result on the source pcd
-            distances = cloud_2_rhino_mesh_distance(source, target, signed_flag)
+            distances = df_cloud_2_rh_mesh_distance(source, target, signed_flag)
 
         if swap:
             results.add(target, source, distances)
@@ -43,7 +43,7 @@ def cloud_2_rhino_mesh_comparison(cloud_source_list, rhino_mesh_target_list, sig
     return results
 
 
-def rhino_mesh_2_cloud_distance(source, target, signed=False):
+def rh_mesh_2_df_cloud_distance(source, target, signed=False):
     """
         Calculate the distance between every vertex of a Rhino Mesh to its closest point on a PCD
     """
@@ -85,7 +85,7 @@ def rhino_mesh_2_cloud_distance(source, target, signed=False):
     return np.asarray(distances)
 
 
-def cloud_2_rhino_mesh_distance(source, target, signed=False):
+def df_cloud_2_rh_mesh_distance(source, target, signed=False):
     """
         Calculate the distance between every point of a source pcd to its closest point on a target Rhino Mesh
     """

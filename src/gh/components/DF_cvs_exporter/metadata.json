@@ -38,8 +38,32 @@
                 "typeHintID": "str"
             },
             {
-                "name": "i_results",
-                "nickname": "i_results",
+                "name": "i_file_name",
+                "nickname": "i_file_name",
+                "description": "The name for the file.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_export_seperate_files",
+                "nickname": "i_export_seperate_file",
+                "description": "Whether to export one single file or seperate files per element.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_result",
+                "nickname": "i_result",
                 "description": "The result of the distance calculation to export",
                 "optional": false,
                 "allowTreeAccess": true,

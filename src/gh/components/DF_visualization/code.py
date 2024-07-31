@@ -14,6 +14,7 @@ from diffCheck import df_cvt_bindings
 from diffCheck import df_visualization
 from diffCheck.df_visualization import DFVizSettings
 from diffCheck.df_error_estimation import DFVizResults
+from diffCheck import diffcheck_bindings
 
 class Visualization(component):
     def RunScript(self,

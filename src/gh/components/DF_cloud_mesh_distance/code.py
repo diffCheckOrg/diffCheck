@@ -44,17 +44,17 @@ class CloudMeshDistance(component):
 
         # conversion
         df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_s) for i_cl_s in i_cloud_source]
-        df_mesh_target_list = [beam.to_mesh(i_analysis_resolution) for beam in i_beams]
+        rh_mesh_target_list = [beam.to_mesh(i_analysis_resolution) for beam in i_beams]
 
         # calculate distances
-        o_result = df_error_estimation.cloud_2_rhino_mesh_comparison(df_cloud_source_list, df_mesh_target_list, i_signed_flag, i_swap)
+        o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)
 
-        return o_result.distances, o_result.distances_mse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
+        return o_result.distances, o_result.distances_rmse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
 
 
 # if __name__ == "__main__":
 #     com = CloudMeshDistance()
-#     o_distances, o_mse, o_max_deviation, o_min_deviation, o_std_deviation, o_results = com.RunScript(
+#     o_distances, o_rmse, o_max_deviation, o_min_deviation, o_std_deviation, o_results = com.RunScript(
 #         i_cloud_source,
 #         i_beams,
 #         i_signed_flag,

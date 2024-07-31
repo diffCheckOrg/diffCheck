@@ -33,8 +33,8 @@ class DFColorMap:
     """
 
     def __init__(self, name):
-        self.names = name
-        if name == "Jet":
+        self.name = name
+        if self.name == "Jet":
             self.colors = [
                 Color.FromArgb(0, 0, 255),  # Blue
                 Color.FromArgb(0, 255, 255),  # Cyan
@@ -42,7 +42,7 @@ class DFColorMap:
                 Color.FromArgb(255, 255, 0),  # Yellow
                 Color.FromArgb(255, 0, 0),  # Red
             ]
-        elif name == "Rainbow":
+        elif self.name == "Rainbow":
             self.colors = [
                 Color.FromArgb(127, 0, 255),
                 Color.FromArgb(0, 180, 235),
@@ -50,7 +50,7 @@ class DFColorMap:
                 Color.FromArgb(255, 178, 96),
                 Color.FromArgb(255, 6, 3)
             ]
-        elif name == "RdPu":
+        elif self.name == "RdPu":
             self.colors = [
                 Color.FromArgb(254, 246, 242),
                 Color.FromArgb(251, 196, 191),
@@ -58,7 +58,7 @@ class DFColorMap:
                 Color.FromArgb(172, 1, 125),
                 Color.FromArgb(76, 0, 106)
             ]
-        elif name == "Viridis":
+        elif self.name == "Viridis":
             self.colors = [
                 Color.FromArgb(68, 3, 87),
                 Color.FromArgb(58, 82, 139),
@@ -67,49 +67,47 @@ class DFColorMap:
                 Color.FromArgb(248, 230, 33)
             ]
 
+    def interpolate_color(self, color1, color2, t):
+        """
+        Interpolate between two colors.
+        """
 
-def interpolate_color(color1, color2, t):
-    """
-    Interpolate between two colors.
-    """
+        r = int(color1.R + (color2.R - color1.R) * t)
+        g = int(color1.G + (color2.G - color1.G) * t)
+        b = int(color1.B + (color2.B - color1.B) * t)
 
-    r = int(color1.R + (color2.R - color1.R) * t)
-    g = int(color1.G + (color2.G - color1.G) * t)
-    b = int(color1.B + (color2.B - color1.B) * t)
+        return Color.FromArgb(r, g, b)
 
-    return Color.FromArgb(r, g, b)
+    def value_to_color(self, value, min_value, max_value):
+        """
+        Map a value to a color based on a colormap.
+        """
 
+        if value < min_value:
+            value = min_value
+        elif value > max_value:
+            value = max_value
 
-def value_to_color(value, min_value, max_value, palette):
-    """
-    Map a value to a color based on a colormap.
-    """
+        colormap = self.colors
 
-    if value < min_value:
-        value = min_value
-    elif value > max_value:
-        value = max_value
+        # Normalize the value within the range
+        if min_value == max_value:
+            t = 0.5
+        else:
+            t = (value - min_value) / (max_value - min_value)
 
-    colormap = palette.colors
+        # Determine the segment in the colormap
+        n = len(colormap) - 1
+        idx = int(t * n)
+        if idx >= n:
+            idx = n - 1
+        t = (t * n) - idx
 
-    # Normalize the value within the range
-    if min_value == max_value:
-        t = 0.5
-    else:
-        t = (value - min_value) / (max_value - min_value)
+        # Interpolate between the two colors
+        color1 = colormap[idx]
+        color2 = colormap[idx + 1]
 
-    # Determine the segment in the colormap
-    n = len(colormap) - 1
-    idx = int(t * n)
-    if idx >= n:
-        idx = n - 1
-    t = (t * n) - idx
-
-    # Interpolate between the two colors
-    color1 = colormap[idx]
-    color2 = colormap[idx + 1]
-
-    return interpolate_color(color1, color2, t)
+        return self.interpolate_color(color1, color2, t)
 
 
 def color_rh_pcd(pcd, values, min_value, max_value, palette):
@@ -120,9 +118,9 @@ def color_rh_pcd(pcd, values, min_value, max_value, palette):
     for i, p in enumerate(pcd):
         # check if values is a list
         if isinstance(values, list):
-            mapped_color = value_to_color(values[i], min_value, max_value, palette)
+            mapped_color = palette.value_to_color(values[i], min_value, max_value)
         else:
-            mapped_color = value_to_color(values, min_value, max_value, palette)
+            mapped_color = palette.value_to_color(values, min_value, max_value)
 
         p.Color = mapped_color
 
@@ -139,9 +137,9 @@ def color_rh_mesh(mesh, values, min_value, max_value, palette):
     for i, vertex in enumerate(mesh.Vertices):
         # check if values is a list
         if isinstance(values, list):
-            mapped_color = value_to_color(values[i], min_value, max_value, palette)
+            mapped_color = palette.value_to_color(values[i], min_value, max_value)
         else:
-            mapped_color = value_to_color(values, min_value, max_value, palette)
+            mapped_color = palette.value_to_color(values, min_value, max_value)
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
 
     return mesh
@@ -160,7 +158,7 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     for i in range(steps+1):
 
         value = min_value + (max_value - min_value) * i / steps
-        color = value_to_color(value, min_value, max_value, palette)
+        color = palette.value_to_color(value, min_value, max_value)
 
         if i > 0:
             mesh = rg.Mesh()

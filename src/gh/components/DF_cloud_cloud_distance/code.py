@@ -51,7 +51,7 @@ class CloudCloudDistance(component):
         df_cloud_target_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_t) for i_cl_t in i_cloud_target]
 
         # calculate distances
-        o_results = df_error_estimation.cloud_2_cloud_comparison(df_cloud_source_list, df_cloud_target_list)
+        o_results = df_error_estimation.df_cloud_2_df_cloud_comparison(df_cloud_source_list, df_cloud_target_list)
 
         return o_results.distances, o_results.distances_rmse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
 

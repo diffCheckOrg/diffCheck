@@ -236,7 +236,7 @@ class DFBeam:
         """
         brep = rg.Brep()
         for face in self.faces:
-            brep.Append(face.to_brep_face().ToBrep())
+            brep.Append(face.to_brep_face())
         brep.Compact()
 
         return brep
@@ -251,7 +251,6 @@ class DFBeam:
         new_faces = [f.DuplicateFace(True) for f in rhino_brep_faces]  # .DuplicateFace bypasses the problem of untrimmed faces that appear in f.to_brep_face
 
         for f in new_faces:
-
             param = rg.MeshingParameters()
             param.MaximumEdgeLength = max_edge_length
             mesh_part = rg.Mesh.CreateFromBrep(f, param)[0] #returns a list of meshes with one element
