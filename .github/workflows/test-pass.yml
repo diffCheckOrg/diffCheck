@@ -70,6 +70,11 @@ jobs:
         run: |
           dir ${{github.workspace}}/build/df_tests/Release
 
+      # FIXME: testing solution
+      - name: Verify the ply file exists
+        run: |
+          dir ${{github.workspace}}/tests/test_data
+
       - name: Run tests with cmake
         run: |
           conda run --name diff_check ctest --test-dir build --output-on-failure -C Release --verbose
