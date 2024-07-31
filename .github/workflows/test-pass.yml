@@ -63,6 +63,6 @@ jobs:
           ls ${{github.workspace}}/tests/integration_tests/pybinds_tests
 
       - name: Run tests with cmake
+        working-directory: ${{github.workspace}}/build
         run: |
-          cd build/
           conda run --name diff_check --no-capture-output ctest -C Release --verbose
