@@ -44,16 +44,6 @@ jobs:
       - name: CMake Build
         run: conda run --name diff_check --no-capture-output cmake --build build --config Release
 
-      # TODO: debug
-      - name: List the files in the bin cpp
-        run: |
-          dir ${{github.workspace}}/build/bin/Release
-
-      # TODO: debug
-      - name: List the files in the bin pybinds
-        run: |
-          dir ${{github.workspace}}/build/Release
-
       - name: Copying the dlls for python tests and c++ tests
         run: |
           copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/build/df_tests/Release
@@ -62,36 +52,6 @@ jobs:
           copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
           copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
           copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/tests/integration_tests/pybinds_tests
-
-      # TODO: debug
-      - name: test if the dlls are copied for python tests
-        run: |
-          dir ${{github.workspace}}/tests/integration_tests/pybinds_tests
-
-      # TODO: debug
-      - name: test if the dlls are copied for c++ tests
-        run: |
-          dir ${{github.workspace}}/build/df_tests/Release
-
-      # TODO: debug
-      - name: Verify the ply file exists
-        run: |
-          dir ${{github.workspace}}/tests/test_data
-      # TODO: debug
-      - name: Check .ply file permissions
-        run: |
-          icacls ${{github.workspace}}/tests/test_data/roof_quarter.ply
-      
-      # FIXME: possible solution: Ensure the .ply file has read permissions
-      - name: Set read permissions for .ply file
-        run: |
-          icacls ${{github.workspace}}/tests/test_data/roof_quarter.ply /grant Everyone:R
-      - name: Print .ply file content
-        run: |
-          type ${{github.workspace}}/tests/test_data/roof_quarter.ply
-      - name: Compute hash of .ply file
-        run: |
-          certutil -hashfile ${{github.workspace}}/tests/test_data/roof_quarter.ply MD5
 
       - name: Run tests with cmake
         run: |
