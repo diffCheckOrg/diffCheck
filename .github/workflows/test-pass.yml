@@ -83,12 +83,6 @@ jobs:
       - name: Set read permissions for .ply file
         run: |
           icacls ${{github.workspace}}/tests/test_data/roof_quarter.ply /grant Everyone:R
-      - name: Verify file path and case sensitivity
-        run: |
-          if not exist ${{github.workspace}}/tests/test_data/roof_quarter.ply (
-            echo "File path or case sensitivity issue"
-            exit 1
-          )
       - name: Print .ply file content
         run: |
           type ${{github.workspace}}/tests/test_data/roof_quarter.ply
