@@ -44,23 +44,31 @@ jobs:
       # TODO: debug
       - name: List the files in the bin cpp
         run: |
-          ls ${{github.workspace}}/build/bin/Release
+          dir ${{github.workspace}}/build/bin/Release
 
       # TODO: debug
       - name: List the files in the bin pybinds
         run: |
-          ls ${{github.workspace}}/build/Release
+          dir ${{github.workspace}}/build/Release
 
       - name: Copying the dlls for python tests and c++ tests
         run: |
-          cp ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
-          cp ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
-          cp ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/build/df_tests/Release
+          copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/build/df_tests/Release
+
+          copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/tests/integration_tests/pybinds_tests
 
       # TODO: debug
-      - name: test if the dlls are copied
+      - name: test if the dlls are copied for python tests
         run: |
-          ls ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          dir ${{github.workspace}}/tests/integration_tests/pybinds_tests
+
+      # TODO: debug
+      - name: test if the dlls are copied for c++ tests
+        run: |
+          dir ${{github.workspace}}/build/df_tests/Release
 
       - name: Run tests with cmake
         run: |
