@@ -1,6 +1,8 @@
 #include "diffCheck/geometry/DFMesh.hh"
 #include "diffCheck/IOManager.hh"
 
+#include <open3d/t/geometry/RaycastingScene.h>
+
 
 namespace diffCheck::geometry
 {
@@ -144,5 +146,40 @@ namespace diffCheck::geometry
         this->ColorsVertex = tempMesh_ptr->ColorsVertex;
         this->NormalsFace = tempMesh_ptr->NormalsFace;
         this->ColorsFace = tempMesh_ptr->ColorsFace;
+    }
+
+    std::vector<float> DFMesh::ComputeDistance(const diffCheck::geometry::DFPointCloud &targetCloud, bool useAbs)
+    {
+        auto rayCastingScene = open3d::t::geometry::RaycastingScene();
+
+        std::vector<Eigen::Vector3d> vertices = this->Vertices;
+        std::vector<float> verticesPosition;
+        for (const auto& vertex : vertices) {
+            verticesPosition.insert(verticesPosition.end(), vertex.data(), vertex.data() + 3);
+        }
+        open3d::core::Tensor verticesPositionTensor(verticesPosition.data(), {static_cast<int64_t>(vertices.size()), 3}, open3d::core::Dtype::Float32);
+        std::vector<uint32_t> triangles;
+        for (int i = 0; i < this->Faces.size(); i++) {
+            triangles.push_back(static_cast<uint32_t>(this->Faces[i].x()));
+            triangles.push_back(static_cast<uint32_t>(this->Faces[i].y()));
+            triangles.push_back(static_cast<uint32_t>(this->Faces[i].z()));
+        }
+        open3d::core::Tensor trianglesTensor(triangles.data(), {static_cast<int64_t>(this->Faces.size()), 3}, open3d::core::Dtype::UInt32);
+        rayCastingScene.AddTriangles(verticesPositionTensor, trianglesTensor);
+
+        auto pointCloudO3dCopy = targetCloud;
+        std::shared_ptr<open3d::geometry::PointCloud> pointCloudO3d_ptr = pointCloudO3dCopy.Cvt2O3DPointCloud();
+        std::vector<float> cloudPoints;
+        for (const auto& point : pointCloudO3d_ptr->points_) {
+            cloudPoints.insert(cloudPoints.end(), point.data(), point.data() + 3);
+        }
+        open3d::core::Tensor cloudPointsTensor(cloudPoints.data(), {static_cast<int64_t>(pointCloudO3d_ptr->points_.size()), 3}, open3d::core::Dtype::Float32);
+
+        open3d::core::Tensor sdf = rayCastingScene.ComputeSignedDistance(cloudPointsTensor);
+        if (useAbs)
+            sdf = sdf.Abs();
+        std::vector<float> sdfVector(sdf.GetDataPtr<float>(), sdf.GetDataPtr<float>() + sdf.NumElements());
+
+        return sdfVector;
     }
 } // namespace diffCheck::geometry

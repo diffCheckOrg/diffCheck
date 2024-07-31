@@ -1,0 +1,68 @@
+{
+    "name": "DFVisualization",
+    "nickname": "DFViz",
+    "category": "diffCheck",
+    "subcategory": "Visualization",
+    "description": "Color input geometry according to the results of the distance calculation and settings",
+    "exposure": 4,
+    "instanceGuid": "3d20b6d2-fc3d-4faf-a554-fa4ae3ddcde9",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_result",
+                "nickname": "i_result",
+                "description": "The result of the distance calculation",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            },
+            {
+                "name": "i_viz_settings",
+                "nickname": "i_viz_settings",
+                "description": "The settings of the visualization",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_colored_geo",
+                "nickname": "o_colored_geo",
+                "description": "The geometry colored according to the distance results.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_legend",
+                "nickname": "_legend",
+                "description": "The legend of the visualization",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_histogram",
+                "nickname": "o_histogram",
+                "description": "Histogram that shows the frequency of the values",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

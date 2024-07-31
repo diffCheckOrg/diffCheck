@@ -1,0 +1,88 @@
+{
+    "name": "DFCsvExporter",
+    "nickname": "DFCsvExporter",
+    "category": "diffCheck",
+    "subcategory": "Utility",
+    "description": "Exports distance calculation to csv.",
+    "exposure": 4,
+    "instanceGuid": "af1f921e-5d5b-4201-b4ea-7bca8b7b6fd1",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_dump",
+                "nickname": "i_dump",
+                "description": "A flag indicating whether to perform the export.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_export_dir",
+                "nickname": "i_export_dir",
+                "description": "The directory where the CSV file will be saved.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_file_name",
+                "nickname": "i_file_name",
+                "description": "The name for the file.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_export_seperate_files",
+                "nickname": "i_export_seperate_file",
+                "description": "Whether to export one single file or seperate files per element.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_result",
+                "nickname": "i_result",
+                "description": "The result of the distance calculation to export",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_success",
+                "nickname": "o_success",
+                "description": "Whether the values exported successfully",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

@@ -1,0 +1,128 @@
+{
+    "name": "DFCloudMeshDistance",
+    "nickname": "DFC2MDistance",
+    "category": "diffCheck",
+    "subcategory": "Analysis",
+    "description": "Computes the distance between a point cloud and a mesh",
+    "exposure": 4,
+    "instanceGuid": "534a24ba-7e32-482f-a3d7-293647185122",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud_source",
+                "nickname": "i_cloud_source",
+                "description": "The source point cloud.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_beams",
+                "nickname": "i_beams",
+                "description": "The target DFbeams",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            },
+            {
+                "name": "i_signed_flag",
+                "nickname": "i_signed_flag",
+                "description": "whether to consider the sign of the distances",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_swap",
+                "nickname": "i_swap",
+                "description": "whether to swap source and target",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_analysis_resolution",
+                "nickname": "i_analysis_resolution",
+                "description": "the maximum edge length of the mesh that is used for the distance calculation",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_distances",
+                "nickname": "o_distances",
+                "description": "list of calculated distances for each point of the source.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_rmse",
+                "nickname": "o_rmse",
+                "description": "average squared difference between source and target.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_max_deviation",
+                "nickname": "o_max_deviation",
+                "description": "max deviation between source and target",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_min_deviation",
+                "nickname": "o_min_deviation",
+                "description": "min deviation between source and target",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_std_deviation",
+                "nickname": "o_std_deviation",
+                "description": "standard deviation between source and target.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_result",
+                "nickname": "o_result",
+                "description": "The result of the distance calculation.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
