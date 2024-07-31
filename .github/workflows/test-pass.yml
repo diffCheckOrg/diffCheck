@@ -77,7 +77,7 @@ jobs:
       # TODO: debug
       - name: Check .ply file permissions
         run: |
-          icacls ${{github.workspace}}/tests/test_data/*.ply
+          icacls ${{github.workspace}}/tests/test_data/roof_quarter.ply
 
       - name: Run tests with cmake
         run: |
