@@ -83,7 +83,18 @@ jobs:
       - name: Set read permissions for .ply file
         run: |
           icacls ${{github.workspace}}/tests/test_data/roof_quarter.ply /grant Everyone:R
-          icacls ${{github.workspace}}/tests/integration_tests/pybinds_tests/roof_quarter.ply /grant Everyone:R
+      - name: Verify file path and case sensitivity
+        run: |
+          if not exist ${{github.workspace}}/tests/test_data/roof_quarter.ply (
+            echo "File path or case sensitivity issue"
+            exit 1
+          )
+      - name: Print .ply file content
+        run: |
+          type ${{github.workspace}}/tests/test_data/roof_quarter.ply
+      - name: Compute hash of .ply file
+        run: |
+          certutil -hashfile ${{github.workspace}}/tests/test_data/roof_quarter.ply MD5
 
       - name: Run tests with cmake
         run: |
