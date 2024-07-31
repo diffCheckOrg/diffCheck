@@ -32,9 +32,11 @@ jobs:
 
       - name: Cmake Configure
         run: |
-          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON
+          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
       - name: CMake Build
-        run: ${{github.workspace}}/cmake/build.bat
+        run: cmake --build build --config Release
+
+      #FIXME: here we are probably missing to copy the dlls and pyds before building the wheel
 
       - name: Build wheel
         run: |

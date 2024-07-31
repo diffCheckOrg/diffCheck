@@ -1,0 +1,58 @@
+name: "test-pass"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    env:
+      BUILD_TYPE: Release
+      VCPKG_FILE: c:/vcpkg/scripts/buildsystems/vcpkg.cmake
+      DF_TEST_DATA_DIR: ${{ github.workspace }}/tests/test_data
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true  # enable lfs support
+
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9.1
+
+      - name: Create diff_check conda environment
+        run: conda env create -f environment.yml
+      
+      - name: Activate diff_check conda environment
+        run: conda activate diff_check
+
+      - name: Verify Python version
+        run: conda run --name diff_check --no-capture-output python --version
+
+      - name: Cmake Configure
+        run: |
+          conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=OFF
+
+      - name: CMake Build
+        run: conda run --name diff_check --no-capture-output cmake --build build --config Release
+
+      - name: Copying the dlls for python tests and c++ tests
+        run: |
+          copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/build/df_tests/Release
+          copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/build/df_tests/Release
+
+          copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
+          copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/tests/integration_tests/pybinds_tests
+
+      - name: Run tests with cmake
+        run: |
+          conda run --name diff_check ctest --test-dir build --output-on-failure -C Release --verbose

@@ -1,2 +1,3 @@
+@echo on
 REM build the project in Release mode
-cmake --build build --config Release
+conda run --name diff_check --no-capture-output cmake --build build --config Release

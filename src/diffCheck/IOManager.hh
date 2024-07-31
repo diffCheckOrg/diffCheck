@@ -24,4 +24,13 @@ namespace diffCheck::io
      * @return std::shared_ptr<diffCheck::geometry::DFMesh> the mesh
      */
     std::shared_ptr<diffCheck::geometry::DFMesh> ReadPLYMeshFromFile(const std::string &filename);
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // IO for test suite and tests data
+    //////////////////////////////////////////////////////////////////////////
+    /// @brief Get the directory where test data is stored
+    std::string GetTestDataDir();
+    /// @brief Get the path to the roof quarter ply test file
+    std::string GetRoofQuarterPlyPath();
 } // namespace diffCheck::io

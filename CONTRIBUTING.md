@@ -319,16 +319,48 @@ dfVisualizerPtr->Run();
 ```
 
 
-### CTesting (TO BE UPDATED)
-Tests in df are all `.cc` files added to the `tests` source files, all the data needs to be contained in `tests/test_data`. Finally add your `.cc` files in the cmake:
+### Test suite
+In df we use `CTest` as a test framework managed by Cmake in the  file `cmake/tests.cmake` to run c++ tests with `GoogleTest` and for python in `PyTest`.
 
-https://github.com/diffCheckOrg/diffCheck/blob/efb10e0b5685a1ef1537d0309388f642075d3244/CMakeLists.txt#L170-L173
+Tests are in the `tests` folder:
+```terminal
+F:\DIFFCHECK\TESTS
+│   allCppTests.cc
+│
+├───integration_tests  <-- mainly python interfaces
+│   ├───ghcomponents_tests   <-- relative to gh components
+│   │       .gitkeep
+│   │
+│   ├───package_tests  <-- relative to the pypi package
+│   │       .gitkeep
+│   │
+│   └───pybinds_tests  <-- strictly pybinding
+│       │   diffCheck.dll
+│       │   diffcheck_bindings.cp39-win_amd64.pyd
+│       │   Open3D.dll
+│       │   test_pybind_pyver.py
+│       │   test_pybind_units.py
+│
+├───test_data  <-- here is where we put some .ply data
+│       roof_quarter.ply
+│
+└───unit_tests  <-- c++ backend, one for each header
+        DFLog.cc
+        DFPointCloudTest.cc
+```
 
-To run the tests from terminal
+To run the tests, you can use the following commands:
+```terminal
+cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=ON
+cmake --build build --config Release
 ```
-ctest --test-dir .\build\ -C Release -V
-```
-or
-```
-.\build\df_tests\<config>\df_tests.exe
-```
+
+## Write C++ tests
+To write a test, you need to create a new file in the `tests/unit_tests` folder. Next add your file in the executable `${CPP_UNIT_TESTS}` in the `cmake/tests.cmake`.
+e.g.:
+https://github.com/diffCheckOrg/diffCheck/blob/e080a93cdd73d96efb0686f80bf13730e0b8efa3/cmake/tests.cmake#L13-L17
+
+## Write Python tests
+To write a test, you need to create a new file in the `tests/integration_tests` folder. Write a new `.py` test file and add it in the `cmake/tests.cmake` in the `add_test` function.
+e.g.:
+https://github.com/diffCheckOrg/diffCheck/blob/e080a93cdd73d96efb0686f80bf13730e0b8efa3/cmake/tests.cmake#L45-L48

@@ -1,8 +1,11 @@
 #include "diffCheck.hh"
 #include "diffCheck/log.hh"
+#include "diffCheck/IOManager.hh"
 
+#include <filesystem>
 #include <iostream>
 #include <fstream>
+
 
 // checking computation time 
 #include <chrono>
@@ -12,6 +15,7 @@ int main()
   auto initTime = std::chrono::high_resolution_clock::now();
 
   std::shared_ptr<diffCheck::geometry::DFPointCloud> pcdSrc = std::make_shared<diffCheck::geometry::DFPointCloud>();
+
   std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>> meshSrc = std::vector<std::vector<std::shared_ptr<diffCheck::geometry::DFMesh>>>();
   std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>> segments;
   std::vector<std::string> meshPaths;
