@@ -78,6 +78,11 @@ jobs:
       - name: Check .ply file permissions
         run: |
           icacls ${{github.workspace}}/tests/test_data/roof_quarter.ply
+      
+      # FIXME: possible solution: Ensure the .ply file has read permissions
+      - name: Set read permissions for .ply file
+        run: |
+          icacls ${{github.workspace}}/tests/test_data/roof_quarter.ply /grant Everyone:R
 
       - name: Run tests with cmake
         run: |
