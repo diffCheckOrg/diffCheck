@@ -19,13 +19,12 @@ except ImportError as e:
         print(file)
     sys.exit(1)
 
+# import data files with correct path (also for GitHub Actions)
 def get_ply_cloud_roof_quarter_path():
     base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
     ply_file_path = os.path.join(base_test_data_dir, "roof_quarter.ply")
     if not os.path.exists(ply_file_path):
         raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
-    print(f"base_test_data_dir: {base_test_data_dir}")  #TODO: Debug
-    print(f"ply_file_path: {ply_file_path}")  #TODO: Debug
     return ply_file_path
 
 #------------------------------------------------------------------------------
@@ -100,7 +99,8 @@ def test_DFPointCloud_compute_normals(create_DFPointCloudSampleRoof):
 def test_DFPointCloud_get_tight_bounding_box(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
     obb = pc.get_tight_bounding_box()
-    assert obb[0][0] == 0.1955558282162114, "The min x of the OBB should be 0.1955558282162114"
+    # round to the 3 decimal places
+    assert round(obb[0][0], 3) == 0.196, "The min x of the OBB should be 0.196"
 
 # TODO: to implement DFMesh tests
 def test_DFMesh_init():

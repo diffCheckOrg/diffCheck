@@ -4,6 +4,7 @@
 
 #include "diffCheck/log.hh"
 
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <fstream>
@@ -29,8 +30,19 @@ namespace diffCheck::io
 
     std::string GetTestDataDir()
     {
-        std::filesystem::path path = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
-        std::filesystem::path pathTestData = path / "tests" / "test_data";
+        // for github action conviniency
+        const char* env_p = std::getenv("DF_TEST_DATA_DIR");
+        std::filesystem::path pathTestData;
+        if (env_p != nullptr)
+        {
+            pathTestData = std::filesystem::path(env_p);
+        }
+        else
+        {
+            std::filesystem::path path = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
+            pathTestData = path / "tests" / "test_data";
+        }
+        pathTestData = std::filesystem::absolute(pathTestData);
         return pathTestData.string();
     }
 
