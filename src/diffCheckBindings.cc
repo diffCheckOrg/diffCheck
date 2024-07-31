@@ -49,6 +49,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("r"), py::arg("g"), py::arg("b"))
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
+        .def("add_points", &diffCheck::geometry::DFPointCloud::AddPoints)  
 
         .def("get_tight_bounding_box", &diffCheck::geometry::DFPointCloud::GetTightBoundingBox)
 

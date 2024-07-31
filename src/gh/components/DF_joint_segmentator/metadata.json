@@ -1,0 +1,105 @@
+{
+    "name": "DFJointSegmentator",
+    "nickname": "DFJointSegmentator",
+    "category": "diffCheck",
+    "subcategory": "Segmentation",
+    "description": "Extracts the joints from a point cloud.",
+    "exposure": 4,
+    "instanceGuid": "fd804928-bf11-43eb-a29f-8afabefa660d",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            
+            {
+                "name": "i_clusters",
+                "nickname": "i_clusters",
+                "description": "The cluster point clouds from normal segmentation.",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_joint_faces",
+                "nickname": "i_joint_faces",
+                "description": "The joints to extract and analyze",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "mesh"
+            },
+            {
+                "name": "i_joint_ids",
+                "nickname": "i_joint_ids",
+                "description": "The joint ids of the assembly",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "i_angle_threshold",
+                "nickname": "i_angle_threshold",
+                "description": "From 0 to 1, it's the sin value. By default 0.1. The closer to 0 the less permissive and viceversa to 1.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_association_threshold",
+                "nickname": "i_association_threshold",
+                "description": "From 0 to infinite. By default 0.1. The closer to 0 the less permissive your point.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_joint_segments",
+                "nickname": "o_joint_segments",
+                "description": "The extracted joints.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_transforms",
+                "nickname": "o_transforms",
+                "description": "The transformations for each joint.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_reference_point_clouds",
+                "nickname": "o_reference_point_clouds",
+                "description": "The reference point clouds of the joints. They are generated from the ",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
