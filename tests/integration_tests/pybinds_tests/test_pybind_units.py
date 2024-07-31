@@ -44,7 +44,9 @@ def test_DFPointCloud_init():
 def test_DFPointCloud_load_from_PLY():
     pc = dfb.dfb_geometry.DFPointCloud()
     # pc.load_from_PLY(get_ply_cloud_roof_quarter_path())
-    pc.load_from_PLY(os.path.join(os.path.dirname(__file__), "./roof_quarter.ply"))
+    path_raw = os.path.join(os.path.dirname(__file__), "./roof_quarter.ply")
+    abs_path = os.path.abspath(path_raw)
+    pc.load_from_PLY(abs_path)
     
     assert pc.points.__len__() == 7379, "DFPointCloud should have 7379 points"
     assert pc.normals.__len__() == 7379, "DFPointCloud should have 7379 normals"
