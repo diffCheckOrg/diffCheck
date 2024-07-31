@@ -241,6 +241,24 @@ class DFBeam:
 
         return brep
 
+    def to_mesh(self, max_edge_length):
+        """
+        Convert the beam to a Rhino Mesh object
+        """
+        rhino_brep_faces = [f.to_brep_face() for f in self.faces]
+        mesh = rg.Mesh()
+
+        new_faces = [f.DuplicateFace(True) for f in rhino_brep_faces]  # .DuplicateFace bypasses the problem of untrimmed faces that appear in f.to_brep_face
+
+        for f in new_faces:
+            param = rg.MeshingParameters()
+            param.MaximumEdgeLength = max_edge_length
+            mesh_part = rg.Mesh.CreateFromBrep(f, param)[0] #returns a list of meshes with one element
+            mesh.Append(mesh_part)
+
+        mesh.Compact()
+        return mesh
+
     def __repr__(self):
         return f"Beam: {self.name}, Faces: {len(self.faces)}"
 

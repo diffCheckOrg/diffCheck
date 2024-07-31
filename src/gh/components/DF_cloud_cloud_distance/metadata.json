@@ -1,0 +1,104 @@
+{
+    "name": "DFCloudCloudDistance",
+    "nickname": "DFC2CDistance",
+    "category": "diffCheck",
+    "subcategory": "Analysis",
+    "description": "Computes the distance between 2 point clouds",
+    "exposure": 4,
+    "instanceGuid": "5e90284b-f932-4617-8740-e9c26a95410c",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud_source",
+                "nickname": "i_cloud_source",
+                "description": "The source point cloud.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_cloud_target",
+                "nickname": "i_cloud_target",
+                "description": "The target cloud.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_swap",
+                "nickname": "i_swap",
+                "description": "whether to swap source and target",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_distances",
+                "nickname": "o_distances",
+                "description": "list of calculated distances for each point of the source.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_rmse",
+                "nickname": "o_rmse",
+                "description": "root mean squared error between source and target.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_max_deviation",
+                "nickname": "o_max_deviation",
+                "description": "max deviation between source and target",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_min_deviation",
+                "nickname": "o_min_deviation",
+                "description": "min deviation between source and target",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_std_deviation",
+                "nickname": "o_std_deviation",
+                "description": "standard deviation between source and target.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_result",
+                "nickname": "o_result",
+                "description": "The result of the distance calculation.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

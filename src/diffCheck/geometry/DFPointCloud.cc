@@ -116,18 +116,6 @@ namespace diffCheck::geometry
         return cilantroPointCloud;
     }
 
-    std::vector<double> DFPointCloud::ComputeP2PDistance(std::shared_ptr<geometry::DFPointCloud> target)
-    {
-        std::vector<double> errors;
-        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
-        auto O3DTargetPointCloud = target->Cvt2O3DPointCloud();
-        
-        std::vector<double> distances;
-
-        distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
-        return distances;
-    }
-
     std::vector<Eigen::Vector3d> DFPointCloud::ComputeBoundingBox()
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
@@ -271,6 +259,18 @@ namespace diffCheck::geometry
         this->Points = cloud->Points;
         this->Colors = cloud->Colors;
         this->Normals = cloud->Normals;
+    }
+
+    std::vector<double> DFPointCloud::ComputeDistance(std::shared_ptr<geometry::DFPointCloud> target)
+    {
+        std::vector<double> errors;
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = target->Cvt2O3DPointCloud();
+        
+        std::vector<double> distances;
+
+        distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
+        return distances;
     }
 
     void DFPointCloud::AddPoints(const DFPointCloud &pointCloud)
