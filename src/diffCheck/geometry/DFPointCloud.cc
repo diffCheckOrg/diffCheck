@@ -271,6 +271,7 @@ namespace diffCheck::geometry
 
         distances = O3DSourcePointCloud->ComputePointCloudDistance(*O3DTargetPointCloud);
         return distances;
+    }
 
     void DFPointCloud::AddPoints(const DFPointCloud &pointCloud)
     {
