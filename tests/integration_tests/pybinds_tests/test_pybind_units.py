@@ -41,13 +41,13 @@ def test_DFPointCloud_init():
     pc = dfb.dfb_geometry.DFPointCloud(points, normals, colors)
     assert pc is not None, "DFPointCloud should be initialized successfully"
 
-# def test_DFPointCloud_load_from_PLY():
-#     pc = dfb.dfb_geometry.DFPointCloud()
-#     pc.load_from_PLY(get_ply_cloud_roof_quarter_path())
+def test_DFPointCloud_load_from_PLY():
+    pc = dfb.dfb_geometry.DFPointCloud()
+    pc.load_from_PLY(get_ply_cloud_roof_quarter_path())
     
-#     assert pc.points.__len__() == 7379, "DFPointCloud should have 7379 points"
-#     assert pc.normals.__len__() == 7379, "DFPointCloud should have 7379 normals"
-#     assert pc.colors.__len__() == 7379, "DFPointCloud should have 7379 colors"
+    assert pc.points.__len__() == 7379, "DFPointCloud should have 7379 points"
+    assert pc.normals.__len__() == 7379, "DFPointCloud should have 7379 normals"
+    assert pc.colors.__len__() == 7379, "DFPointCloud should have 7379 colors"
 
 # @pytest.fixture
 # def create_DFPointCloudSampleRoof():
