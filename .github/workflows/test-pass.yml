@@ -51,7 +51,7 @@ jobs:
         run: |
           ls ${{github.workspace}}/build/Release
 
-      - name: Copying the dlls
+      - name: Copying the dlls for python tests and c++ tests
         run: |
           cp ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
           cp ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/tests/integration_tests/pybinds_tests
@@ -63,6 +63,5 @@ jobs:
           ls ${{github.workspace}}/tests/integration_tests/pybinds_tests
 
       - name: Run tests with cmake
-        working-directory: ${{github.workspace}}/build
         run: |
-          conda run --name diff_check --no-capture-output ctest -C Release --verbose
+          conda run --name diff_check ctest --test-dir build --output-on-failure -C Release --verbose
