@@ -70,10 +70,14 @@ jobs:
         run: |
           dir ${{github.workspace}}/build/df_tests/Release
 
-      # FIXME: testing solution
+      # TODO: debug
       - name: Verify the ply file exists
         run: |
           dir ${{github.workspace}}/tests/test_data
+      # TODO: debug
+      - name: Check .ply file permissions
+        run: |
+          icacls ${{github.workspace}}/tests/test_data/*.ply
 
       - name: Run tests with cmake
         run: |
