@@ -44,7 +44,7 @@ class VisualizationSettings(component):
             return None
         
         if i_value_type not in  ["Dist", "RMSE", "MAX", "MIN", "STD"]:
-            ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: Dist, RMSE, MAX, MIN, STD")
             return None
         
         # set default values
