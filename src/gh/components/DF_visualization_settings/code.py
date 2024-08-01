@@ -1,5 +1,8 @@
 #! python3
 
+from ghpythonlib.componentbase import executingcomponent as component
+import Grasshopper, GhPython
+
 import System
 import typing
 
@@ -12,9 +15,62 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from diffCheck import df_visualization
 
+
+        
+# FIXME: rearrange position
+poss_value_types = ["Dist", "RMSE", "MAX", "MIN", "STD"]
+poss_value_types_dict = {
+    0: "Dist",
+    1: "RMSE",
+    2: "MAX",
+    3: "MIN",
+    4: "STD"
+}
+poss_palettes = ["Jet", "Rainbow", "RdPu", "Viridis"]
+def add_valuelist(self, nickname, indx, Y):
+    param = ghenv.Component.Params.Input[indx]
+    if param.SourceCount == 0:
+        valuelist = Grasshopper.Kernel.Special.GH_ValueList()
+        valuelist.NickName = nickname
+        selected = valuelist.FirstSelectedItem
+        valuelist.ListItems.Clear()
+        Keys = ["Dist", "RMSE", "MAX", "MIN", "STD"]
+        Values = ["Dist", "RMSE", "MAX", "MIN", "STD"]
+        # for key, item in poss_value_types_dict.items():
+        for k,v in zip(Keys,Values):
+            vli = gh.Kernel.Special.GH_ValueListItem(str(k),str('"' + v + '"'))
+            # vli = gh.Kernel.Special.GH_ValueListItem("".join(item),"".join(key))
+            valuelist.ListItems.Add(vli)
+        if selected in Keys:
+            valuelist.SelectItem(Keys.index(selected))
+        valuelist.ExpireSolution(True)
+
+        
+        valuelist.CreateAttributes()
+        valuelist.Attributes.Pivot = System.Drawing.PointF(
+            self.Attributes.InputGrip.X - valuelist.Attributes.Bounds.Width - 10,
+            Y - valuelist.Attributes.Bounds.Height / 2
+            )
+        # FIXME: the problem is that the valuelist does not have values, it has ti be recomputed
+        valuelist.Attributes.ExpireLayout();
+        Grasshopper.Instances.ActiveCanvas.Document.AddObject(valuelist, False)
+        self.Params.Input[indx].AddSource(valuelist)
+
 class VisualizationSettings(component):
+    def BeforeRunScript(self):
+        params = getattr(ghenv.Component.Params, "Input")
+        for j in range(len(params)):
+            if "i_value_type" == params[j].NickName:
+                # if params[j].Attributes.InputGrip.Y == 10:
+                #     ghenv.Component.ExpireSolution(True)
+                Y_cord = params[j].Attributes.InputGrip.Y
+                input_indx = j
+                add_valuelist(ghenv.Component, "nicknametest", input_indx, Y_cord)
+
+
+
     def RunScript(self,
-        i_value_type: str,
+        i_value_type: int,
         i_palette: str,
         i_upper_threshold: float,
         i_lower_threshold: float,
@@ -37,15 +93,19 @@ class VisualizationSettings(component):
 
         :returns o_viz_settings: the results of the comparison all in one object
         """
+
+        print(f"DEBUG>>>i_value_type: {i_value_type}")
+
         # set default values
+        # FIXME: the none check has to be kept
         if i_value_type is not None:
-            if i_value_type not in  ["Dist", "RMSE", "MAX", "MIN", "STD"]:
+            if i_value_type not in poss_value_types:
                 ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")
                 return None
         else:
             i_value_type = "Dist"
         if i_palette is not None:
-            if i_palette not in  ["Jet", "Rainbow", "RdPu", "Viridis"]:
+            if i_palette not in poss_palettes:
                 ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis")
                 return None
         else:
@@ -65,7 +125,9 @@ class VisualizationSettings(component):
                                                         i_legend_plane,
                                                         i_histogram_scale_factor)
 
-        return o_viz_settings
+        # print(i_value_type)
+        return i_value_type
+        # return o_viz_settings
 
 # if __name__ == "__main__":
 #     com = VisualizationSettings()
