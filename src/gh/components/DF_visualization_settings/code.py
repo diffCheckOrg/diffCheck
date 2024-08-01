@@ -38,18 +38,18 @@ class VisualizationSettings(component):
         :returns o_viz_settings: the results of the comparison all in one object
         """
         # set default values
-        if i_palette is not None:
-            if i_palette not in  ["Jet", "Rainbow", "RdPu", "Viridis"]:
-                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis")
-                return None
-        else:
-            i_palette = "Jet"
         if i_value_type is not None:
             if i_value_type not in  ["Dist", "RMSE", "MAX", "MIN", "STD"]:
                 ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")
                 return None
         else:
             i_value_type = "Dist"
+        if i_palette is not None:
+            if i_palette not in  ["Jet", "Rainbow", "RdPu", "Viridis"]:
+                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis")
+                return None
+        else:
+            i_palette = "Jet"
         if i_legend_height is None: i_legend_height = 10
         if i_legend_width is None: i_legend_width = 0.5
         if i_legend_plane is None: i_legend_plane = rg.Plane.WorldXY
