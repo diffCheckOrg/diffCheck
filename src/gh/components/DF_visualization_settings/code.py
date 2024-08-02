@@ -17,11 +17,12 @@ from diffCheck import df_visualization
 
 
 def add_str_valuelist(self,
-    values_list,
-    nickname, indx,
-    X_param_coord,
-    Y_param_coord,
-    X_offset=40
+    values_list: typing.List[str],
+    nickname: str,
+    indx: int,
+    X_param_coord: float,
+    Y_param_coord: float,
+    X_offset: int=87
     ) -> None:
     """
         Adds a value list of string values to the component input
@@ -54,6 +55,81 @@ def add_str_valuelist(self,
         Grasshopper.Instances.ActiveCanvas.Document.AddObject(valuelist, False)
         ghenv.Component.Params.Input[indx].AddSource(valuelist)
 
+def add_slider(self,
+    nickname: str,
+    indx: int,
+    lower_bound: float,
+    upper_bound: float,
+    default_value: float,
+    X_param_coord: float,
+    Y_param_coord: float,
+    X_offset: int=100
+    ) -> None:
+    """
+        Adds a slider to the component input
+
+        :param nickname: the nickname of the slider
+        :param indx: the index of the input parameter
+        :param X_param_coord: the x coordinate of the input parameter
+        :param Y_param_coord: the y coordinate of the input parameter
+        :param X_offset: the offset of the slider from the input parameter
+    """
+    param = ghenv.Component.Params.Input[indx]
+    if param.SourceCount == 0:
+        slider = Grasshopper.Kernel.Special.GH_NumberSlider()
+        slider.NickName = nickname
+        slider.Description = "Set the value for the threshold"
+        slider.Slider.Minimum = System.Decimal(lower_bound)
+        slider.Slider.Maximum = System.Decimal(upper_bound)
+        slider.Slider.DecimalPlaces = 3
+        slider.Slider.SmallChange = System.Decimal(0.001)
+        slider.Slider.LargeChange = System.Decimal(0.01)
+        slider.Slider.Value = System.Decimal(default_value)
+        slider.CreateAttributes()
+        slider.Attributes.Pivot = System.Drawing.PointF(
+            X_param_coord - (slider.Attributes.Bounds.Width) - X_offset,
+            Y_param_coord - (slider.Attributes.Bounds.Height / 2 - 0.1)
+            )
+        slider.Attributes.ExpireLayout()
+        Grasshopper.Instances.ActiveCanvas.Document.AddObject(slider, False)
+        ghenv.Component.Params.Input[indx].AddSource(slider)
+
+def add_plane_object(self,
+    nickname: str,
+    indx: int,
+    X_param_coord: float,
+    Y_param_coord: float,
+    X_offset: int=75
+    ) -> None:
+    """
+        Adds a plane object to the component input
+
+        :param nickname: the nickname of the plane object
+        :param indx: the index of the input parameter
+        :param X_param_coord: the x coordinate of the input parameter
+        :param Y_param_coord: the y coordinate of the input parameter
+        :param X_offset: the offset of the plane object from the input parameter
+    """
+    param = ghenv.Component.Params.Input[indx]
+    if param.SourceCount == 0:
+        from Grasshopper import Instances
+        doc = Instances.ActiveCanvas.Document
+        if doc:
+            plane = Grasshopper.Kernel.Parameters.Param_Plane()
+            plane.NickName = nickname
+            # set the value of the plane to WorldXY
+            # plane.PersistentData.ClearData()
+            # plane.PersistentData.Append(rg.Plane.WorldXY)
+            plane.CreateAttributes()
+            plane.Attributes.Pivot = System.Drawing.PointF(
+                X_param_coord - (plane.Attributes.Bounds.Width) - X_offset,
+                Y_param_coord
+                )
+            plane.Attributes.ExpireLayout()
+            doc.AddObject(plane, False)
+            ghenv.Component.Params.Input[indx].AddSource(plane)
+        # Grasshopper.Instances.ActiveCanvas.Document.AddObject(plane, False)
+
 
 class DFVisualizationSettings(component):
     def __init__(self):
@@ -79,6 +155,46 @@ class DFVisualizationSettings(component):
                     self.poss_palettes,
                     "DF_palette",
                     input_indx, X_cord, Y_cord)
+            if "i_upper_threshold" == params[j].NickName:
+                add_slider(
+                    ghenv.Component,
+                    "DF_upper_threshold",
+                    input_indx,
+                    0.000, 5.000, 5.000,
+                    X_cord, Y_cord)
+            if "i_lower_threshold" == params[j].NickName:
+                add_slider(
+                    ghenv.Component,
+                    "DF_lower_threshold",
+                    input_indx,
+                    0.000, 5.000, 0.000,
+                    X_cord, Y_cord)
+            if "i_legend_height" == params[j].NickName:
+                add_slider(
+                    ghenv.Component,
+                    "DF_legend_height",
+                    input_indx,
+                    0.000, 20.000, 10.000,
+                    X_cord, Y_cord)
+            if "i_legend_width" == params[j].NickName:
+                add_slider(
+                    ghenv.Component,
+                    "DF_legend_width",
+                    input_indx,
+                    0.000, 2.000, 0.500,
+                    X_cord, Y_cord)
+            if "i_legend_plane" == params[j].NickName:
+                add_plane_object(
+                    ghenv.Component,
+                    "DF_legend_plane",
+                    input_indx, X_cord, Y_cord)
+            if "i_histogram_scale_factor" == params[j].NickName:
+                add_slider(
+                    ghenv.Component,
+                    "DF_histogram_scale_factor",
+                    input_indx,
+                    0.000, 0.100, 0.010,
+                    X_cord, Y_cord)
 
     def RunScript(self,
         i_value_type: str,
