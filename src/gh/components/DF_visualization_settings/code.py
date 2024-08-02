@@ -8,87 +8,60 @@ import typing
 
 import Rhino
 import Rhino.Geometry as rg
-from ghpythonlib.componentbase import executingcomponent as component
 
+from ghpythonlib.componentbase import executingcomponent as component
 import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from diffCheck import df_visualization
 
 
-        
-# FIXME: rearrange position
-poss_value_types = ["Dist", "RMSE", "MAX", "MIN", "STD"]
-poss_value_types_dict = {
-    0: "Dist",
-    1: "RMSE",
-    2: "MAX",
-    3: "MIN",
-    4: "STD"
-}
-poss_palettes = ["Jet", "Rainbow", "RdPu", "Viridis"]
-
-def add_valuelist(self, nickname, indx, Y):
+def add_str_valuelist(self, values_list, nickname, indx, X_param_coord, Y_param_coord, X_offset=40):
     param = ghenv.Component.Params.Input[indx]
     if param.SourceCount == 0:
         valuelist = Grasshopper.Kernel.Special.GH_ValueList()
         valuelist.NickName = nickname
-        valuelist.Description = "Select the value type to visualize"
+        valuelist.Description = "Select the value to use with DFVizSettings"
         selected = valuelist.FirstSelectedItem
         valuelist.ListItems.Clear()
-        Keys = ["Dist", "RMSE", "MAX", "MIN", "STD"]
-        Values = ["Dist", "RMSE", "MAX", "MIN", "STD"]
-        # for key, item in poss_value_types_dict.items():
-        for k,v in zip(Keys,Values):
-            vli = gh.Kernel.Special.GH_ValueListItem(str(k),str('"' + v + '"'))
-            # vli = gh.Kernel.Special.GH_ValueListItem("".join(item),"".join(key))
+        for v in values_list:
+            vli = gh.Kernel.Special.GH_ValueListItem(str(v),str('"' + v + '"'))
             valuelist.ListItems.Add(vli)
-        # if selected in Keys:
-        #     valuelist.SelectItem(Keys.index(selected))
-        # valuelist.SelectItem(0)
-        
-
-        # print the selected item
-        print(valuelist.FirstSelectedItem.Name)
-        # valuelist.ExpireSolution(True)
-
-        
+        if selected in values_list:
+            valuelist.SelectItem(values_list.index(selected))
         valuelist.CreateAttributes()
-        # FIXME: position to adjust
         valuelist.Attributes.Pivot = System.Drawing.PointF(
-            self.Attributes.InputGrip.X - valuelist.Attributes.Bounds.Width + 10,
-            self.Attributes.InputGrip.Y - valuelist.Attributes.Bounds.Height / 2
+            X_param_coord - (valuelist.Attributes.Bounds.Width) - X_offset,
+            Y_param_coord - (valuelist.Attributes.Bounds.Height / 2 + 0.1)
             )
-        # valuelist.Attributes.ExpireLayout();
-
+        valuelist.Attributes.ExpireLayout()
         Grasshopper.Instances.ActiveCanvas.Document.AddObject(valuelist, False)
-        self.Params.Input[indx].AddSource(valuelist)
-        
-
-
-
-
-        # self.Params.Input[indx].Sources[0].ExpireSolution(True)
-
-        # self.ExpireSolution(True)
-        # refresh the values
-        # self.Params.Input[indx].Sources[0].ExpireSolution(True)
-        # self.Params.Input[indx].Sources[0].Attributes.ExpireLayout()
+        ghenv.Component.Params.Input[indx].AddSource(valuelist)
 
 class DFVisualizationSettings(component):
     def __init__(self):
-        params = getattr(ghenv.Component.Params, "Input")
+        self.poss_value_types = ["Dist", "RMSE", "MAX", "MIN", "STD"]
+        self.poss_palettes = ["Jet", "Rainbow", "RdPu", "Viridis"]
+        
         ghenv.Component.ExpireSolution(True)
+        ghenv.Component.Attributes.PerformLayout()
+        params = getattr(ghenv.Component.Params, "Input")
         for j in range(len(params)):
+            Y_cord = params[j].Attributes.InputGrip.Y
+            X_cord = params[j].Attributes.Pivot.X
+            input_indx = j
             if "i_value_type" == params[j].NickName:
-                # if params[j].Attributes.InputGrip.Y == 10:
-                Y_cord = params[j].Attributes.InputGrip.Y
-                input_indx = j
-                add_valuelist(ghenv.Component, "nicknametest", input_indx, Y_cord)
-                break
-
-    # def BeforeRunScript(self):
-    #     ghenv.Component.ExpireSolution(False)
+                add_str_valuelist(
+                    ghenv.Component,
+                    self.poss_value_types,
+                    "DF_value_t",
+                    input_indx, X_cord, Y_cord)
+            if "i_palette" == params[j].NickName:
+                add_str_valuelist(
+                    ghenv.Component,
+                    self.poss_palettes,
+                    "DF_palette",
+                    input_indx, X_cord, Y_cord)
 
     def RunScript(self,
         i_value_type: str,
@@ -114,32 +87,19 @@ class DFVisualizationSettings(component):
 
         :returns o_viz_settings: the results of the comparison all in one object
         """
-
-        # objs = ghenv.Component.OnPingDocument().Objects
-        # for obj in objs:
-        #     if obj.NickName == "nicknametest":
-        #         i_value_type = obj.FirstSelectedItem.Name
-        #         break
-
-        # ghenv.Component.ExpireSolution(True)
-        print(f"DEBUG>>>i_value_type: {i_value_type}")
-
         # set default values
-        # FIXME: the none check has to be kept
-        # if i_value_type is not None:
-        #     if i_value_type not in poss_value_types:
-        #         ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")
-        #         return None
-        # else:
-        #     i_value_type = "Dist"
-        # if i_palette is not None:
-        #     if i_palette not in poss_palettes:
-        #         ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis")
-        #         return None
-        # else:
-        #     i_palette = "Jet"
-        i_palette = "Jet"
-        
+        if i_value_type is not None:
+            if i_value_type not in self.poss_value_types:
+                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")
+                return None
+        else:
+            i_value_type = "Dist"
+        if i_palette is not None:
+            if i_palette not in self.poss_palettes:
+                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis")
+                return None
+        else:
+            i_palette = "Jet"
         if i_legend_height is None: i_legend_height = 10
         if i_legend_width is None: i_legend_width = 0.5
         if i_legend_plane is None: i_legend_plane = rg.Plane.WorldXY
@@ -155,9 +115,7 @@ class DFVisualizationSettings(component):
                                                         i_legend_plane,
                                                         i_histogram_scale_factor)
 
-        # print(i_value_type)
-        return i_value_type
-        # return o_viz_settings
+        return o_viz_settings
 
 # if __name__ == "__main__":
 #     com = DFVisualizationSettings()
