@@ -117,9 +117,6 @@ def add_plane_object(self,
         if doc:
             plane = Grasshopper.Kernel.Parameters.Param_Plane()
             plane.NickName = nickname
-            # set the value of the plane to WorldXY
-            # plane.PersistentData.ClearData()
-            # plane.PersistentData.Append(rg.Plane.WorldXY)
             plane.CreateAttributes()
             plane.Attributes.Pivot = System.Drawing.PointF(
                 X_param_coord - (plane.Attributes.Bounds.Width) - X_offset,
@@ -193,7 +190,7 @@ class DFVisualizationSettings(component):
                     ghenv.Component,
                     "DF_histogram_scale_factor",
                     input_indx,
-                    0.000, 0.100, 0.010,
+                    0.000, 1.000, 0.01,
                     X_cord, Y_cord)
 
     def RunScript(self,
