@@ -16,7 +16,23 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 from diffCheck import df_visualization
 
 
-def add_str_valuelist(self, values_list, nickname, indx, X_param_coord, Y_param_coord, X_offset=40):
+def add_str_valuelist(self,
+    values_list,
+    nickname, indx,
+    X_param_coord,
+    Y_param_coord,
+    X_offset=40
+    ) -> None:
+    """
+        Adds a value list of string values to the component input
+
+        :param values_list: a list of string values to add to the value list
+        :param nickname: the nickname of the value list
+        :param indx: the index of the input parameter
+        :param X_param_coord: the x coordinate of the input parameter
+        :param Y_param_coord: the y coordinate of the input parameter
+        :param X_offset: the offset of the value list from the input parameter
+    """
     param = ghenv.Component.Params.Input[indx]
     if param.SourceCount == 0:
         valuelist = Grasshopper.Kernel.Special.GH_ValueList()
@@ -37,6 +53,7 @@ def add_str_valuelist(self, values_list, nickname, indx, X_param_coord, Y_param_
         valuelist.Attributes.ExpireLayout()
         Grasshopper.Instances.ActiveCanvas.Document.AddObject(valuelist, False)
         ghenv.Component.Params.Input[indx].AddSource(valuelist)
+
 
 class DFVisualizationSettings(component):
     def __init__(self):
