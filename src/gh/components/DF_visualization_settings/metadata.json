@@ -23,7 +23,7 @@
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "int"
+                "typeHintID": "str"
             },
             {
                 "name": "i_palette",

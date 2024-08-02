@@ -27,11 +27,13 @@ poss_value_types_dict = {
     4: "STD"
 }
 poss_palettes = ["Jet", "Rainbow", "RdPu", "Viridis"]
+
 def add_valuelist(self, nickname, indx, Y):
     param = ghenv.Component.Params.Input[indx]
     if param.SourceCount == 0:
         valuelist = Grasshopper.Kernel.Special.GH_ValueList()
         valuelist.NickName = nickname
+        valuelist.Description = "Select the value type to visualize"
         selected = valuelist.FirstSelectedItem
         valuelist.ListItems.Clear()
         Keys = ["Dist", "RMSE", "MAX", "MIN", "STD"]
@@ -41,36 +43,55 @@ def add_valuelist(self, nickname, indx, Y):
             vli = gh.Kernel.Special.GH_ValueListItem(str(k),str('"' + v + '"'))
             # vli = gh.Kernel.Special.GH_ValueListItem("".join(item),"".join(key))
             valuelist.ListItems.Add(vli)
-        if selected in Keys:
-            valuelist.SelectItem(Keys.index(selected))
-        valuelist.ExpireSolution(True)
+        # if selected in Keys:
+        #     valuelist.SelectItem(Keys.index(selected))
+        # valuelist.SelectItem(0)
+        
+
+        # print the selected item
+        print(valuelist.FirstSelectedItem.Name)
+        # valuelist.ExpireSolution(True)
 
         
         valuelist.CreateAttributes()
+        # FIXME: position to adjust
         valuelist.Attributes.Pivot = System.Drawing.PointF(
-            self.Attributes.InputGrip.X - valuelist.Attributes.Bounds.Width - 10,
-            Y - valuelist.Attributes.Bounds.Height / 2
+            self.Attributes.InputGrip.X - valuelist.Attributes.Bounds.Width + 10,
+            self.Attributes.InputGrip.Y - valuelist.Attributes.Bounds.Height / 2
             )
-        # FIXME: the problem is that the valuelist does not have values, it has ti be recomputed
-        valuelist.Attributes.ExpireLayout();
+        # valuelist.Attributes.ExpireLayout();
+
         Grasshopper.Instances.ActiveCanvas.Document.AddObject(valuelist, False)
         self.Params.Input[indx].AddSource(valuelist)
+        
 
-class VisualizationSettings(component):
-    def BeforeRunScript(self):
+
+
+
+        # self.Params.Input[indx].Sources[0].ExpireSolution(True)
+
+        # self.ExpireSolution(True)
+        # refresh the values
+        # self.Params.Input[indx].Sources[0].ExpireSolution(True)
+        # self.Params.Input[indx].Sources[0].Attributes.ExpireLayout()
+
+class DFVisualizationSettings(component):
+    def __init__(self):
         params = getattr(ghenv.Component.Params, "Input")
+        ghenv.Component.ExpireSolution(True)
         for j in range(len(params)):
             if "i_value_type" == params[j].NickName:
                 # if params[j].Attributes.InputGrip.Y == 10:
-                #     ghenv.Component.ExpireSolution(True)
                 Y_cord = params[j].Attributes.InputGrip.Y
                 input_indx = j
                 add_valuelist(ghenv.Component, "nicknametest", input_indx, Y_cord)
+                break
 
-
+    # def BeforeRunScript(self):
+    #     ghenv.Component.ExpireSolution(False)
 
     def RunScript(self,
-        i_value_type: int,
+        i_value_type: str,
         i_palette: str,
         i_upper_threshold: float,
         i_lower_threshold: float,
@@ -94,22 +115,31 @@ class VisualizationSettings(component):
         :returns o_viz_settings: the results of the comparison all in one object
         """
 
+        # objs = ghenv.Component.OnPingDocument().Objects
+        # for obj in objs:
+        #     if obj.NickName == "nicknametest":
+        #         i_value_type = obj.FirstSelectedItem.Name
+        #         break
+
+        # ghenv.Component.ExpireSolution(True)
         print(f"DEBUG>>>i_value_type: {i_value_type}")
 
         # set default values
         # FIXME: the none check has to be kept
-        if i_value_type is not None:
-            if i_value_type not in poss_value_types:
-                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")
-                return None
-        else:
-            i_value_type = "Dist"
-        if i_palette is not None:
-            if i_palette not in poss_palettes:
-                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis")
-                return None
-        else:
-            i_palette = "Jet"
+        # if i_value_type is not None:
+        #     if i_value_type not in poss_value_types:
+        #         ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")
+        #         return None
+        # else:
+        #     i_value_type = "Dist"
+        # if i_palette is not None:
+        #     if i_palette not in poss_palettes:
+        #         ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis")
+        #         return None
+        # else:
+        #     i_palette = "Jet"
+        i_palette = "Jet"
+        
         if i_legend_height is None: i_legend_height = 10
         if i_legend_width is None: i_legend_width = 0.5
         if i_legend_plane is None: i_legend_plane = rg.Plane.WorldXY
@@ -130,7 +160,7 @@ class VisualizationSettings(component):
         # return o_viz_settings
 
 # if __name__ == "__main__":
-#     com = VisualizationSettings()
+#     com = DFVisualizationSettings()
 #     o_viz_settings = com.RunScript(
 #         i_value_type,
 #         i_palette,
