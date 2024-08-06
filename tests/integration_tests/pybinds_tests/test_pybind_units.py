@@ -191,7 +191,7 @@ def test_DFRegistration_pure_rotation():
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert df_transformation_result.transformation_matrix[0][2] < -0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied "
+        assert df_transformation_result.transformation_matrix[0][2] < -0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert df_transformation_result.transformation_matrix[1][1] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert df_transformation_result.transformation_matrix[2][0] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
@@ -203,7 +203,7 @@ def test_DFRegistration_pure_rotation():
     r = dfb.dfb_transformation.DFTransformation()
     r.transformation_matrix = [[0.0, 0.0, 1.0, 0.0],
                                [0.0, 1.0, 0.0, 0.0],
-                               [-1.0, 0.0, 1.0, 0.0],
+                               [-1.0, 0.0, 0.0, 0.0],
                                [0.0, 0.0, 0.0, 1.0]] # 90 degree rotation around y-axis
 
     pc_1 = mesh.sample_points_uniformly(1000)
