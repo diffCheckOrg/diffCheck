@@ -229,8 +229,8 @@ def test_DFRegistration_bunny(create_DFPointCloudBunny):
         assert abs(df_transformation_result.transformation_matrix[2][3] + 0.1) < 0.02, "The translation in z should be around -0.1"
         assert df_transformation_result.transformation_matrix[0][0] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert df_transformation_result.transformation_matrix[1][2] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied "
-        assert df_transformation_result.transformation_matrix[2][1] < -0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"$
-        
+        assert df_transformation_result.transformation_matrix[2][1] < -0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+
     pc_1 = create_DFPointCloudBunny
     pc_2 = create_DFPointCloudBunny
    
