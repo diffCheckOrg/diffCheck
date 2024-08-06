@@ -214,8 +214,8 @@ def test_DFRegistration_pure_rotation():
     pc_2.apply_transformation(r)
 
 
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2)
-    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2, max_correspondence_distance=1)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2, max_correspondence_distance=1)
 
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
@@ -224,26 +224,26 @@ def test_DFRegistration_bunny(create_DFPointCloudBunny):
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert abs(df_transformation_result.transformation_matrix[0][3] - 1) < 0.2, "The translation in x should be around -0.05"
-        assert abs(df_transformation_result.transformation_matrix[1][3] - 1) < 0.2, "The translation in y should be around -0.05"
-        assert abs(df_transformation_result.transformation_matrix[2][3] - 1) < 0.2, "The translation in z should be around 0.05"
+        assert abs(df_transformation_result.transformatiotrix[0][3] - 0.5) < 0.2, "The translation in x should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[1][3] - 0.5) < 0.2, "The translation in y should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[2][3] - 0.5) < 0.2, "The translation in z should be around 0.05"
         assert abs(df_transformation_result.transformation_matrix[0][0] - 0.866) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformn_maation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
     pc_1 = create_DFPointCloudBunny
     pc_2 = create_DFPointCloudBunny
    
     transform = dfb.dfb_transformation.DFTransformation()
-    transform.transformation_matrix = [[0.866, 0.0, 0.5, 1],
-                                      [0.0, 1.0, 0.0, 1],
-                                      [-0.5, 0.0, 0.866, 1],
+    transform.transformation_matrix = [[0.866, 0.0, 0.5, 0.5],
+                                      [0.0, 1.0, 0.0, 0.5],
+                                      [-0.5, 0.0, 0.866, 0.5],
                                       [0.0, 0.0, 0.0, 1.0]] # 30 degree rotation around y-axis + translation
 
     pc_2.apply_transformation(transform)
 
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2)
-    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2, max_correspondence_distance=1)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2, max_correspondence_distance=1)
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
 
