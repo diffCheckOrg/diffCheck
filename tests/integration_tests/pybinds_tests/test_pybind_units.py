@@ -155,14 +155,14 @@ def test_DFRegistration_pure_translation(create_DFPointCloudSphere):
                                 [0.0, 1.0, 0.0, 20],
                                 [0.0, 0.0, 1.0, 20],
                                 [0.0, 0.0, 0.0, 1.0]]
-    pc2.transform(t)
+    pc2.apply_transformation(t)
 
     df_transformation_result = dfb.dfb_registrations.O3DFastGlobalRegistrationFeatureMatching(pc, pc2, 0.01, 100)
     assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-    assert abs(df_transformation_result[0][3] - 20) > 0.5, "The translation in x should be around 20"
-    assert abs(df_transformation_result[1][3] - 20) > 0.5, "The translation in y should be around 20"
-    assert abs(df_transformation_result[2][3] - 20) > 0.5, "The translation in z should be around 20"
-    
+    assert abs(df_transformation_result.transformation_matrix[0][3] - 20) > 0.5, "The translation in x should be around 20"
+    assert abs(df_transformation_result.transformation_matrix[1][3] - 20) > 0.5, "The translation in y should be around 20"
+    assert abs(df_transformation_result.transformation_matrix[2][3] - 20) > 0.5, "The translation in z should be around 20"
+
 #------------------------------------------------------------------------------
 # dfb_segmentation namespace
 #------------------------------------------------------------------------------
