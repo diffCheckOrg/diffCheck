@@ -20,7 +20,7 @@ For an end-to-end transformer library built on JAX, see MaxText_.
     :maxdepth: 1
     :caption: Developer Resources
 
-    diffCheck.df_geometries
+    diffCheck_PythonAPI
 
 .. _Flax: https://flax.readthedocs.io/
 .. _Orbax: https://orbax.readthedocs.io/

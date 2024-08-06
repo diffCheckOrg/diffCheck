@@ -37,12 +37,31 @@ import operator
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../src/gh/diffCheck'))
+# FIXME: check if the sys paths are correct on clean build
+# import package's modules path
+sys.path.insert(0, os.path.abspath('./'))
+sys.path.insert(0, os.path.abspath('./../src/gh/diffCheck'))
+# check that the bindings pyd/dlls are copied and importable
+try:
+    import diffCheck.diffcheck_bindings as dfb
+except ImportError as e:
+    print(f"Failed to import diffcheck_bindings: {e}")
+    print("Current sys.path directories:")
+    for path in sys.path:
+        print(path)
+    print("Current files in the directory:")
+    for file in os.listdir(extra_dll_dir):
+        print(file)
+    sys.exit(1)
 
-import diffCheck
-print(diffCheck.__version__)
+# import diffCheck
+# print(f"Current diffCheck imported: {diffCheck.__version__}")
+
+
+
 # # Workaround to avoid expanding type aliases. See:
 # # https://github.com/sphinx-doc/sphinx/issues/6518#issuecomment-589613836
+# from typing import ForwardRef
 
 # def _do_not_evaluate_in_diffCheck(
 #     self, globalns, *args, _evaluate=ForwardRef._evaluate,
@@ -81,7 +100,7 @@ extensions = [
     'sphinx.ext.linkcode',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
-    'matplotlib.sphinxext.plot_directive',
+    # 'matplotlib.sphinxext.plot_directive',
     'myst_nb',
     "sphinx_remove_toctrees",
     'sphinx_copybutton',
@@ -108,11 +127,7 @@ suppress_warnings = [
 templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
-# Note: important to list ipynb before md here: we have both md and ipynb
-# copies of each notebook, and myst will choose which to convert based on
-# the order in the source_suffix list. Notebooks which are not executed have
-# outputs stored in ipynb but not in md, so we must convert the ipynb.
-source_suffix = ['.rst', '.ipynb', '.md']
+source_suffix = ['.rst', '.md']
 
 # The main toctree document.
 main_doc = 'index'
@@ -151,6 +166,7 @@ pygments_style = None
 
 autosummary_generate = True
 napolean_use_rtype = False
+
 
 # -- Rh/gh mocking -----------------------------------------------------------
 autodoc_mock_imports = [
