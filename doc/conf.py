@@ -168,12 +168,16 @@ autosummary_generate = True
 napolean_use_rtype = False
 
 
-# -- Rh/gh mocking -----------------------------------------------------------
+# -- Mocking -----------------------------------------------------------------
 autodoc_mock_imports = [
+  # Rhino/gh specifics
   "Rhino",
   "rhinoscriptsyntax",
   "scriptcontext",
-  "Grasshopper"
+  "Grasshopper",
+
+  # Windows specific
+  "System",
   ]
 
 # -- Options for HTML output -------------------------------------------------

@@ -162,12 +162,13 @@ if (BUILD_PYTHON_MODULE)
         $<TARGET_FILE:${PYBINDMODULE_NAME}>
         ${PYPI_DIR}
         )
+    copy_dlls(${TARGET_DLL_PYPI_DIR} ${PYBINDMODULE_NAME})
+    # copy the pyd/dlls for the sphinx documentation
     add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
         $<TARGET_FILE:${PYBINDMODULE_NAME}>
         ${SPHINX_DOC_DIR}
         )
-    copy_dlls(${TARGET_DLL_PYPI_DIR} ${PYBINDMODULE_NAME})
     copy_dlls(${SPHINX_DOC_DIR} ${PYBINDMODULE_NAME})
 endif()
 

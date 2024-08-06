@@ -3,7 +3,7 @@
 
 .. currentmodule:: diffCheck.diffcheck_bindings
 
-FIXME: sphinx is not recognizing the wrap pybind, it disappears from the documentation when clicking elsewhere
+FIXME: sphinx is not recognizing the wrap pybind
 
 .. automodule:: diffCheck.diffcheck_bindings
    :members:
