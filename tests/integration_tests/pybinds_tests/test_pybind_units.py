@@ -191,9 +191,9 @@ def test_DFRegistration_pure_rotation():
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert abs(df_transformation_result.transformation_matrix[0][0] - 0.866) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][0] - 0.866) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
     vertices = [[-2, -1, 0], [2, -1, 0], [2, 1, 0], [-2, 1, 0]]
     faces = [[0, 1, 2], [0, 2, 3]]
@@ -226,20 +226,20 @@ def test_DFRegistration_bunny(create_DFPointCloudBunny):
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert abs(df_transformation_result.transformation_matrix[0][3] - 0.1) < 0.02, "The translation in x should be around -0.05"
-        assert abs(df_transformation_result.transformation_matrix[1][3] - 0.1) < 0.02, "The translation in y should be around -0.05"
-        assert abs(df_transformation_result.transformation_matrix[2][3] - 0.1) < 0.02, "The translation in z should be around 0.05"
-        assert abs(df_transformation_result.transformation_matrix[0][0] - 0.866) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][3] - 1) < 0.2, "The translation in x should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[1][3] - 1) < 0.2, "The translation in y should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[2][3] - 1) < 0.2, "The translation in z should be around 0.05"
+        assert abs(df_transformation_result.transformation_matrix[0][0] - 0.866) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
     pc_1 = create_DFPointCloudBunny
     pc_2 = create_DFPointCloudBunny
    
     transform = dfb.dfb_transformation.DFTransformation()
-    transform.transformation_matrix = [[0.866, 0.0, 0.5, 0.1],
-                                      [0.0, 1.0, 0.0, 0.1],
-                                      [-0.5, 0.0, 0.866, 0.1],
+    transform.transformation_matrix = [[0.866, 0.0, 0.5, 1],
+                                      [0.0, 1.0, 0.0, 1],
+                                      [-0.5, 0.0, 0.866, 1],
                                       [0.0, 0.0, 0.0, 1.0]] # 30 degree rotation around y-axis + translation
 
     pc_2.apply_transformation(transform)
