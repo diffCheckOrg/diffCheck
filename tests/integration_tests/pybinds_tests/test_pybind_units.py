@@ -27,6 +27,13 @@ def get_ply_cloud_roof_quarter_path():
         raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
     return ply_file_path
 
+def get_ply_cloud_sphere_path():
+    base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
+    ply_file_path = os.path.join(base_test_data_dir, "sphere_5kpts_with_normals.ply")
+    if not os.path.exists(ply_file_path):
+        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    return ply_file_path
+
 #------------------------------------------------------------------------------
 # dfb_geometry namespace
 #------------------------------------------------------------------------------
@@ -52,6 +59,12 @@ def test_DFPointCloud_load_from_PLY():
 def create_DFPointCloudSampleRoof():
     df_pcd = dfb.dfb_geometry.DFPointCloud()
     df_pcd.load_from_PLY(get_ply_cloud_roof_quarter_path())
+    yield df_pcd
+
+@pytest.fixture
+def create_DFPointCloudSphere():
+    df_pcd = dfb.dfb_geometry.DFPointCloud()
+    df_pcd.load_from_PLY(get_ply_cloud_sphere_path())
     yield df_pcd
 
 def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
@@ -134,8 +147,22 @@ def test_DFTransform_read_write(create_DFPointCloudSampleRoof):
 #------------------------------------------------------------------------------
 # dfb_registrations namespace
 #------------------------------------------------------------------------------
-# TODO: to be implemented
+def test_DFRegistration_pure_translation(create_DFPointCloudSphere):
+    pc = create_DFPointCloudSphere
+    pc2 = create_DFPointCloudSphere
+    t = dfb.dfb_transformation.DFTransformation()
+    t.transformation_matrix = [[1.0, 0.0, 0.0, 20],
+                                [0.0, 1.0, 0.0, 20],
+                                [0.0, 0.0, 1.0, 20],
+                                [0.0, 0.0, 0.0, 1.0]]
+    pc2.transform(t)
 
+    df_transformation_result = dfb.dfb_registrations.O3DFastGlobalRegistrationFeatureMatching(pc, pc2, 0.01, 100)
+    assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
+    assert abs(df_transformation_result[0][3] - 20) > 0.5, "The translation in x should be around 20"
+    assert abs(df_transformation_result[1][3] - 20) > 0.5, "The translation in y should be around 20"
+    assert abs(df_transformation_result[2][3] - 20) > 0.5, "The translation in z should be around 20"
+    
 #------------------------------------------------------------------------------
 # dfb_segmentation namespace
 #------------------------------------------------------------------------------
