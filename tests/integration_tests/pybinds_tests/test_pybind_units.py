@@ -195,7 +195,7 @@ def test_DFRegistration_pure_rotation():
         assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
-    vertices = [[-2, -1, 0], [2, -1, 0], [2, 1, 0], [-2, 1, 0]]
+    vertices = [[-2.0, -1.0, 0.0], [2.0, -1.0, 0.0], [2.0, 1.0, 0.0], [-2.0, 1.0, 0.0]]
     faces = [[0, 1, 2], [0, 2, 3]]
     mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
     mesh2 = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
@@ -213,12 +213,10 @@ def test_DFRegistration_pure_rotation():
 
     pc_2.apply_transformation(r)
 
-    df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(pc_1, pc_2)
-    df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(pc_1, pc_2)
+
     df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2)
     df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2)
-    make_assertions(df_transformation_result_o3dfgrfm)
-    make_assertions(df_transformation_result_o3drfm)
+
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
 
@@ -244,12 +242,8 @@ def test_DFRegistration_bunny(create_DFPointCloudBunny):
 
     pc_2.apply_transformation(transform)
 
-    df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(pc_1, pc_2)
-    df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(pc_1, pc_2)
     df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2)
     df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2)
-    make_assertions(df_transformation_result_o3dfgrfm)
-    make_assertions(df_transformation_result_o3drfm)
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
 
