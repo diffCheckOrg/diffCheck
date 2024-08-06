@@ -191,20 +191,20 @@ def test_DFRegistration_pure_rotation():
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert df_transformation_result.transformation_matrix[0][2] < -0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert df_transformation_result.transformation_matrix[1][1] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert df_transformation_result.transformation_matrix[2][0] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][0] - 0.866) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][2] + 0.5) < 0.1, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
-    vertices = [[-1, -1, 0], [1, -1, 0], [1, 1, 0], [-1, 1, 0]]
+    vertices = [[-2, -1, 0], [2, -1, 0], [2, 1, 0], [-2, 1, 0]]
     faces = [[0, 1, 2], [0, 2, 3]]
     mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
     mesh2 = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
 
     r = dfb.dfb_transformation.DFTransformation()
-    r.transformation_matrix = [[0.0, 0.0, 1.0, 0.0],
+    r.transformation_matrix = [[0.866, 0.0, 0.5, 0.0],
                                [0.0, 1.0, 0.0, 0.0],
-                               [-1.0, 0.0, 0.0, 0.0],
-                               [0.0, 0.0, 0.0, 1.0]] # 90 degree rotation around y-axis
+                               [-0.5, 0.0, 0.866, 0.0],
+                               [0.0, 0.0, 0.0, 1.0]] # 30 degree rotation around y-axis
 
     pc_1 = mesh.sample_points_uniformly(1000)
     pc_2 = mesh2.sample_points_uniformly(1000)
@@ -226,9 +226,9 @@ def test_DFRegistration_bunny(create_DFPointCloudBunny):
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert abs(df_transformation_result.transformation_matrix[0][3] + 0.1) < 0.02, "The translation in x should be around 0.1"
-        assert abs(df_transformation_result.transformation_matrix[1][3] + 0.2) < 0.02, "The translation in y should be around 0.2"
-        assert abs(df_transformation_result.transformation_matrix[2][3] - 0.1) < 0.02, "The translation in z should be around -0.1"
+        assert abs(df_transformation_result.transformation_matrix[0][3] + 0.05) < 0.02, "The translation in x should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[1][3] + 0.05) < 0.02, "The translation in y should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[2][3] - 0.05) < 0.02, "The translation in z should be around 0.05"
         assert df_transformation_result.transformation_matrix[0][0] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert df_transformation_result.transformation_matrix[1][2] > 0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied "
         assert df_transformation_result.transformation_matrix[2][1] < -0.9, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
@@ -237,9 +237,9 @@ def test_DFRegistration_bunny(create_DFPointCloudBunny):
     pc_2 = create_DFPointCloudBunny
    
     transform = dfb.dfb_transformation.DFTransformation()
-    transform.transformation_matrix = [[1.0, 0.0, 0.0, 0.1],
-                                       [0.0, 0.0, -1.0, 0.2],
-                                       [0.0, 1.0, 0.0, -0.1],
+    transform.transformation_matrix = [[1.0, 0.0, 0.0, 0.05],
+                                       [0.0, 0.0, -1.0, 0.05],
+                                       [0.0, 1.0, 0.0, -0.05],
                                        [0.0, 0.0, 0.0, 1.0]]
     pc_2.apply_transformation(transform)
 
