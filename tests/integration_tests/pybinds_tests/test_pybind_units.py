@@ -179,7 +179,7 @@ def test_DFRegistration_pure_translation(create_DFPointCloudSphere):
 
     df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(pc_1, pc_2)
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(pc_1, pc_2)
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DDICP(pc_1, pc_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DICP(pc_1, pc_2)
     df_transformation_result_o3dgicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DGeneralizedICP(pc_1, pc_2)
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
@@ -205,15 +205,15 @@ def test_DFRegistration_pure_rotation():
                                [0.0, 1.0, 0.0, 0.0],
                                [-1.0, 0.0, 1.0, 0.0],
                                [0.0, 0.0, 0.0, 1.0]] # 90 degree rotation around y-axis
-    
-    mesh2.apply_transformation(r)
 
     pc_1 = mesh.sample_points_uniformly(1000)
     pc_2 = mesh2.sample_points_uniformly(1000)
 
+    pc_2.apply_transformation(r)
+
     df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(pc_1, pc_2)
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(pc_1, pc_2)
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DDICP(pc_1, pc_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DICP(pc_1, pc_2)
     df_transformation_result_o3dgicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DGeneralizedICP(pc_1, pc_2)
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
@@ -243,7 +243,7 @@ def test_DFRegistration_bunny(create_DFPointCloudBunny):
 
     df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(pc_1, pc_2)
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(pc_1, pc_2)
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DDICP(pc_1, pc_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DICP(pc_1, pc_2)
     df_transformation_result_o3dgicp = dfb.dfb_registrations.DFGlobalRegistrations.O3DGeneralizedICP(pc_1, pc_2)
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
