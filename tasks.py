@@ -59,3 +59,7 @@ def yakerize(c):
         --logo-path {PATH_LOGO} \
         --license-path {PATH_LICENSE} \
         --readme-path {PATH_README}")
+
+@task
+def documentize(c):
+    c.run("conda run --name diff_check --no-capture-output sphinx-build doc _build")
