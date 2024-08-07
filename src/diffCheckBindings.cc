@@ -40,6 +40,9 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("downsample_by_size", &diffCheck::geometry::DFPointCloud::DownsampleBySize,
             py::arg("target_size"))
 
+        .def("apply_transformation", &diffCheck::geometry::DFPointCloud::ApplyTransformation,
+            py::arg("transformation"))
+
         .def("estimate_normals", &diffCheck::geometry::DFPointCloud::EstimateNormals,
             py::arg("use_cilantro_evaluator") = false,
             py::arg("knn") = 100,
