@@ -23,11 +23,13 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
     // dfb_geometry namespace
     //#################################################################################################
 
-    py::module_ submodule_geometry = m.def_submodule("dfb_geometry", "A submodule for the geometry classes.");
+    py::module_ submodule_geometry = m.def_submodule("dfb_geometry", "A submodule for wrap geometries in df.");
 
-    py::class_<diffCheck::geometry::DFPointCloud, std::shared_ptr<diffCheck::geometry::DFPointCloud>>(submodule_geometry, "DFPointCloud")
+    py::class_<diffCheck::geometry::DFPointCloud, std::shared_ptr<diffCheck::geometry::DFPointCloud>>(submodule_geometry, "DFPointCloud",
+        "A class for the point cloud representation.")
         .def(py::init<>())
-        .def(py::init<std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>>())
+        .def(py::init<std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>>(),
+            py::arg("points"), py::arg("colors"), py::arg("normals"))
         
         .def("compute_distance", &diffCheck::geometry::DFPointCloud::ComputeDistance,
             py::arg("target_cloud"))
@@ -49,11 +51,12 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("r"), py::arg("g"), py::arg("b"))
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
-        .def("add_points", &diffCheck::geometry::DFPointCloud::AddPoints)  
+        .def("add_points", &diffCheck::geometry::DFPointCloud::AddPoints)
 
         .def("get_tight_bounding_box", &diffCheck::geometry::DFPointCloud::GetTightBoundingBox)
 
-        .def("get_num_points", &diffCheck::geometry::DFPointCloud::GetNumPoints)
+        .def("get_num_points", &diffCheck::geometry::DFPointCloud::GetNumPoints,
+            "Get the number of points in the point cloud.")
         .def("get_num_colors", &diffCheck::geometry::DFPointCloud::GetNumColors)
         .def("get_num_normals", &diffCheck::geometry::DFPointCloud::GetNumNormals)
         .def("get_center_point", &diffCheck::geometry::DFPointCloud::GetCenterPoint)
@@ -72,7 +75,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             [](const diffCheck::geometry::DFPointCloud &self) { return self.Normals; },
             [](diffCheck::geometry::DFPointCloud &self, const std::vector<Eigen::Vector3d>& value) { self.Normals = value; });
 
-    py::class_<diffCheck::geometry::DFMesh, std::shared_ptr<diffCheck::geometry::DFMesh>>(submodule_geometry, "DFMesh")
+    py::class_<diffCheck::geometry::DFMesh, std::shared_ptr<diffCheck::geometry::DFMesh>>(submodule_geometry, "DFMesh",
+        "A class for the triangle mesh representation.")
         .def(py::init<>())
         .def(py::init<std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3i>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>, std::vector<Eigen::Vector3d>>())
 
@@ -126,7 +130,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
 
     py::module_ submodule_registrations = m.def_submodule("dfb_registrations", "A submodule for the registration methods.");
 
-    py::class_<diffCheck::registrations::DFGlobalRegistrations>(submodule_registrations, "DFGlobalRegistrations")
+    py::class_<diffCheck::registrations::DFGlobalRegistrations>(submodule_registrations, "DFGlobalRegistrations",
+        "A static class for the global registration methods.")
         .def_static("O3DFastGlobalRegistrationFeatureMatching", &diffCheck::registrations::DFGlobalRegistrations::O3DFastGlobalRegistrationFeatureMatching,
             py::arg("source"),
             py::arg("target"),
@@ -152,7 +157,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("ransac_max_iteration") = 5000,
             py::arg("ransac_confidence_threshold") = 0.999);
 
-    py::class_<diffCheck::registrations::DFRefinedRegistration>(submodule_registrations, "DFRefinedRegistration")
+    py::class_<diffCheck::registrations::DFRefinedRegistration>(submodule_registrations, "DFRefinedRegistration",
+        "A static class for the refined registration methods.")
         .def_static("O3DICP", &diffCheck::registrations::DFRefinedRegistration::O3DICP,
             py::arg("source"),
             py::arg("target"),
@@ -176,7 +182,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
 
     py::module_ submodule_segmentation = m.def_submodule("dfb_segmentation", "A submodule for the `semantic` segmentation methods.");
 
-    py::class_<diffCheck::segmentation::DFSegmentation>(submodule_segmentation, "DFSegmentation")
+    py::class_<diffCheck::segmentation::DFSegmentation>(submodule_segmentation, "DFSegmentation",
+        "A static class for the segmentation methods.")
         .def_static("segment_by_normal", &diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation,
             py::arg("point_cloud"),
             py::arg("normal_threshold_degree") = 20.0,

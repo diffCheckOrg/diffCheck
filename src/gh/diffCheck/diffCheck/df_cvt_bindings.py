@@ -17,7 +17,7 @@ def test_bindings() -> bool:
 
         :return is_imported: True if the bindings are imported, False otherwise
     """
-    return False
+    return diffcheck_bindings.dfb_test.test()
 
 def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCloud:
     """

@@ -1,9 +1,9 @@
-``diffCheck.df_transformations`` module
-=======================================
+``diffCheck.df_util`` module
+============================
 
-.. currentmodule:: diffCheck.df_transformations
+.. currentmodule:: diffCheck.df_util
 
-.. automodule:: diffCheck.df_transformations
+.. automodule:: diffCheck.df_util
    :members:
    :undoc-members:
    :show-inheritance:

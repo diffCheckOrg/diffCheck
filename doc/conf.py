@@ -108,6 +108,7 @@ extensions = [
     'sphinx_design',
     'sphinxext.rediraffe',
     'sphinxcontrib.mermaid',
+    'sphinx_autodoc_typehints',
 ]
 
 intersphinx_mapping = {
@@ -200,7 +201,7 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '../logo.png'
+html_logo = './_static/logo_sphinx.png'
 
 # html_favicon = '_static/favicon.png'
 html_favicon = '../favicon.png'

@@ -3,8 +3,6 @@
 
 .. currentmodule:: diffCheck.df_visualization
 
-///
-
 .. automodule:: diffCheck.df_visualization
    :members:
    :undoc-members:

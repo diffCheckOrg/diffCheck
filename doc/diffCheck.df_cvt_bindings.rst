@@ -3,7 +3,7 @@
 
 .. currentmodule:: diffCheck.df_cvt_bindings
 
-This module contains all the objects and functions to handle the conversion between, :mod:`diffCheck.df_geometries` or Rhino types and :mod:`diffCheck.diffcheck_bindings` modules.
+This module contains all the objects and functions to handle the conversion between, diffCheck (in particular :mod:`diffCheck.diffcheck_bindings`) to/from Rhino.
 
 .. automodule:: diffCheck.df_cvt_bindings
    :members:
