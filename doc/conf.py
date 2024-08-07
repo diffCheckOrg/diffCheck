@@ -107,6 +107,7 @@ extensions = [
     'jax_extensions',
     'sphinx_design',
     'sphinxext.rediraffe',
+    'sphinxcontrib.mermaid',
 ]
 
 intersphinx_mapping = {
