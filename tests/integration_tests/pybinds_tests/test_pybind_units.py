@@ -69,16 +69,20 @@ def create_DFPointCloudSampleRoof():
     yield df_pcd
 
 @pytest.fixture
-def create_DFPointCloudSphere():
-    df_pcd = dfb.dfb_geometry.DFPointCloud()
-    df_pcd.load_from_PLY(get_ply_cloud_sphere_path())
-    yield df_pcd
+def create_two_DFPointCloudSphere():
+    df_pcd_1 = dfb.dfb_geometry.DFPointCloud()
+    df_pcd_2 = dfb.dfb_geometry.DFPointCloud()  
+    df_pcd_1.load_from_PLY(get_ply_cloud_sphere_path())
+    df_pcd_2.load_from_PLY(get_ply_cloud_sphere_path())
+    yield df_pcd_1, df_pcd_2
 
 @pytest.fixture
-def create_DFPointCloudBunny():
-    df_pcd = dfb.dfb_geometry.DFPointCloud()
-    df_pcd.load_from_PLY(get_ply_cloud_bunny_path())
-    yield df_pcd
+def create_two_DFPointCloudBunny():
+    df_pcd_1 = dfb.dfb_geometry.DFPointCloud()
+    df_pcd_2 = dfb.dfb_geometry.DFPointCloud()
+    df_pcd_1.load_from_PLY(get_ply_cloud_bunny_path())
+    df_pcd_2.load_from_PLY(get_ply_cloud_bunny_path())
+    yield df_pcd_1, df_pcd_2
 
 def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
@@ -160,34 +164,36 @@ def test_DFTransform_read_write(create_DFPointCloudSampleRoof):
 #------------------------------------------------------------------------------
 # dfb_registrations namespace
 #------------------------------------------------------------------------------
-def test_DFRegistration_pure_translation(create_DFPointCloudSphere):
+def test_DFRegistration_pure_translation(create_two_DFPointCloudSphere):
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert abs(df_transformation_result.transformation_matrix[0][3] - 20) > 0.5, "The translation in x should be around 20"
-        assert abs(df_transformation_result.transformation_matrix[1][3] - 20) > 0.5, "The translation in y should be around 20"
-        assert abs(df_transformation_result.transformation_matrix[2][3] - 20) > 0.5, "The translation in z should be around 20"
+        assert abs(df_transformation_result.transformation_matrix[0][3] - 20) < 0.5, "The translation in x should be around 20"
+        assert abs(df_transformation_result.transformation_matrix[1][3] - 20) < 0.5, "The translation in y should be around 20"
+        assert abs(df_transformation_result.transformation_matrix[2][3] - 20) < 0.5, "The translation in z should be around 20"
 
-    pc_1 = create_DFPointCloudSphere
-    pc_2 = create_DFPointCloudSphere
+    sphere_1, sphere_2 = create_two_DFPointCloudSphere
+
     t = dfb.dfb_transformation.DFTransformation()
     t.transformation_matrix = [[1.0, 0.0, 0.0, 20],
                                 [0.0, 1.0, 0.0, 20],
                                 [0.0, 0.0, 1.0, 20],
                                 [0.0, 0.0, 0.0, 1.0]]
-    pc_2.apply_transformation(t)
 
-    df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(pc_1, pc_2)
-    df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(pc_1, pc_2)
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2)
-    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2)
+    sphere_2.apply_transformation(t)
+
+    df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(sphere_1, sphere_2)
+    df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(sphere_1, sphere_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(sphere_1, sphere_2, max_correspondence_distance=20)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(sphere_1, sphere_2, max_correspondence_distance=20)
+    
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
     
 
-def test_DFRegistration_pure_rotation():
+def test_DFRegistration_rotation_bunny(create_two_DFPointCloudBunny):
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
@@ -195,55 +201,54 @@ def test_DFRegistration_pure_rotation():
         assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
-    vertices = [[-2.0, -1.0, 0.0], [2.0, -1.0, 0.0], [2.0, 1.0, 0.0], [-2.0, 1.0, 0.0]]
-    faces = [[0, 1, 2], [0, 2, 3]]
-    mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
-    mesh2 = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
+    bunny_1, bunny_2 =create_two_DFPointCloudBunny
 
     r = dfb.dfb_transformation.DFTransformation()
     r.transformation_matrix = [[0.866, 0.0, 0.5, 0.0],
                                [0.0, 1.0, 0.0, 0.0],
                                [-0.5, 0.0, 0.866, 0.0],
                                [0.0, 0.0, 0.0, 1.0]] # 30 degree rotation around y-axis
+    bunny_2.apply_transformation(r)
 
-    pc_1 = mesh.sample_points_uniformly(1000)
-    pc_2 = mesh2.sample_points_uniformly(1000)
-    pc_1.estimate_normals()
-    pc_2.estimate_normals()
+    df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(bunny_1, bunny_2)
+    df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(bunny_1, bunny_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(bunny_1, bunny_2, max_correspondence_distance=1.0)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(bunny_1, bunny_2, max_correspondence_distance=15.0)
 
-    pc_2.apply_transformation(r)
-
-
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2, max_correspondence_distance=1)
-    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2, max_correspondence_distance=1)
-
+    make_assertions(df_transformation_result_o3dfgrfm)
+    make_assertions(df_transformation_result_o3drfm)
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
 
-def test_DFRegistration_bunny(create_DFPointCloudBunny):
+
+def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
 
     def make_assertions(df_transformation_result):
         assert df_transformation_result is not None, "DFRegistration should return a transformation matrix"
-        assert abs(df_transformation_result.transformatiotrix[0][3] - 0.5) < 0.2, "The translation in x should be around -0.05"
-        assert abs(df_transformation_result.transformation_matrix[1][3] - 0.5) < 0.2, "The translation in y should be around -0.05"
-        assert abs(df_transformation_result.transformation_matrix[2][3] - 0.5) < 0.2, "The translation in z should be around 0.05"
+        assert abs(df_transformation_result.transformation_matrix[0][3] - 0.1) < 0.02, "The translation in x should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[1][3] - 0.1) < 0.02, "The translation in y should be around -0.05"
+        assert abs(df_transformation_result.transformation_matrix[2][3] - 0.1) < 0.02, "The translation in z should be around 0.05"
         assert abs(df_transformation_result.transformation_matrix[0][0] - 0.866) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
-        assert abs(df_transformation_result.transformn_maation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
+        assert abs(df_transformation_result.transformation_matrix[0][1]) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
         assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
-    pc_1 = create_DFPointCloudBunny
-    pc_2 = create_DFPointCloudBunny
+    bunny_1 ,bunny_2 = create_two_DFPointCloudBunny
    
     transform = dfb.dfb_transformation.DFTransformation()
-    transform.transformation_matrix = [[0.866, 0.0, 0.5, 0.5],
-                                      [0.0, 1.0, 0.0, 0.5],
-                                      [-0.5, 0.0, 0.866, 0.5],
-                                      [0.0, 0.0, 0.0, 1.0]] # 30 degree rotation around y-axis + translation
+    transform.transformation_matrix = [[0.866, 0.0, 0.5, 0.1],
+                                [0.0, 1.0, 0.0, 0.1],
+                                [-0.5, 0.0, 0.866, 0.1],
+                                [0.0, 0.0, 0.0, 1.0]] # 30 degree rotation around y-axis + translation
 
-    pc_2.apply_transformation(transform)
+    bunny_2.apply_transformation(transform)
 
-    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(pc_1, pc_2, max_correspondence_distance=1)
-    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(pc_1, pc_2, max_correspondence_distance=1)
+    df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(bunny_1, bunny_2)
+    df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(bunny_1, bunny_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(bunny_1, bunny_2)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(bunny_1, bunny_2)
+    
+    make_assertions(df_transformation_result_o3dfgrfm)
+    make_assertions(df_transformation_result_o3drfm)
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
 
