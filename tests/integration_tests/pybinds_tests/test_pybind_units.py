@@ -41,6 +41,13 @@ def get_ply_cloud_bunny_path():
         raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
     return ply_file_path
 
+def get_ply_mesh_cube_path():
+    base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
+    ply_file_path = os.path.join(base_test_data_dir, "cube_mesh.ply")
+    if not os.path.exists(ply_file_path):
+        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    return ply_file_path
+
 #------------------------------------------------------------------------------
 # dfb_geometry namespace
 #------------------------------------------------------------------------------
@@ -83,6 +90,13 @@ def create_two_DFPointCloudBunny():
     df_pcd_1.load_from_PLY(get_ply_cloud_bunny_path())
     df_pcd_2.load_from_PLY(get_ply_cloud_bunny_path())
     yield df_pcd_1, df_pcd_2
+
+@pytest.fixture
+def create_DFMeshCube():
+    df_mesh = dfb.dfb_geometry.DFMesh()
+    df_mesh.load_from_PLY(get_ply_mesh_cube_path())
+    yield df_mesh
+
 
 def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
@@ -132,9 +146,33 @@ def test_DFPointCloud_get_tight_bounding_box(create_DFPointCloudSampleRoof):
     # round to the 3 decimal places
     assert round(obb[0][0], 3) == 0.196, "The min x of the OBB should be 0.196"
 
-# TODO: to implement DFMesh tests
 def test_DFMesh_init():
-    pass
+    mesh = dfb.dfb_geometry.DFMesh()
+    assert mesh is not None, "DFMesh should be initialized successfully"
+
+def test_DFMesh_load_from_PLY(create_DFMeshCube):
+    mesh = create_DFMeshCube
+    assert mesh.vertices.__len__() == 726, "DFMesh should have 726 vertices"
+    assert mesh.faces.__len__() == 1200, "DFMesh should have 800 faces"
+
+def test_DFMesh_sample_points(create_DFMeshCube):
+    mesh = create_DFMeshCube
+    pc = mesh.sample_points_uniformly(1000)
+    assert pc.points.__len__() == 1000, "DFPointCloud should have 1000 points"
+
+def test_DFMesh_compute_bounding_box(create_DFMeshCube):
+    mesh = create_DFMeshCube
+    obb = mesh.get_tight_bounding_box()
+    assert obb[0][0] == 0, "The x coordinate of the first corner of the OBB should be 0"
+    assert obb[1][0] == 100, "The y coordinate of the second corner of the OBB should be 100"
+    assert obb[2][0] == 0, "The y coordinate of the third corner of the OBB should be 0"
+    assert obb[6][2] == 100, "The z coordinate of the second to last corner of the OBB should be 100"
+
+def test_DFMesh_getters(create_DFMeshCube):
+    mesh = create_DFMeshCube
+    assert mesh.get_num_vertices() == 726, "get_num_vertices() should return 726"
+    assert mesh.get_num_faces() == 1200, "get_num_faces() should return 1200"
+
 
 #------------------------------------------------------------------------------
 # dfb_transformation namespace
@@ -257,9 +295,27 @@ def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
 # dfb_segmentation namespace
 #------------------------------------------------------------------------------
 
-    # vertices = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, -1], [0, 0, -1]]
-    # faces = [[0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 5]]
-    # mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
+def test_DFPlaneSegmentation():
+    vertices = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, -1], [0, 0, -1]]
+    faces = [[0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 5]]
+    mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
+    pc = mesh.sample_points_uniformly(1000)
+    pc.estimate_normals(knn=200)
+
+    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, min_cluster_size=250)
+
+    assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
+
+def test_DFPlaneSegmentation_disconnected_plans():
+    vertices = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, -1], [0, 0, -1]]
+    faces = [[0, 1, 2], [3, 4, 5]]
+    mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
+    pc = mesh.sample_points_uniformly(1000)
+    pc.estimate_normals(knn=200)
+
+    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, min_cluster_size=250)
+
+    assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
 
 if __name__ == "__main__":
     pytest.main()
