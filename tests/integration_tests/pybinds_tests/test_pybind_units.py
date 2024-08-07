@@ -300,9 +300,12 @@ def test_DFPlaneSegmentation():
     faces = [[0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 5]]
     mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
     pc = mesh.sample_points_uniformly(1000)
-    pc.estimate_normals(knn=200)
+    pc.estimate_normals(knn=50)
 
-    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, min_cluster_size=250)
+    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, 
+                                                                     normal_threshold_degree=10, 
+                                                                     min_cluster_size=200, 
+                                                                     knn_neighborhood_size=200)
 
     assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
 
@@ -311,9 +314,12 @@ def test_DFPlaneSegmentation_disconnected_plans():
     faces = [[0, 1, 2], [3, 4, 5]]
     mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
     pc = mesh.sample_points_uniformly(1000)
-    pc.estimate_normals(knn=200)
+    pc.estimate_normals(knn=50)
 
-    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, min_cluster_size=250)
+    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, 
+                                                                     normal_threshold_degree=10, 
+                                                                     min_cluster_size=200, 
+                                                                     knn_neighborhood_size=200)
 
     assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
 
