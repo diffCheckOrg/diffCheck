@@ -15,9 +15,6 @@ from diffCheck import diffcheck_bindings
 
 class DFTester(component):
     def RunScript(self):
-        """
-            The component test and import bind module for diffCheck.
-        """
         ghenv.Component.Message = f"diffCheck v: {diffCheck.__version__}"
         is_binding_imported = diffcheck_bindings.dfb_test.test()
 
@@ -29,7 +26,3 @@ class DFTester(component):
         print(f"diffCheck test: {diffCheck.df_cvt_bindings.test_bindings()}")
 
         return is_binding_imported
-
-# if __name__ == "__main__":
-#     tester = DFTester()
-#     tester.RunScript()

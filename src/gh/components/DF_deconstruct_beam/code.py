@@ -16,15 +16,6 @@ from diffCheck.df_geometries import DFBeam, DFAssembly
 class DFDeconstructBeam(component):
     def RunScript(self,
             i_beams : typing.List[DFBeam]):
-        """
-            Deconstruct the DFBeam object into Rhino objects.
-            
-            :param i_beams: the DFBeam objects
-
-            :return o_side_faces: the side joints of the beam
-            :return o_joint_faces: the face joints of the beam
-            :return o_joint_ids: the ids for each face joint
-        """
         o_side_faces, o_joint_faces, o_joint_ids, o_breps = [], [], [], []
 
         for i_b in i_beams:
@@ -33,9 +24,3 @@ class DFDeconstructBeam(component):
             o_joint_ids = [f.joint_id for f in i_b.joint_faces]
 
         return o_side_faces, o_joint_faces, o_joint_ids
-
-# if __name__ == "__main__":
-#     comp = DFDeconstructBeam()
-#     o_side_faces, o_joint_faces, o_joint_ids = comp.RunScript(
-#         i_beams
-#     )

@@ -15,14 +15,6 @@ class DFXMLExporter(component):
             i_dump: bool,
             i_export_dir,
             i_assembly):
-        """
-            Export the DFAssembly to XML.
-            
-            :param i_dump: whether to dump the xml
-            :param i_assembly: the assembly to export
-
-            :return o_xml: the xml string
-        """
         # dump the xml
         o_xml = None
         xml: str = i_assembly.to_xml()
@@ -31,12 +23,3 @@ class DFXMLExporter(component):
         o_xml = xml
 
         return o_xml
-
-
-# if __name__ == "__main__":
-#     com = DFXMLExporter()
-#     o_xml = com.RunScript(
-#         i_dump,
-#         i_export_dir,
-#         i_assembly,
-#     )

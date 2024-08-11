@@ -18,32 +18,17 @@ class DFJointSegmentator(component):
                   i_joint_ids: int,
                   i_angle_threshold: float,
                   i_distance_threshold: float):
-        """
-        Amongst clusters, associates the clusters to the individual joints, 
-        creates a reference point cloud for each joint, 
-        and returns the joint segments, the reference point clouds, and the ICP transformations from the first to the second.
-
-        :param i_clusters: The clusters to be associated to the joints.
-        :param i_joints: The joints to which the clusters will be associated. These are meshes.
-        :param i_joint_ids: The joint ids of the joints.
-        :param i_angle_threshold: The angle threshold for the association of the clusters to the joints.
-        :param i_distance_threshold: The distance threshold for the association of the clusters to the joints.
-        """
         if i_angle_threshold is None : i_angle_threshold = 0.1
         if i_distance_threshold is None : i_distance_threshold = 0.1
 
         if len(i_joints) != len(i_joint_ids):
             raise ValueError("The number of joints and joint ids must be the same.")
-        
         if len(i_clusters) == 0:
             raise ValueError("No clusters given.")
-
         if not isinstance(i_clusters[0], Rhino.Geometry.PointCloud):
             raise ValueError("The input clusters must be PointClouds.")
-        
         if not isinstance(i_joints[0], Rhino.Geometry.Mesh):
             raise ValueError("The input joints must be convertible to Meshes.")
-            
 
         # prepping the reference meshes
         n_joints = max(i_joint_ids) + 1
@@ -82,9 +67,3 @@ class DFJointSegmentator(component):
             joint_segments.append(df_cvt.cvt_dfcloud_2_rhcloud(segment))
 
         return joint_segments, registrations, joint_clouds
-
-# if __name__ == "__main__":
-#     o_joint_segments, o_reference_point_clouds, o_transforms = main(i_clusters, i_joints, i_joint_ids)
-
-#     for i in range(len(o_joint_segments)):
-#         o_joint_segments[i].Transform(o_transforms[i])

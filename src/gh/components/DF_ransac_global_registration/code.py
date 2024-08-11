@@ -29,23 +29,6 @@ class DFRANSACGlobalRegistration(component):
         i_max_iterations: int,
         i_confidence_threshold: float
     ) -> rg.Transform:
-        """
-            The global registration component aligns two point clouds in a rough way.
-
-            :param i_cloud_source: source point cloud
-            :param i_cloud_target: target point cloud to align to
-            :param i_radius_kd_search: radius for the kd search
-            :param i_neighbours_kd_search: number of neighbours to consider
-            :param i_max_corrspondence_dist: maximum correspondence distance
-            :param is_t_estimate_pt2pt: if true, it deforms the point cloud
-            :param i_ransac_n: number of ransac iterations
-            :param i_checker_dist: correspondence checker distance
-            :param i_similarity_threshold: similarity threshold for the correspondence
-            :param i_max_iterations: maximum number of iterations
-            :param i_confidence_threshold: confidence threshold for RANSAC
-
-            :return o_x_form : transformation matrix
-        """
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")
             return None
@@ -105,20 +88,3 @@ class DFRANSACGlobalRegistration(component):
         o_x_form = rh_form
 
         return o_x_form
-
-
-# if __name__ == "__main__":
-#     com = DFRANSACGlobalRegistration()
-#     o_x_form = com.RunScript(
-#         i_cloud_source,
-#         i_cloud_target,
-#         i_radius_kd_search,
-#         i_neighbours_kd_search,
-#         i_max_corrspondence_dist,
-#         is_t_estimate_pt2pt,
-#         i_ransac_n,
-#         i_checker_dist,
-#         i_similarity_threshold,
-#         i_max_iterations,
-#         i_confidence_threshold
-#         )

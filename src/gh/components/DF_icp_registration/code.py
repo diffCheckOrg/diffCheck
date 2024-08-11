@@ -29,19 +29,6 @@ class DFICPRegistration(component):
         is_t_estimate_pt2pt: bool,  # valid only for 03dicp
         i_use_point_to_plane: bool  # valid only for 03dicp
     ) -> rg.Transform:
-        """
-            The global registration component aligns two point clouds in a rough way.
-
-            :param i_cloud_source: source point cloud
-            :param i_cloud_target: target point cloud to align to
-            :param i_use_generalized_icp: if true, it uses the generalized ICP algorithm
-            :param i_max_corrspondence_dist: maximum correspondence distance
-            :param i_max_iteration: maximum number of iterations
-            :param is_t_estimate_pt2pt: (valid only for 03dicp) if true, it deforms the point cloud
-            :param i_use_point_to_plane: (valid only for 03dicp) if true, it uses point to plane registration
-
-            :return o_x_form : transformation matrix
-        """
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")
             return None
@@ -103,19 +90,3 @@ class DFICPRegistration(component):
         o_x_form = rh_form
 
         return o_x_form
-
-
-# if __name__ == "__main__":
-#     com = DFICPRegistration()
-#     o_x_form = com.RunScript(
-#         i_cloud_source,
-#         i_cloud_target,
-
-#         i_use_generalized_icp,
-
-#         i_max_corrspondence_dist,
-#         i_max_iteration,
-
-#         is_t_estimate_pt2pt,
-#         i_use_point_to_plane
-#         )

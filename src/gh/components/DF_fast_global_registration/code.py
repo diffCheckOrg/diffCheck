@@ -26,19 +26,6 @@ class DFFastGlobalRegistration(component):
         i_iteration_number: int,
         i_max_tuple_count: int
     ) -> rg.Transform:
-        """
-            The global registration component aligns two point clouds in a rough way.
-
-            :param i_cloud_source: source point cloud
-            :param i_cloud_target: target point cloud to align to
-            :param i_radius_kd_search: radius for the kd search
-            :param i_neighbours_kd_search: number of neighbours to consider
-            :param i_max_corrspondence_dist: maximum correspondence distance
-            :param i_iteration_number: number of iterations
-            :param i_max_tuple_count: maximum tuple count
-
-            :return o_x_form : transformation matrix
-        """
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")
             return None
@@ -87,16 +74,3 @@ class DFFastGlobalRegistration(component):
         o_x_form = rh_form
 
         return o_x_form
-
-
-# if __name__ == "__main__":
-#     com = DFFastGlobalRegistration()
-#     o_x_form = com.RunScript(
-#         i_cloud_source,
-#         i_cloud_target,
-#         i_radius_kd_search,
-#         i_neighbours_kd_search,
-#         i_max_corrspondence_dist,
-#         i_iteration_number,
-#         i_max_tuple_count
-#         )

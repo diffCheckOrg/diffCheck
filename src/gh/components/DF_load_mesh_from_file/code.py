@@ -16,14 +16,6 @@ class DFLoadMeshFromFile(component):
     def RunScript(self,
         i_path: str,
         i_scalef: float) -> rg.Mesh:
-        """
-            This compoonent loads a Rhino mesh from a .ply file.
-
-            :param i_path: path to the .ply file
-            :param i_scalef: scale factor
-
-            :return o_mesh: Rhino Mesh
-        """
         # import and convert to Rhino Mesh
         df_mesh = diffcheck_bindings.dfb_geometry.DFMesh()
         df_mesh.load_from_PLY(i_path)
@@ -35,7 +27,3 @@ class DFLoadMeshFromFile(component):
         rh_mesh.Transform(x_form_scale)
 
         return [rh_mesh]
-
-# if __name__ == "__main__":
-#     com = DFLoadMeshFromFile()
-#     o_rh_mesh = com.RunScript(i_path, i_scalef)
