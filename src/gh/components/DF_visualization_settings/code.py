@@ -12,7 +12,7 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from diffCheck import df_visualization
 
-class VisualizationSettings(component):
+class DFVisualizationSettings(component):
     def RunScript(self,
         i_value_type: str,
         i_upper_threshold: float,

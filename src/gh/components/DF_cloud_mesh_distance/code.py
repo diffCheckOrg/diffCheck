@@ -16,7 +16,7 @@ from diffCheck import df_error_estimation
 from diffCheck.df_geometries import DFBeam
 
 
-class CloudMeshDistance(component):
+class DFCloudMeshDistance(component):
     def RunScript(self,
         i_cloud_source: typing.List[rg.PointCloud],
         i_beams: typing.List[DFBeam],

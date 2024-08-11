@@ -109,6 +109,8 @@ extensions = [
     'sphinxext.rediraffe',
     'sphinxcontrib.mermaid',
     'sphinx_autodoc_typehints',
+
+    'sphinx_ghcomponent_parser',  # custom extension
 ]
 
 intersphinx_mapping = {

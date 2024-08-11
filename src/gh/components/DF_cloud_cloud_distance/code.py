@@ -17,7 +17,7 @@ from diffCheck import df_error_estimation
 import diffCheck.df_util
 
 
-class CloudCloudDistance(component):
+class DFCloudCloudDistance(component):
     def RunScript(self,
         i_cloud_source:  typing.List[rg.PointCloud],
         i_cloud_target: typing.List[rg.PointCloud],

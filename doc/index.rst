@@ -1,10 +1,9 @@
 DiffCheck: CAD-Point cloud comparison
 =====================================
 
-JAX is a Python library for accelerator-oriented array computation and program transformation,
-designed for high-performance numerical computing and large-scale machine learning.
+Description missing for DiffCheck
 
-If you're looking to train neural networks, use Flax_ and start with its documentation.
+Example of links Flax_ and start with its documentation.
 Some associated tools are Optax_ and Orbax_.
 For an end-to-end transformer library built on JAX, see MaxText_.
 
@@ -14,6 +13,7 @@ For an end-to-end transformer library built on JAX, see MaxText_.
     :caption: Getting Started
 
     installation
+    gh_components
 
 .. toctree::
     :hidden:
