@@ -373,3 +373,7 @@ def linkcode_resolve(domain, info):
   filename = os.path.relpath(filename, start=os.path.dirname(diffCheck.__file__))
   lines = f"#L{linenum}-L{linenum + len(source)}" if linenum else ""
   return f"https://github.com/diffCheckOrg/diffCheck/blob/main/diffCheck/{filename}{lines}"
+
+
+# FIXME: this is a temporary fix to suppress redirects warn on console build
+rediraffe_redirects = "redirects.txt"
