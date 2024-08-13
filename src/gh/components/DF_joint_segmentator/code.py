@@ -40,17 +40,13 @@ class DFJointSegmentator(component):
 
         if not isinstance(i_clusters[0], Rhino.Geometry.PointCloud):
             raise ValueError("The input clusters must be PointClouds.")
-        
-        all_joints = i_assembly.all_joints
-        if not isinstance(all_joints[0].faces[0].to_mesh(), Rhino.Geometry.Mesh):
-            raise ValueError("The input joints must be convertible to Meshes.")
             
         # get number of joints
-        n_joints = max([joint.id for joint in all_joints]) + 1
+        n_joints = i_assembly.total_number_joints
 
         # prepping the reference meshes
         joints = [[] for _ in range(n_joints)]
-        for joint in all_joints:
+        for joint in i_assembly.all_joints:
             for face in joint.faces:
                 face = face.to_mesh()
                 face.Subdivide()
