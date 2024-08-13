@@ -97,6 +97,7 @@ def create_DFMeshCube():
     df_mesh.load_from_PLY(get_ply_mesh_cube_path())
     yield df_mesh
 
+# point cloud tests
 
 def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
@@ -118,6 +119,11 @@ def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     assert pc.has_points() == False, "has_points() should return False"
     assert pc.has_colors() == False, "has_colors() should return False"
     assert pc.has_normals() == False, "has_normals() should return False"
+
+def test_DFPointCloud_add_points(create_two_DFPointCloudSphere):
+    sphere_1, sphere_2 = create_two_DFPointCloudSphere
+    sphere_1.add_points(sphere_2)
+    assert sphere_1.points.__len__() == 10050, "two pointclouds of 5025 pts combined into one should have 10050 pts"
 
 def test_DFPointCloud_apply_color(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
@@ -145,6 +151,8 @@ def test_DFPointCloud_get_tight_bounding_box(create_DFPointCloudSampleRoof):
     obb = pc.get_tight_bounding_box()
     # round to the 3 decimal places
     assert round(obb[0][0], 3) == 0.196, "The min x of the OBB should be 0.196"
+
+# mesh tests
 
 def test_DFMesh_init():
     mesh = dfb.dfb_geometry.DFMesh()
