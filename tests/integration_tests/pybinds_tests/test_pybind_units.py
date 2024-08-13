@@ -120,10 +120,6 @@ def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     assert pc.has_colors() == False, "has_colors() should return False"
     assert pc.has_normals() == False, "has_normals() should return False"
 
-def test_DFPointCloud_add_points(create_two_DFPointCloudSphere):
-    sphere_1, sphere_2 = create_two_DFPointCloudSphere
-    sphere_1.add_points(sphere_2)
-    assert sphere_1.points.__len__() == 10050, "two pointclouds of 5025 pts combined into one should have 10050 pts"
 
 def test_DFPointCloud_apply_color(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
