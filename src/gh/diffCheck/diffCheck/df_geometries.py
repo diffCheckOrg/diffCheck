@@ -430,21 +430,21 @@ class DFAssembly:
 
     @property
     def all_joint_faces(self):
-        if len(self._all_jointfaces) == 0:
-            for beam in self.beams:
-                self._all_jointfaces.extend(beam.joint_faces)
+        self._all_jointfaces = []
+        for beam in self.beams:
+            self._all_jointfaces.extend(beam.joint_faces)
         return self._all_jointfaces
 
     @property
     def all_side_faces(self):
-        if len(self._all_sidefaces) == 0:
-            for beam in self.beams:
-                self._all_sidefaces.extend(beam.side_faces)
+        self._all_sidefaces = []
+        for beam in self.beams:
+            self._all_sidefaces.extend(beam.side_faces)
         return self._all_sidefaces
 
     @property
     def all_joints(self):
-        if len(self._all_joints) == 0:
-            for beam in self.beams:
-                self._all_joints.extend(beam.joints)
+        self._all_joints = []
+        for beam in self.beams:
+            self._all_joints.extend(beam.joints)
         return self._all_joints
