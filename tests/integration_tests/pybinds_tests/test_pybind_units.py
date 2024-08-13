@@ -48,6 +48,20 @@ def get_ply_mesh_cube_path():
         raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
     return ply_file_path
 
+def get_two_separate_planes_ply_path():
+    base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
+    ply_file_path = os.path.join(base_test_data_dir, "two_separate_planes_with_normals.ply")
+    if not os.path.exists(ply_file_path):
+        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    return ply_file_path
+
+def get_two_connected_planes_ply_path():
+    base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
+    ply_file_path = os.path.join(base_test_data_dir, "two_connected_planes_with_normals.ply")
+    if not os.path.exists(ply_file_path):
+        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    return ply_file_path
+
 #------------------------------------------------------------------------------
 # dfb_geometry namespace
 #------------------------------------------------------------------------------
@@ -90,6 +104,18 @@ def create_two_DFPointCloudBunny():
     df_pcd_1.load_from_PLY(get_ply_cloud_bunny_path())
     df_pcd_2.load_from_PLY(get_ply_cloud_bunny_path())
     yield df_pcd_1, df_pcd_2
+
+@pytest.fixture
+def create_DFPointCloudTwoSeparatePlanes():
+    df_pcd = dfb.dfb_geometry.DFPointCloud()
+    df_pcd.load_from_PLY(get_two_separate_planes_ply_path())
+    yield df_pcd
+
+@pytest.fixture
+def create_DFPointCloudTwoConnectedPlanes():
+    df_pcd = dfb.dfb_geometry.DFPointCloud()
+    df_pcd.load_from_PLY(get_two_connected_planes_ply_path())
+    yield df_pcd
 
 @pytest.fixture
 def create_DFMeshCube():
@@ -346,32 +372,24 @@ def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
 # dfb_segmentation namespace
 #------------------------------------------------------------------------------
 
-def test_DFPlaneSegmentation():
-    vertices = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, -1], [0, 0, -1]]
-    faces = [[0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 5]]
-    mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
-    pc = mesh.sample_points_uniformly(5000)
-    pc.estimate_normals(knn=20)
+def test_DFPlaneSegmentation_separate_plans(create_DFPointCloudTwoSeparatePlanes):
+    pc = create_DFPointCloudTwoSeparatePlanes
 
     segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, 
                                                                      normal_threshold_degree=5, 
-                                                                     min_cluster_size=1000, 
-                                                                     knn_neighborhood_size=200)
+                                                                     min_cluster_size=100, 
+                                                                     knn_neighborhood_size=20)
 
     assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
 
-def test_DFPlaneSegmentation_disconnected_plans():
-    vertices = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, -1], [0, 0, -1]]
-    faces = [[0, 1, 2], [3, 4, 5]]
-    mesh = dfb.dfb_geometry.DFMesh(vertices, faces, [], [], [])
-    pc = mesh.sample_points_uniformly(5000)
-    pc.estimate_normals(knn=20)
+def test_DFPlaneSegmentation_connected_plans(create_DFPointCloudTwoConnectedPlanes):
+    pc = create_DFPointCloudTwoConnectedPlanes
 
     segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, 
                                                                      normal_threshold_degree=5, 
-                                                                     min_cluster_size=1000, 
-                                                                     knn_neighborhood_size=200)
-
+                                                                     min_cluster_size=100, 
+                                                                     knn_neighborhood_size=20)
+    
     assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
 
 if __name__ == "__main__":
