@@ -31,7 +31,6 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         
         .def("compute_distance", &diffCheck::geometry::DFPointCloud::ComputeDistance,
             py::arg("target_cloud"))
-        .def("compute_BoundingBox", &diffCheck::geometry::DFPointCloud::ComputeBoundingBox)
         
         .def("voxel_downsample", &diffCheck::geometry::DFPointCloud::VoxelDownsample,
             py::arg("voxel_size"))
@@ -55,6 +54,7 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("add_points", &diffCheck::geometry::DFPointCloud::AddPoints)  
 
         .def("get_tight_bounding_box", &diffCheck::geometry::DFPointCloud::GetTightBoundingBox)
+        .def("get_axis_aligned_bounding_box", &diffCheck::geometry::DFPointCloud::GetAxixAlignedBoundingBox)
 
         .def("get_num_points", &diffCheck::geometry::DFPointCloud::GetNumPoints)
         .def("get_num_colors", &diffCheck::geometry::DFPointCloud::GetNumColors)
