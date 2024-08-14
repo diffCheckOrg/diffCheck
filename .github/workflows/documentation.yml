@@ -39,11 +39,7 @@ jobs:
 
       - name: Cmake Configure
         run: |
-          conda run --name diff_check --no-capture-output \
-          cmake -S . -B build -A x64 \
-          -DBUILD_PYTHON_MODULE=ON \
-          -DBUILD_TESTS=OFF \
-          -DRUN_TESTS=OFF
+          conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
 
       - name: CMake Build
         run: conda run --name diff_check --no-capture-output cmake --build build --config Release
@@ -94,7 +90,7 @@ jobs:
         run: |
           conda run --name diff_check --no-capture-output sphinx-build doc _build
 
-
+      # TODO: upload _build as artefact to be reused later
 
 
 
