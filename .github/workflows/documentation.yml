@@ -6,22 +6,106 @@ permissions:
   contents: write
 
 jobs:
-  docs:
-    runs-on: ubuntu-latest
+  build-source:
+    runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-      - name: Install dependencies
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9.1
+
+      - name: Cache conda environment
+        uses: actions/cache@v2
+        with:
+          path: ~/conda_env
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-
+
+      - name: Create diff_check conda environment
         run: |
-          pip install sphinx sphinx_rtd_theme myst_parser
+          conda config --set envs_dirs ~/conda_env
+          conda env create -f environment.yml
+
+      - name: Activate diff_check conda environment
+        run: |
+          conda config --set envs_dirs ~/conda_env
+          conda activate diff_check
+
+      - name: Cmake Configure
+        run: |
+          conda run --name diff_check --no-capture-output \
+          cmake -S . -B build -A x64 \
+          -DBUILD_PYTHON_MODULE=ON \
+          -DBUILD_TESTS=OFF \
+          -DRUN_TESTS=OFF
+
+      - name: CMake Build
+        run: conda run --name diff_check --no-capture-output cmake --build build --config Release
+
+      - name: Store the dlls/pyd as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: __build_artifacts__
+          path: |
+            ${{github.workspace}}/build/bin/Release/diffCheck.dll
+            ${{github.workspace}}/build/bin/Release/Open3D.dll
+            ${{github.workspace}}/build/Release/*.pyd
+
+  build-docs:
+    runs-on: windows-latest
+    needs: build-source
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9.1
+
+      - name: Restore conda environment cache
+        uses: actions/cache@v2
+        with:
+          path: ~/conda_env
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-
+
+      - name: Activate diff_check conda environment
+        run: |
+          conda config --set envs_dirs ~/conda_env
+          conda activate diff_check
+
+      - name: Download dlls/pyd artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts__
+          path: ${{github.workspace}}/doc
+
       - name: Sphinx build
         run: |
-          sphinx-build doc _build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build/
-          force_orphan: true
+          conda run --name diff_check --no-capture-output sphinx-build doc _build
+
+
+
+
+
+  # page-deployement:
+  #   runs-on: windows-latest
+      ## FIXME: we should replace this with the action to deploy to gh-pages
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      #   with:
+      #     publish_branch: gh-pages
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: _build/
+      #     force_orphan: true

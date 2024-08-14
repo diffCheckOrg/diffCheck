@@ -1,6 +1,6 @@
 .. currentmodule:: diffCheck
 
-DiffCheck Python API
+diffCheck Python API
 ====================
 
 DF's Python API is composed by two main source code directories:
