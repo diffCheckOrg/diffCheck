@@ -198,6 +198,51 @@ class DFFace:
     def id(self):
         return self.__id
 
+@dataclass
+class DFJoint:
+    """
+    This class represents a joint, in diffCheck, a joint is a collection of faces
+    For convenience, this is used only as a return type from the DFBeam class's property for retrieveing joints
+    """
+
+    id: int
+    faces: typing.List[DFFace]
+
+    def __post_init__(self):
+        self.id = self.id
+        self.faces = self.faces or []
+
+    def __repr__(self):
+        return f"Joint id: {self.id}, Faces: {len(self.faces)}"
+
+    def to_brep(self):
+        """
+        Convert the joint to a Rhino Brep object
+        """
+        brep = rg.Brep()
+        for face in self.faces:
+            brep.Append(face.to_brep_face())
+        brep.Compact()
+        return brep
+
+    def to_mesh(self, max_edge_length):
+        """
+        Convert the joint to a Rhino Mesh object
+        """
+        rhino_brep_faces = [f.to_brep_face() for f in self.faces]
+        mesh = rg.Mesh()
+
+        new_faces = [f.DuplicateFace(True) for f in rhino_brep_faces]
+
+        for f in new_faces:
+            param = rg.MeshingParameters()
+            param.MaximumEdgeLength = max_edge_length
+            mesh_part = rg.Mesh.CreateFromBrep(f, param)[0]
+            mesh.Append(mesh_part)
+
+        mesh.Faces.ConvertQuadsToTriangles()
+        mesh.Compact()
+        return mesh
 
 @dataclass
 class DFBeam:
@@ -213,6 +258,8 @@ class DFBeam:
         self.faces = self.faces or []
         self._joint_faces = []
         self._side_faces = []
+
+        self._joints = []
 
         self.__id = uuid.uuid4().int
 
@@ -274,6 +321,18 @@ class DFBeam:
     def side_faces(self):
         return [face for face in self.faces if not face.is_joint]
 
+    @property
+    def joints(self):
+        joints : typing.List[DFJoint] = []
+        temp_faces = self.joint_faces.copy()
+        while len(temp_faces) > 0:
+            joint_id = temp_faces[0].joint_id
+            joint_faces = [face for face in temp_faces if face.joint_id == joint_id]
+            joint = DFJoint(joint_id, joint_faces)
+            joints.append(joint)
+            temp_faces = [face for face in temp_faces if face.joint_id != joint_id]
+        return joints
+
 
 @dataclass
 class DFAssembly:
@@ -288,9 +347,11 @@ class DFAssembly:
         self.beams = self.beams
         self.name = self.name or "Unnamed Assembly"
 
-        self._all_jointfaces = []
-        self._all_sidefaces = []
+        self._all_jointfaces: typing.List[DFFace] = []
+        self._all_sidefaces: typing.List[DFFace] = []
 
+        self._all_joints: typing.List[DFJoint] = []
+        
     def __repr__(self):
         return f"Assembly: {self.name}, Beams: {len(self.beams)}"
 
@@ -370,3 +431,9 @@ class DFAssembly:
         for beam in self.beams:
             self._all_sidefaces.extend(beam.side_faces)
         return self._all_sidefaces
+
+    @property
+    def all_joints(self):
+        for beam in self.beams:
+            self._all_joints.extend(beam.joints)
+        return self._all_joints

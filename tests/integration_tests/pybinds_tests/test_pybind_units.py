@@ -146,6 +146,17 @@ def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     assert pc.has_colors() == False, "has_colors() should return False"
     assert pc.has_normals() == False, "has_normals() should return False"
 
+def test_DFPointCloud_add_points():
+    point_pc_1 = [(0, 0, 0)]
+    point_pc_2 = [(1, 1, 1)]
+    normal_pc_1 = [(0, 0, 1)]
+    normal_pc_2 = [(1, 0, 0)]
+    color_pc_1 = [(255, 0, 0)]
+    color_pc_2 = [(0, 255, 0)]
+    pc_1 = dfb.dfb_geometry.DFPointCloud(point_pc_1, normal_pc_1, color_pc_1)
+    pc_2 = dfb.dfb_geometry.DFPointCloud(point_pc_2, normal_pc_2, color_pc_2)
+    pc_1.add_points(pc_2)
+    assert pc_1.points.__len__() == 2, "two pointclouds of 1 pt combined into one should have 2 pts"
 
 def test_DFPointCloud_apply_color(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof

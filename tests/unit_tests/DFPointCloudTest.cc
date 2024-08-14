@@ -117,6 +117,13 @@ TEST_F(DFPointCloudTestFixture, ComputeDistance) {
     EXPECT_EQ(distances.size(), 7379);
 }
 
+TEST_F(DFPointCloudTestFixture, AddPoints) {
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloud2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    dfPointCloud2->LoadFromPLY(diffCheck::io::GetRoofQuarterPlyPath());
+    dfPointCloud.AddPoints(*dfPointCloud2);
+    EXPECT_EQ(dfPointCloud.GetNumPoints(), 7379 * 2);
+}
+
 TEST_F(DFPointCloudTestFixture, ComputeAABB) {
     std::vector<Eigen::Vector3d> bbox = dfPointCloud.GetAxixAlignedBoundingBox();
     EXPECT_EQ(bbox.size(), 2);
