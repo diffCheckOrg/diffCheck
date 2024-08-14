@@ -116,7 +116,7 @@ namespace diffCheck::geometry
         return cilantroPointCloud;
     }
 
-    std::vector<Eigen::Vector3d> DFPointCloud::ComputeBoundingBox()
+    std::vector<Eigen::Vector3d> DFPointCloud::GetAxixAlignedBoundingBox()
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
         auto boundingBox = O3DPointCloud->GetAxisAlignedBoundingBox();

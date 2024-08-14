@@ -13,7 +13,7 @@ namespace diffCheck::registrations
         int maxIteration,
         bool usePointToPlane)
     {
-        std::vector<Eigen::Vector3d> minMax = source->ComputeBoundingBox();
+        std::vector<Eigen::Vector3d> minMax = source->GetAxixAlignedBoundingBox();
 
         std::shared_ptr<open3d::geometry::PointCloud> O3Dsource = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> O3Dtarget = target->Cvt2O3DPointCloud();
@@ -65,7 +65,7 @@ namespace diffCheck::registrations
             double relativeFitness,
             double relativeRMSE)
     {
-        std::vector<Eigen::Vector3d> minMax = source->ComputeBoundingBox();
+        std::vector<Eigen::Vector3d> minMax = source->GetAxixAlignedBoundingBox();
 
         std::shared_ptr<open3d::geometry::PointCloud> O3Dsource = source->Cvt2O3DPointCloud();
         std::shared_ptr<open3d::geometry::PointCloud> O3Dtarget = target->Cvt2O3DPointCloud();

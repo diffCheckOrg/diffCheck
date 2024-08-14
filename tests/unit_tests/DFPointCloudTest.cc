@@ -125,7 +125,7 @@ TEST_F(DFPointCloudTestFixture, AddPoints) {
 }
 
 TEST_F(DFPointCloudTestFixture, ComputeAABB) {
-    std::vector<Eigen::Vector3d> bbox = dfPointCloud.ComputeBoundingBox();
+    std::vector<Eigen::Vector3d> bbox = dfPointCloud.GetAxixAlignedBoundingBox();
     EXPECT_EQ(bbox.size(), 2);
 }
 

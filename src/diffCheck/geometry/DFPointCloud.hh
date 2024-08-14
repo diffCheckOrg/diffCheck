@@ -54,7 +54,7 @@ namespace diffCheck::geometry
          * @return std::vector<Eigen::Vector3d> A vector of two Eigen::Vector3d, with the first one being the minimum
          *  point and the second one the maximum point of the bounding box.
         */
-        std::vector<Eigen::Vector3d> ComputeBoundingBox();
+        std::vector<Eigen::Vector3d> GetAxixAlignedBoundingBox();
 
         /**
          * @brief Estimate the normals of the point cloud by either knn or if the radius
