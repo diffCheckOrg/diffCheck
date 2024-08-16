@@ -37,11 +37,14 @@ import operator
 import os
 import sys
 
-# FIXME: check if the sys paths are correct on clean build
-# import package's modules path
-sys.path.insert(0, os.path.abspath('./'))
-sys.path.insert(0, os.path.abspath('./../src/gh/diffCheck'))
-# check that the bindings pyd/dlls are copied and importable
+# import package's modules path and dlls/pyds
+extra_dll_dir_doc = os.path.abspath('./')
+extra_dll_dir_pysource = os.path.abspath('./../src/gh/diffCheck')
+
+os.add_dll_directory(extra_dll_dir_doc)  # For finding DLL dependencies on Windows
+sys.path.insert(0, extra_dll_dir_doc)
+sys.path.insert(0, extra_dll_dir_pysource)
+
 try:
     import diffCheck.diffcheck_bindings as dfb
 except ImportError as e:
