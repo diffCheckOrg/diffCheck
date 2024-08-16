@@ -29,6 +29,9 @@ jobs:
           ls $env:USERPROFILE
           echo "------------------------------------------------------"
           ls $env:CONDA
+          echo "------------------------------------------------------"
+          echo "print conda env paths"
+          conda info --envs
 
       - name: Cache conda environment
         uses: actions/cache@v2
