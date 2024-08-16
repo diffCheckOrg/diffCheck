@@ -82,6 +82,11 @@ jobs:
           name: __build_artifacts__
           path: ${{github.workspace}}/doc
 
+      # TODO: debug
+      - name: List all the files in doc/
+        run: |
+          ls doc
+
       - name: Sphinx build
         run: |
           conda run --name diff_check --no-capture-output sphinx-build doc _build
