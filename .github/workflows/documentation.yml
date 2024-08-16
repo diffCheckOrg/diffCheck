@@ -28,16 +28,16 @@ jobs:
         run: |
           echo $env:USERPROFILE
           echo "------------------------------------------------------"
-          echo %USERPROFILE%\miniconda3
+          echo $env:USERPROFILE\miniconda3
           echo "------------------------------------------------------"
-          echo %USERPROFILE%\miniconda3\envs
+          echo $env:USERPROFILE\miniconda3\envs
           echo "------------------------------------------------------"
-          echo %USERPROFILE%\miniconda3\envs\diff_check
+          echo $env:USERPROFILE\miniconda3\envs\diff_check
 
       - name: Cache conda environment
         uses: actions/cache@v2
         with:
-          path: C:\Users\runneradmin\miniconda3\envs\diff_check
+          path: $env:USERPROFILE\miniconda3\envs\diff_check
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
@@ -76,10 +76,15 @@ jobs:
           auto-update-conda: true
           python-version: 3.9.1
 
+      # TODO: debug
+      - name: List all the conda envs
+        run: |
+          conda info --envs
+
       - name: Restore conda environment cache
         uses: actions/cache@v2
         with:
-          path: C:\Users\runneradmin\miniconda3\envs\diff_check
+          path: $env:USERPROFILE\miniconda3\envs\diff_check
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
