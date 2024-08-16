@@ -19,39 +19,48 @@ jobs:
           auto-update-conda: true
           python-version: 3.9.1
 
+      - name: Create diff_check conda environment
+        run: |
+          conda env create -f environment.yml
+
+      # TODO: debug
+      - name: Print the path of the conda environment
+        run: |
+          echo $env:USERPROFILE
+          echo "------------------------------------------------------"
+          echo %USERPROFILE%\miniconda3
+          echo "------------------------------------------------------"
+          echo %USERPROFILE%\miniconda3\envs
+          echo "------------------------------------------------------"
+          echo %USERPROFILE%\miniconda3\envs\diff_check
+
       - name: Cache conda environment
         uses: actions/cache@v2
         with:
-          path: ~/conda_env
+          path: C:\Users\runneradmin\miniconda3\envs\diff_check
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
 
-      - name: Create diff_check conda environment
-        run: |
-          conda config --set envs_dirs ~/conda_env
-          conda env create -f environment.yml
-
       - name: Activate diff_check conda environment
         run: |
-          conda config --set envs_dirs ~/conda_env
           conda activate diff_check
 
-      - name: Cmake Configure
-        run: |
-          conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
+      # - name: Cmake Configure
+      #   run: |
+      #     conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
 
-      - name: CMake Build
-        run: conda run --name diff_check --no-capture-output cmake --build build --config Release
+      # - name: CMake Build
+      #   run: conda run --name diff_check --no-capture-output cmake --build build --config Release
 
-      - name: Store the dlls/pyd as artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: __build_artifacts__
-          path: |
-            ${{github.workspace}}/build/bin/Release/diffCheck.dll
-            ${{github.workspace}}/build/bin/Release/Open3D.dll
-            ${{github.workspace}}/build/Release/*.pyd
+      # - name: Store the dlls/pyd as artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: __build_artifacts__
+      #     path: |
+      #       ${{github.workspace}}/build/bin/Release/diffCheck.dll
+      #       ${{github.workspace}}/build/bin/Release/Open3D.dll
+      #       ${{github.workspace}}/build/Release/*.pyd
 
   build-docs:
     runs-on: windows-latest
@@ -70,34 +79,27 @@ jobs:
       - name: Restore conda environment cache
         uses: actions/cache@v2
         with:
-          path: ~/conda_env
+          path: C:\Users\runneradmin\miniconda3\envs\diff_check
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
       
-      - name: Create diff_check conda environment if not exists
-        run: |
-          if (Test-Path -Path "$env:USERPROFILE\conda_env\envs\diff_check") {
-            echo "Environment already exists"
-          } else {
-            conda env create -f environment.yml
-          }
-      
       - name: Activate diff_check conda environment
-        shell: bash
         run: |
-          source ~/miniconda/etc/profile.d/conda.sh
           conda activate diff_check
 
-      - name: Download dlls/pyd artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: __build_artifacts__
-          path: ${{github.workspace}}/doc
 
-      - name: Sphinx build
-        run: |
-          conda run --name diff_check --no-capture-output sphinx-build doc _build
+
+
+      # - name: Download dlls/pyd artifacts
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: __build_artifacts__
+      #     path: ${{github.workspace}}/doc
+
+      # - name: Sphinx build
+      #   run: |
+      #     conda run --name diff_check --no-capture-output sphinx-build doc _build
 
       # TODO: upload _build as artefact to be reused later
 
