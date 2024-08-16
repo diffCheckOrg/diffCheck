@@ -5,11 +5,12 @@ import os
 import sys
 
 # Import the C++ bindings
-extra_dll_dir = os.path.join(os.path.dirname(__file__), "./")
-os.add_dll_directory(extra_dll_dir)  # For finding DLL dependencies on Windows
+extra_dll_dir = os.path.abspath(os.path.dirname(__file__))
+print(f"extra_dll_dir: {extra_dll_dir}")
 sys.path.append(extra_dll_dir)  # Add this directory to the Python path
+# os.add_dll_directory(extra_dll_dir)  # For finding DLL dependencies on Windows
 try:
-    import diffcheck_bindings as dfb
+    import diffCheck.diffcheck_bindings as dfb
 except ImportError as e:
     print(f"Failed to import diffcheck_bindings: {e}")
     print("Current sys.path directories:")
