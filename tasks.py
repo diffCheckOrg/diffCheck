@@ -1,5 +1,6 @@
 # tasks.py
 from invoke import task
+import subprocess
 
 PATH_MANIFEST = "./manifest.yml"
 PATH_LOGO = "./logo.png"
@@ -62,4 +63,4 @@ def yakerize(c):
 
 @task
 def documentize(c):
-    c.run("conda run --name diff_check --no-capture-output sphinx-build doc _build")
+    subprocess.run("conda activate diff_check && sphinx-build doc _build", shell=True, check=True)
