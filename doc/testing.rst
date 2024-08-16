@@ -1,11 +1,15 @@
-(test_guide)=
-# Test guide
+
+.. _test_guide:
+
+Testing
+=======
 
 In df we use `CTest` as a test framework managed by Cmake in the file `cmake/tests.cmake` to run:
 * [c++](cpp_test) tests with `GoogleTest`, and
 * [python](py_test) in `PyTest`.
 
 Tests are in the `tests` folder, and here's its structure:
+
 ```terminal
 F:\DIFFCHECK\TESTS
 │   allCppTests.cc
@@ -41,9 +45,14 @@ cmake --build build --config Release
 (py_test)=
 ## Write Python tests
 
-To write a test, you need to create a new file in the `tests/integration_tests` folder. Write a new `.py` test file and add it in the `cmake/tests.cmake` in the `add_test` function.
+To write a test, you need to create a new file in the `tests/integration_tests` folder. Write a new `.py` test file if you are not contributing to an already existing test, and add it in the `cmake/tests.cmake` in the `add_test` function.
 e.g.:
-https://github.com/diffCheckOrg/diffCheck/blob/e080a93cdd73d96efb0686f80bf13730e0b8efa3/cmake/tests.cmake#L45-L48
+```cmake
+add_test(NAME PYBIND_UNIT_TEST 
+         COMMAND ${PYTHON_EXECUTABLE} -m pytest ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests/test_pybind_units.py 
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} 
+         )
+```
 
 
 (cpp_test)=

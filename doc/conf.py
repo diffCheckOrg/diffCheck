@@ -37,6 +37,7 @@ import operator
 import os
 import sys
 
+# -- Dlls/pyd imports ---------------------------------------------------------
 # import package's modules path and dlls/pyds, checking for import of pybind module
 extra_dll_dir_doc = os.path.abspath('./')
 extra_dll_dir_pysource = os.path.abspath('./../src/gh/diffCheck')
@@ -44,34 +45,17 @@ extra_dll_dir_pysource = os.path.abspath('./../src/gh/diffCheck')
 os.add_dll_directory(extra_dll_dir_doc)  # For finding DLL dependencies on Windows
 sys.path.insert(0, extra_dll_dir_doc)
 sys.path.insert(0, extra_dll_dir_pysource)
-try:
-    import diffCheck.diffcheck_bindings as dfb
-except ImportError as e:
-    print(f"Failed to import diffcheck_bindings: {e}")
-    print("Current sys.path directories:")
-    for path in sys.path:
-        print(path)
-    print("Current files in the directory:")
-    for file in os.listdir(extra_dll_dir_doc):
-        print(file)
-    sys.exit(1)
-
-# import diffCheck
-# print(f"Current diffCheck imported: {diffCheck.__version__}")
-
-
-
-# # Workaround to avoid expanding type aliases. See:
-# # https://github.com/sphinx-doc/sphinx/issues/6518#issuecomment-589613836
-# from typing import ForwardRef
-
-# def _do_not_evaluate_in_diffCheck(
-#     self, globalns, *args, _evaluate=ForwardRef._evaluate,
-# ):
-#   if globalns.get('__name__', '').startswith('diffCheck'):
-#     return self
-#   return _evaluate(self, globalns, *args)
-# ForwardRef._evaluate = _do_not_evaluate_in_diffCheck
+# try:
+#     import diffCheck.diffcheck_bindings as dfb
+# except ImportError as e:
+#     print(f"Failed to import diffcheck_bindings: {e}")
+#     print("Current sys.path directories:")
+#     for path in sys.path:
+#         print(path)
+#     print("Current files in the directory:")
+#     for file in os.listdir(extra_dll_dir_doc):
+#         print(file)
+#     sys.exit(1)
 
 # -- Project information -----------------------------------------------------
 
