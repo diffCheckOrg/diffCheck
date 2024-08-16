@@ -53,13 +53,6 @@ jobs:
         with:
           name: __build_artifacts__
           path: ${{ github.workspace }}/artifacts/*
-          
-      # TODO: old
-      # - name: Store the dlls/pyd as artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: __build_artifacts__
-      #     path: ${{ github.workspace }}/artifacts/*
 
 
   build-docs:
@@ -104,6 +97,7 @@ jobs:
       - name: Sphinx build
         run: |
           conda run --name diff_check --no-capture-output sphinx-build doc _build
+        working-directory: ${{github.workspace}}
 
 
   # page-deployement:
