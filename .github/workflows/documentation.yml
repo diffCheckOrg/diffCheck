@@ -106,7 +106,7 @@ jobs:
 
       - name: Sphinx build
         run: |
-          conda run --name diff_check --no-capture-output sphinx-build doc _build
+          sphinx-build doc _build
         working-directory: ${{github.workspace}}
 
 

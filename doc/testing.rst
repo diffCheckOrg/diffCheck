@@ -4,6 +4,7 @@
 DFTesting
 =========
 
+Ideally, if we add code to the project, we should also add tests (at least unit tests).
 In df we use `CTest` as a test framework managed by Cmake in the file ``cmake/tests.cmake`` to run:
 
 * `c++ <#cpp_test>`_ tests with `GoogleTest`, and
