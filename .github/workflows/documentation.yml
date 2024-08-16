@@ -33,9 +33,9 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-conda-
 
-      - name: Activate diff_check conda environment
-        run: |
-          conda activate diff_check
+      # - name: Activate diff_check conda environment
+      #   run: |
+      #     conda activate diff_check
 
       - name: Cmake Configure
         run: |
@@ -58,7 +58,7 @@ jobs:
 
       - name: Sphinx build
         run: |
-          invoke documentize
+          conda run --name diff_check --no-capture-output sphinx-build doc _build
 
 
 
