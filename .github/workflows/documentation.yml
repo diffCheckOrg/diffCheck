@@ -42,14 +42,22 @@ jobs:
 
       - name: Move dlls and pyd files to a single directory
         run: |
-          mkdir -p ${{ github.workspace }}/artifacts
-          find ${{ github.workspace }}/build/Release -name "*.pyd" -exec mv {} ${{ github.workspace }}/artifacts/ \;
-          find ${{ github.workspace }}/build/bin/Release -name "*.dll" -exec mv {} ${{ github.workspace }}/artifacts/ \;
+          mkdir $env:GITHUB_WORKSPACE\artifacts
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\Release -Filter *.pyd -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\bin\Release -Filter *.dll -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts
+        shell: pwsh
       - name: Store the dlls/pyd as artifacts
         uses: actions/upload-artifact@v2
         with:
           name: __build_artifacts__
           path: ${{ github.workspace }}/artifacts/*
+          
+      # TODO: old
+      # - name: Store the dlls/pyd as artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: __build_artifacts__
+      #     path: ${{ github.workspace }}/artifacts/*
 
 
   build-docs:
