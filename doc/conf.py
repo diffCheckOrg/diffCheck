@@ -45,17 +45,17 @@ extra_dll_dir_pysource = os.path.abspath('./../src/gh/diffCheck')
 os.add_dll_directory(extra_dll_dir_doc)  # For finding DLL dependencies on Windows
 sys.path.insert(0, extra_dll_dir_doc)
 sys.path.insert(0, extra_dll_dir_pysource)
-# try:
-#     import diffCheck.diffcheck_bindings as dfb
-# except ImportError as e:
-#     print(f"Failed to import diffcheck_bindings: {e}")
-#     print("Current sys.path directories:")
-#     for path in sys.path:
-#         print(path)
-#     print("Current files in the directory:")
-#     for file in os.listdir(extra_dll_dir_doc):
-#         print(file)
-#     sys.exit(1)
+try:
+    import diffCheck.diffcheck_bindings as dfb
+except ImportError as e:
+    print(f"Failed to import diffcheck_bindings: {e}")
+    print("Current sys.path directories:")
+    for path in sys.path:
+        print(path)
+    print("Current files in the directory:")
+    for file in os.listdir(extra_dll_dir_doc):
+        print(file)
+    sys.exit(1)
 
 # -- Project information -----------------------------------------------------
 

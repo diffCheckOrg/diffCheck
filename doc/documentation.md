@@ -1,4 +1,4 @@
 (doc_guide)=
-# Documentation guide
+# Documentation
 
 /// from CONTRIBUTING how to write documentation
