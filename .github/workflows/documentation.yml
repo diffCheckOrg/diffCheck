@@ -28,7 +28,7 @@ jobs:
         run: |
           ls $env:USERPROFILE
           echo "------------------------------------------------------"
-          ls $env:USERPROFILE\miniconda3
+          ls $env:USERPROFILE\.conda
           echo "------------------------------------------------------"
           ls $env:USERPROFILE\miniconda3\envs
           echo "------------------------------------------------------"
