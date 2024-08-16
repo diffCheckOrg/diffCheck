@@ -95,10 +95,13 @@ jobs:
           ls doc
 
       # TODO: testing import with test file test_pybind_dll_smoke.py to remove
-      - name: tester test_pybind_dll_smoke.py
+      - name: tester test_pybind_dll_smoke.py with conda run
         run: |
-          python doc/test_pybind_dll_smoke.py
+          conda run -n diff_check python doc/test_pybind_dll_smoke.py
         working-directory: ${{github.workspace}}
+
+      - 
+
 
       - name: Sphinx build
         run: |
