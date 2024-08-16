@@ -28,16 +28,12 @@ jobs:
         run: |
           ls $env:USERPROFILE
           echo "------------------------------------------------------"
-          ls $env:USERPROFILE\.conda
-          echo "------------------------------------------------------"
-          ls $env:USERPROFILE\miniconda3\envs
-          echo "------------------------------------------------------"
-          ls $env:USERPROFILE\miniconda3\envs\diff_check
+          ls $env:CONDA
 
       - name: Cache conda environment
         uses: actions/cache@v2
         with:
-          path: $env:USERPROFILE\miniconda3\envs\diff_check
+          path: ${{ env.CONDA }}\envs\diff_check
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
@@ -84,7 +80,7 @@ jobs:
       - name: Restore conda environment cache
         uses: actions/cache@v2
         with:
-          path: $env:USERPROFILE\miniconda3\envs\diff_check
+          path: ${{ env.CONDA }}\envs\diff_check
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
