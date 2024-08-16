@@ -39,7 +39,7 @@ jobs:
 
       - name: Cmake Configure
         run: |
-          conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
+          conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=ON -DRUN_TESTS=OFF
 
       - name: CMake Build
         run: conda run --name diff_check --no-capture-output cmake --build build --config Release
