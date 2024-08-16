@@ -71,17 +71,13 @@ jobs:
           auto-update-conda: true
           python-version: 3.9.1
 
-      # - name: Restore conda environment cache
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: C:\Miniconda\envs\diff_check
-      #     key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-conda-
-
-      - name: Create diff_check conda environment
-        run: |
-          conda env create -f environment.yml
+      - name: Restore conda environment cache
+        uses: actions/cache@v2
+        with:
+          path: C:\Miniconda\envs\diff_check
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-
 
       - name: Activate diff_check conda environment
         run: |
@@ -98,20 +94,24 @@ jobs:
         run: |
           ls doc
 
-      # TODO: testing if it works for dlls import
-      - name: Set environment variables
+      # TODO: testing import with test file test_pybind_dll_smoke.py to remove
+      - name: tester test_pybind_dll_smoke.py
         run: |
-          $env:PATH += ";$PWD"
-          $env:PYTHONPATH += ";$PWD"
-      - name: Set environment variables x2
-        run: |
-          $env:PATH += ";${{ github.workspace }}\\doc"
-          $env:PYTHONPATH += ";${{ github.workspace }}\\doc"
+          python doc/test_pybind_dll_smoke.py
+        working-directory: ${{github.workspace}}
 
       - name: Sphinx build
         run: |
           conda run --name diff_check --no-capture-output sphinx-build doc _build
         working-directory: ${{github.workspace}}
+
+
+
+
+
+
+
+
 
 
   # page-deployement:
