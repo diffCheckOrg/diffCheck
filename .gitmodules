@@ -2,9 +2,6 @@
 	path = deps/googletest
 	url = https://github.com/google/googletest
 	branch = main
-[submodule "deps/eigen"]
-	path = deps/eigen
-	url = https://gitlab.com/libeigen/eigen.git
 [submodule "deps/open3d"]
 	path = deps/open3d
 	url = https://github.com/diffCheckOrg/submodule-open3d.git
