@@ -74,10 +74,19 @@ jobs:
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
-
-      - name: Activate diff_check conda environment
+      
+      - name: Create diff_check conda environment if not exists
         run: |
-          conda config --set envs_dirs ~/conda_env
+          if (Test-Path -Path "$env:USERPROFILE\conda_env\envs\diff_check") {
+            echo "Environment already exists"
+          } else {
+            conda env create -f environment.yml
+          }
+      
+      - name: Activate diff_check conda environment
+        shell: bash
+        run: |
+          source ~/miniconda/etc/profile.d/conda.sh
           conda activate diff_check
 
       - name: Download dlls/pyd artifacts
