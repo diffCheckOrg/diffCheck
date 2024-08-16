@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          lfs: true  # enable lfs support
 
       - name: Setup conda environment
         uses: conda-incubator/setup-miniconda@v2
@@ -67,6 +69,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          lfs: true  # enable lfs support
 
       - name: Setup conda environment
         uses: conda-incubator/setup-miniconda@v2
