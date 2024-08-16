@@ -94,6 +94,12 @@ jobs:
         run: |
           ls doc
 
+      # TODO: testing if it works for dlls import
+      - name: Set environment variables
+        run: |
+          $env:PATH += ";$PWD"
+          $env:PYTHONPATH += ";$PWD"
+
       - name: Sphinx build
         run: |
           conda run --name diff_check --no-capture-output sphinx-build doc _build
