@@ -53,7 +53,7 @@ except ImportError as e:
     for path in sys.path:
         print(path)
     print("Current files in the directory:")
-    for file in os.listdir(extra_dll_dir):
+    for file in os.listdir(extra_dll_dir_doc):
         print(file)
     sys.exit(1)
 
