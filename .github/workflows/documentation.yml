@@ -45,9 +45,8 @@ jobs:
         with:
           name: __build_artifacts__
           path: |
-            ${{github.workspace}}/build/bin/Release/diffCheck.dll
-            ${{github.workspace}}/build/bin/Release/Open3D.dll
-            ${{github.workspace}}/build/Release/*.pyd
+            ${{ github.workspace }}/build/Release/*.pyd
+            ${{ github.workspace }}/build/bin/Release/*.dll
 
 
   build-docs:
