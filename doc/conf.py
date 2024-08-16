@@ -46,6 +46,11 @@ os.add_dll_directory(extra_dll_dir_doc)  # For finding DLL dependencies on Windo
 sys.path.insert(0, extra_dll_dir_doc)
 sys.path.insert(0, extra_dll_dir_pysource)
 try:
+    # check general pacakae import
+    import diffCheck
+    print(f"diffCheck's version: {diffCheck.__version__}")
+
+    # check bindings
     import diffCheck.diffcheck_bindings as dfb
 except ImportError as e:
     print(f"Failed to import diffcheck_bindings: {e}")
