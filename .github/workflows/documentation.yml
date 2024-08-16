@@ -71,17 +71,21 @@ jobs:
           auto-update-conda: true
           python-version: 3.9.1
 
-      - name: Restore conda environment cache
-        uses: actions/cache@v2
-        with:
-          path: C:\Miniconda\envs\diff_check
-          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-
+      # - name: Restore conda environment cache
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: C:\Miniconda\envs\diff_check
+      #     key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-conda-
 
-      # - name: Activate diff_check conda environment
-      #   run: |
-      #     conda activate diff_check
+      - name: Create diff_check conda environment
+        run: |
+          conda env create -f environment.yml
+
+      - name: Activate diff_check conda environment
+        run: |
+          conda activate diff_check
 
       - name: Download dlls/pyd artifacts
         uses: actions/download-artifact@v2
@@ -106,8 +110,7 @@ jobs:
 
       - name: Sphinx build
         run: |
-          conda activate diff_check
-          sphinx-build doc _build
+          conda run --name diff_check --no-capture-output sphinx-build doc _build
         working-directory: ${{github.workspace}}
 
 

@@ -3,6 +3,20 @@
 
 In DF we use `Sphinx` to generate the documentation. The documentation is written in `reStructuredText` and `Markdown` and the source files are located in the `doc` folder. The documentation is hosted on `ReadTheDocs` and is automatically updated when a new commit is pushed to the `main` branch.
 
+## Build locally
+
+To build locally the documentation to test your changes:
+```console
+invoke documentize
+```
+and to open the documentation in your browser:
+```console
+start _build/html/index.html
+```
+If you modify the `doc`s files and refresh the pages updates will be visible.
+
+## Contribute to the documentation
+
 Follow these guides to contribute to the documentation whether you:
 
 - add a new [GHComponents](ghcomp_doc_g)
@@ -11,7 +25,7 @@ Follow these guides to contribute to the documentation whether you:
 
 ---
 (ghcomp_doc_g)=
-## `GHComponent`'s docs
+### ✔️ `GHComponent`'s docs
 
 If you write a new [GHComponents](gh_components.rst) you will most probably already have created and filled a `metadata.json` file. DF uses this file to automatically generate the documentation for the GHComponents. The only thing you need to do is:
 * add a new `.rst` file with the name of the component like `gh_DFComponentName.rst`
@@ -24,7 +38,7 @@ Our custom sphinx extension `sphinx_ghcomponent_parser` will automatically parse
 
 
 (pyapi_doc_g)=
-## `Python API`'s docs
+### ☑️ `Python API`'s docs
 
 For [Python API documentation](diffCheck_PythonAPI), we use `sphinx-apidoc` to automatically generate the API documentation so the only thing to do is to add beautiful docstrings to the Python code with the following reStructuredText (reST) format style:
 
@@ -44,7 +58,7 @@ For [Python API documentation](diffCheck_PythonAPI), we use `sphinx-apidoc` to a
 ```
 
 (tutorial_doc_g)=
-## `DF Tutorial`'s docs
+### ✅ `DF Tutorial`'s docs
 
 If you need to add a new page to the [tutorials](tutorials.rst) (e.g. a [new tutorial](tutorials.rst)), you can do so by adding a new `.rst` file in the `doc` folder and linking it in the `tutorials.rst` file's toctree:
 
