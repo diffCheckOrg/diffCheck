@@ -113,14 +113,14 @@ jobs:
           path: ${{ github.workspace }}/_build
 
 
-  # Run only on pushes to the default branch
   page-deployement:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build-docs
-    if: github.ref == 'refs/heads/main'
+    # Run only on pushes to the default branch
+    # if: github.ref == 'refs/heads/main'
     # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
     # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
     concurrency:
