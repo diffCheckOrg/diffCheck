@@ -116,10 +116,12 @@ class DFFace:
         """
         all_loops = []
 
-        if brep_face.IsCylinder():
-            cls.is_cylinder = True
-            df_face._rh_brepface = brep_face
-            return df_face
+        # if brep_face.IsCylinder():
+            
+        #     df_face = cls([[[], [], []]], joint_id)
+        #     cls.is_cylinder = True
+        #     df_face._rh_brepface = brep_face
+        #     return df_face
 
         for idx, loop in enumerate(brep_face.Loops):
             loop_trims = loop.Trims
