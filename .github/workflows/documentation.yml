@@ -23,7 +23,7 @@ jobs:
         run: |
           conda env create -f environment.yml
 
-      - name: Update/Restore conda environment cache
+      - name: Cache conda environment cache
         uses: actions/cache@v2
         with:
           path: C:\Miniconda\envs\diff_check
@@ -77,10 +77,6 @@ jobs:
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
-
-      - name: Activate diff_check conda environment
-        run: |
-          conda activate diff_check
 
         # download artifacts
       - name: Download dlls for doc folder
