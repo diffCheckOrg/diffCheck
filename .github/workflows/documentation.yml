@@ -39,9 +39,10 @@ jobs:
         # upload artifacts
       - name: Move dlls and pyd files to single directories
         run: |
-          mkdir $env:GITHUB_WORKSPACE\artifacts
-          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\Release -Filter *.pyd -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_pyds
+          mkdir $env:GITHUB_WORKSPACE\artifacts_dlls
+          mkdir $env:GITHUB_WORKSPACE\artifacts_pyds
           Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\bin\Release -Filter *.dll -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_dlls
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\Release -Filter *.pyd -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_pyds
         shell: pwsh
       - name: Upload artifacts - dlls
         uses: actions/upload-artifact@v2
