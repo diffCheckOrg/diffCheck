@@ -63,4 +63,4 @@ def yakerize(c):
 
 @task
 def documentize(c):
-    subprocess.run("conda activate diff_check && sphinx-build doc _build", shell=True, check=True)
+    subprocess.run("conda activate diff_check && sphinx-build -b html -v doc _build", shell=True, check=True)

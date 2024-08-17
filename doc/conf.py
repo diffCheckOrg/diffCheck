@@ -83,7 +83,6 @@ needs_sphinx = '2.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-sys.path.append(os.path.abspath('sphinxext'))
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
@@ -91,13 +90,10 @@ extensions = [
     'sphinx.ext.linkcode',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
-    # 'matplotlib.sphinxext.plot_directive',
     'myst_nb',
     "sphinx_remove_toctrees",
     'sphinx_copybutton',
-    'jax_extensions',
     'sphinx_design',
-    'sphinxext.rediraffe',
     'sphinxcontrib.mermaid',
     'sphinx_autodoc_typehints',
 
@@ -192,23 +188,21 @@ html_theme_options = {
     'navigation_with_keys': False,
 }
 
-# The name of an image file (relative to this directory) to place at the top
-# of the sidebar.
-html_logo = './_static/logo_sphinx.png'
-
-# html_favicon = '_static/favicon.png'
-html_favicon = '../favicon.png'
-
-
 # Add any paths that contain custom 
 # static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+# The name of an image file (relative to this directory) to place at the top
+# of the sidebar.
+html_logo = '_static/logo_sphinx.png'
+html_favicon = '_static/logo_favicon.ico'
+
 html_css_files = [
     'style.css',
 ]
+
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -230,26 +224,6 @@ nb_execution_show_tb = True
 
 # Notebook cell execution timeout; defaults to 30.
 nb_execution_timeout = 100
-
-# # List of patterns, relative to source directory, that match notebook
-# # files that will not be executed.
-# nb_execution_excludepatterns = [
-#     # Slow notebook: long time to load tf.ds
-#     'notebooks/neural_network_with_tfds_data.*',
-#     # Slow notebook
-#     'notebooks/Neural_Network_and_Data_Loading.*',
-#     # Has extra requirements: networkx, pandas, pytorch, tensorflow, etc.
-#     'jep/9407-type-promotion.*',
-#     # TODO(jakevdp): enable execution on the following if possible:
-#     'notebooks/Distributed_arrays_and_automatic_parallelization.*',
-#     'notebooks/autodiff_remat.*',
-#     # Requires accelerators
-#     'pallas/quickstart.*',
-#     'pallas/tpu/pipelining.*',
-#     'pallas/tpu/matmul.*',
-#     'sharded-computation.*',
-#     'distributed_data_loading.*'
-# ]
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
@@ -366,7 +340,3 @@ def linkcode_resolve(domain, info):
   filename = os.path.relpath(filename, start=os.path.dirname(diffCheck.__file__))
   lines = f"#L{linenum}-L{linenum + len(source)}" if linenum else ""
   return f"https://github.com/diffCheckOrg/diffCheck/blob/main/diffCheck/{filename}{lines}"
-
-
-# FIXME: this is a temporary fix to suppress redirects warn on console build
-rediraffe_redirects = "redirects.txt"
