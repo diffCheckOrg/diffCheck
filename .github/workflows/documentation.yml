@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          lfs: true  # enable lfs support
 
       - name: Setup conda environment
         uses: conda-incubator/setup-miniconda@v2
@@ -25,17 +23,11 @@ jobs:
         run: |
           conda env create -f environment.yml
 
-      # - name: Update/Restore conda environment cache
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: C:\Miniconda\envs\diff_check
-      #     key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-conda-
-
-      # - name: Activate diff_check conda environment
-      #   run: |
-      #     conda activate diff_check
+      - name: Update/Restore conda environment cache
+        uses: actions/cache@v2
+        with:
+          path: C:\Miniconda\envs\diff_check
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
 
       - name: Cmake Configure
         run: |
@@ -44,90 +36,82 @@ jobs:
       - name: CMake Build
         run: conda run --name diff_check --no-capture-output cmake --build build --config Release
 
-
-      # TODO: testing copying
-      - name: Copying the dlls for python tests and c++ tests
+        # upload artifacts
+      - name: Move dlls and pyd files to single directories
         run: |
-          echo "Copying dlls/pyds for sphinx docs"
-          copy ${{github.workspace}}/build/bin/Release/*.dll ${{github.workspace}}/doc
-          copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/doc
+          mkdir $env:GITHUB_WORKSPACE\artifacts
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\Release -Filter *.pyd -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_pyds
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\bin\Release -Filter *.dll -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_dlls
+        shell: pwsh
+      - name: Upload artifacts - dlls
+        uses: actions/upload-artifact@v2
+        with:
+          name: __build_artifacts_dlls__
+          path: ${{ github.workspace }}/artifacts_dlls/*
+      - name: Upload artifacts - pyds
+        uses: actions/upload-artifact@v2
+        with:
+          name: __build_artifacts_pyds__
+          path: ${{ github.workspace }}/artifacts_pyds/*
 
-          echo "Copying dlls/pyds for python diffCheck package"
-          copy ${{github.workspace}}/build/bin/Release/*.dll ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
-          copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/src/gh/diffCheck/diffCheck
+
+  build-docs:
+    runs-on: windows-latest
+    needs: build-source
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9.1
+
+      - name: Restore conda environment cache
+        uses: actions/cache@v2
+        with:
+          path: C:\Miniconda\envs\diff_check
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-
+
+      - name: Activate diff_check conda environment
+        run: |
+          conda activate diff_check
+
+        # download artifacts
+      - name: Download dlls for doc folder
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_dlls__
+          path: ${{github.workspace}}/doc
+      - name: Download pyds for doc folder
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_pyds__
+          path: ${{github.workspace}}/doc
+      - name: Download dlls for diffCheck py package
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_dlls__
+          path: ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+      - name: Download pyds for diffCheck py package
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_pyds__
+          path: ${{github.workspace}}/src/gh/diffCheck/diffCheck
 
       - name: Sphinx build
         run: |
-          conda run --name diff_check --no-capture-output sphinx-build doc _build
+          conda run --name diff_check --no-capture-output sphinx-build -b html -v doc _build
 
-
-
-      # # FIXME: uploading artifacts
-      # - name: Move dlls and pyd files to a single directory
-      #   run: |
-      #     mkdir $env:GITHUB_WORKSPACE\artifacts
-      #     Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\Release -Filter *.pyd -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts
-      #     Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\bin\Release -Filter *.dll -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts
-      #   shell: pwsh
-      # - name: Store the dlls/pyd as artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: __build_artifacts__
-      #     path: ${{ github.workspace }}/artifacts/*
-
-
-  # build-docs:
-  #   runs-on: windows-latest
-  #   needs: build-source
-    
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         lfs: true  # enable lfs support
-
-  #     - name: Setup conda environment
-  #       uses: conda-incubator/setup-miniconda@v2
-  #       with:
-  #         auto-update-conda: true
-  #         python-version: 3.9.1
-
-  #     - name: Restore conda environment cache
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: C:\Miniconda\envs\diff_check
-  #         key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-conda-
-
-  #     - name: Activate diff_check conda environment
-  #       run: |
-  #         conda activate diff_check
-
-  #     - name: Download dlls/pyd artifacts
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: __build_artifacts__
-  #         path: ${{github.workspace}}/doc
-
-  #     # TODO: debug
-  #     - name: List all the files in doc/
-  #       run: |
-  #         ls doc
-
-  #     # TODO: testing import with test file test_pybind_dll_smoke.py to remove
-  #     - name: tester test_pybind_dll_smoke.py with conda run
-  #       run: |
-  #         conda run -n diff_check python doc/test_pybind_dll_smoke.py
-  #       working-directory: ${{github.workspace}}
-
-  #     # - 
-
-
-  #     - name: Sphinx build
-  #       run: |
-  #         conda run --name diff_check --no-capture-output sphinx-build doc _build
-  #       working-directory: ${{github.workspace}}
+      - name: Upload documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: __build_sphx_docs__
+          path: ${{ github.workspace }}/_build
 
 
 
