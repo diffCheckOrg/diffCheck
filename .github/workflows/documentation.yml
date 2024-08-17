@@ -111,22 +111,23 @@ jobs:
           path: ${{ github.workspace }}/_build
 
 
+  page-deployement:
+    runs-on: ubuntu-latest
+    needs: build-docs
 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      - name: Download sphinx docs
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_sphx_docs__
+          path: ${{github.workspace}}/_build
 
-
-
-
-
-
-  # page-deployement:
-  #   runs-on: windows-latest
-      ## FIXME: we should replace this with the action to deploy to gh-pages
-      # - name: Deploy to GitHub Pages
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      #   with:
-      #     publish_branch: gh-pages
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: _build/
-      #     force_orphan: true
+      # TODO: debug
+      - name: Debug
+        run: |
+          ls -la ${{github.workspace}}
+          ls -la ${{github.workspace}}/_build
+          ls -la ${{github.workspace}}/_build/html
