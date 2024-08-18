@@ -61,7 +61,7 @@ class MetadataParser:
         # for key, value in self.get_ghpython_settings().items():
         #     content.append(f"{'#' * 3} {key}: {value}")
 
-        
+
 
         params = self.get_input_parameters()
         # if params:  # Ensure params is not empty

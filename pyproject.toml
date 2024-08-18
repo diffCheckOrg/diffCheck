@@ -1,0 +1,27 @@
+[tool.mypy]
+warn_return_any = true
+warn_unused_configs = true
+exclude = [
+    "deps",
+    "src/gh/components",
+    "src/gh/diffCheck/setup.py",
+    "temp",
+    "doc"
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "Rhino.*",
+    "rhinoscriptsyntax.*",
+    "scriptcontext.*",
+    "Grasshopper.*",
+    "System.*",
+    "GH_IO.*",
+    "clr.*",
+    "diffcheck_bindings"
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pefile"
+ignore_missing_imports = true

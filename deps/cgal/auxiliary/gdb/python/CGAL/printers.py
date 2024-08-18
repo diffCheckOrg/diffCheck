@@ -23,7 +23,7 @@ def lookup_function (val):
     # Get the unqualified type, stripped of typedefs.
     type = type.unqualified ().strip_typedefs ()
 
-    # Get the type name.    
+    # Get the type name.
     typename = type.tag
     if typename == None:
         return None
@@ -34,7 +34,7 @@ def lookup_function (val):
     for function in CGAL_pretty_printers_dict:
         if function.search (typename):
             return CGAL_pretty_printers_dict[function] (val)
-        
+
     # Cannot find a pretty printer.  Return None.
     return None
 
@@ -43,7 +43,7 @@ def lookup_function (val):
 class CGAL_Handle_for:
     def __init__(self, val):
         self.val = val
-        
+
     def to_string (self):
         node = self.val['ptr_'].dereference()
         return 'Handle_for(%s , refcount=%d)' % (node['t'],node['count'])
@@ -51,7 +51,7 @@ class CGAL_Handle_for:
 class CGAL_Point_2:
     def __init__(self, val):
         self.val = val
-        
+
     def to_string (self):
         node = self.val;
         type = self.val.type
@@ -64,7 +64,7 @@ class CGAL_Point_2:
 class CGAL_Tdsvb3:
     def __init__(self, val):
         self.val = val
-        
+
     def to_string (self):
         node = self.val;
         return 'CGAL::Tvb_3(%s)' % node['_p']
@@ -72,7 +72,7 @@ class CGAL_Tdsvb3:
 class CGAL_Point_3:
     def __init__(self, val):
         self.val = val
-        
+
     def to_string (self):
         node = self.val;
         type = self.val.type
@@ -86,7 +86,7 @@ class CGAL_Vector_2:
     def __init__(self, val, name):
         self.val = val
         self.name = name
-        
+
     def to_string (self):
         node = self.val['base']
         return 'CGAL::%s(%s)' % (self.name, node)
@@ -94,7 +94,7 @@ class CGAL_Vector_2:
 class CGAL_Array:
     def __init__(self, val):
         self.val = val
-        
+
     def to_string (self):
         node = self.val['_M_instance']
         return node
@@ -102,7 +102,7 @@ class CGAL_Array:
 class CGAL_Boost_tuples:
     def __init__(self, val):
         self.val = val
-        
+
     def to_string (self):
         return '{%s}' % self.display_head_and_continue(self.val)
 
@@ -135,4 +135,3 @@ CGAL_pretty_printers_dict[re.compile('^(std|boost)(::tr1)?::array<.*>')] = lambd
 
 CGAL_pretty_printers_dict[re.compile('^(std|boost)(::tr1)?(::tuples)?::tuple<.*>')] = lambda val: CGAL_Boost_tuples(val)
 #p2 = gdb.selected_frame().read_var('p2')
-

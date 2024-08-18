@@ -24,7 +24,7 @@ class GhComponentToRSTDirective(SphinxDirective):
         metadata_json_file = os.path.join(ghcomponent_dir, 'metadata.json')
         pycode_file = os.path.join(ghcomponent_dir, 'code.py')
         icon_file = os.path.join(ghcomponent_dir, 'icon.png')
-        
+
         metadata = metadata_parser.MetadataParser(metadata_json_file)
 
         ##########################################################################
@@ -47,7 +47,7 @@ class GhComponentToRSTDirective(SphinxDirective):
         table += tgroup
         tgroup += nodes.colspec(colwidth=1)
         tgroup += nodes.colspec(colwidth=1)
-        
+
         tbody = nodes.tbody()
         tgroup += tbody
         if metadata.get_input_parameters():
@@ -71,7 +71,7 @@ class GhComponentToRSTDirective(SphinxDirective):
         table += tgroup
         tgroup += nodes.colspec(colwidth=1)
         tgroup += nodes.colspec(colwidth=1)
-        
+
         tbody = nodes.tbody()
         tgroup += tbody
         if metadata.get_output_parameters():

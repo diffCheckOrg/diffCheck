@@ -25,5 +25,5 @@ class DFLoadCloudFromFile(component):
         centroid = rh_cloud.GetBoundingBox(True).Center
         x_form_scale = rg.Transform.Scale(centroid, i_scalef)
         rh_cloud.Transform(x_form_scale)
-        
+
         return [rh_cloud]

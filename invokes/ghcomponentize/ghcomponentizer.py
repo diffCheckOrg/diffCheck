@@ -382,7 +382,7 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     clr.AddReference(os.path.splitext(gh_io)[0])
-    
+
     print("[x] GH_IO assembly: {}".format(gh_io))
 
     print("Processing component bundles:")

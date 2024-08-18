@@ -11,7 +11,7 @@ def get_inverse_transformation(
 ) -> Rhino.Geometry.Transform:
     """
         Get the inverse of a transformation
-        
+
         :param x_form: the transformation to get the inverse from
         :return: the inverse transformation
     """
@@ -36,7 +36,7 @@ def get_inverse_transformation(
 def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Transform:
     """
         Transform a brep (beam) to the world plane
-        
+
         :param brep: the brep to transform
         :return: the transformation
     """
@@ -44,7 +44,7 @@ def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Trans
     def _get_lowest_brep_vertex(brep) -> Rhino.Geometry.Point3d:
         """
             Get the the vertex with the lowest y,x and z values
-            
+
             :param brep: the brep to get the lowest vertex from
             :return: the lowest vertex
         """
@@ -63,7 +63,7 @@ def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Trans
 
     # find the longest edge of the brep
     edges = brep.Edges
-    longest_edge = None
+    longest_edge: Rhino.Geometry.Curve = None
     longest_edge_length = 0
     for edge in edges:
         if edge.GetLength() > longest_edge_length:
@@ -73,7 +73,7 @@ def pln_2_pln_world_transform(brep: Rhino.Geometry.Brep) -> Rhino.Geometry.Trans
     # find biggest face
     face_indices = longest_edge.AdjacentFaces()
     faces = [brep.Faces[face_index] for face_index in face_indices]
-    biggest_face = None
+    biggest_face: Rhino.Geometry.BrepFace = None
     biggest_face_area = 0
     for face in faces:
         if rg.AreaMassProperties.Compute(face).Area > biggest_face_area:

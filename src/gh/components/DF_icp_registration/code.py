@@ -86,7 +86,7 @@ class DFICPRegistration(component):
         if rh_form == rg.Transform.Identity:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")
             return None
-        
+
         o_x_form = rh_form
 
         return o_x_form

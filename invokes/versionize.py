@@ -1,4 +1,4 @@
-#! python3 
+#! python3
 
 import os
 import sys
@@ -28,7 +28,7 @@ def main(
         if manifest_crt_version is not None:
             if version <= manifest_crt_version:
                 print(f"Version {version} is equal or smaller than the current version {manifest_crt_version}. Please provide a version number bigger than the current one.")
-                return
+                return False
         else:
             print("Could not find the current version in the manifest file.")
             sys.exit(1)
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         or len(_version) < 5:
         is_version_ok = False
         parse_errors.append("Version must be in the format: Major.Minor.Patch")
-        
+
     is_manifest_ok = True
     is_setup_ok = True
     is_init_ok = True

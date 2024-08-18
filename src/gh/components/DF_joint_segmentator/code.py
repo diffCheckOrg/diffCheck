@@ -12,9 +12,9 @@ from ghpythonlib.componentbase import executingcomponent as component
 ABSTOL = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance
 
 class DFJointSegmentator(component):
-    def RunScript(self, 
-                  i_clusters: Rhino.Geometry.PointCloud, 
-                  i_joints: Rhino.Geometry.Mesh, 
+    def RunScript(self,
+                  i_clusters: Rhino.Geometry.PointCloud,
+                  i_joints: Rhino.Geometry.Mesh,
                   i_joint_ids: int,
                   i_angle_threshold: float,
                   i_distance_threshold: float):
