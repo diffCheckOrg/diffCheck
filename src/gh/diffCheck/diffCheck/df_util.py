@@ -109,7 +109,7 @@ def compute_ordered_vertices(brep_face) -> typing.List[Rhino.Geometry.Point3d]:
     edges = brep_face.DuplicateEdgeCurves()
     edges = list(set(edges))
 
-    edges_sorted = []
+    edges_sorted: list[Rhino.Geometry.Curve] = []
     while len(edges) > 0:
         if len(edges_sorted) == 0:
             edges_sorted.append(edges[0])

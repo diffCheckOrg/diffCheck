@@ -4,7 +4,7 @@
 """
 
 import numpy as np
-from diffCheck import diffcheck_bindings
+from diffCheck import diffcheck_bindings  # type: ignore
 import Rhino.Geometry as rg
 
 

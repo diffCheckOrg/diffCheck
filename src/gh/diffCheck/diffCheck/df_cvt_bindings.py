@@ -9,9 +9,12 @@ import Rhino.Geometry as rg
 import scriptcontext as sc
 import numpy as np
 
-from diffCheck import diffcheck_bindings
+import typing
+from typing import List, Dict, Any
 
-def test_bindings() -> bool:
+from diffCheck import diffcheck_bindings  # type: ignore
+
+def test_bindings() -> Any:
     """
         Test the bindings import.
 

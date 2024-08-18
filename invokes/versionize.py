@@ -28,7 +28,7 @@ def main(
         if manifest_crt_version is not None:
             if version <= manifest_crt_version:
                 print(f"Version {version} is equal or smaller than the current version {manifest_crt_version}. Please provide a version number bigger than the current one.")
-                return
+                return False
         else:
             print("Could not find the current version in the manifest file.")
             sys.exit(1)

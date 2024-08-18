@@ -1,13 +1,17 @@
 (contrib_guide)=
 # Contribute
 
-We value all contributions to diffCheck, whether they are bug reports, feature requests, or pull requests. We have a few guidelines to ensure that the process is as smooth as possible.
-
-## How to contribute
-
 We welcome pull requests from everyone. Please have a look at the [issue](https://github.com/diffCheckOrg/diffCheck/issues) list to see if there is something you can help with. If you have a new feature in mind, please open an issue to discuss it first.
 
-To contribute, you will need to install your developer's environment to build the project. You can find the instructions in the [development installation guide](dev_documentation).
+## Code quality
+
+We run [mypy](https://mypy.readthedocs.io/en/stable/index.html) and [] on pre-commit hooks to ensure code quality. Please make sure to run the following commands before submitting a pull request:
+
+```console
+pre-commit run --all-files
+```
+
+## How to contribute
 
 Next, fall the following steps:
 
@@ -24,4 +28,10 @@ Next, fall the following steps:
 
     ```console
     git checkout -b my-feature
-    ``` 
+    ```
+
+4. Add the diffCheck repository as a remote for convinience:
+
+    ```console
+    git remote add upstream https://github.com/diffCheckOrg/diffCheck
+    ```
