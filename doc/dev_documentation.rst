@@ -1,4 +1,4 @@
-.. _dev_documentation:
+.. _dev_df_doc:
 
 Developer documentation
 =======================

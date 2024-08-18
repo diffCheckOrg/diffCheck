@@ -1,5 +1,7 @@
 .. currentmodule:: diffCheck
 
+.. _diffCheck_API:
+
 diffCheck Python API
 ====================
 

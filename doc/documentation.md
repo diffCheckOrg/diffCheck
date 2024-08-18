@@ -3,6 +3,10 @@
 
 In DF we use `Sphinx` to generate the documentation. The documentation is written in `reStructuredText` and `Markdown` and the source files are located in the `doc` folder. The documentation is hosted on `ReadTheDocs` and is automatically updated when a new commit is pushed to the `main` branch.
 
+```{note}	
+  For more info on how to write `.rst` files, check this [reStructuredText](https://canonical-documentation-with-sphinx-and-readthedocscom.readthedocs-hosted.com/style-guide/) guide.
+```	
+
 ## Build locally
 
 To build locally the documentation to test your changes:

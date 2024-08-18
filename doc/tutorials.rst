@@ -1,4 +1,4 @@
-.. _df-tutorials:
+.. _df-tuto:
 
 diffCheck tutorials
 ===================

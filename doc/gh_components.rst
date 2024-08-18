@@ -1,3 +1,5 @@
+.. _gh_dfcomp:
+
 DiffCheck Gh Components
 =======================
 
