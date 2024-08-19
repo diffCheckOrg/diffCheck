@@ -1,0 +1,34 @@
+name: Python sanity check (pre-commits)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup conda environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        python-version: 3.9.1
+    - name: Create diff_check conda environment
+      run: |
+        conda env create -f environment.yml
+    - name: Cache conda environment cache
+      uses: actions/cache@v2
+      with:
+        path: C:\Miniconda\envs\diff_check
+        key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+
+    - name: Cache pre-commit hooks
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pre-commit
+        key: ${{ runner.os }}-precommit-${{ hashFiles('.pre-commit-config.yaml') }}
+    - name: Install pre-commit
+      run: pip install pre-commit
+    - name: Run pre-commit
+      run: conda run --name diff_check --no-capture-output pre-commit run --all-files
