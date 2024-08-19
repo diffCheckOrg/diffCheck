@@ -253,11 +253,3 @@ cython_debug/
 #######################################
 # get rid of output folder
 _build/
-
-#######################################
-## Pre-commits
-#######################################
-# Pre-commit cache directory
-.pre-commit-config.yaml
-.pre-commit-hooks.yaml
-.pre-commit/
