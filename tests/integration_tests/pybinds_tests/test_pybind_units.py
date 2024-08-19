@@ -64,16 +64,16 @@ def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     assert pc.get_num_normals() == 7379, "get_num_normals() should return 7379"
     assert pc.get_num_colors() == 7379, "get_num_colors() should return 7379"
 
-    assert pc.has_points() == True, "has_points() should return True"
-    assert pc.has_colors() == True, "has_colors() should return True"
-    assert pc.has_normals() == True, "has_normals() should return True"
+    assert pc.has_points(), "has_points() should return True"
+    assert pc.has_colors(), "has_colors() should return True"
+    assert pc.has_normals(), "has_normals() should return True"
 
     pc.points = []
     pc.normals = []
     pc.colors = []
-    assert pc.has_points() == False, "has_points() should return False"
-    assert pc.has_colors() == False, "has_colors() should return False"
-    assert pc.has_normals() == False, "has_normals() should return False"
+    assert not pc.has_points(), "has_points() should return False"
+    assert not pc.has_colors(), "has_colors() should return False"
+    assert not pc.has_normals(), "has_normals() should return False"
 
 def test_DFPointCloud_apply_color(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof
@@ -115,7 +115,6 @@ def test_DFTransform_init():
     assert t is not None, "DFTransformation should be initialized successfully"
 
 def test_DFTransform_read_write(create_DFPointCloudSampleRoof):
-    pc = create_DFPointCloudSampleRoof
     t = dfb.dfb_transformation.DFTransformation()
 
     matrix = t.transformation_matrix

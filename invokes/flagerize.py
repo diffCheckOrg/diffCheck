@@ -5,7 +5,6 @@ import sys
 import argparse
 import re
 
-import typing
 
 
 def main(
@@ -122,11 +121,11 @@ if __name__ == "__main__":
     if is_version_ok:
         print("\t[x] Correct version format")
     else:
-        print(f"\t[ ] Correct version format")
+        print("\t[ ] Correct version format")
     if is_source_populated:
         print(f"\t[x] Source folder is populated {args.source} with {nbr_pycode_files} components")
     else:
-        print(f"\t[ ] Source folder is populated")
+        print("\t[ ] Source folder is populated")
 
     if parse_errors.__len__() != 0:
         for error in parse_errors:

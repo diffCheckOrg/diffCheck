@@ -1,13 +1,9 @@
 #! python3
 
-import System
-import typing
 
-import Rhino
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
-import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
@@ -30,19 +26,28 @@ class DFRANSACGlobalRegistration(component):
         i_confidence_threshold: float
     ) -> rg.Transform:
         if i_cloud_source is None or i_cloud_target is None:
-            ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
 
         # set default values
-        if i_radius_kd_search is None: i_radius_kd_search = 1
-        if i_neighbours_kd_search is None: i_neighbours_kd_search = 50
-        if i_max_corrspondence_dist is None: i_max_corrspondence_dist = 0.5
-        if is_t_estimate_pt2pt is None: is_t_estimate_pt2pt = False
-        if i_ransac_n is None: i_ransac_n = 3
-        if i_checker_dist is None: i_checker_dist = 0.5
-        if i_similarity_threshold is None: i_similarity_threshold = 1.5
-        if i_max_iterations is None: i_max_iterations = 5000
-        if i_confidence_threshold is None: i_confidence_threshold = 0.999
+        if i_radius_kd_search is None:
+            i_radius_kd_search = 1
+        if i_neighbours_kd_search is None:
+            i_neighbours_kd_search = 50
+        if i_max_corrspondence_dist is None:
+            i_max_corrspondence_dist = 0.5
+        if is_t_estimate_pt2pt is None:
+            is_t_estimate_pt2pt = False
+        if i_ransac_n is None:
+            i_ransac_n = 3
+        if i_checker_dist is None:
+            i_checker_dist = 0.5
+        if i_similarity_threshold is None:
+            i_similarity_threshold = 1.5
+        if i_max_iterations is None:
+            i_max_iterations = 5000
+        if i_confidence_threshold is None:
+            i_confidence_threshold = 0.999
 
         # get the working unit of the Rhino document, if other than meters, set a multiplier factor
         scalef = diffCheck.df_util.get_doc_2_meters_unitf()
@@ -82,7 +87,7 @@ class DFRANSACGlobalRegistration(component):
             for j in range(4):
                 rh_form[i, j] = df_xform_matrix[i, j]
         if rh_form == rg.Transform.Identity:
-            ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")  # noqa: F821
             return None
 
         o_x_form = rh_form

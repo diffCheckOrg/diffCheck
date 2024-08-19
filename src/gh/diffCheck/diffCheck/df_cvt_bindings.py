@@ -7,10 +7,8 @@
 import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
-import numpy as np
 
-import typing
-from typing import List, Dict, Any
+from typing import Any
 
 from diffCheck import diffcheck_bindings  # type: ignore
 

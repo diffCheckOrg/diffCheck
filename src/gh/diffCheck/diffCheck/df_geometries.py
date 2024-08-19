@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 import typing
 from typing import Optional
-from typing import List, Dict, Any
 
 import uuid
 
@@ -129,7 +128,6 @@ class DFFace:
             return df_face
 
         for idx, loop in enumerate(brep_face.Loops):
-            loop_trims = loop.Trims
             loop_curve = loop.To3dCurve()
             loop_curve = loop_curve.ToNurbsCurve()
             loop_vertices = loop_curve.Points
@@ -154,7 +152,7 @@ class DFFace:
             return self._rh_brepface
 
         if self.is_cylinder:
-            ghenv.Component.AddRuntimeMessage(
+            ghenv.Component.AddRuntimeMessage(  # noqa: F821
                 RML.Warning, "The DFFace was a cylinder created from scratch \n \
                  , it cannot convert to brep.")
 
@@ -346,7 +344,6 @@ class DFAssembly:
                     facerhmesh_face_elem.set("v3", str(face.C))
                     facerhmesh_face_elem.set("v4", str(face.D))
 
-        tree = ET.ElementTree(root)
         xml_string = ET.tostring(root, encoding="unicode")
         dom = parseString(xml_string)
         pretty_xml = dom.toprettyxml()

@@ -1,13 +1,9 @@
 #! python3
 
-import System
 
-import Rhino
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
-import diffCheck
-import diffCheck.df_geometries
 from diffCheck import df_cvt_bindings
 
 class DFCloudNormalEstimator(component):

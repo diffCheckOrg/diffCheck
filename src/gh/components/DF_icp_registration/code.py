@@ -1,13 +1,9 @@
 #! python3
 
-import System
-import typing
 
-import Rhino
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
-import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
@@ -30,13 +26,16 @@ class DFICPRegistration(component):
         i_use_point_to_plane: bool  # valid only for 03dicp
     ) -> rg.Transform:
         if i_cloud_source is None or i_cloud_target is None:
-            ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
 
         # set default values
-        if i_use_generalized_icp is None: i_use_generalized_icp = True
-        if i_max_corrspondence_dist is None: i_max_corrspondence_dist = 5
-        if i_max_iteration is None: i_max_iteration = 50
+        if i_use_generalized_icp is None:
+            i_use_generalized_icp = True
+        if i_max_corrspondence_dist is None:
+            i_max_corrspondence_dist = 5
+        if i_max_iteration is None:
+            i_max_iteration = 50
 
         # get the working unit of the Rhino document, if other than meters, set a multiplier factor
         scalef = diffCheck.df_util.get_doc_2_meters_unitf()
@@ -84,7 +83,7 @@ class DFICPRegistration(component):
             for j in range(4):
                 rh_form[i, j] = df_xform_matrix[i, j]
         if rh_form == rg.Transform.Identity:
-            ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")  # noqa: F821
             return None
 
         o_x_form = rh_form

@@ -52,7 +52,6 @@ def flagerize(c, package_name="diffCheck"):
 @task
 def yakerize(c):
     path_yakerize = "./invokes/yakerize/yakerize.py"
-    build_yak_dir = "./build/yak"
     c.run(f"python {path_yakerize} \
         --gh-components-dir {DIR_OUT_GHUER_COMPONENTS} \
         --build-dir {DIR_OUT_YAK} \

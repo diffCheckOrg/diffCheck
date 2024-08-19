@@ -1,14 +1,9 @@
 #! python3
 
-import System
-import typing
 
-import Rhino
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
-import Grasshopper as gh
-from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from diffCheck import df_cvt_bindings
 from diffCheck import df_visualization

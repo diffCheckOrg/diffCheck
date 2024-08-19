@@ -1,6 +1,5 @@
 import Rhino
 import Rhino.Geometry as rg
-import rhinoscriptsyntax as rs
 import scriptcontext as sc
 
 import typing

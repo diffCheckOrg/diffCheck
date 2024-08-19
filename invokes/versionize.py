@@ -5,7 +5,6 @@ import sys
 import argparse
 import re
 
-import typing
 
 
 def main(
@@ -78,8 +77,6 @@ def main(
     with open(path_init, "w") as f:
         f.write(init)
 
-    # modify the CMake file
-    cmake_crt_version = None
     # search the first "project" line
     with open(path_cmake, "r") as f:
         cmake = f.read()

@@ -154,6 +154,8 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     height = total_height/steps
 
     legend_geometry = []
+    rect_pts = []
+    previous_color = None
 
     for i in range(steps+1):
 

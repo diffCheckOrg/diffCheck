@@ -25,3 +25,11 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "pefile"
 ignore_missing_imports = true
+
+
+[tool.ruff]
+exclude = [
+    "doc/",
+    "deps/",
+    "temp/"
+]

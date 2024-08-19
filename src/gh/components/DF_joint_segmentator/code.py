@@ -2,10 +2,8 @@
 
 import Rhino
 
-import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings as df_cvt
-import diffCheck.df_util
 
 from ghpythonlib.componentbase import executingcomponent as component
 
@@ -18,8 +16,10 @@ class DFJointSegmentator(component):
                   i_joint_ids: int,
                   i_angle_threshold: float,
                   i_distance_threshold: float):
-        if i_angle_threshold is None : i_angle_threshold = 0.1
-        if i_distance_threshold is None : i_distance_threshold = 0.1
+        if i_angle_threshold is None:
+            i_angle_threshold = 0.1
+        if i_distance_threshold is None:
+            i_distance_threshold = 0.1
 
         if len(i_joints) != len(i_joint_ids):
             raise ValueError("The number of joints and joint ids must be the same.")
