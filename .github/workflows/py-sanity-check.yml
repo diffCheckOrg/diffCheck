@@ -14,14 +14,19 @@ jobs:
       with:
         auto-update-conda: true
         python-version: 3.9.1
-    - name: Create diff_check conda environment
-      run: |
-        conda env create -f environment.yml
     - name: Cache conda environment cache
       uses: actions/cache@v2
       with:
         path: C:\Miniconda\envs\diff_check
         key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-
+      id: cache-conda
+    
+    - name: Create diff_check conda environment if not cached
+      if: steps.cache-conda.outputs.cache-hit != 'true'
+      run: |
+          conda env create -f environment.yml
 
     - name: Cache pre-commit hooks
       uses: actions/cache@v2
