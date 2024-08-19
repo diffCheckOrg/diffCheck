@@ -38,7 +38,7 @@ class DFCADSegmentator(component):
         o_clusters = []
         # the df cloud clusters
         df_clusters = []
-        # we make a deepcopy of the input clouds because 
+        # we make a deepcopy of the input clouds
         df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
 
         df_beams = i_assembly.beams
@@ -73,11 +73,11 @@ class DFCADSegmentator(component):
 
         return o_clusters, rh_beams_meshes
 
-if __name__ == "__main__":
-    com = DFCADSegmentator()
-    o_clusters, rh_beams_meshes = com.RunScript(
-        i_clouds,
-        i_assembly,
-        i_angle_threshold,
-        i_association_threshold
-        )
+# if __name__ == "__main__":
+#     com = DFCADSegmentator()
+#     o_clusters, rh_beams_meshes = com.RunScript(
+#         i_clouds,
+#         i_assembly,
+#         i_angle_threshold,
+#         i_association_threshold
+#         )

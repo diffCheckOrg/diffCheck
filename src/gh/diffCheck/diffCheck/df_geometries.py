@@ -314,6 +314,10 @@ class DFBeam:
         return self.__id
 
     @property
+    def number_joints(self):
+        return max([joint.id for joint in self.joints]) + 1
+
+    @property
     def joint_faces(self):
         return [face for face in self.faces if face.is_joint]
 
@@ -421,19 +425,26 @@ class DFAssembly:
             f.write(pretty_xml)
 
     @property
+    def total_number_joints(self):
+        return max([joint.id for joint in self.all_joints]) + 1
+
+    @property
     def all_joint_faces(self):
+        self._all_jointfaces = []
         for beam in self.beams:
             self._all_jointfaces.extend(beam.joint_faces)
         return self._all_jointfaces
 
     @property
     def all_side_faces(self):
+        self._all_sidefaces = []
         for beam in self.beams:
             self._all_sidefaces.extend(beam.side_faces)
         return self._all_sidefaces
 
     @property
     def all_joints(self):
+        self._all_joints = []
         for beam in self.beams:
             self._all_joints.extend(beam.joints)
         return self._all_joints
