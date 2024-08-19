@@ -1,4 +1,4 @@
-name: Python sanity check (pre-commits)
+name: py-sanity-checks
 
 on: [push, pull_request]
 
