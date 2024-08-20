@@ -13,13 +13,13 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 import diffCheck
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
-from diffCheck.df_geometries import DFBeam
+from diffCheck.df_geometries import DFAssembly
 
 
 class CloudMeshDistance(component):
     def RunScript(self,
         i_cloud_source: typing.List[rg.PointCloud],
-        i_beams: typing.List[DFBeam],
+        i_assembly: DFAssembly,
         i_signed_flag: bool,
         i_swap: bool,
         i_analysis_resolution):
@@ -28,7 +28,7 @@ class CloudMeshDistance(component):
             The cloud-to-mesh component computes the distance between a point cloud and a mesh
 
             :param i_cloud_source: a list of point clouds
-            :param i_beams: a list of DF beams
+            :param i_assembly: an assembly of DF beams
             :param i_signed_flag: calculate the sign of the distances
             :param i_swap: swap source and target
 
@@ -42,9 +42,20 @@ class CloudMeshDistance(component):
             scalef = diffCheck.df_util.get_doc_2_meters_unitf()
             i_analysis_resolution = 0.1 / scalef
 
+        # Based on cloud source input + beam size, decide whether to calculate joints or entire assembly and output respective message
+        if len(i_assembly.beams) == len(i_cloud_source):
+            ghenv.Component.Message = f"Per Beam"
+            rh_mesh_target_list = [beam.to_mesh(i_analysis_resolution) for beam in i_assembly.beams]
+        elif len(i_assembly.all_joints) == len(i_cloud_source):
+            ghenv.Component.Message= f"Per Joint"
+            rh_mesh_target_list = [joint.to_mesh(i_analysis_resolution) for joint in i_assembly._all_joints]
+        else:
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "The input number of obejcts to compare matches neither the number of beams nor the number of joints")
+            return None, None, None, None, None, None
+
         # conversion
         df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_s) for i_cl_s in i_cloud_source]
-        rh_mesh_target_list = [beam.to_mesh(i_analysis_resolution) for beam in i_beams]
+
 
         # calculate distances
         o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)
