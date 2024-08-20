@@ -237,9 +237,9 @@ class DFVisualizationSettings(component):
 
         # pack settings
         o_viz_settings = df_visualization.DFVizSettings(i_value_type,
+                                                        i_palette,
                                                         i_upper_threshold,
                                                         i_lower_threshold,
-                                                        i_palette,
                                                         i_legend_height,
                                                         i_legend_width,
                                                         i_legend_plane,
