@@ -13,7 +13,7 @@ class DFVizSettings:
     This class compiles the settings for the visualization into one object
     """
 
-    def __init__(self
+    def __init__(self,
         valueType,
         palette,
         upper_threshold,
