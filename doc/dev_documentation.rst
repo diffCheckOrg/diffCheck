@@ -3,10 +3,9 @@
 Developer documentation
 =======================
 
-/// this octree should explode the CONTRIBUTING.md file in multiple sections and delete it, e.g.:
+Here you will find all the necessary as a developer to contribute to the project.
 
 .. toctree::
-    :hidden:
     :maxdepth: 1
     :caption: Developer documentation
 

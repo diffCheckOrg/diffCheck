@@ -22,7 +22,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-conda-
       id: cache-conda
-    
     - name: Create diff_check conda environment if not cached
       if: steps.cache-conda.outputs.cache-hit != 'true'
       run: |

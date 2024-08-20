@@ -42,3 +42,4 @@ repos:
   rev: v0.4.4
   hooks:
   - id: ruff
+    args: [--config=.ruff.toml]
