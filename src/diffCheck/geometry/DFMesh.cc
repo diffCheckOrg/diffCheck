@@ -137,6 +137,56 @@ namespace diffCheck::geometry
         return false;
     }
 
+    std::tuple<Eigen::Vector3d, Eigen::Vector3d> DFMesh::GetCylinderCenterAndAxis()
+    {
+        Eigen::Vector3d center;
+        Eigen::Vector3d axis;
+
+        // Check if the mesh contains normals. If not, compute them
+        if (this->NormalsFace.size() == 0)
+        {
+            std::shared_ptr<open3d::geometry::TriangleMesh> O3DTriangleMesh = this->Cvt2O3DTriangleMesh();
+            O3DTriangleMesh->ComputeTriangleNormals();
+            this->NormalsFace.resize(O3DTriangleMesh->triangle_normals_.size());
+            for (int i = 0; i < O3DTriangleMesh->triangle_normals_.size(); i++)
+            {
+                this->NormalsFace[i] = O3DTriangleMesh->triangle_normals_[i];
+            }
+        }
+
+        // retrieve 20 random mesh faces to test the cylinder hypothesis
+        std::vector<Eigen::Vector3i> randomFaces;
+        std::vector<Eigen::Vector3d> randomFacesNormals;
+        std::vector<int> randomFacesIndices;
+        for (int i = 0; i < 20; i++)
+        {
+            int randomIndex = rand() % this->Faces.size();
+            randomFaces.push_back(this->Faces[randomIndex]);
+            randomFacesNormals.push_back(this->NormalsFace[randomIndex].normalized());
+            randomFacesIndices.push_back(randomIndex);
+        }
+
+        // compute normal to the normals of the 20 vertices, and check that they are colinear
+        std::vector<Eigen::Vector3d> normalsToVertexNormals;
+        for (int i = 0; i < 20 ; i++)
+        {
+            for (int j = i + 1; j < 20; j++)
+            {
+                normalsToVertexNormals.push_back(randomFacesNormals[i].cross(randomFacesNormals[j]).normalized());
+            }
+        }
+
+        std::cout << "normalsToVertexNormals size: " << normalsToVertexNormals.size() << std::endl;
+        Eigen::Vector3d meanNormalToVertexNormals;
+        for (Eigen::Vector3d normal : normalsToVertexNormals)
+        {
+            meanNormalToVertexNormals += normal;
+        }
+        meanNormalToVertexNormals.normalize();
+        std::cout << "meanNormalToVertexNormals : " << meanNormalToVertexNormals << std::endl;
+        return std::make_tuple(center, axis);
+    }
+
     void DFMesh::LoadFromPLY(const std::string &path)
     {
         std::shared_ptr<diffCheck::geometry::DFMesh> tempMesh_ptr = diffCheck::io::ReadPLYMeshFromFile(path);
