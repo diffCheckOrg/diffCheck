@@ -73,11 +73,11 @@ class DFCADSegmentator(component):
 
         return o_clusters, rh_beams_meshes
 
-if __name__ == "__main__":
-    com = DFCADSegmentator()
-    o_clusters, rh_beams_meshes = com.RunScript(
-        i_clouds,
-        i_assembly,
-        i_angle_threshold,
-        i_association_threshold
-        )
+# if __name__ == "__main__":
+#     com = DFCADSegmentator()
+#     o_clusters, rh_beams_meshes = com.RunScript(
+#         i_clouds,
+#         i_assembly,
+#         i_angle_threshold,
+#         i_association_threshold
+#         )
