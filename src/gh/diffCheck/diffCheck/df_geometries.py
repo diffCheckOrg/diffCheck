@@ -264,6 +264,7 @@ class DFBeam:
         self._joints = []
 
         self.__id = uuid.uuid4().int
+        self.is_cylinder = None
 
     @classmethod
     def from_brep_face(cls, brep):
@@ -272,7 +273,8 @@ class DFBeam:
         It also removes duplicates and creates a list of unique faces.
         """
         faces : typing.List[DFFace] = []
-        data_faces = diffCheck.df_joint_detector.JointDetector(brep).run()
+        data_faces, is_cylinder = diffCheck.df_joint_detector.JointDetector(brep).run()
+        cls.is_cylinder = is_cylinder
         for data in data_faces:
             face = DFFace.from_brep_face(data[0], data[1])
             faces.append(face)
@@ -353,6 +355,13 @@ class DFAssembly:
         self._all_sidefaces: typing.List[DFFace] = []
 
         self._all_joints: typing.List[DFJoint] = []
+
+        for beam in self.beams:
+            if beam.is_cylinder:
+                self.contains_cylinders = True
+                break
+        else:
+            self.contains_cylinders = False
         
     def __repr__(self):
         return f"Assembly: {self.name}, Beams: {len(self.beams)}"
