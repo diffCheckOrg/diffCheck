@@ -74,6 +74,10 @@ class JointDetector:
                 print(largest_srf)
                 largest_cylinder = cylinder.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance)
         
+        # Check if the cylinder exists
+        if largest_cylinder is None:
+            return False, None
+        
         # check if all vertices are inside the cylinder
         for vertex in self.brep.Vertices:
             if not largest_cylinder.IsPointInside(vertex.Location, sc.doc.ModelAbsoluteTolerance, False):
@@ -109,7 +113,7 @@ class JointDetector:
 
         rh_Bounding_geometry_zaxis = rg.Vector3d(longest_edge.PointAt(1) - longest_edge.PointAt(0))
         rh_Bounding_geometry_plane = rg.Plane(rh_Bounding_geometry_center, rh_Bounding_geometry_zaxis)
-        scale_factor = 0.001
+        scale_factor = 0.01
         xform = rg.Transform.Scale(
             rh_Bounding_geometry_plane,
             1 - scale_factor,
@@ -133,4 +137,4 @@ class JointDetector:
 
         self._faces = [(face, face_ids[idx]) for idx, face in enumerate(self.brep.Faces)]
 
-        return self._faces
+        return self._faces, is_cylinder_beam
