@@ -10,3 +10,4 @@ os.add_dll_directory(extra_dll_dir)
 
 # import the bindings
 from . import diffcheck_bindings
+from . import df_cvt_bindings

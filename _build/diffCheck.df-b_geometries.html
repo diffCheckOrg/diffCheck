@@ -1,0 +1,1169 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>diffCheck.df-b_geometries modules &#8212; DiffCheck  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css?v=3cbd6ad6" />
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'diffCheck.df-b_geometries';</script>
+    <link rel="icon" href="_static/logo_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="diffCheck.df_joint_detector module" href="diffCheck.df_joint_detector.html" />
+    <link rel="prev" title="diffCheck Python API" href="diffCheck_PythonAPI.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo_sphinx.png" class="logo__image only-light" alt="DiffCheck  documentation - Home"/>
+    <script>document.write(`<img src="_static/logo_sphinx.png" class="logo__image only-dark" alt="DiffCheck  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing diffCheck</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">diffCheck tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key-concepts.html">Key-concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pre-processing.html">Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assembly_intro.html">DfAssembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segmentation_intro.html">Segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_error_intro.html">Compute cloud-CAD error</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="gh_components.html">DiffCheck Gh Components</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFBuildAssembly.html"><code class="docutils literal notranslate"><span class="pre">DFBuildAssembly</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCADSegmentator.html"><code class="docutils literal notranslate"><span class="pre">DFCADSegmentator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudCloudDistance.html"><code class="docutils literal notranslate"><span class="pre">DFCloudCloudDistance</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudMeshDistance.html"><code class="docutils literal notranslate"><span class="pre">DFCloudMeshDistance</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudNormalEstimator.html"><code class="docutils literal notranslate"><span class="pre">DFCloudNormalEstimator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudSizeDownsample.html"><code class="docutils literal notranslate"><span class="pre">DFCloudSizeDownsample</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudUniformDownsample.html"><code class="docutils literal notranslate"><span class="pre">DFCloudVoxelDownsample</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudVoxelDownsample.html"><code class="docutils literal notranslate"><span class="pre">DFCloudUniformDownsample</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCsvExporter.html"><code class="docutils literal notranslate"><span class="pre">DFCsvExporter</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFDeconstructAssembly.html"><code class="docutils literal notranslate"><span class="pre">DFDeconstructAssembly</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFDeconstructBeam.html"><code class="docutils literal notranslate"><span class="pre">DFDeconstructBeam</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFFastGlobalRegistration.html"><code class="docutils literal notranslate"><span class="pre">DFFastGlobalRegistration</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFICPRegistration.html"><code class="docutils literal notranslate"><span class="pre">DFICPRegistration</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFJointSegmentator.html"><code class="docutils literal notranslate"><span class="pre">DFJointSegmentator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFLoadCloudFromFile.html"><code class="docutils literal notranslate"><span class="pre">DFLoadCloudFromFile</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFLoadMeshFromFile.html"><code class="docutils literal notranslate"><span class="pre">DFMeshToCloud</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFMeshToCloud.html"><code class="docutils literal notranslate"><span class="pre">DFLoadMeshFromFile</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudNormalSegmentator.html"><code class="docutils literal notranslate"><span class="pre">DFCloudNormalSegmentator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFRANSACGlobalRegistration.html"><code class="docutils literal notranslate"><span class="pre">DFRANSACGlobalRegistration</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFTester.html"><code class="docutils literal notranslate"><span class="pre">DFTester</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFVisualization.html"><code class="docutils literal notranslate"><span class="pre">DFVisualization</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFVisualizationSettings.html"><code class="docutils literal notranslate"><span class="pre">DFVisualizationSettings</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFXMLExporter.html"><code class="docutils literal notranslate"><span class="pre">DFXMLExporter</span></code> component</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further resources</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="df_architecture.html">diffCheck architecture</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="diffCheck_PythonAPI.html">diffCheck Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">diffCheck.df-b_geometries</span></code> modules</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_joint_detector.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_joint_detector</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_error_estimation.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_error_estimation</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_visualization.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_visualization</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_cvt_bindings.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_cvt_bindings</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_transformations.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_transformations</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_util.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_util</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.dfb_registrations.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.dfb_registrations</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.dfb_segmentation.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.dfb_segmentation</span></code> module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="dev_documentation.html">Developer documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="change_log.html">Change log</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/diffCheckOrg/diffCheck" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/diffCheck.df-b_geometries.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>diffCheck.df-b_geometries modules</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#"><code class="docutils literal notranslate"><span class="pre">diffCheck.df-b_geometries</span></code> modules</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#diffcheck-df-geometries-module"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_geometries</span></code> module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly"><code class="docutils literal notranslate"><span class="pre">DFAssembly</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.add_beam"><code class="docutils literal notranslate"><span class="pre">DFAssembly.add_beam()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_joint_faces"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_joint_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_side_faces"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_side_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.beams"><code class="docutils literal notranslate"><span class="pre">DFAssembly.beams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.dump_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.dump_xml()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.name"><code class="docutils literal notranslate"><span class="pre">DFAssembly.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.remove_beam"><code class="docutils literal notranslate"><span class="pre">DFAssembly.remove_beam()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.to_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.to_xml()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam"><code class="docutils literal notranslate"><span class="pre">DFBeam</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFBeam.from_brep_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.id"><code class="docutils literal notranslate"><span class="pre">DFBeam.id</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.joint_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.joint_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.name"><code class="docutils literal notranslate"><span class="pre">DFBeam.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.side_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.side_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_brep"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_brep()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_mesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace"><code class="docutils literal notranslate"><span class="pre">DFFace</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.all_loops"><code class="docutils literal notranslate"><span class="pre">DFFace.all_loops</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.from_brep_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.id"><code class="docutils literal notranslate"><span class="pre">DFFace.id</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.is_joint"><code class="docutils literal notranslate"><span class="pre">DFFace.is_joint</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.joint_id"><code class="docutils literal notranslate"><span class="pre">DFFace.joint_id</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.to_brep_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFFace.to_mesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex"><code class="docutils literal notranslate"><span class="pre">DFVertex</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.from_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.from_rg_point3d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.to_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.to_rg_point3d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.x"><code class="docutils literal notranslate"><span class="pre">DFVertex.x</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.y"><code class="docutils literal notranslate"><span class="pre">DFVertex.y</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.z"><code class="docutils literal notranslate"><span class="pre">DFVertex.z</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-diffCheck.diffcheck_bindings.dfb_geometry"><code class="docutils literal notranslate"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry</span></code> module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><code class="docutils literal notranslate"><span class="pre">DFMesh</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_face"><code class="docutils literal notranslate"><span class="pre">DFMesh.colors_face</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_vertex"><code class="docutils literal notranslate"><span class="pre">DFMesh.colors_vertex</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.compute_distance"><code class="docutils literal notranslate"><span class="pre">DFMesh.compute_distance()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.faces"><code class="docutils literal notranslate"><span class="pre">DFMesh.faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_faces"><code class="docutils literal notranslate"><span class="pre">DFMesh.get_num_faces()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_vertices"><code class="docutils literal notranslate"><span class="pre">DFMesh.get_num_vertices()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_tight_bounding_box"><code class="docutils literal notranslate"><span class="pre">DFMesh.get_tight_bounding_box()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.load_from_PLY"><code class="docutils literal notranslate"><span class="pre">DFMesh.load_from_PLY()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_face"><code class="docutils literal notranslate"><span class="pre">DFMesh.normals_face</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_vertex"><code class="docutils literal notranslate"><span class="pre">DFMesh.normals_vertex</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.sample_points_uniformly"><code class="docutils literal notranslate"><span class="pre">DFMesh.sample_points_uniformly()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.vertices"><code class="docutils literal notranslate"><span class="pre">DFMesh.vertices</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><code class="docutils literal notranslate"><span class="pre">DFPointCloud</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.add_points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.add_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.apply_color"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.apply_color()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.colors"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.colors</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_BoundingBox"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.compute_BoundingBox()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_distance"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.compute_distance()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.downsample_by_size"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.downsample_by_size()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.estimate_normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.estimate_normals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_center_point"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_center_point()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_colors"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_num_colors()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_num_normals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_num_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_tight_bounding_box"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_tight_bounding_box()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_colors"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.has_colors()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.has_normals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.has_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.load_from_PLY"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.load_from_PLY()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.normals</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.points</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.uniform_downsample"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.uniform_downsample()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.voxel_downsample"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.voxel_downsample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="diffcheck-df-b-geometries-modules">
+<span id="diffcheck-df-b-geometries"></span><h1><code class="docutils literal notranslate"><span class="pre">diffCheck.df-b_geometries</span></code> modules<a class="headerlink" href="#diffcheck-df-b-geometries-modules" title="Link to this heading">#</a></h1>
+<p>This page contains 2 modules for the geometries:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#module-diffCheck.df_geometries" title="diffCheck.df_geometries"><code class="xref py py-mod docutils literal notranslate"><span class="pre">diffCheck.df_geometries</span></code></a> module contains all the objects and functions to handle geometries of a structure in the DiffCheck library.</p></li>
+<li><p><a class="reference internal" href="#module-diffCheck.diffcheck_bindings.dfb_geometry" title="diffCheck.diffcheck_bindings.dfb_geometry"><code class="xref py py-mod docutils literal notranslate"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry</span></code></a> module contains all the objects and functions to handle mesh and point cloud geometries in diffCheck.</p></li>
+</ol>
+</section>
+<section id="diffcheck-df-geometries-module">
+<span id="diffcheck-df-geometries"></span><h1><code class="docutils literal notranslate"><span class="pre">diffCheck.df_geometries</span></code> module<a class="headerlink" href="#diffcheck-df-geometries-module" title="Link to this heading">#</a></h1>
+<p>This module represent the geometry of a structure in the DiffCheck library. It contains the following classes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#diffCheck.df_geometries.DFAssembly" title="diffCheck.df_geometries.DFAssembly"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFAssembly</span></code></a></p></li>
+<li><p><a class="reference internal" href="#diffCheck.df_geometries.DFBeam" title="diffCheck.df_geometries.DFBeam"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFBeam</span></code></a></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFJoint</span></code></p></li>
+<li><p><a class="reference internal" href="#diffCheck.df_geometries.DFFace" title="diffCheck.df_geometries.DFFace"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFFace</span></code></a></p></li>
+<li><p><a class="reference internal" href="#diffCheck.df_geometries.DFVertex" title="diffCheck.df_geometries.DFVertex"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFVertex</span></code></a></p></li>
+</ul>
+<p>This is how these geometris are related:</p>
+<div class="mermaid">
+            stateDiagram-v2
+ DFAssembly
+   state DFAssembly {
+
+      [*] --&gt; DFBeam
+      state DFBeam {
+
+         [*] --&gt; DFJoint
+         DFJoint --&gt; DFFace
+
+         state DFFace {
+            [*] --&gt; DFVertex
+         }
+      }
+   }
+        </div><div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFJoint</span></code> is only generated when accessed from the <a class="reference internal" href="#diffCheck.df_geometries.DFAssembly" title="diffCheck.df_geometries.DFAssembly"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFAssembly</span></code></a> or <a class="reference internal" href="#diffCheck.df_geometries.DFBeam" title="diffCheck.df_geometries.DFBeam"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffCheck.df_geometries.DFBeam</span></code></a> objects. It exists only as a convinience container for the joints.</p>
+</div>
+<dl class="py class" id="module-diffCheck.df_geometries">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffCheck.df_geometries.</span></span><span class="sig-name descname"><span class="pre">DFAssembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class represents an assembly of beams</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>beams</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a><em>[</em><a class="reference internal" href="#diffCheck.df_geometries.DFBeam" title="diffCheck.df_geometries.DFBeam"><em>DFBeam</em></a><em>]</em>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.add_beam">
+<span class="sig-name descname"><span class="pre">add_beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.add_beam" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>beam</strong> (<a class="reference internal" href="#diffCheck.df_geometries.DFBeam" title="diffCheck.df_geometries.DFBeam"><em>DFBeam</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.all_joint_faces">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_joint_faces</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.all_joint_faces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.all_side_faces">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_side_faces</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.all_side_faces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.beams">
+<span class="sig-name descname"><span class="pre">beams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a><span class="pre">[</span><a class="reference internal" href="#diffCheck.df_geometries.DFBeam" title="diffCheck.df_geometries.DFBeam"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFBeam</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.beams" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.dump_xml">
+<span class="sig-name descname"><span class="pre">dump_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pretty_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.dump_xml" title="Link to this definition">#</a></dt>
+<dd><p>Dump the pretty XML to a file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretty_xml</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The pretty XML string</p></li>
+<li><p><strong>dir</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The directory to save the XML</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.remove_beam">
+<span class="sig-name descname"><span class="pre">remove_beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.remove_beam" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>beam_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.to_xml">
+<span class="sig-name descname"><span class="pre">to_xml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.to_xml" title="Link to this definition">#</a></dt>
+<dd><p>Dump the assembly’s meshes to an XML file. On top of the DiffCheck datatypes and structure,
+we export the underlaying beams’s meshes from Rhino as vertices and faces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return xml_string<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The pretty XML string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffCheck.df_geometries.</span></span><span class="sig-name descname"><span class="pre">DFBeam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class represents a beam, in diffCheck, a beam is a collection of faces</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>faces</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a><em>[</em><a class="reference internal" href="#diffCheck.df_geometries.DFFace" title="diffCheck.df_geometries.DFFace"><em>DFFace</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.faces">
+<span class="sig-name descname"><span class="pre">faces</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a><span class="pre">[</span><a class="reference internal" href="#diffCheck.df_geometries.DFFace" title="diffCheck.df_geometries.DFFace"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFFace</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.faces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.from_brep_face">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_brep_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.from_brep_face" title="Link to this definition">#</a></dt>
+<dd><p>Create a DFBeam from a RhinoBrep object.
+It also removes duplicates and creates a list of unique faces.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.id" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.joint_faces">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">joint_faces</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.joint_faces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.side_faces">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">side_faces</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.side_faces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.to_brep">
+<span class="sig-name descname"><span class="pre">to_brep</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.to_brep" title="Link to this definition">#</a></dt>
+<dd><p>Convert the beam to a Rhino Brep object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.to_mesh">
+<span class="sig-name descname"><span class="pre">to_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_edge_length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.to_mesh" title="Link to this definition">#</a></dt>
+<dd><p>Convert the beam to a Rhino Mesh object</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffCheck.df_geometries.</span></span><span class="sig-name descname"><span class="pre">DFFace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFFace" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class represents a face, in diffCheck, a face is a collection of vertices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a><em>[</em><a class="reference internal" href="#diffCheck.df_geometries.DFVertex" title="diffCheck.df_geometries.DFVertex"><em>DFVertex</em></a><em>]</em><em>]</em>)</p></li>
+<li><p><strong>joint_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.all_loops">
+<span class="sig-name descname"><span class="pre">all_loops</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a><span class="pre">[</span><a class="reference internal" href="#diffCheck.df_geometries.DFVertex" title="diffCheck.df_geometries.DFVertex"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFVertex</span></code></a><span class="pre">]]</span></em><a class="headerlink" href="#diffCheck.df_geometries.DFFace.all_loops" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.from_brep_face">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_brep_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brep_face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.from_brep_face" title="Link to this definition">#</a></dt>
+<dd><p>Create a DFFace from a Rhino Brep face</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>brep_face</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrepFace</span></code></span>) – The Rhino Brep face</p></li>
+<li><p><strong>joint_id</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The joint id</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return face<span class="colon">:</span></dt>
+<dd class="field-even"><p>The DFFace object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.id" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.is_joint">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_joint</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.is_joint" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.joint_id">
+<span class="sig-name descname"><span class="pre">joint_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#diffCheck.df_geometries.DFFace.joint_id" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.to_brep_face">
+<span class="sig-name descname"><span class="pre">to_brep_face</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.to_brep_face" title="Link to this definition">#</a></dt>
+<dd><p>Convert the face to a Rhino Brep planar face</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return brep_face<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Rhino Brep planar face</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.to_mesh">
+<span class="sig-name descname"><span class="pre">to_mesh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.to_mesh" title="Link to this definition">#</a></dt>
+<dd><p>Convert the face to a Rhino Mesh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return mesh<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Rhino Mesh object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffCheck.df_geometries.</span></span><span class="sig-name descname"><span class="pre">DFVertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFVertex" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class represents a vertex, a simple container with 3 coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>)</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.from_rg_point3d">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_rg_point3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.from_rg_point3d" title="Link to this definition">#</a></dt>
+<dd><p>Create a DFVertex from a Rhino Point3d object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point3d</span></code></span>) – The Rhino Point3d object</p>
+</dd>
+<dt class="field-even">Return vertex<span class="colon">:</span></dt>
+<dd class="field-even"><p>The DFVertex object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.to_rg_point3d">
+<span class="sig-name descname"><span class="pre">to_rg_point3d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.to_rg_point3d" title="Link to this definition">#</a></dt>
+<dd><p>Convert the vertex to a Rhino Point3d object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return point<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Rhino Point3d object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.x" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.y" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.z">
+<span class="sig-name descname"><span class="pre">z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.z" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-diffCheck.diffcheck_bindings.dfb_geometry">
+<span id="diffcheck-diffcheck-bindings-dfb-geometry-module"></span><h1><code class="docutils literal notranslate"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry</span></code> module<a class="headerlink" href="#module-diffCheck.diffcheck_bindings.dfb_geometry" title="Link to this heading">#</a></h1>
+<p>A submodule for wrap geometries in df.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.</span></span><span class="sig-name descname"><span class="pre">DFMesh</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<p>A class for the triangle mesh representation.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_face">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colors_face</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_face" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_vertex">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colors_vertex</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_vertex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.compute_distance">
+<span class="sig-name descname"><span class="pre">compute_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh" title="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFMesh</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cloud</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.compute_distance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.faces">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">faces</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.faces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_faces">
+<span class="sig-name descname"><span class="pre">get_num_faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh" title="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_faces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_vertices">
+<span class="sig-name descname"><span class="pre">get_num_vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh" title="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_vertices" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_tight_bounding_box">
+<span class="sig-name descname"><span class="pre">get_tight_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh" title="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><span class="pre">numpy.ndarray</span></a><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_tight_bounding_box" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.load_from_PLY">
+<span class="sig-name descname"><span class="pre">load_from_PLY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh" title="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFMesh</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.load_from_PLY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_face">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normals_face</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_face" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_vertex">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normals_vertex</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_vertex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.sample_points_uniformly">
+<span class="sig-name descname"><span class="pre">sample_points_uniformly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh" title="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFMesh</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.sample_points_uniformly" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.vertices">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vertices</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.vertices" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.</span></span><span class="sig-name descname"><span class="pre">DFPointCloud</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<p>A class for the point cloud representation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.add_points">
+<span class="sig-name descname"><span class="pre">add_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.add_points" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.apply_color">
+<span class="sig-name descname"><span class="pre">apply_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.apply_color" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.colors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colors</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.colors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_BoundingBox">
+<span class="sig-name descname"><span class="pre">compute_BoundingBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><span class="pre">numpy.ndarray</span></a><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_BoundingBox" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_distance">
+<span class="sig-name descname"><span class="pre">compute_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cloud</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_distance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.downsample_by_size">
+<span class="sig-name descname"><span class="pre">downsample_by_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.downsample_by_size" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.estimate_normals">
+<span class="sig-name descname"><span class="pre">estimate_normals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cilantro_evaluator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.estimate_normals" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_center_point">
+<span class="sig-name descname"><span class="pre">get_center_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><span class="pre">numpy.ndarray</span></a><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_center_point" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_colors">
+<span class="sig-name descname"><span class="pre">get_num_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_colors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_normals">
+<span class="sig-name descname"><span class="pre">get_num_normals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_normals" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_points">
+<span class="sig-name descname"><span class="pre">get_num_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_points" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of points in the point cloud.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_tight_bounding_box">
+<span class="sig-name descname"><span class="pre">get_tight_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><span class="pre">numpy.ndarray</span></a><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_tight_bounding_box" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_colors">
+<span class="sig-name descname"><span class="pre">has_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_colors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_normals">
+<span class="sig-name descname"><span class="pre">has_normals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_normals" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_points">
+<span class="sig-name descname"><span class="pre">has_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_points" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.load_from_PLY">
+<span class="sig-name descname"><span class="pre">load_from_PLY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.load_from_PLY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.normals">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normals</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.normals" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.points" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.uniform_downsample">
+<span class="sig-name descname"><span class="pre">uniform_downsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">every_k_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.uniform_downsample" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.voxel_downsample">
+<span class="sig-name descname"><span class="pre">voxel_downsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud" title="diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.voxel_downsample" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="diffCheck_PythonAPI.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">diffCheck Python API</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="diffCheck.df_joint_detector.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_joint_detector</span></code> module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#"><code class="docutils literal notranslate"><span class="pre">diffCheck.df-b_geometries</span></code> modules</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#diffcheck-df-geometries-module"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_geometries</span></code> module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly"><code class="docutils literal notranslate"><span class="pre">DFAssembly</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.add_beam"><code class="docutils literal notranslate"><span class="pre">DFAssembly.add_beam()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_joint_faces"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_joint_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_side_faces"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_side_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.beams"><code class="docutils literal notranslate"><span class="pre">DFAssembly.beams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.dump_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.dump_xml()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.name"><code class="docutils literal notranslate"><span class="pre">DFAssembly.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.remove_beam"><code class="docutils literal notranslate"><span class="pre">DFAssembly.remove_beam()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.to_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.to_xml()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam"><code class="docutils literal notranslate"><span class="pre">DFBeam</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFBeam.from_brep_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.id"><code class="docutils literal notranslate"><span class="pre">DFBeam.id</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.joint_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.joint_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.name"><code class="docutils literal notranslate"><span class="pre">DFBeam.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.side_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.side_faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_brep"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_brep()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_mesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace"><code class="docutils literal notranslate"><span class="pre">DFFace</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.all_loops"><code class="docutils literal notranslate"><span class="pre">DFFace.all_loops</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.from_brep_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.id"><code class="docutils literal notranslate"><span class="pre">DFFace.id</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.is_joint"><code class="docutils literal notranslate"><span class="pre">DFFace.is_joint</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.joint_id"><code class="docutils literal notranslate"><span class="pre">DFFace.joint_id</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.to_brep_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFFace.to_mesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex"><code class="docutils literal notranslate"><span class="pre">DFVertex</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.from_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.from_rg_point3d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.to_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.to_rg_point3d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.x"><code class="docutils literal notranslate"><span class="pre">DFVertex.x</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.y"><code class="docutils literal notranslate"><span class="pre">DFVertex.y</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.z"><code class="docutils literal notranslate"><span class="pre">DFVertex.z</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-diffCheck.diffcheck_bindings.dfb_geometry"><code class="docutils literal notranslate"><span class="pre">diffCheck.diffcheck_bindings.dfb_geometry</span></code> module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh"><code class="docutils literal notranslate"><span class="pre">DFMesh</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_face"><code class="docutils literal notranslate"><span class="pre">DFMesh.colors_face</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.colors_vertex"><code class="docutils literal notranslate"><span class="pre">DFMesh.colors_vertex</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.compute_distance"><code class="docutils literal notranslate"><span class="pre">DFMesh.compute_distance()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.faces"><code class="docutils literal notranslate"><span class="pre">DFMesh.faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_faces"><code class="docutils literal notranslate"><span class="pre">DFMesh.get_num_faces()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_num_vertices"><code class="docutils literal notranslate"><span class="pre">DFMesh.get_num_vertices()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.get_tight_bounding_box"><code class="docutils literal notranslate"><span class="pre">DFMesh.get_tight_bounding_box()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.load_from_PLY"><code class="docutils literal notranslate"><span class="pre">DFMesh.load_from_PLY()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_face"><code class="docutils literal notranslate"><span class="pre">DFMesh.normals_face</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.normals_vertex"><code class="docutils literal notranslate"><span class="pre">DFMesh.normals_vertex</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.sample_points_uniformly"><code class="docutils literal notranslate"><span class="pre">DFMesh.sample_points_uniformly()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFMesh.vertices"><code class="docutils literal notranslate"><span class="pre">DFMesh.vertices</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud"><code class="docutils literal notranslate"><span class="pre">DFPointCloud</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.add_points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.add_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.apply_color"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.apply_color()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.colors"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.colors</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_BoundingBox"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.compute_BoundingBox()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.compute_distance"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.compute_distance()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.downsample_by_size"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.downsample_by_size()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.estimate_normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.estimate_normals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_center_point"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_center_point()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_colors"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_num_colors()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_num_normals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_num_points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_num_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.get_tight_bounding_box"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.get_tight_bounding_box()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_colors"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.has_colors()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.has_normals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.has_points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.has_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.load_from_PLY"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.load_from_PLY()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.normals"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.normals</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.points"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.points</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.uniform_downsample"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.uniform_downsample()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud.voxel_downsample"><code class="docutils literal notranslate"><span class="pre">DFPointCloud.voxel_downsample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The DiffCheck authors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, The DiffCheck Authors. We use ReadTheDocs, SPhinx, SphinxBookTheme and Jax theme-flavoured which are copyright their respective authors..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
