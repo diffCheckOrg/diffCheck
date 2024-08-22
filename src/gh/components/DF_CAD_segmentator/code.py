@@ -51,15 +51,38 @@ class DFCADSegmentator(component):
             df_beams_meshes.append(df_b_mesh_faces)
             rh_beams_meshes.append(rh_b_mesh_faces)
 
-            df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
-                reference_mesh=df_b_mesh_faces,
+            # different association depending on the type of beam
+            if df_b.is_cylinder:
+                df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
+                    is_cylinder=True,
+                    reference_mesh=df_b_mesh_faces,
+                    unassociated_clusters=df_clouds,
+                    angle_threshold=i_angle_threshold,
+                    association_threshold=i_association_threshold
+                )
+            else:
+                df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
+                    is_cylinder=False,
+                    reference_mesh=df_b_mesh_faces,
+                    unassociated_clusters=df_clouds,
+                    angle_threshold=i_angle_threshold,
+                    association_threshold=i_association_threshold
+                )
+            df_clusters.append(df_asssociated_cluster)
+    
+        # clean the unassociated clusters depending on the type of assembly
+        if i_assembly.contains_cylinders:
+            dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
+                is_cylinder=True,
                 unassociated_clusters=df_clouds,
+                associated_clusters=df_clusters,
+                reference_mesh=df_beams_meshes,
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold
             )
-            df_clusters.append(df_asssociated_cluster)
-
-        dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
+        else:
+            dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
+                is_cylinder=False,
                 unassociated_clusters=df_clouds,
                 associated_clusters=df_clusters,
                 reference_mesh=df_beams_meshes,
@@ -71,7 +94,7 @@ class DFCADSegmentator(component):
 
         o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
-        return o_clusters, rh_beams_meshes
+        return o_clusters
 
 # if __name__ == "__main__":
 #     com = DFCADSegmentator()
