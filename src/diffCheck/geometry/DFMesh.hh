@@ -87,11 +87,11 @@ namespace diffCheck::geometry
         bool IsPointOnFace(Eigen::Vector3d point, double associationThreshold = 0.1);
 
         /**
-         * @brief Get the center and axis of the cylinder, assuming the mesh is a cylinder
+         * @brief Get the center and main axis of oriented boundung box of the mesh. It was developped for the cylinder case, but can be used for other shapes.
          * 
-         * @return std::tuple<Eigen::Vector3d, Eigen::Vector3d> the first element is the center of the cylinder, the second element is the axis of the cylinder
+         * @return std::tuple<Eigen::Vector3d, Eigen::Vector3d> the first element is the center of the obb of the mesh, the second element is the main axis of the obb of the mesh
          */
-        std::tuple<Eigen::Vector3d, Eigen::Vector3d> GetCylinderCenterAndAxis();
+        std::tuple<Eigen::Vector3d, Eigen::Vector3d> GetCenterAndAxis();
 
     public:  ///< I/O loader
         /**
