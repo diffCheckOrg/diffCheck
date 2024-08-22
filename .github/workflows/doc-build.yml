@@ -1,0 +1,148 @@
+name: doc-build
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-source:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9.1
+
+      - name: Create diff_check conda environment
+        run: |
+          conda env create -f environment.yml
+
+      - name: Cache conda environment cache
+        uses: actions/cache@v2
+        with:
+          path: C:\Miniconda\envs\diff_check
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+
+      - name: Cmake Configure
+        run: |
+          conda run --name diff_check --no-capture-output cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
+
+      - name: CMake Build
+        run: conda run --name diff_check --no-capture-output cmake --build build --config Release
+
+        # upload artifacts
+      - name: Move dlls and pyd files to single directories
+        run: |
+          mkdir $env:GITHUB_WORKSPACE\artifacts_dlls
+          mkdir $env:GITHUB_WORKSPACE\artifacts_pyds
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\bin\Release -Filter *.dll -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_dlls
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\Release -Filter *.pyd -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_pyds
+        shell: pwsh
+      - name: Upload artifacts - dlls
+        uses: actions/upload-artifact@v2
+        with:
+          name: __build_artifacts_dlls__
+          path: ${{ github.workspace }}/artifacts_dlls/*
+      - name: Upload artifacts - pyds
+        uses: actions/upload-artifact@v2
+        with:
+          name: __build_artifacts_pyds__
+          path: ${{ github.workspace }}/artifacts_pyds/*
+
+
+  build-docs:
+    runs-on: windows-latest
+    needs: build-source
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9.1
+
+      - name: Restore conda environment cache
+        uses: actions/cache@v2
+        with:
+          path: C:\Miniconda\envs\diff_check
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-
+
+        # download artifacts
+      - name: Download dlls for doc folder
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_dlls__
+          path: ${{github.workspace}}/doc
+      - name: Download pyds for doc folder
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_pyds__
+          path: ${{github.workspace}}/doc
+      - name: Download dlls for diffCheck py package
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_dlls__
+          path: ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+      - name: Download pyds for diffCheck py package
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_artifacts_pyds__
+          path: ${{github.workspace}}/src/gh/diffCheck/diffCheck
+
+      - name: Sphinx build
+        run: |
+          conda run --name diff_check --no-capture-output sphinx-build -b html -v doc _build
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: __build_sphx_docs__
+          path: ${{ github.workspace }}/_build
+
+
+  page-deployement:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-docs
+    # Run only on pushes to the default branch
+    if: github.ref == 'refs/heads/main'
+    # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+    # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download sphinx docs
+        uses: actions/download-artifact@v2
+        with:
+          name: __build_sphx_docs__
+          path: ${{github.workspace}}/_build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_build'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

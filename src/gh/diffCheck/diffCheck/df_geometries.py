@@ -1,7 +1,10 @@
 import os
 from datetime import datetime
 from dataclasses import dataclass
+
 import typing
+from typing import Optional
+
 import uuid
 
 import Rhino
@@ -69,7 +72,7 @@ class DFFace:
 
     # just as breps a first outer loop and then inner loops of DFVertices
     all_loops: typing.List[typing.List[DFVertex]]
-    joint_id: int = None
+    joint_id: Optional[int] = None
 
     def __post_init__(self):
         if len(self.all_loops[0]) < 3:
@@ -101,12 +104,14 @@ class DFFace:
 
     def __eq__(self, other):
         if isinstance(other, DFFace):
-            # check if 
+            # check if
             return self.all_loops == other.all_loops
         return False
 
     @classmethod
-    def from_brep_face(cls, brep_face: rg.BrepFace, joint_id: int = None):
+    def from_brep_face(cls,
+        brep_face: rg.BrepFace,
+        joint_id: Optional[int] = None):
         """
         Create a DFFace from a Rhino Brep face
 
@@ -115,6 +120,7 @@ class DFFace:
         :return face: The DFFace object
         """
         all_loops = []
+        df_face: DFFace = cls([], joint_id)
 
         if brep_face.IsCylinder():
             cls.is_cylinder = True
@@ -122,7 +128,6 @@ class DFFace:
             return df_face
 
         for idx, loop in enumerate(brep_face.Loops):
-            loop_trims = loop.Trims
             loop_curve = loop.To3dCurve()
             loop_curve = loop_curve.ToNurbsCurve()
             loop_vertices = loop_curve.Points
@@ -147,7 +152,7 @@ class DFFace:
             return self._rh_brepface
 
         if self.is_cylinder:
-            ghenv.Component.AddRuntimeMessage(
+            ghenv.Component.AddRuntimeMessage(  # noqa: F821
                 RML.Warning, "The DFFace was a cylinder created from scratch \n \
                  , it cannot convert to brep.")
 
@@ -178,7 +183,7 @@ class DFFace:
         mesh_parts = Rhino.Geometry.Mesh.CreateFromBrep(
                 self.to_brep_face().DuplicateFace(True),
                 Rhino.Geometry.MeshingParameters.QualityRenderMesh)
-        
+
         for mesh_part in mesh_parts:
             mesh.Append(mesh_part)
         mesh.Faces.ConvertQuadsToTriangles()
@@ -404,7 +409,6 @@ class DFAssembly:
                     facerhmesh_face_elem.set("v3", str(face.C))
                     facerhmesh_face_elem.set("v4", str(face.D))
 
-        tree = ET.ElementTree(root)
         xml_string = ET.tostring(root, encoding="unicode")
         dom = parseString(xml_string)
         pretty_xml = dom.toprettyxml()

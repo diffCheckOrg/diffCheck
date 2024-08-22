@@ -6,6 +6,7 @@
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/test-pass.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/pypi-build.yml/badge.svg">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/doc-build.yml/badge.svg">
     <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/diffCheck?style=flat&logo=pypi&logoColor=white&color=blue">
 </p>
 
@@ -35,6 +36,7 @@ gantt
     Fabrication of Robot Prototype      :crit, fabrob, 2024-07-01, 2024-08-30
     Data collection and evaluation      :dataeval, after fabrob, 4w
 ```
+
 
 ## 3rd party libraries
 

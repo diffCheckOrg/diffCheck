@@ -7,17 +7,18 @@
 import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
-import numpy as np
 
-from diffCheck import diffcheck_bindings
+from typing import Any
 
-def test_bindings() -> bool:
+from diffCheck import diffcheck_bindings  # type: ignore
+
+def test_bindings() -> Any:
     """
         Test the bindings import.
 
         :return is_imported: True if the bindings are imported, False otherwise
     """
-    return False
+    return diffcheck_bindings.dfb_test.test()
 
 def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCloud:
     """
@@ -27,7 +28,7 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
 
         :return df_cloud: diffCheck cloud
     """
-    
+
     if not isinstance(rh_cloud, rg.PointCloud):
         raise ValueError("rh_cloud for convertion should be a PointCloud")
 
@@ -230,7 +231,7 @@ def cvt_dfOBB_2_rhbrep(df_OBB) -> rg.Box:
 
 def cvt_ndarray_2_rh_transform(matrix) -> rg.Transform:
     """
-        Convert a numpy matrix to a Rhino transformation. 
+        Convert a numpy matrix to a Rhino transformation.
         Useful to transform a DFTransformation-transformation_matrix to a Rhino transformation.
 
         :param matrix: the numpy matrix
