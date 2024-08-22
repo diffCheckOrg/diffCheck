@@ -21,7 +21,7 @@ except ImportError as e:
     sys.exit(1)
 
 def test_dfb_test_simple():
-    assert dfb.dfb_test.test() == True, "The test function should return True"
+    assert dfb.dfb_test.test(), "The test function should return True"
 
 if __name__ == "__main__":
     pytest.main()

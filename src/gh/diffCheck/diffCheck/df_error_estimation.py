@@ -4,7 +4,7 @@
 """
 
 import numpy as np
-from diffCheck import diffcheck_bindings
+from diffCheck import diffcheck_bindings  # type: ignore
 import Rhino.Geometry as rg
 
 
@@ -50,14 +50,14 @@ def rh_mesh_2_df_cloud_distance(source, target, signed=False):
     # make a Df point cloud containing all the vertices of the source rhino mesh
     df_pcd_from_mesh_vertices = diffcheck_bindings.dfb_geometry.DFPointCloud()
     df_pcd_from_mesh_vertices.points = [[pt.X, pt.Y, pt.Z] for pt in source.Vertices]
-    
+
     # calculate the distances
     distances = np.asarray(df_pcd_from_mesh_vertices.compute_distance(target))
 
     if signed:
         # build an RTree containing all the points of the target
         tree = rg.RTree()
-        for i, ver in enumerate(target.points): 
+        for i, ver in enumerate(target.points):
             tree.Insert(rg.Point3d(ver[0], ver[1], ver[2]), i)
 
         for idx, p in enumerate(source.Vertices):

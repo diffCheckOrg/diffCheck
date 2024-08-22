@@ -5,7 +5,9 @@ import os
 import re
 import sys
 import tempfile
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import zipfile
 from io import BytesIO
 
@@ -133,8 +135,6 @@ def validate_source_bundle(source):
                 sorted(EXPOSURE["valid"])
             )
         )
-
-    ghpython = data.get("ghpython")
 
     if r'"""' not in python_code:
         python_code = r'"""{}"""{}{}'.format(
@@ -382,7 +382,7 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     clr.AddReference(os.path.splitext(gh_io)[0])
-    
+
     print("[x] GH_IO assembly: {}".format(gh_io))
 
     print("Processing component bundles:")

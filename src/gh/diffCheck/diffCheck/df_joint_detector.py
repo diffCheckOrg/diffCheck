@@ -2,7 +2,6 @@ import Rhino
 import scriptcontext as sc
 import Rhino.Geometry as rg
 
-import typing
 from dataclasses import dataclass
 
 import diffCheck.df_util

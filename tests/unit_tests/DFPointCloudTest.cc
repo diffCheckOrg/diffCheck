@@ -2,6 +2,10 @@
 #include "diffCheck.hh"
 #include "diffCheck/IOManager.hh"
 
+//-------------------------------------------------------------------------
+// fixtures
+//-------------------------------------------------------------------------
+
 class DFPointCloudTestFixture : public ::testing::Test {
 protected:
     std::vector<Eigen::Vector3d> points;
@@ -21,6 +25,8 @@ protected:
         // Clean up any resources if needed
     }
 };
+
+// add your fixtures here..
 
 //-------------------------------------------------------------------------
 // basic constructors
@@ -51,7 +57,6 @@ TEST_F(DFPointCloudTestFixture, LoadFromPLY) {
     EXPECT_EQ(dfPointCloud.GetNumPoints(), 7379);
     EXPECT_EQ(dfPointCloud.GetNumColors(), 7379);
     EXPECT_EQ(dfPointCloud.GetNumNormals(), 7379);
-
 }
 
 //-------------------------------------------------------------------------

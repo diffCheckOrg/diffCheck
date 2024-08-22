@@ -4,7 +4,6 @@ import os
 import sys
 import argparse
 
-import typing
 
 def main(
     setup_path: str,
@@ -13,8 +12,8 @@ def main(
     setup_dir = os.path.dirname(setup_path)
     os.chdir(setup_dir)
     try:
-        os.system(f"python setup.py sdist")
-        os.system(f"python setup.py bdist_wheel")
+        os.system("python setup.py sdist")
+        os.system("python setup.py bdist_wheel")
     except Exception as e:
         print(f"Failed to build the package: {e}")
         return False

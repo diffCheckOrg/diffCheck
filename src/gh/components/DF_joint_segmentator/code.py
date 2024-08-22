@@ -2,10 +2,8 @@
 
 import Rhino
 
-import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings as df_cvt
-import diffCheck.df_util
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 from ghpythonlib.componentbase import executingcomponent as component
@@ -28,7 +26,6 @@ class DFJointSegmentator(component):
         
         if len(i_clusters) == 0:
             raise ValueError("No clusters given.")
-
         if not isinstance(i_clusters[0], Rhino.Geometry.PointCloud):
             raise ValueError("The input clusters must be PointClouds.")
             
@@ -82,9 +79,3 @@ class DFJointSegmentator(component):
                 ghenv.Component.AddRuntimeMessage(RML.Warning, "Some joints could not be segmented and were ignored.")
 
         return o_joint_segments, o_transforms, o_reference_point_clouds
-
-# if __name__ == "__main__":
-#     comp = DFJointSegmentator()
-#     o_joint_segments, o_transforms, o_reference_point_clouds = comp.RunScript(i_clusters, i_assembly, i_angle_threshold, i_distance_threshold)
-#     for i in range(len(o_joint_segments)):
-#         o_joint_segments[i].Transform(o_transforms[i])

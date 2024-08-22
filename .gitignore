@@ -247,3 +247,9 @@ cython_debug/
 
 # egg-info
 *.egg-info/
+
+#######################################
+## Sphinx
+#######################################
+# get rid of output folder
+_build/
