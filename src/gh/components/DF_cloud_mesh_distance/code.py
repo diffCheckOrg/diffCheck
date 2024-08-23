@@ -50,7 +50,7 @@ class CloudMeshDistance(component):
             ghenv.Component.Message= f"Per Joint"
             rh_mesh_target_list = [joint.to_mesh(i_analysis_resolution) for joint in i_assembly._all_joints]
         else:
-            ghenv.Component.AddRuntimeMessage(RML.Warning, "The input number of obejcts to compare matches neither the number of beams nor the number of joints")
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "The input number of objects to compare matches neither the number of beams nor the number of joints")
             return None, None, None, None, None, None
 
         # conversion
