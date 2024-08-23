@@ -24,20 +24,6 @@ class CloudMeshDistance(component):
         i_swap: bool,
         i_analysis_resolution):
 
-        """
-            The cloud-to-mesh component computes the distance between a point cloud and a mesh
-
-            :param i_cloud_source: a list of point clouds
-            :param i_assembly: an assembly of DF beams
-            :param i_signed_flag: calculate the sign of the distances
-            :param i_swap: swap source and target
-
-            :return o_distances : list of calculated distances for each point
-            :return o_rmse: the root mean square error between corresponding points of source and target
-            :return o_max_deviation: the max deviation between source and target
-            :return o_min_deviation: the min deviation between source and target
-            :returns o_results: the results of the comparison all in one object
-        """
         if i_analysis_resolution is None:
             scalef = diffCheck.df_util.get_doc_2_meters_unitf()
             i_analysis_resolution = 0.1 / scalef
