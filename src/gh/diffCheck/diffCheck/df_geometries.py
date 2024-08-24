@@ -75,8 +75,6 @@ class DFFace:
     joint_id: Optional[int] = None
 
     def __post_init__(self):
-        if len(self.all_loops[0]) < 3:
-            raise ValueError("A face must have at least 3 vertices")
         self.all_loops = self.all_loops
 
         self.joint_id = self.joint_id
