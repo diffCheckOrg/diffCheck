@@ -2,6 +2,7 @@
 
 import Rhino
 
+import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings as df_cvt
 
@@ -15,20 +16,22 @@ ABSTOL = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance
 class DFJointSegmentator(component):
     def __init__(self):
         super(DFJointSegmentator, self).__init__()
-    def RunScript(self, 
-                  i_clusters: typing.List[Rhino.Geometry.PointCloud], 
+    def RunScript(self,
+                  i_clusters: typing.List[Rhino.Geometry.PointCloud],
                   i_assembly: diffCheck.df_geometries.DFAssembly,
                   i_angle_threshold: float,
                   i_distance_threshold: float):
 
-        if i_angle_threshold is None : i_angle_threshold = 0.1
-        if i_distance_threshold is None : i_distance_threshold = 0.1
-        
+        if i_angle_threshold is None:
+            i_angle_threshold = 0.1
+        if i_distance_threshold is None:
+            i_distance_threshold = 0.1
+
         if len(i_clusters) == 0:
             raise ValueError("No clusters given.")
         if not isinstance(i_clusters[0], Rhino.Geometry.PointCloud):
             raise ValueError("The input clusters must be PointClouds.")
-            
+
         # get number of joints
         n_joints = i_assembly.total_number_joints
 
@@ -60,13 +63,13 @@ class DFJointSegmentator(component):
             # find the corresponding clusters and merge them
             df_joint_segment = diffcheck_bindings.dfb_segmentation.DFSegmentation.associate_clusters(df_joint, df_cloud_clusters, i_angle_threshold, i_distance_threshold)
             diffcheck_bindings.dfb_segmentation.DFSegmentation.clean_unassociated_clusters(df_cloud_clusters, [df_joint_segment], [df_joint], i_angle_threshold, i_distance_threshold)
-            
+
             # register the merged clusters to the reference point cloud
             registration = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DICP(df_joint_segment, ref_df_joint_cloud)
             res = registration.transformation_matrix
             transforms.append(df_cvt.cvt_ndarray_2_rh_transform(res))
             rh_joint_segments.append(df_cvt.cvt_dfcloud_2_rhcloud(df_joint_segment))
-        
+
         o_joint_segments = []
         o_transforms = []
         o_reference_point_clouds = []
@@ -76,6 +79,6 @@ class DFJointSegmentator(component):
                 o_transforms.append(transform)
                 o_reference_point_clouds.append(_joint_cloud)
             else:
-                ghenv.Component.AddRuntimeMessage(RML.Warning, "Some joints could not be segmented and were ignored.")
+                ghenv.Component.AddRuntimeMessage(RML.Warning, "Some joints could not be segmented and were ignored.")  # noqa: F821
 
         return o_joint_segments, o_transforms, o_reference_point_clouds

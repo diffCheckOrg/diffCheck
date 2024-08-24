@@ -360,7 +360,7 @@ class DFAssembly:
         self._all_sidefaces: typing.List[DFFace] = []
 
         self._all_joints: typing.List[DFJoint] = []
-        
+
     def __repr__(self):
         return f"Assembly: {self.name}, Beams: {len(self.beams)}"
 

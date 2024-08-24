@@ -5,7 +5,7 @@
     "subcategory": "Analysis",
     "description": "Computes the distance between a point cloud and a mesh",
     "exposure": 4,
-    "instanceGuid": "534a24ba-7e32-482f-a3d7-293647185122",
+    "instanceGuid": "eda01e34-b89b-4e3c-a9b6-0178a05ae81b",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -26,13 +26,13 @@
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_beams",
-                "nickname": "i_beams",
-                "description": "The target DFbeams",
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The target DFAssembly",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "list",
+                "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "ghdoc"
