@@ -6,7 +6,8 @@ exclude = [
     "src/gh/components",
     "src/gh/diffCheck/setup.py",
     "temp",
-    "doc"
+    "doc",
+    "src/gh/diffCheck/diffCheck/__init__.py"
 ]
 
 [[tool.mypy.overrides]]
@@ -18,13 +19,19 @@ module = [
     "System.*",
     "GH_IO.*",
     "clr.*",
-    "diffcheck_bindings"
+    "diffcheck_bindings",
+    "diffCheck.diffcheck_bindings"
 ]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "pefile"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "diffCheck"
+ignore_undefined_attributes = true
+
 
 
 [tool.ruff]
@@ -33,3 +40,6 @@ exclude = [
     "deps/",
     "temp/"
 ]
+
+[tool.ruff.per-file-ignores]
+"src/gh/diffCheck/diffCheck/__init__.py" = ["F401", "F403" ,"E402"]
