@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -447,21 +449,16 @@ Computes the distance between 2 point clouds<p class="section-subtitle"><strong>
 <p class="section-subtitle"><strong>Code:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#! python3</span>
 
-<span class="kn">import</span> <span class="nn">System</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">Rhino</span>
 <span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
 
-<span class="kn">import</span> <span class="nn">Grasshopper</span> <span class="k">as</span> <span class="nn">gh</span>
 <span class="kn">from</span> <span class="nn">Grasshopper.Kernel</span> <span class="kn">import</span> <span class="n">GH_RuntimeMessageLevel</span> <span class="k">as</span> <span class="n">RML</span>
 
-<span class="kn">import</span> <span class="nn">diffCheck</span>
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">df_cvt_bindings</span>
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">df_error_estimation</span>
 
-<span class="kn">import</span> <span class="nn">diffCheck.df_util</span>
 
 
 <span class="k">class</span> <span class="nc">DFCloudCloudDistance</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
@@ -470,7 +467,7 @@ Computes the distance between 2 point clouds<p class="section-subtitle"><strong>
         <span class="n">i_cloud_target</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">rg</span><span class="o">.</span><span class="n">PointCloud</span><span class="p">],</span>
         <span class="n">i_swap</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">i_cloud_source</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">i_cloud_target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Please provide both objects of type point clouds to compare&quot;</span><span class="p">)</span>
+            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Please provide both objects of type point clouds to compare&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="c1"># swap</span>

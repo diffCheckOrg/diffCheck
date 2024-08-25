@@ -38,6 +38,10 @@ import os
 import sys
 
 # -- Dlls/pyd imports ---------------------------------------------------------
+# Set the SPHINX_BUILD environment variable to not conflct with the import of
+# the pybind module and df_cvt_bindings from the diffCheck __init__.py
+os.environ['SPHINX_BUILD'] = '1'
+
 # import package's modules path and dlls/pyds, checking for import of pybind module
 extra_dll_dir_doc = os.path.abspath('./')
 extra_dll_dir_pysource = os.path.abspath('./../src/gh/diffCheck')

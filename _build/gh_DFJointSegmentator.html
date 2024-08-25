@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -413,16 +415,13 @@ Extracts the joints from a point cloud.<p class="section-subtitle"><strong>Input
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">i_clusters</span></code> (pointcloud ,list)</p></td>
 <td><p>The cluster point clouds from normal segmentation.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">i_joint_faces</span></code> (mesh ,list)</p></td>
-<td><p>The joints to extract and analyze</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">i_assembly</span></code> (ghdoc ,item)</p></td>
+<td><p>The assembly to extract the joints from</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">i_joint_ids</span></code> (int ,list)</p></td>
-<td><p>The joint ids of the assembly</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">i_angle_threshold</span></code> (float ,item)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">i_angle_threshold</span></code> (float ,item)</p></td>
 <td><p>From 0 to 1, it’s the sin value. By default 0.1. The closer to 0 the less permissive and viceversa to 1.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">i_association_threshold</span></code> (float ,item)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">i_association_threshold</span></code> (float ,item)</p></td>
 <td><p>From 0 to infinite. By default 0.1. The closer to 0 the less permissive your point.</p></td>
 </tr>
 </tbody>
@@ -449,68 +448,83 @@ Extracts the joints from a point cloud.<p class="section-subtitle"><strong>Input
 <span class="kn">import</span> <span class="nn">diffCheck</span>
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">diffcheck_bindings</span>
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">df_cvt_bindings</span> <span class="k">as</span> <span class="n">df_cvt</span>
-<span class="kn">import</span> <span class="nn">diffCheck.df_util</span>
 
+<span class="kn">from</span> <span class="nn">Grasshopper.Kernel</span> <span class="kn">import</span> <span class="n">GH_RuntimeMessageLevel</span> <span class="k">as</span> <span class="n">RML</span>
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
+
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="n">ABSTOL</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">RhinoDoc</span><span class="o">.</span><span class="n">ActiveDoc</span><span class="o">.</span><span class="n">ModelAbsoluteTolerance</span>
 
 <span class="k">class</span> <span class="nc">DFJointSegmentator</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">RunScript</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                  <span class="n">i_clusters</span><span class="p">:</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">PointCloud</span><span class="p">,</span> 
-                  <span class="n">i_joints</span><span class="p">:</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Mesh</span><span class="p">,</span> 
-                  <span class="n">i_joint_ids</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DFJointSegmentator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">RunScript</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">i_clusters</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Rhino</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">PointCloud</span><span class="p">],</span>
+                  <span class="n">i_assembly</span><span class="p">:</span> <span class="n">diffCheck</span><span class="o">.</span><span class="n">df_geometries</span><span class="o">.</span><span class="n">DFAssembly</span><span class="p">,</span>
                   <span class="n">i_angle_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                   <span class="n">i_distance_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">i_angle_threshold</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span> <span class="n">i_angle_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
-        <span class="k">if</span> <span class="n">i_distance_threshold</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span> <span class="n">i_distance_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_joints</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_joint_ids</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The number of joints and joint ids must be the same.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i_angle_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_angle_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="k">if</span> <span class="n">i_distance_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_distance_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_clusters</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No clusters given.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i_clusters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">PointCloud</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The input clusters must be PointClouds.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i_joints</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Mesh</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The input joints must be convertible to Meshes.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># get number of joints</span>
+        <span class="n">n_joints</span> <span class="o">=</span> <span class="n">i_assembly</span><span class="o">.</span><span class="n">total_number_joints</span>
 
         <span class="c1"># prepping the reference meshes</span>
-        <span class="n">n_joints</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">i_joint_ids</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">joints</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_joints</span><span class="p">)</span> <span class="p">]</span>
-        <span class="k">for</span> <span class="n">face</span><span class="p">,</span> <span class="nb">id</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">i_joints</span><span class="p">,</span> <span class="n">i_joint_ids</span><span class="p">):</span>
-            <span class="n">face</span><span class="o">.</span><span class="n">Subdivide</span><span class="p">()</span>
-            <span class="n">face</span><span class="o">.</span><span class="n">Faces</span><span class="o">.</span><span class="n">ConvertQuadsToTriangles</span><span class="p">()</span>
-            <span class="n">joints</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_rhmesh_2_dfmesh</span><span class="p">(</span><span class="n">face</span><span class="p">))</span>
+        <span class="n">df_joints</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_joints</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="n">i_assembly</span><span class="o">.</span><span class="n">all_joints</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">joint</span><span class="o">.</span><span class="n">faces</span><span class="p">:</span>
+                <span class="n">face</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">to_mesh</span><span class="p">()</span>
+                <span class="n">face</span><span class="o">.</span><span class="n">Subdivide</span><span class="p">()</span>
+                <span class="n">face</span><span class="o">.</span><span class="n">Faces</span><span class="o">.</span><span class="n">ConvertQuadsToTriangles</span><span class="p">()</span>
+                <span class="n">df_joints</span><span class="p">[</span><span class="n">joint</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_rhmesh_2_dfmesh</span><span class="p">(</span><span class="n">face</span><span class="p">))</span>
 
-        <span class="n">joint_clouds</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">registrations</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">joint_segments</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">df_clouds</span> <span class="o">=</span> <span class="p">[</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_rhcloud_2_dfcloud</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">i_clusters</span><span class="p">]</span>
+        <span class="n">ref_rh_joint_clouds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">transforms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rh_joint_segments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">df_cloud_clusters</span> <span class="o">=</span> <span class="p">[</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_rhcloud_2_dfcloud</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">i_clusters</span><span class="p">]</span>
 
         <span class="c1"># for each joint, find the corresponding clusters and merge them, generate a reference point cloud, and register the merged clusters to the reference point cloud</span>
-        <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="n">joints</span><span class="p">:</span>
-
+        <span class="k">for</span> <span class="n">df_joint</span> <span class="ow">in</span> <span class="n">df_joints</span><span class="p">:</span>
             <span class="c1"># create the reference point cloud</span>
-            <span class="n">joint_cloud</span> <span class="o">=</span> <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_geometry</span><span class="o">.</span><span class="n">DFPointCloud</span><span class="p">()</span>
+            <span class="n">ref_df_joint_cloud</span> <span class="o">=</span> <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_geometry</span><span class="o">.</span><span class="n">DFPointCloud</span><span class="p">()</span>
 
-            <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">joint</span><span class="p">:</span>
-                <span class="n">face_cloud</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">sample_points_uniformly</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-                <span class="n">joint_cloud</span><span class="o">.</span><span class="n">add_points</span><span class="p">(</span><span class="n">face_cloud</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">df_joint</span><span class="p">:</span>
+                <span class="n">ref_face_cloud</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">sample_points_uniformly</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+                <span class="n">ref_df_joint_cloud</span><span class="o">.</span><span class="n">add_points</span><span class="p">(</span><span class="n">ref_face_cloud</span><span class="p">)</span>
 
-            <span class="n">joint_clouds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_dfcloud_2_rhcloud</span><span class="p">(</span><span class="n">joint_cloud</span><span class="p">))</span>
+            <span class="n">ref_rh_joint_clouds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_dfcloud_2_rhcloud</span><span class="p">(</span><span class="n">ref_df_joint_cloud</span><span class="p">))</span>
 
             <span class="c1"># find the corresponding clusters and merge them</span>
-            <span class="n">segment</span> <span class="o">=</span> <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_segmentation</span><span class="o">.</span><span class="n">DFSegmentation</span><span class="o">.</span><span class="n">associate_clusters</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">df_clouds</span><span class="p">,</span> <span class="n">i_angle_threshold</span><span class="p">,</span> <span class="n">i_distance_threshold</span><span class="p">)</span>
-            <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_segmentation</span><span class="o">.</span><span class="n">DFSegmentation</span><span class="o">.</span><span class="n">clean_unassociated_clusters</span><span class="p">(</span><span class="n">df_clouds</span><span class="p">,</span> <span class="p">[</span><span class="n">segment</span><span class="p">],</span> <span class="p">[</span><span class="n">joint</span><span class="p">],</span> <span class="n">i_angle_threshold</span> <span class="p">,</span><span class="n">i_distance_threshold</span><span class="p">)</span>
+            <span class="n">df_joint_segment</span> <span class="o">=</span> <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_segmentation</span><span class="o">.</span><span class="n">DFSegmentation</span><span class="o">.</span><span class="n">associate_clusters</span><span class="p">(</span><span class="n">df_joint</span><span class="p">,</span> <span class="n">df_cloud_clusters</span><span class="p">,</span> <span class="n">i_angle_threshold</span><span class="p">,</span> <span class="n">i_distance_threshold</span><span class="p">)</span>
+            <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_segmentation</span><span class="o">.</span><span class="n">DFSegmentation</span><span class="o">.</span><span class="n">clean_unassociated_clusters</span><span class="p">(</span><span class="n">df_cloud_clusters</span><span class="p">,</span> <span class="p">[</span><span class="n">df_joint_segment</span><span class="p">],</span> <span class="p">[</span><span class="n">df_joint</span><span class="p">],</span> <span class="n">i_angle_threshold</span><span class="p">,</span> <span class="n">i_distance_threshold</span><span class="p">)</span>
 
             <span class="c1"># register the merged clusters to the reference point cloud</span>
-            <span class="n">registration</span> <span class="o">=</span> <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_registrations</span><span class="o">.</span><span class="n">DFRefinedRegistration</span><span class="o">.</span><span class="n">O3DICP</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">joint_cloud</span><span class="p">)</span>
+            <span class="n">registration</span> <span class="o">=</span> <span class="n">diffcheck_bindings</span><span class="o">.</span><span class="n">dfb_registrations</span><span class="o">.</span><span class="n">DFRefinedRegistration</span><span class="o">.</span><span class="n">O3DICP</span><span class="p">(</span><span class="n">df_joint_segment</span><span class="p">,</span> <span class="n">ref_df_joint_cloud</span><span class="p">)</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">registration</span><span class="o">.</span><span class="n">transformation_matrix</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_ndarray_2_rh_transform</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+            <span class="n">rh_joint_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_dfcloud_2_rhcloud</span><span class="p">(</span><span class="n">df_joint_segment</span><span class="p">))</span>
 
-            <span class="n">registrations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_ndarray_2_rh_transform</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
-            <span class="n">joint_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cvt</span><span class="o">.</span><span class="n">cvt_dfcloud_2_rhcloud</span><span class="p">(</span><span class="n">segment</span><span class="p">))</span>
+        <span class="n">o_joint_segments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">o_transforms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">o_reference_point_clouds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span>  <span class="n">joint_segment</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">_joint_cloud</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rh_joint_segments</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">ref_rh_joint_clouds</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">joint_segment</span><span class="o">.</span><span class="n">IsValid</span><span class="p">:</span>
+                <span class="n">o_joint_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">joint_segment</span><span class="p">)</span>
+                <span class="n">o_transforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+                <span class="n">o_reference_point_clouds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_joint_cloud</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Some joints could not be segmented and were ignored.&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
 
-        <span class="k">return</span> <span class="n">joint_segments</span><span class="p">,</span> <span class="n">registrations</span><span class="p">,</span> <span class="n">joint_clouds</span>
+        <span class="k">return</span> <span class="n">o_joint_segments</span><span class="p">,</span> <span class="n">o_transforms</span><span class="p">,</span> <span class="n">o_reference_point_clouds</span>
 </pre></div>
 </div>
 </section>

@@ -1,0 +1,40 @@
+{
+    "name": "DFPreviewAssembly",
+    "nickname": "DFPreviewAssembly",
+    "category": "diffCheck",
+    "subcategory": "Visualization",
+    "description": "This component allows to visualize extra information related to the diffcheck assembly object.",
+    "exposure": 4,
+    "instanceGuid": "5d11079d-d938-41de-810a-a53c3f70874e",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The DFAssembly object to preview.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "_",
+                "nickname": "_",
+                "description": "This is just a mass center point of the assembly to enable the component preview and localize the preview zoom of the component. Without this output geometry object the grasshopper preview is not enabled for python components.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

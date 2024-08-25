@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -432,23 +434,18 @@ Deconstruct the DFBeam objects into semantic Rhino objects.<p class="section-sub
 <p class="section-subtitle"><strong>Code:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#! python3</span>
 
-<span class="kn">import</span> <span class="nn">System</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">Rhino</span>
-<span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
-<span class="kn">import</span> <span class="nn">scriptcontext</span> <span class="k">as</span> <span class="nn">sc</span>
 
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
 
-<span class="kn">import</span> <span class="nn">diffCheck</span>
-<span class="kn">from</span> <span class="nn">diffCheck.df_geometries</span> <span class="kn">import</span> <span class="n">DFBeam</span><span class="p">,</span> <span class="n">DFAssembly</span>
+<span class="kn">from</span> <span class="nn">diffCheck.df_geometries</span> <span class="kn">import</span> <span class="n">DFBeam</span>
 
 
 <span class="k">class</span> <span class="nc">DFDeconstructBeam</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">RunScript</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
             <span class="n">i_beams</span> <span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">DFBeam</span><span class="p">]):</span>
-        <span class="n">o_side_faces</span><span class="p">,</span> <span class="n">o_joint_faces</span><span class="p">,</span> <span class="n">o_joint_ids</span><span class="p">,</span> <span class="n">o_breps</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">o_side_faces</span><span class="p">,</span> <span class="n">o_joint_faces</span><span class="p">,</span> <span class="n">o_joint_ids</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">i_b</span> <span class="ow">in</span> <span class="n">i_beams</span><span class="p">:</span>
             <span class="n">o_side_faces</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">to_brep_face</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">i_b</span><span class="o">.</span><span class="n">side_faces</span><span class="p">]</span>

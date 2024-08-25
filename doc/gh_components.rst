@@ -66,10 +66,10 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
      - .. image:: ../src/gh/components/DF_visualization_settings/icon.png
      - `gh_DFVisualizationSettings <gh_DFVisualizationSettings.html>`_
 
-   * - .. image:: ../src/gh/components/DF_tester/icon.png
+   * - .. image:: ../src/gh/components/DF_preview_assembly/icon.png
+     - `gh_DFPreviewAssembly <gh_DFPreviewAssembly.html>`_
+     - .. image:: ../src/gh/components/DF_tester/icon.png
      - `gh_DFTester <gh_DFTester.html>`_
-     -
-     -
 
 
 

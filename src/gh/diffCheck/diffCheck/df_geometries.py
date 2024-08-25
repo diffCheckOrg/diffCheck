@@ -87,7 +87,7 @@ class DFFace:
         self.is_cylinder = False
 
     def __repr__(self):
-        return f"Face id: {len(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
+        return f"Face id: {(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
 
     def __hash__(self):
         outer_loop = tuple(
@@ -224,7 +224,7 @@ class DFJoint:
         """
         brep = rg.Brep()
         for face in self.faces:
-            brep.Append(face.to_brep_face())
+            brep.Append(face.to_brep_face().ToBrep())
         brep.Compact()
         return brep
 
@@ -264,7 +264,12 @@ class DFBeam:
 
         self._joints = []
 
+        # this should be used like a hash identifier
         self.__id = uuid.uuid4().int
+        # this index is assigned only when the an beam is added to an assembly
+        self._index_assembly = None
+
+        self._center = None
 
     @classmethod
     def from_brep_face(cls, brep):
@@ -286,7 +291,7 @@ class DFBeam:
         """
         brep = rg.Brep()
         for face in self.faces:
-            brep.Append(face.to_brep_face())
+            brep.Append(face.to_brep_face().ToBrep())
         brep.Compact()
 
         return brep
@@ -340,6 +345,17 @@ class DFBeam:
             temp_faces = [face for face in temp_faces if face.joint_id != joint_id]
         return joints
 
+    @property
+    def center(self):
+        self._center = self.to_brep().GetBoundingBox(True).Center
+        return self._center
+
+    @property
+    def index_assembly(self):
+        if self._index_assembly is None:
+            raise ValueError("The beam is not added to an assembly")
+        return self._index_assembly
+
 
 @dataclass
 class DFAssembly:
@@ -352,17 +368,23 @@ class DFAssembly:
 
     def __post_init__(self):
         self.beams = self.beams
+        for idx, beam in enumerate(self.beams):
+            beam._index_assembly = idx
+
         self.name = self.name or "Unnamed Assembly"
 
         self._all_jointfaces: typing.List[DFFace] = []
         self._all_sidefaces: typing.List[DFFace] = []
-
+        self._all_vertices: typing.List[DFVertex] = []
         self._all_joints: typing.List[DFJoint] = []
+
+        self._mass_center = None
 
     def __repr__(self):
         return f"Assembly: {self.name}, Beams: {len(self.beams)}"
 
     def add_beam(self, beam: DFBeam):
+        beam._index_assembly = len(self.beams)
         self.beams.append(beam)
 
     def remove_beam(self, beam_id: int):
@@ -450,3 +472,19 @@ class DFAssembly:
         for beam in self.beams:
             self._all_joints.extend(beam.joints)
         return self._all_joints
+
+    @property
+    def all_vertices(self):
+        self._all_vertices = []
+        for beam in self.beams:
+            for face in beam.faces:
+                self._all_vertices.extend(face.all_loops[0])
+        return self._all_vertices
+
+    @property
+    def mass_center(self):
+        # calculate the mass center of the assembly
+        df_vertices = self.all_vertices
+        rh_vertices = [vertex.to_rg_point3d() for vertex in df_vertices]
+        self._mass_center = rg.BoundingBox(rh_vertices).Center
+        return self._mass_center

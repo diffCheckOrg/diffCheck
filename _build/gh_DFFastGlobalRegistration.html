@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -447,14 +449,10 @@ Register two point clouds together in a fast manner.<p class="section-subtitle">
 <p class="section-subtitle"><strong>Code:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#! python3</span>
 
-<span class="kn">import</span> <span class="nn">System</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">Rhino</span>
 <span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
 
-<span class="kn">import</span> <span class="nn">Grasshopper</span> <span class="k">as</span> <span class="nn">gh</span>
 <span class="kn">from</span> <span class="nn">Grasshopper.Kernel</span> <span class="kn">import</span> <span class="n">GH_RuntimeMessageLevel</span> <span class="k">as</span> <span class="n">RML</span>
 
 <span class="kn">import</span> <span class="nn">diffCheck</span>
@@ -474,15 +472,20 @@ Register two point clouds together in a fast manner.<p class="section-subtitle">
         <span class="n">i_max_tuple_count</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">rg</span><span class="o">.</span><span class="n">Transform</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">i_cloud_source</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">i_cloud_target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Please provide both objects of type point clouds to align&quot;</span><span class="p">)</span>
+            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Please provide both objects of type point clouds to align&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="c1"># set default values</span>
-        <span class="k">if</span> <span class="n">i_radius_kd_search</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_radius_kd_search</span> <span class="o">=</span> <span class="mf">0.8</span>
-        <span class="k">if</span> <span class="n">i_neighbours_kd_search</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_neighbours_kd_search</span> <span class="o">=</span> <span class="mi">50</span>
-        <span class="k">if</span> <span class="n">i_max_corrspondence_dist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_max_corrspondence_dist</span> <span class="o">=</span> <span class="mf">0.05</span>
-        <span class="k">if</span> <span class="n">i_iteration_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_iteration_number</span> <span class="o">=</span> <span class="mi">128</span>
-        <span class="k">if</span> <span class="n">i_max_tuple_count</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_max_tuple_count</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="k">if</span> <span class="n">i_radius_kd_search</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_radius_kd_search</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="k">if</span> <span class="n">i_neighbours_kd_search</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_neighbours_kd_search</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="k">if</span> <span class="n">i_max_corrspondence_dist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_max_corrspondence_dist</span> <span class="o">=</span> <span class="mf">0.05</span>
+        <span class="k">if</span> <span class="n">i_iteration_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_iteration_number</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="k">if</span> <span class="n">i_max_tuple_count</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_max_tuple_count</span> <span class="o">=</span> <span class="mi">1000</span>
 
         <span class="c1"># get the working unit of the Rhino document, if other than meters, set a multiplier factor</span>
         <span class="n">scalef</span> <span class="o">=</span> <span class="n">diffCheck</span><span class="o">.</span><span class="n">df_util</span><span class="o">.</span><span class="n">get_doc_2_meters_unitf</span><span class="p">()</span>
@@ -515,7 +518,7 @@ Register two point clouds together in a fast manner.<p class="section-subtitle">
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
                 <span class="n">rh_form</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_xform_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">rh_form</span> <span class="o">==</span> <span class="n">rg</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="n">Identity</span><span class="p">:</span>
-            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;The transformation matrix is identity, no transformation is applied&quot;</span><span class="p">)</span>
+            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;The transformation matrix is identity, no transformation is applied&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="n">o_x_form</span> <span class="o">=</span> <span class="n">rh_form</span>

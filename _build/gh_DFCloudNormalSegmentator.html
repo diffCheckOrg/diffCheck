@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -441,18 +443,11 @@ Cluster a point cloud based on normals.<p class="section-subtitle"><strong>Input
 <p class="section-subtitle"><strong>Code:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#! python3</span>
 
-<span class="kn">import</span> <span class="nn">System</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">Rhino</span>
 <span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
 
-<span class="kn">import</span> <span class="nn">Grasshopper</span> <span class="k">as</span> <span class="nn">gh</span>
-<span class="kn">from</span> <span class="nn">Grasshopper.Kernel</span> <span class="kn">import</span> <span class="n">GH_RuntimeMessageLevel</span> <span class="k">as</span> <span class="n">RML</span>
 
-<span class="kn">import</span> <span class="nn">diffCheck</span>
-<span class="kn">import</span> <span class="nn">diffCheck.df_geometries</span>
 <span class="kn">from</span> <span class="nn">diffCheck.diffcheck_bindings</span> <span class="kn">import</span> <span class="n">dfb_segmentation</span>
 
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">df_cvt_bindings</span>

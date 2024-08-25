@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -402,7 +404,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <a class="reference internal image-reference" href="_images/icon21.png"><img alt="_images/icon21.png" class="align-left" src="_images/icon21.png" style="width: 40px;" />
+  <a class="reference internal image-reference" href="_images/icon22.png"><img alt="_images/icon22.png" class="align-left" src="_images/icon22.png" style="width: 40px;" />
 </a>
 <section id="dfvisualizationsettings-component">
 <h1><code class="docutils literal notranslate"><span class="pre">DFVisualizationSettings</span></code> component<a class="headerlink" href="#dfvisualizationsettings-component" title="Link to this heading">#</a></h1>
@@ -453,14 +455,10 @@ Compiles all the settings to feed to the visualization component.<p class="secti
 <p class="section-subtitle"><strong>Code:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#! python3</span>
 
-<span class="kn">import</span> <span class="nn">System</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">Rhino</span>
 <span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
 
-<span class="kn">import</span> <span class="nn">Grasshopper</span> <span class="k">as</span> <span class="nn">gh</span>
 <span class="kn">from</span> <span class="nn">Grasshopper.Kernel</span> <span class="kn">import</span> <span class="n">GH_RuntimeMessageLevel</span> <span class="k">as</span> <span class="n">RML</span>
 
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">df_visualization</span>
@@ -476,18 +474,22 @@ Compiles all the settings to feed to the visualization component.<p class="secti
         <span class="n">i_legend_plane</span><span class="p">:</span> <span class="n">rg</span><span class="o">.</span><span class="n">Plane</span><span class="p">,</span>
         <span class="n">i_histogram_scale_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">i_palette</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="p">[</span><span class="s2">&quot;Jet&quot;</span><span class="p">,</span> <span class="s2">&quot;Rainbow&quot;</span><span class="p">,</span> <span class="s2">&quot;RdPu&quot;</span><span class="p">,</span> <span class="s2">&quot;Viridis&quot;</span><span class="p">]:</span>
-            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis&quot;</span><span class="p">)</span>
+            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Possible values for i_palette are: Jet, Rainbow, RdPu, Viridis&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
             <span class="k">return</span> <span class="kc">None</span>
-        
+
         <span class="k">if</span> <span class="n">i_value_type</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="p">[</span><span class="s2">&quot;Dist&quot;</span><span class="p">,</span> <span class="s2">&quot;RMSE&quot;</span><span class="p">,</span> <span class="s2">&quot;MAX&quot;</span><span class="p">,</span> <span class="s2">&quot;MIN&quot;</span><span class="p">,</span> <span class="s2">&quot;STD&quot;</span><span class="p">]:</span>
-            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD&quot;</span><span class="p">)</span>
+            <span class="n">ghenv</span><span class="o">.</span><span class="n">Component</span><span class="o">.</span><span class="n">AddRuntimeMessage</span><span class="p">(</span><span class="n">RML</span><span class="o">.</span><span class="n">Warning</span><span class="p">,</span> <span class="s2">&quot;Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
             <span class="k">return</span> <span class="kc">None</span>
-        
+
         <span class="c1"># set default values</span>
-        <span class="k">if</span> <span class="n">i_legend_height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_legend_height</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="k">if</span> <span class="n">i_legend_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_legend_width</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="k">if</span> <span class="n">i_legend_plane</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_legend_plane</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Plane</span><span class="o">.</span><span class="n">WorldXY</span>
-        <span class="k">if</span> <span class="n">i_histogram_scale_factor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">i_histogram_scale_factor</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="k">if</span> <span class="n">i_legend_height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_legend_height</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="k">if</span> <span class="n">i_legend_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_legend_width</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">if</span> <span class="n">i_legend_plane</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_legend_plane</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Plane</span><span class="o">.</span><span class="n">WorldXY</span>
+        <span class="k">if</span> <span class="n">i_histogram_scale_factor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_histogram_scale_factor</span> <span class="o">=</span> <span class="mf">0.01</span>
 
         <span class="c1"># pack settings</span>
         <span class="n">o_viz_settings</span> <span class="o">=</span> <span class="n">df_visualization</span><span class="o">.</span><span class="n">DFVizSettings</span><span class="p">(</span><span class="n">i_value_type</span><span class="p">,</span>

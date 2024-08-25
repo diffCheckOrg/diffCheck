@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -402,7 +404,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <a class="reference internal image-reference" href="_images/icon22.png"><img alt="_images/icon22.png" class="align-left" src="_images/icon22.png" style="width: 40px;" />
+  <a class="reference internal image-reference" href="_images/icon23.png"><img alt="_images/icon23.png" class="align-left" src="_images/icon23.png" style="width: 40px;" />
 </a>
 <section id="dfxmlexporter-component">
 <h1><code class="docutils literal notranslate"><span class="pre">DFXMLExporter</span></code> component<a class="headerlink" href="#dfxmlexporter-component" title="Link to this heading">#</a></h1>
@@ -432,12 +434,7 @@ This component reads a DFAssembly object to export it to XML.<p class="section-s
 <p class="section-subtitle"><strong>Code:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#! python3</span>
 
-<span class="kn">import</span> <span class="nn">System</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">Rhino</span>
-<span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
-<span class="kn">import</span> <span class="nn">scriptcontext</span> <span class="k">as</span> <span class="nn">sc</span>
 
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
 

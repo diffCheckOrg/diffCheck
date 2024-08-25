@@ -221,6 +221,8 @@
 <li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+
+
 <li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
@@ -429,14 +431,9 @@ Import a point cloud from a file.<p class="section-subtitle"><strong>Inputs:</st
 <p class="section-subtitle"><strong>Code:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#! python3</span>
 
-<span class="kn">import</span> <span class="nn">System</span>
-
-<span class="kn">import</span> <span class="nn">Rhino</span>
 <span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
 <span class="kn">from</span> <span class="nn">ghpythonlib.componentbase</span> <span class="kn">import</span> <span class="n">executingcomponent</span> <span class="k">as</span> <span class="n">component</span>
 
-<span class="kn">import</span> <span class="nn">Grasshopper</span> <span class="k">as</span> <span class="nn">gh</span>
-<span class="kn">from</span> <span class="nn">Grasshopper.Kernel</span> <span class="kn">import</span> <span class="n">GH_RuntimeMessageLevel</span> <span class="k">as</span> <span class="n">RML</span>
 
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">diffcheck_bindings</span>
 <span class="kn">from</span> <span class="nn">diffCheck</span> <span class="kn">import</span> <span class="n">df_cvt_bindings</span>
@@ -454,7 +451,7 @@ Import a point cloud from a file.<p class="section-subtitle"><strong>Inputs:</st
         <span class="n">centroid</span> <span class="o">=</span> <span class="n">rh_cloud</span><span class="o">.</span><span class="n">GetBoundingBox</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">Center</span>
         <span class="n">x_form_scale</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">i_scalef</span><span class="p">)</span>
         <span class="n">rh_cloud</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">x_form_scale</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="p">[</span><span class="n">rh_cloud</span><span class="p">]</span>
 </pre></div>
 </div>
