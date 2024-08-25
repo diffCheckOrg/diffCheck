@@ -19,7 +19,10 @@ class DFPreviewAssembly(component):
         super(DFPreviewAssembly, self).__init__()
         self._dfassembly = None
 
-    def RunScript(self, i_assembly: DFAssembly):
+    def RunScript(self, i_assembly: DFAssembly=None):
+        if i_assembly is None:
+            return None
+
         self._dfassembly = i_assembly
         return i_assembly.mass_center
 

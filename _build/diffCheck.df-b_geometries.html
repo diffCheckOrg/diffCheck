@@ -403,19 +403,21 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_side_faces"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_side_faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_vertices"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_vertices</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.beams"><code class="docutils literal notranslate"><span class="pre">DFAssembly.beams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFAssembly.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.dump_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.dump_xml()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.mass_center"><code class="docutils literal notranslate"><span class="pre">DFAssembly.mass_center</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.name"><code class="docutils literal notranslate"><span class="pre">DFAssembly.name</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.remove_beam"><code class="docutils literal notranslate"><span class="pre">DFAssembly.remove_beam()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.to_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.to_xml()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.total_number_joints"><code class="docutils literal notranslate"><span class="pre">DFAssembly.total_number_joints</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.uuid"><code class="docutils literal notranslate"><span class="pre">DFAssembly.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam"><code class="docutils literal notranslate"><span class="pre">DFBeam</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.center"><code class="docutils literal notranslate"><span class="pre">DFBeam.center</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFBeam.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFBeam.from_brep_face()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.id"><code class="docutils literal notranslate"><span class="pre">DFBeam.id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.index_assembly"><code class="docutils literal notranslate"><span class="pre">DFBeam.index_assembly</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.joint_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.joint_faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.joints"><code class="docutils literal notranslate"><span class="pre">DFBeam.joints</span></code></a></li>
@@ -424,28 +426,34 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.side_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.side_faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_brep"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_brep()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.uuid"><code class="docutils literal notranslate"><span class="pre">DFBeam.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace"><code class="docutils literal notranslate"><span class="pre">DFFace</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.all_loops"><code class="docutils literal notranslate"><span class="pre">DFFace.all_loops</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFFace.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.from_brep_face()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.id"><code class="docutils literal notranslate"><span class="pre">DFFace.id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.is_joint"><code class="docutils literal notranslate"><span class="pre">DFFace.is_joint</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.joint_id"><code class="docutils literal notranslate"><span class="pre">DFFace.joint_id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.to_brep_face()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFFace.to_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.uuid"><code class="docutils literal notranslate"><span class="pre">DFFace.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint"><code class="docutils literal notranslate"><span class="pre">DFJoint</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFJoint.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.faces"><code class="docutils literal notranslate"><span class="pre">DFJoint.faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.id"><code class="docutils literal notranslate"><span class="pre">DFJoint.id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.to_brep"><code class="docutils literal notranslate"><span class="pre">DFJoint.to_brep()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFJoint.to_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.uuid"><code class="docutils literal notranslate"><span class="pre">DFJoint.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex"><code class="docutils literal notranslate"><span class="pre">DFVertex</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFVertex.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.from_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.from_rg_point3d()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.to_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.to_rg_point3d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.uuid"><code class="docutils literal notranslate"><span class="pre">DFVertex.uuid</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.x"><code class="docutils literal notranslate"><span class="pre">DFVertex.x</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.y"><code class="docutils literal notranslate"><span class="pre">DFVertex.y</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.z"><code class="docutils literal notranslate"><span class="pre">DFVertex.z</span></code></a></li>
@@ -595,6 +603,12 @@ document.write(`
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.deepcopy" title="Link to this definition">#</a></dt>
+<dd><p>Create a deep copy of the assembly</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.dump_xml">
 <span class="sig-name descname"><span class="pre">dump_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pretty_xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.dump_xml" title="Link to this definition">#</a></dt>
 <dd><p>Dump the pretty XML to a file</p>
@@ -620,10 +634,11 @@ document.write(`
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.remove_beam">
-<span class="sig-name descname"><span class="pre">remove_beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.remove_beam" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">remove_beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_assembly_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.remove_beam" title="Link to this definition">#</a></dt>
+<dd><p>Remove a beam from the assembly</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>beam_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+<dd class="field-odd"><p><strong>beam_assembly_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -643,6 +658,11 @@ we export the underlaying beams’s meshes from Rhino as vertices and faces.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.total_number_joints">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_number_joints</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.total_number_joints" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFAssembly.uuid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFAssembly.uuid" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -665,6 +685,11 @@ we export the underlaying beams’s meshes from Rhino as vertices and faces.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.center" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.deepcopy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.faces">
 <span class="sig-name descname"><span class="pre">faces</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a><span class="pre">[</span><a class="reference internal" href="#diffCheck.df_geometries.DFFace" title="diffCheck.df_geometries.DFFace"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFFace</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.faces" title="Link to this definition">#</a></dt>
@@ -676,11 +701,6 @@ we export the underlaying beams’s meshes from Rhino as vertices and faces.</p>
 <dd><p>Create a DFBeam from a RhinoBrep object.
 It also removes duplicates and creates a list of unique faces.</p>
 </dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.id">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.id" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.index_assembly">
@@ -724,6 +744,11 @@ It also removes duplicates and creates a list of unique faces.</p>
 <dd><p>Convert the beam to a Rhino Mesh object</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFBeam.uuid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFBeam.uuid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -745,6 +770,11 @@ It also removes duplicates and creates a list of unique faces.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.deepcopy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.from_brep_face">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_brep_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brep_face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.from_brep_face" title="Link to this definition">#</a></dt>
 <dd><p>Create a DFFace from a Rhino Brep face</p>
@@ -760,11 +790,6 @@ It also removes duplicates and creates a list of unique faces.</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.id">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.id" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.is_joint">
@@ -798,6 +823,11 @@ It also removes duplicates and creates a list of unique faces.</p>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFFace.uuid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFFace.uuid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -814,6 +844,11 @@ For convenience, this is used only as a return type from the DFBeam class’s pr
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFJoint.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFJoint.deepcopy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFJoint.faces">
 <span class="sig-name descname"><span class="pre">faces</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a><span class="pre">[</span><a class="reference internal" href="#diffCheck.df_geometries.DFFace" title="diffCheck.df_geometries.DFFace"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFFace</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#diffCheck.df_geometries.DFJoint.faces" title="Link to this definition">#</a></dt>
@@ -836,6 +871,12 @@ For convenience, this is used only as a return type from the DFBeam class’s pr
 <dd><p>Convert the joint to a Rhino Mesh object</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFJoint.uuid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFJoint.uuid" title="Link to this definition">#</a></dt>
+<dd><p>It retrives the automatic identifier, not the one of the joint in the beam</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -852,6 +893,11 @@ For convenience, this is used only as a return type from the DFBeam class’s pr
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.deepcopy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.from_rg_point3d">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_rg_point3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.from_rg_point3d" title="Link to this definition">#</a></dt>
@@ -876,6 +922,11 @@ For convenience, this is used only as a return type from the DFBeam class’s pr
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.uuid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#diffCheck.df_geometries.DFVertex.uuid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffCheck.df_geometries.DFVertex.x">
@@ -1134,19 +1185,21 @@ For convenience, this is used only as a return type from the DFBeam class’s pr
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_side_faces"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_side_faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.all_vertices"><code class="docutils literal notranslate"><span class="pre">DFAssembly.all_vertices</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.beams"><code class="docutils literal notranslate"><span class="pre">DFAssembly.beams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFAssembly.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.dump_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.dump_xml()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.mass_center"><code class="docutils literal notranslate"><span class="pre">DFAssembly.mass_center</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.name"><code class="docutils literal notranslate"><span class="pre">DFAssembly.name</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.remove_beam"><code class="docutils literal notranslate"><span class="pre">DFAssembly.remove_beam()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.to_xml"><code class="docutils literal notranslate"><span class="pre">DFAssembly.to_xml()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.total_number_joints"><code class="docutils literal notranslate"><span class="pre">DFAssembly.total_number_joints</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFAssembly.uuid"><code class="docutils literal notranslate"><span class="pre">DFAssembly.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam"><code class="docutils literal notranslate"><span class="pre">DFBeam</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.center"><code class="docutils literal notranslate"><span class="pre">DFBeam.center</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFBeam.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFBeam.from_brep_face()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.id"><code class="docutils literal notranslate"><span class="pre">DFBeam.id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.index_assembly"><code class="docutils literal notranslate"><span class="pre">DFBeam.index_assembly</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.joint_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.joint_faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.joints"><code class="docutils literal notranslate"><span class="pre">DFBeam.joints</span></code></a></li>
@@ -1155,28 +1208,34 @@ For convenience, this is used only as a return type from the DFBeam class’s pr
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.side_faces"><code class="docutils literal notranslate"><span class="pre">DFBeam.side_faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_brep"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_brep()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFBeam.to_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFBeam.uuid"><code class="docutils literal notranslate"><span class="pre">DFBeam.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace"><code class="docutils literal notranslate"><span class="pre">DFFace</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.all_loops"><code class="docutils literal notranslate"><span class="pre">DFFace.all_loops</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFFace.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.from_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.from_brep_face()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.id"><code class="docutils literal notranslate"><span class="pre">DFFace.id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.is_joint"><code class="docutils literal notranslate"><span class="pre">DFFace.is_joint</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.joint_id"><code class="docutils literal notranslate"><span class="pre">DFFace.joint_id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_brep_face"><code class="docutils literal notranslate"><span class="pre">DFFace.to_brep_face()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFFace.to_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFFace.uuid"><code class="docutils literal notranslate"><span class="pre">DFFace.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint"><code class="docutils literal notranslate"><span class="pre">DFJoint</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFJoint.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.faces"><code class="docutils literal notranslate"><span class="pre">DFJoint.faces</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.id"><code class="docutils literal notranslate"><span class="pre">DFJoint.id</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.to_brep"><code class="docutils literal notranslate"><span class="pre">DFJoint.to_brep()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.to_mesh"><code class="docutils literal notranslate"><span class="pre">DFJoint.to_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFJoint.uuid"><code class="docutils literal notranslate"><span class="pre">DFJoint.uuid</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex"><code class="docutils literal notranslate"><span class="pre">DFVertex</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.deepcopy"><code class="docutils literal notranslate"><span class="pre">DFVertex.deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.from_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.from_rg_point3d()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.to_rg_point3d"><code class="docutils literal notranslate"><span class="pre">DFVertex.to_rg_point3d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.uuid"><code class="docutils literal notranslate"><span class="pre">DFVertex.uuid</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.x"><code class="docutils literal notranslate"><span class="pre">DFVertex.x</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.y"><code class="docutils literal notranslate"><span class="pre">DFVertex.y</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diffCheck.df_geometries.DFVertex.z"><code class="docutils literal notranslate"><span class="pre">DFVertex.z</span></code></a></li>

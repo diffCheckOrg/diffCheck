@@ -71,6 +71,11 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
      - .. image:: ../src/gh/components/DF_tester/icon.png
      - `gh_DFTester <gh_DFTester.html>`_
 
+   * - .. image:: ../src/gh/components/DF_remove_beam/icon.png
+     - `gh_DFRemoveBeam <gh_DFRemoveBeam.html>`_
+     -
+     -
+
 
 
 .. toctree::
@@ -100,3 +105,5 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
    gh_DFVisualization
    gh_DFVisualizationSettings
    gh_DFXMLExporter
+   gh_DFPreviewAssembly
+   gh_DFRemoveBeam

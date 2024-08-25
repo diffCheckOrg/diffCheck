@@ -1,11 +1,11 @@
 {
-    "name": "DFDeconstructAssembly",
-    "nickname": "DFDeconstructAssembly",
+    "name": "DFRemoveBeam",
+    "nickname": "DFRemoveBeam",
     "category": "diffCheck",
     "subcategory": "Structure",
-    "description": "Deconstruct the DFAssembly into a set of df_beams objects.",
+    "description": "Remove a single or list of beams by providing their assembly indexes.",
     "exposure": 4,
-    "instanceGuid": "43098147-78a1-41ce-863d-e48337cb8cd5",
+    "instanceGuid": "af657e69-3b92-4f89-9457-270a9858217f",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -16,7 +16,7 @@
             {
                 "name": "i_assembly",
                 "nickname": "i_assembly",
-                "description": "The DFAssembly object to deconstruct.",
+                "description": "The DFAssembly object to which remove the beams.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -24,13 +24,25 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "ghdoc"
+            },
+            {
+                "name": "i_idx_2_remove",
+                "nickname": "i_idx_2_remove",
+                "description": "The list of indexes assembly of the beams to remove.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
             }
         ],
         "outputParameters": [
             {
-                "name": "o_beams",
-                "nickname": "o_beams",
-                "description": "The set of beams contained by this DFAssembly object.",
+                "name": "o_assembly",
+                "nickname": "o_assembly",
+                "description": "The new DFAssembly with less beams.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
