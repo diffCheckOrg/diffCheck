@@ -152,20 +152,6 @@ class DFVisualizationSettings(component):
                     self.poss_palettes,
                     "DF_palette",
                     input_indx, X_cord, Y_cord)
-            if "i_upper_threshold" == params[j].NickName:
-                add_slider(
-                    ghenv.Component,
-                    "DF_upper_threshold",
-                    input_indx,
-                    0.000, 5.000, 5.000,
-                    X_cord, Y_cord)
-            if "i_lower_threshold" == params[j].NickName:
-                add_slider(
-                    ghenv.Component,
-                    "DF_lower_threshold",
-                    input_indx,
-                    0.000, 5.000, 0.000,
-                    X_cord, Y_cord)
             if "i_legend_height" == params[j].NickName:
                 add_slider(
                     ghenv.Component,
