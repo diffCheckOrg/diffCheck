@@ -58,7 +58,6 @@ class JointDetector:
         # brep vertices to cloud
         df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
         df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
-
         rh_OBB = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
 
         # scale the box in the longest edge direction by 1.5 from center on both directions
