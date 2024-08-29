@@ -24,7 +24,6 @@ class DFPreviewAssembly(component):
             return None
 
         self._dfassembly = i_assembly
-        return i_assembly.mass_center
 
     # Preview overrides
     def DrawViewportWires(self, args):
