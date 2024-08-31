@@ -171,16 +171,39 @@ namespace diffCheck::segmentation
                 for (Eigen::Vector3d point : correspondingSegment->Points)
                 {
                     bool pointInFace = false;
-                    if (face->IsPointOnFace(point, associationThreshold))
-                    {
-                        unifiedPointCloud->Points.push_back(point);
-                        unifiedPointCloud->Normals.push_back(
-                            correspondingSegment->Normals[std::distance(
-                                correspondingSegment->Points.begin(), 
-                                std::find(correspondingSegment->Points.begin(), 
-                                correspondingSegment->Points.end(), 
-                                point))]);
-                    }
+
+                    unifiedPointCloud->Points.push_back(point);
+                    unifiedPointCloud->Normals.push_back(
+                        correspondingSegment->Normals[std::distance(
+                            correspondingSegment->Points.begin(), 
+                            std::find(correspondingSegment->Points.begin(), 
+                            correspondingSegment->Points.end(),
+                            point))]);
+                }
+                // removing points from the segment that are in the face
+                if (unifiedPointCloud->GetNumPoints() == 0)
+                {
+                    DIFFCHECK_WARN("No point was associated to this segment. Skipping the segment.");
+                    continue;
+                }
+                for(Eigen::Vector3d point : unifiedPointCloud->Points)
+                {
+                    correspondingSegment->Points.erase(
+                        std::remove(
+                            correspondingSegment->Points.begin(), 
+                            correspondingSegment->Points.end(), 
+                            point), 
+                        correspondingSegment->Points.end());
+                }
+                if (correspondingSegment->GetNumPoints() == 0)
+                {
+                    DIFFCHECK_WARN("No point was left in the segment. Deleting the segment.");
+                    clusters.erase(
+                        std::remove(
+                            clusters.begin(), 
+                            clusters.end(), 
+                            correspondingSegment), 
+                        clusters.end());
                 }
             }
             
@@ -284,11 +307,6 @@ namespace diffCheck::segmentation
         if (unassociatedClusters.size() == 0)
         {
             DIFFCHECK_WARN("No unassociated clusters. Nothing is done");
-            return;
-        }
-        if (isCylinder == true)
-        {
-            DIFFCHECK_WARN("Cylinder mode not implemented yet. Nothing is done");
             return;
         }
         else
@@ -414,11 +432,18 @@ namespace diffCheck::segmentation
 
                 for (Eigen::Vector3d point : cluster->Points)
                 {
-                    if (correspondingMeshFace->IsPointOnFace(point, associationThreshold))
+                    if(isCylinder)
                     {
                         completed_segment->Points.push_back(point);
                         completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                        
                     }
+                    else
+                        if (correspondingMeshFace->IsPointOnFace(point, associationThreshold))
+                        {
+                            completed_segment->Points.push_back(point);
+                            completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                        }
                 }
                 std::vector<int> indicesToRemove;
 
