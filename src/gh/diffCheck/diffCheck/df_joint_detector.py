@@ -2,7 +2,6 @@ import Rhino
 import scriptcontext as sc
 import Rhino.Geometry as rg
 
-import typing
 from dataclasses import dataclass
 
 import diffCheck.df_util
@@ -99,7 +98,6 @@ class JointDetector:
         # brep vertices to cloud
         df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
         df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
-
         if is_cylinder_beam:
             Bounding_geometry = cylinder
         else:

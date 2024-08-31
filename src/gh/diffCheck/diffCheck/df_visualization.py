@@ -13,18 +13,31 @@ class DFVizSettings:
     This class compiles the settings for the visualization into one object
     """
 
-    def __init__(self, valueType, upper_threshold, lower_threshold, palette, legend_height, legend_width, legend_plane, histogram_scale_factor):
+    def __init__(self,
+        valueType,
+        palette,
+        upper_threshold,
+        lower_threshold,
+        legend_height,
+        legend_width,
+        legend_plane,
+        histogram_scale_factor):
 
         self.valueType = valueType
-
+        self.palette = df_visualization.DFColorMap(palette)
         self.upper_threshold = upper_threshold
         self.lower_threshold = lower_threshold
-        self.palette = df_visualization.DFColorMap(palette)
         self.legend_height = legend_height
         self.legend_width = legend_width
         self.legend_plane = legend_plane
         self.histogram_scale_factor = histogram_scale_factor
 
+        self.str_repr = f"DFVizSettings: \n\t- Value type: {self.valueType}\n\t- Palette: {self.palette}\n\t- Upper threshold: {self.upper_threshold}\n\t- Lower threshold: {self.lower_threshold}\n\t- Legend height: {self.legend_height}\n\t- Legend width: {self.legend_width}\n\t- Legend plane: {self.legend_plane}\n\t- Histogram scale factor: {self.histogram_scale_factor}"
+
+    def __repr__(self):
+        return self.str_repr
+    def __str__(self):
+        return self.str_repr
 
 class DFColorMap:
     """
@@ -154,6 +167,8 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     height = total_height/steps
 
     legend_geometry = []
+    rect_pts = []
+    previous_color = None
 
     for i in range(steps+1):
 

@@ -1,6 +1,5 @@
 import Rhino
 import Rhino.Geometry as rg
-import rhinoscriptsyntax as rs
 import scriptcontext as sc
 
 import typing
@@ -109,7 +108,7 @@ def compute_ordered_vertices(brep_face) -> typing.List[Rhino.Geometry.Point3d]:
     edges = brep_face.DuplicateEdgeCurves()
     edges = list(set(edges))
 
-    edges_sorted = []
+    edges_sorted: list[Rhino.Geometry.Curve] = []
     while len(edges) > 0:
         if len(edges_sorted) == 0:
             edges_sorted.append(edges[0])
@@ -139,7 +138,7 @@ def compute_ordered_vertices(brep_face) -> typing.List[Rhino.Geometry.Point3d]:
     return sorted_vertices
 
 def get_doc_2_meters_unitf():
-    """ 
+    """
         Retrieve the document unit system and get the multiplier factor to
         be multiplied to all the component's inputs for df functions since they
         are all based in meters.

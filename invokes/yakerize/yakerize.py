@@ -4,7 +4,6 @@ import os
 import sys
 import argparse
 import shutil
-import typing
 
 def main(
     gh_components_dir: str,

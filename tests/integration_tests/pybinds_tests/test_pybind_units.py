@@ -78,7 +78,7 @@ def test_DFPointCloud_init():
 def test_DFPointCloud_load_from_PLY():
     pc = dfb.dfb_geometry.DFPointCloud()
     pc.load_from_PLY(get_ply_cloud_roof_quarter_path())
-    
+
     assert pc.points.__len__() == 7379, "DFPointCloud should have 7379 points"
     assert pc.normals.__len__() == 7379, "DFPointCloud should have 7379 normals"
     assert pc.colors.__len__() == 7379, "DFPointCloud should have 7379 colors"
@@ -92,7 +92,7 @@ def create_DFPointCloudSampleRoof():
 @pytest.fixture
 def create_two_DFPointCloudSphere():
     df_pcd_1 = dfb.dfb_geometry.DFPointCloud()
-    df_pcd_2 = dfb.dfb_geometry.DFPointCloud()  
+    df_pcd_2 = dfb.dfb_geometry.DFPointCloud()
     df_pcd_1.load_from_PLY(get_ply_cloud_sphere_path())
     df_pcd_2.load_from_PLY(get_ply_cloud_sphere_path())
     yield df_pcd_1, df_pcd_2
@@ -135,16 +135,16 @@ def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
     assert pc.get_num_normals() == 7379, "get_num_normals() should return 7379"
     assert pc.get_num_colors() == 7379, "get_num_colors() should return 7379"
 
-    assert pc.has_points() == True, "has_points() should return True"
-    assert pc.has_colors() == True, "has_colors() should return True"
-    assert pc.has_normals() == True, "has_normals() should return True"
+    assert pc.has_points(), "has_points() should return True"
+    assert pc.has_colors(), "has_colors() should return True"
+    assert pc.has_normals(), "has_normals() should return True"
 
     pc.points = []
     pc.normals = []
     pc.colors = []
-    assert pc.has_points() == False, "has_points() should return False"
-    assert pc.has_colors() == False, "has_colors() should return False"
-    assert pc.has_normals() == False, "has_normals() should return False"
+    assert not pc.has_points(), "has_points() should return False"
+    assert not pc.has_colors(), "has_colors() should return False"
+    assert not pc.has_normals(), "has_normals() should return False"
 
 def test_DFPointCloud_add_points():
     point_pc_1 = [(0, 0, 0)]
@@ -198,7 +198,7 @@ def test_DFPointCloud_compute_distance():
     normal_pc_2 = [(0, 0, 1)]
     color_pc_1 = [(0, 0, 0)]
     color_pc_2 = [(0, 0, 0)]
-    
+
     pc_1 = dfb.dfb_geometry.DFPointCloud(point_pc_1, normal_pc_1, color_pc_1)
     pc_2 = dfb.dfb_geometry.DFPointCloud(point_pc_2, normal_pc_2, color_pc_2)
 
@@ -271,7 +271,6 @@ def test_DFTransform_init():
     assert t is not None, "DFTransformation should be initialized successfully"
 
 def test_DFTransform_read_write(create_DFPointCloudSampleRoof):
-    pc = create_DFPointCloudSampleRoof
     t = dfb.dfb_transformation.DFTransformation()
 
     matrix = t.transformation_matrix
@@ -312,12 +311,12 @@ def test_DFRegistration_pure_translation(create_two_DFPointCloudSphere):
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(sphere_1, sphere_2)
     df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(sphere_1, sphere_2, max_correspondence_distance=20)
     df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(sphere_1, sphere_2, max_correspondence_distance=20)
-    
+
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
-    
+
 
 def test_DFRegistration_rotation_bunny(create_two_DFPointCloudBunny):
 
@@ -359,7 +358,7 @@ def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
         assert abs(df_transformation_result.transformation_matrix[0][2] - 0.5) < 0.2, "The rotation part of transformation matrix should be close to the transposed rotation matrix initially applied"
 
     bunny_1 ,bunny_2 = create_two_DFPointCloudBunny
-   
+
     transform = dfb.dfb_transformation.DFTransformation()
     transform.transformation_matrix = [[0.866, 0.0, 0.5, 0.1],
                                 [0.0, 1.0, 0.0, 0.1],
@@ -372,13 +371,13 @@ def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(bunny_1, bunny_2)
     df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(bunny_1, bunny_2)
     df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(bunny_1, bunny_2)
-    
+
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
     make_assertions(df_transformation_result_o3dicp)
     make_assertions(df_transformation_result_o3dgicp)
 
-    
+
 #------------------------------------------------------------------------------
 # dfb_segmentation namespace
 #------------------------------------------------------------------------------
@@ -386,9 +385,9 @@ def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
 def test_DFPlaneSegmentation_separate_plans(create_DFPointCloudTwoSeparatePlanes):
     pc = create_DFPointCloudTwoSeparatePlanes
 
-    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, 
-                                                                     normal_threshold_degree=5, 
-                                                                     min_cluster_size=100, 
+    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc,
+                                                                     normal_threshold_degree=5,
+                                                                     min_cluster_size=100,
                                                                      knn_neighborhood_size=20)
 
     assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
@@ -396,11 +395,11 @@ def test_DFPlaneSegmentation_separate_plans(create_DFPointCloudTwoSeparatePlanes
 def test_DFPlaneSegmentation_connected_plans(create_DFPointCloudTwoConnectedPlanes):
     pc = create_DFPointCloudTwoConnectedPlanes
 
-    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc, 
-                                                                     normal_threshold_degree=5, 
-                                                                     min_cluster_size=100, 
+    segments = dfb.dfb_segmentation.DFSegmentation.segment_by_normal(pc,
+                                                                     normal_threshold_degree=5,
+                                                                     min_cluster_size=100,
                                                                      knn_neighborhood_size=20)
-    
+
     assert len(segments) == 2, "DFPlaneSegmentation should return 2 segments"
 
 if __name__ == "__main__":

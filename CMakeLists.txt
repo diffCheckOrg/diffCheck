@@ -137,6 +137,7 @@ if (BUILD_PYTHON_MODULE)
     set(PYBINDMODULE_NAME diffcheck_bindings)
     set(PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck)
     set(TARGET_DLL_PYPI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/gh/diffCheck/diffCheck/dlls)
+    set(SPHINX_DOC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc)
 
     download_submodule_project(pybind11)
     add_subdirectory(deps/pybind11)
@@ -162,6 +163,13 @@ if (BUILD_PYTHON_MODULE)
         ${PYPI_DIR}
         )
     copy_dlls(${TARGET_DLL_PYPI_DIR} ${PYBINDMODULE_NAME})
+    # copy the pyd/dlls for the sphinx documentation
+    add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:${PYBINDMODULE_NAME}>
+        ${SPHINX_DOC_DIR}
+        )
+    copy_dlls(${SPHINX_DOC_DIR} ${PYBINDMODULE_NAME})
 endif()
 
 #--------------------------------------------------------------------------
@@ -170,4 +178,3 @@ endif()
 if(BUILD_TESTS)
     include(tests)
 endif()
-

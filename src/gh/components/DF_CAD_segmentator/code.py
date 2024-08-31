@@ -1,14 +1,10 @@
 #! python3
 
-import System
 import typing
 
-import Rhino
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
-import Grasshopper as gh
-from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
 import diffCheck.df_geometries
@@ -16,7 +12,6 @@ from diffCheck.diffcheck_bindings import dfb_segmentation
 
 from diffCheck import df_cvt_bindings
 
-import numpy as np
 
 
 class DFCADSegmentator(component):
@@ -26,19 +21,9 @@ class DFCADSegmentator(component):
         i_angle_threshold : float,
         i_association_threshold : float
     ) -> rg.PointCloud:
-        """
-        @param i_meshes : the beams (to be converted)
-        @param i_angle_threshold : from 0 to 1, it's the sin value. The closer to 0 the less permissive and viceversa to 1.
-        @param i_association_threshold: from 0 to infinite. By default 0.5. The closer to 0 the less permissive your point 
-        inclusion will be, the higher the value the opposite.
-
-        @return o_clusters : the clusters of the beams
-        """
-        # the final rhino cloud clusters associated to the beams
         o_clusters = []
-        # the df cloud clusters
         df_clusters = []
-        # we make a deepcopy of the input clouds because 
+        # we make a deepcopy of the input clouds
         df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
 
         df_beams = i_assembly.beams
@@ -89,8 +74,6 @@ class DFCADSegmentator(component):
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold
             )
-        
-        
 
         o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 

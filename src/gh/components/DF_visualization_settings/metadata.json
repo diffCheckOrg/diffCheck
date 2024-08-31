@@ -26,6 +26,18 @@
                 "typeHintID": "str"
             },
             {
+                "name": "i_palette",
+                "nickname": "i_palette",
+                "description": "Select a color palette to map the values to",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
                 "name": "i_upper_threshold",
                 "nickname": "i_upper_threshold",
                 "description": "Thresholds the values with a maximum value",
@@ -48,18 +60,6 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "float"
-            },
-            {
-                "name": "i_palette",
-                "nickname": "i_palette",
-                "description": "Select a color palette to map the values to",
-                "optional": false,
-                "allowTreeAccess": false,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "str"
             },
             {
                 "name": "i_legend_height",

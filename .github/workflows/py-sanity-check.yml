@@ -1,0 +1,42 @@
+name: py-sanity-checks
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup conda environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        python-version: 3.9.1
+    - name: Cache conda environment cache
+      uses: actions/cache@v2
+      with:
+        path: C:\Miniconda\envs\diff_check
+        key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-
+      id: cache-conda
+    - name: Create diff_check conda environment if not cached
+      if: steps.cache-conda.outputs.cache-hit != 'true'
+      run: |
+          conda env create -f environment.yml
+
+    - name: Cache pre-commit hooks
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pre-commit
+        key: ${{ runner.os }}-precommit-${{ hashFiles('.pre-commit-config.yaml') }}
+    - name: Install pre-commit
+      run: pip install pre-commit
+    - name: Run pre-commit
+      run: conda run --name diff_check --no-capture-output pre-commit run --all-files

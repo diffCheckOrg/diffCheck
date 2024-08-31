@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Style guide &#8212; DiffCheck  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css?v=3cbd6ad6" />
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'style';</script>
+    <link rel="icon" href="_static/logo_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DFTesting" href="testing.html" />
+    <link rel="prev" title="Development environment" href="development_env.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo_sphinx.png" class="logo__image only-light" alt="DiffCheck  documentation - Home"/>
+    <script>document.write(`<img src="_static/logo_sphinx.png" class="logo__image only-dark" alt="DiffCheck  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing diffCheck</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">diffCheck tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key-concepts.html">Key-concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pre-processing.html">Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assembly_intro.html">DfAssembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segmentation_intro.html">Segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_error_intro.html">Compute cloud-CAD error</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="gh_components.html">DiffCheck Gh Components</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFBuildAssembly.html"><code class="docutils literal notranslate"><span class="pre">DFBuildAssembly</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCADSegmentator.html"><code class="docutils literal notranslate"><span class="pre">DFCADSegmentator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudCloudDistance.html"><code class="docutils literal notranslate"><span class="pre">DFCloudCloudDistance</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudMeshDistance.html"><code class="docutils literal notranslate"><span class="pre">DFCloudMeshDistance</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudNormalEstimator.html"><code class="docutils literal notranslate"><span class="pre">DFCloudNormalEstimator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudSizeDownsample.html"><code class="docutils literal notranslate"><span class="pre">DFCloudSizeDownsample</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudUniformDownsample.html"><code class="docutils literal notranslate"><span class="pre">DFCloudVoxelDownsample</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudVoxelDownsample.html"><code class="docutils literal notranslate"><span class="pre">DFCloudUniformDownsample</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCsvExporter.html"><code class="docutils literal notranslate"><span class="pre">DFCsvExporter</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFDeconstructAssembly.html"><code class="docutils literal notranslate"><span class="pre">DFDeconstructAssembly</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFDeconstructBeam.html"><code class="docutils literal notranslate"><span class="pre">DFDeconstructBeam</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFFastGlobalRegistration.html"><code class="docutils literal notranslate"><span class="pre">DFFastGlobalRegistration</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFICPRegistration.html"><code class="docutils literal notranslate"><span class="pre">DFICPRegistration</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFJointSegmentator.html"><code class="docutils literal notranslate"><span class="pre">DFJointSegmentator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFLoadCloudFromFile.html"><code class="docutils literal notranslate"><span class="pre">DFLoadCloudFromFile</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFLoadMeshFromFile.html"><code class="docutils literal notranslate"><span class="pre">DFMeshToCloud</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFMeshToCloud.html"><code class="docutils literal notranslate"><span class="pre">DFLoadMeshFromFile</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFCloudNormalSegmentator.html"><code class="docutils literal notranslate"><span class="pre">DFCloudNormalSegmentator</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFRANSACGlobalRegistration.html"><code class="docutils literal notranslate"><span class="pre">DFRANSACGlobalRegistration</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFTester.html"><code class="docutils literal notranslate"><span class="pre">DFTester</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFVisualization.html"><code class="docutils literal notranslate"><span class="pre">DFVisualization</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFVisualizationSettings.html"><code class="docutils literal notranslate"><span class="pre">DFVisualizationSettings</span></code> component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gh_DFXMLExporter.html"><code class="docutils literal notranslate"><span class="pre">DFXMLExporter</span></code> component</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further resources</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="df_architecture.html">diffCheck architecture</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="diffCheck_PythonAPI.html">diffCheck Python API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df-b_geometries.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df-b_geometries</span></code> modules</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_joint_detector.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_joint_detector</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_error_estimation.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_error_estimation</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_visualization.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_visualization</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_cvt_bindings.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_cvt_bindings</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_transformations.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_transformations</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.df_util.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.df_util</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.dfb_registrations.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.dfb_registrations</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffCheck.dfb_segmentation.html"><code class="docutils literal notranslate"><span class="pre">diffCheck.dfb_segmentation</span></code> module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="dev_documentation.html">Developer documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development_env.html">Development environment</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Style guide</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="testing.html">DFTesting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="change_log.html">Change log</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/diffCheckOrg/diffCheck" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/style.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Style guide</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Style guide</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git">Git</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#github-commit-convetion">GitHub commit convetion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-submodule">Delete submodule</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#py-sanity-check">Py sanity check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-grasshopper-components">Python Grasshopper Components</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#c">C++</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-synthax-convention">Naming &amp; synthax convention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#only-smart-or-unique-pointers">Only smart (or unique) pointers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-with-gdb">Debugging with GDB</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doxygen">Doxygen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logging">Logging</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#i-o-and-basic-datatypes">I/O and basic datatypes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizer">Visualizer</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="style-guide">
+<span id="id1"></span><h1>Style guide<a class="headerlink" href="#style-guide" title="Link to this heading">#</a></h1>
+<p>Here’s you can find some documentations and guidelines to contribute to the source code of DF.</p>
+<hr class="docutils" />
+<section id="git">
+<span id="git-module"></span><h2>Git<a class="headerlink" href="#git" title="Link to this heading">#</a></h2>
+<section id="github-commit-convetion">
+<span id="git-commit-system"></span><h3>GitHub commit convetion<a class="headerlink" href="#github-commit-convetion" title="Link to this heading">#</a></h3>
+<p>All commits need to be labeled with a tag among these:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;ADD:&lt;description&gt;&quot;</span>         <span class="o">&lt;---</span> <span class="k">for</span> <span class="n">adding</span> <span class="n">new</span> <span class="n">elements</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;FIX:&lt;description&gt;&quot;</span>         <span class="o">&lt;---</span> <span class="k">for</span> <span class="n">fixing</span> <span class="p">(</span><span class="n">errors</span><span class="p">,</span> <span class="n">typos</span><span class="p">)</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;FLASH:&lt;description&gt;&quot;</span>       <span class="o">&lt;---</span> <span class="n">quick</span> <span class="n">checkpoint</span> <span class="n">before</span> <span class="n">refactoring</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;MILESTONE:&lt;description&gt;&quot;</span>   <span class="o">&lt;---</span> <span class="k">for</span> <span class="n">capping</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">development</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;CAP:&lt;description&gt;&quot;</span>         <span class="o">&lt;---</span> <span class="k">for</span> <span class="k">for</span> <span class="n">less</span> <span class="n">important</span> <span class="n">milestones</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;UPDATE:&lt;description&gt;&quot;</span>      <span class="o">&lt;---</span> <span class="k">for</span> <span class="n">moddification</span> <span class="n">to</span> <span class="n">the</span> <span class="n">same</span> <span class="n">file</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;MISC:&lt;description&gt;&quot;</span>        <span class="o">&lt;---</span> <span class="k">for</span> <span class="nb">any</span> <span class="n">other</span> <span class="n">reasons</span> <span class="n">to</span> <span class="n">be</span> <span class="n">described</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;WIP:&lt;description&gt;&quot;</span>         <span class="o">&lt;---</span> <span class="k">for</span> <span class="ow">not</span> <span class="n">finished</span> <span class="n">work</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;REFACTOR:&lt;description&gt;&quot;</span>    <span class="o">&lt;---</span> <span class="k">for</span> <span class="n">refactored</span> <span class="n">code</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;MERGE:&lt;description&gt;&quot;</span>       <span class="o">&lt;---</span> <span class="k">for</span> <span class="n">merging</span> <span class="n">operations</span>
+</pre></div>
+</div>
+<p>You can merge few tags e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;WIP-CAP:&lt;description&gt;      &lt;--- for cap moment in not finished work </span>
+</pre></div>
+</div>
+</section>
+<section id="delete-submodule">
+<h3>Delete submodule<a class="headerlink" href="#delete-submodule" title="Link to this heading">#</a></h3>
+<p>To delete a submodule in Win, you need to:</p>
+<ol class="arabic simple">
+<li><p>Delete the relevant section from the <code class="docutils literal notranslate"><span class="pre">.gitmodules</span></code> file. The section would look something like this:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[submodule &quot;submodule_name&quot;]</span>
+<span class="go">    path = submodule_path</span>
+<span class="go">    url = submodule_url</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Stage the <code class="docutils literal notranslate"><span class="pre">.gitmodules</span></code> changes:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git add .gitmodules</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>(optional) Delete the relevant section from <code class="docutils literal notranslate"><span class="pre">.git/config</span></code>. The section would look something like this:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[submodule &quot;submodule_name&quot;]</span>
+<span class="go">    url = submodule_url</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rm</span> <span class="pre">--cached</span> <span class="pre">path_to_submodule</span></code> (no trailing slash).</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">Remove-Item</span> <span class="pre">-Recurse</span> <span class="pre">-Force</span> <span class="pre">.git/modules/path_to_submodule</span></code>.</p></li>
+<li><p>Commit the changes:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git commit -m &quot;Remove a submodule name&quot;</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="python">
+<span id="py-conv"></span><h1>Python<a class="headerlink" href="#python" title="Link to this heading">#</a></h1>
+<section id="py-sanity-check">
+<h2>Py sanity check<a class="headerlink" href="#py-sanity-check" title="Link to this heading">#</a></h2>
+<p>To ensure the code quality we use the following linter and type checker tools:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://mypy.readthedocs.io/en/stable/index.html">mypy</a> for type checking.</p></li>
+<li><p><a class="reference external" href="https://docs.astral.sh/ruff/">Ruff</a> for code quality and style.</p></li>
+</ul>
+</section>
+<section id="python-grasshopper-components">
+<span id="pyghcomp-style"></span><h2>Python Grasshopper Components<a class="headerlink" href="#python-grasshopper-components" title="Link to this heading">#</a></h2>
+<p>Here’s the list of convetion for the Grasshopper components for DF in python:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">i_</span></code> for input parameters: e.g. <code class="docutils literal notranslate"><span class="pre">i_plane</span></code> for a plane input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">o_</span></code> for output parameters: e.g. <code class="docutils literal notranslate"><span class="pre">o_plane</span></code> for a plane output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DF</span></code> for the component name: e.g. <code class="docutils literal notranslate"><span class="pre">DF_tester</span></code> for a tester component and the name of the class should be <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">DFTester(component)</span></code>.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="c">
+<span id="cpp-conv"></span><h1>C++<a class="headerlink" href="#c" title="Link to this heading">#</a></h1>
+<section id="naming-synthax-convention">
+<h2>Naming &amp; synthax convention<a class="headerlink" href="#naming-synthax-convention" title="Link to this heading">#</a></h2>
+<p>Here’s the naming convention for this project:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"> </code>: lowerCamelCase.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">PublicVariable</span></code>: public member of a class</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">m_PrivateVariable</span></code>: Hungarian notation with UpperCamelCase for private class members.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">type</span> <span class="pre">s_StaticVariable</span></code>: Hungarian notation with UpperCamelCase for static members of class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">APP_SPEC</span></code>: Constants with SNAKE_UPPER_CASE.</p></li>
+<li><p>All the other naming uses UpperCamelCase.</p></li>
+</ul>
+<p>Here’s an example:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// do not use using namespace std; we specify the namespace everytime</span>
+<span class="n">std</span><span class="o">::</span><span class="n">foo</span><span class="p">()</span>
+
+<span class="c1">// next line graph style</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">Foo</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* content */</span>
+<span class="p">}</span>
+
+<span class="c1">// structure name uses UpperCamelCase</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">AnExampleStruct</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// structure attribute uses UpperCamelCase</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">Name</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// class name uses UpperCamelCase</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnExampleClass</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">AnExampleClass</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="o">&amp;</span><span class="w"> </span><span class="n">init</span><span class="p">);</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">AnExampleClass</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// member functions use UpperCamelCase</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">PublicMemberFunction</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// local variable uses lowerCamelCase</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">localVariable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="c1">// A field indicator to separate the functions and attributes</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">PublicVariable</span><span class="p">;</span>
+
+<span class="c1">// Private member function block</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="c1">// member functions use UpperCamelCase</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">PrivateMemberFunction</span><span class="p">();</span><span class="w"> </span>
+
+<span class="c1">// Also a field indicator to separate the functions and attributes</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="c1">// private variables uses Hungarian notation with UpperCamelCase</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">m_PrivateVariable</span><span class="p">;</span><span class="w"> </span><span class="c1">// m_VariableName for normal variable</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">s_Instance</span><span class="p">;</span><span class="w"> </span><span class="c1">// s_VariableName for static variable</span>
+<span class="p">};</span>
+
+<span class="c1">// Start headers with </span>
+<span class="cp">#pragma once</span>
+
+<span class="c1">// Start declarations with precompiled headers</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;aiacpch.h&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="only-smart-or-unique-pointers">
+<h2>Only smart (or unique) pointers<a class="headerlink" href="#only-smart-or-unique-pointers" title="Link to this heading">#</a></h2>
+<p>It’s 2024, we can pass on raw pointers. We use smart pointers.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">AnExampleClass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">AnExampleClass</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Or if you really need to use an unique pointer because you don’t want to transfer the ownership of the object, use a shared pointer.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AnExampleClass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">AnExampleClass</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="debugging-with-gdb">
+<h2>Debugging with GDB<a class="headerlink" href="#debugging-with-gdb" title="Link to this heading">#</a></h2>
+<p>We use GDB for debugging. To install GDB on windows, do the following:</p>
+<ol class="arabic simple">
+<li><p>Download the MSYS2 installer from the <a class="reference external" href="https://www.msys2.org/">MSYS2 website</a>.</p></li>
+<li><p>Run the installer and follow the instructions in the <a class="reference external" href="https://www.msys2.org/wiki/MSYS2-installation/">MSYS2 installation guide</a>.</p></li>
+<li><p>Open the MSYS2 terminal and update the core package database:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pacman<span class="w"> </span>-Syu
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Install the GDB debugger:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pacman<span class="w"> </span>-S<span class="w"> </span>mingw-w64-x86_64-gdb
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Add the GDB to the system path in PATH_ENVIRONMENT:</p></li>
+<li><p>Close the terminal sessions you where using and open a new one. Now you can use GDB.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdb<span class="w"> </span><span class="s2">&quot;path-to-executable&quot;</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>use <code class="docutils literal notranslate"><span class="pre">run</span></code> to start the program and <code class="docutils literal notranslate"><span class="pre">quit</span></code> to exit the debugger.
+use <code class="docutils literal notranslate"><span class="pre">break</span></code> to set a breakpoint and <code class="docutils literal notranslate"><span class="pre">continue</span></code> to continue the execution of the program.
+use <code class="docutils literal notranslate"><span class="pre">bt</span></code> to see the backtrace of the program when a segfault occurs.</p>
+</div></blockquote>
+</section>
+<section id="doxygen">
+<h2>Doxygen<a class="headerlink" href="#doxygen" title="Link to this heading">#</a></h2>
+<p>For documentation we use the <a class="reference external" href="https://doxygen.nl/manual/docblocks.html">*JavaDoc” convention</a>.
+Follow <a class="reference external" href="https://developer.lsst.io/cpp/api-docs.html">this guide for documenting the code</a>.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * @brief fill a vector of TSPlanes from a yaml file containing their corners data</span>
+<span class="cm"> * @param filename path to the map.yaml file</span>
+<span class="cm"> * @param planes vector of TSPlane objects</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+</section>
+<section id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Link to this heading">#</a></h2>
+<p>To log use the following MACROS. All the code is contained in <code class="docutils literal notranslate"><span class="pre">log.hh</span></code> and <code class="docutils literal notranslate"><span class="pre">log.cc</span></code>.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">DIFFCHECK_INFO</span><span class="p">(</span><span class="s">&quot;test_core_info&quot;</span><span class="p">);</span>
+<span class="n">DIFFCHECK_WARN</span><span class="p">(</span><span class="s">&quot;test_core_warn&quot;</span><span class="p">);</span>
+<span class="n">DIFFCHECK_ERROR</span><span class="p">(</span><span class="s">&quot;test_core_error&quot;</span><span class="p">);</span>
+<span class="n">DIFFCHECK_FATAL</span><span class="p">(</span><span class="s">&quot;test_core_critical&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The output is like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2024</span>-03-30<span class="w"> </span><span class="m">12</span>:53:29.971<span class="w"> </span><span class="o">(</span><span class="w">   </span><span class="m">0</span>.000s<span class="o">)</span><span class="w"> </span><span class="o">[</span><span class="w">        </span>ADF6D348<span class="o">]</span><span class="w">        </span>diffCheckApp.cc:24<span class="w">    </span>INFO<span class="p">|</span><span class="w"> </span>test_core_info
+<span class="m">2024</span>-03-30<span class="w"> </span><span class="m">12</span>:53:29.972<span class="w"> </span><span class="o">(</span><span class="w">   </span><span class="m">0</span>.000s<span class="o">)</span><span class="w"> </span><span class="o">[</span><span class="w">        </span>ADF6D348<span class="o">]</span><span class="w">        </span>diffCheckApp.cc:25<span class="w">    </span>WARN<span class="p">|</span><span class="w"> </span>test_core_warn
+<span class="m">2024</span>-03-30<span class="w"> </span><span class="m">12</span>:53:29.972<span class="w"> </span><span class="o">(</span><span class="w">   </span><span class="m">0</span>.000s<span class="o">)</span><span class="w"> </span><span class="o">[</span><span class="w">        </span>ADF6D348<span class="o">]</span><span class="w">        </span>diffCheckApp.cc:26<span class="w">     </span>ERR<span class="p">|</span><span class="w"> </span>test_core_error
+<span class="m">2024</span>-03-30<span class="w"> </span><span class="m">12</span>:53:29.972<span class="w"> </span><span class="o">(</span><span class="w">   </span><span class="m">0</span>.000s<span class="o">)</span><span class="w"> </span><span class="o">[</span><span class="w">        </span>ADF6D348<span class="o">]</span><span class="w">        </span>diffCheckApp.cc:27<span class="w">    </span>FATL<span class="p">|</span><span class="w"> </span>test_core_critical
+</pre></div>
+</div>
+<p>The logging can be silenced by setting ON the option in the main <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>.</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">option</span><span class="p">(</span><span class="s">SILENT_LOGGING</span><span class="w"> </span><span class="s2">&quot;Do not log messages in the terminal of on.&quot;</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="i-o-and-basic-datatypes">
+<h2>I/O and basic datatypes<a class="headerlink" href="#i-o-and-basic-datatypes" title="Link to this heading">#</a></h2>
+<p>Here’s how you can import point cloud from file:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;diffCheck/geometry/DFPointCloud.hh&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;diffCheck/geometry/DFMesh.hh&quot;</span>
+
+<span class="c1">// clouds</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">geometry</span><span class="o">::</span><span class="n">DFPointCloud</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dfPointCloudPtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">geometry</span><span class="o">::</span><span class="n">DFPointCloud</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">pathMesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sa">R</span><span class="s">&quot;</span><span class="dl">(</span><span class="s">C:\Users\yourfilecloudpath.ply</span><span class="dl">)</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="n">dfPointCloudPtr</span><span class="o">-&gt;</span><span class="n">LoadFromPLY</span><span class="p">(</span><span class="n">pathCloud</span><span class="p">);</span>
+
+<span class="c1">// mesh</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">geometry</span><span class="o">::</span><span class="n">DFMesh</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dfMeshPtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">geometry</span><span class="o">::</span><span class="n">DFMesh</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">pathCloud</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sa">R</span><span class="s">&quot;</span><span class="dl">(</span><span class="s">C:\Users\yourfilemeshpath.ply</span><span class="dl">)</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="n">dfMeshPtr</span><span class="o">-&gt;</span><span class="n">LoadFromPLY</span><span class="p">(</span><span class="n">pathMesh</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="visualizer">
+<h2>Visualizer<a class="headerlink" href="#visualizer" title="Link to this heading">#</a></h2>
+<p>Clouds and mesh can be visualized like this:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;diffCheck/visualizer/DFVisualizer.hh&quot;</span>
+
+<span class="c1">// clouds</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">visualizer</span><span class="o">::</span><span class="n">DFVisualizer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dfVisualizerPtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">visualizer</span><span class="o">::</span><span class="n">DFVisualizer</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">dfVisualizerPtr</span><span class="o">-&gt;</span><span class="n">AddPointCloud</span><span class="p">(</span><span class="n">dfPointCloudPtr</span><span class="p">);</span>
+<span class="n">dfVisualizerPtr</span><span class="o">-&gt;</span><span class="n">Run</span><span class="p">();</span>
+
+<span class="c1">// mesh</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">visualizer</span><span class="o">::</span><span class="n">DFVisualizer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dfVisualizerPtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">diffCheck</span><span class="o">::</span><span class="n">visualizer</span><span class="o">::</span><span class="n">DFVisualizer</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">dfVisualizerPtr</span><span class="o">-&gt;</span><span class="n">AddMesh</span><span class="p">(</span><span class="n">dfMeshPtr</span><span class="p">);</span>
+<span class="n">dfVisualizerPtr</span><span class="o">-&gt;</span><span class="n">Run</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="development_env.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Development environment</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="testing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">DFTesting</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Style guide</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git">Git</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#github-commit-convetion">GitHub commit convetion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-submodule">Delete submodule</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#py-sanity-check">Py sanity check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-grasshopper-components">Python Grasshopper Components</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#c">C++</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-synthax-convention">Naming &amp; synthax convention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#only-smart-or-unique-pointers">Only smart (or unique) pointers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-with-gdb">Debugging with GDB</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doxygen">Doxygen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logging">Logging</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#i-o-and-basic-datatypes">I/O and basic datatypes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizer">Visualizer</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The DiffCheck authors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, The DiffCheck Authors. We use ReadTheDocs, SPhinx, SphinxBookTheme and Jax theme-flavoured which are copyright their respective authors..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

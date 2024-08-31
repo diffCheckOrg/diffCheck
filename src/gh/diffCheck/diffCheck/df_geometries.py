@@ -1,7 +1,10 @@
 import os
 from datetime import datetime
 from dataclasses import dataclass
+
 import typing
+from typing import Optional
+
 import uuid
 
 import Rhino
@@ -31,6 +34,8 @@ class DFVertex:
         self.y = self.y or 0.0
         self.z = self.z or 0.0
 
+        self.__uuid = uuid.uuid4().int
+
     def __repr__(self):
         return f"Vertex: X={self.x}, Y={self.y}, Z={self.z}"
 
@@ -41,6 +46,9 @@ class DFVertex:
         if isinstance(other, DFVertex):
             return self.x == other.x and self.y == other.y and self.z == other.z
         return False
+
+    def deepcopy(self):
+        return DFVertex(self.x, self.y, self.z)
 
     @classmethod
     def from_rg_point3d(cls, point: rg.Point3d):
@@ -60,6 +68,10 @@ class DFVertex:
         """
         return rg.Point3d(self.x, self.y, self.z)
 
+    @property
+    def uuid(self):
+        return self.__uuid
+
 
 @dataclass
 class DFFace:
@@ -69,16 +81,14 @@ class DFFace:
 
     # just as breps a first outer loop and then inner loops of DFVertices
     all_loops: typing.List[typing.List[DFVertex]]
-    joint_id: int = None
+    joint_id: Optional[int] = None
 
     def __post_init__(self):
-        if len(self.all_loops[0]) < 3:
-            raise ValueError("A face must have at least 3 vertices")
         self.all_loops = self.all_loops
 
         self.joint_id = self.joint_id
         self.__is_joint = False
-        self.__id = uuid.uuid4().int
+        self.__uuid = uuid.uuid4().int
 
         # if df_face is created from a rhino brep face, we store the rhino brep face
         self._rh_brepface = None
@@ -86,7 +96,7 @@ class DFFace:
         self.is_cylinder = False
 
     def __repr__(self):
-        return f"Face id: {len(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
+        return f"Face id: {(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
 
     def __hash__(self):
         outer_loop = tuple(
@@ -101,12 +111,20 @@ class DFFace:
 
     def __eq__(self, other):
         if isinstance(other, DFFace):
-            # check if 
+            # check if
             return self.all_loops == other.all_loops
         return False
 
+    def deepcopy(self):
+        loop_copy: typing.List[typing.List[DFVertex]] = []
+        for loop in self.all_loops:
+            loop_copy.append([vertex.deepcopy() for vertex in loop])
+        return DFFace(loop_copy, self.joint_id)
+
     @classmethod
-    def from_brep_face(cls, brep_face: rg.BrepFace, joint_id: int = None):
+    def from_brep_face(cls,
+        brep_face: rg.BrepFace,
+        joint_id: Optional[int] = None):
         """
         Create a DFFace from a Rhino Brep face
 
@@ -115,6 +133,7 @@ class DFFace:
         :return face: The DFFace object
         """
         all_loops = []
+        df_face: DFFace = cls([], joint_id)
 
         # if brep_face.IsCylinder():
             
@@ -124,7 +143,6 @@ class DFFace:
         #     return df_face
 
         for idx, loop in enumerate(brep_face.Loops):
-            loop_trims = loop.Trims
             loop_curve = loop.To3dCurve()
             loop_curve = loop_curve.ToNurbsCurve()
             loop_vertices = loop_curve.Points
@@ -149,7 +167,7 @@ class DFFace:
             return self._rh_brepface
 
         if self.is_cylinder:
-            ghenv.Component.AddRuntimeMessage(
+            ghenv.Component.AddRuntimeMessage(  # noqa: F821
                 RML.Warning, "The DFFace was a cylinder created from scratch \n \
                  , it cannot convert to brep.")
 
@@ -180,7 +198,7 @@ class DFFace:
         mesh_parts = Rhino.Geometry.Mesh.CreateFromBrep(
                 self.to_brep_face().DuplicateFace(True),
                 Rhino.Geometry.MeshingParameters.QualityRenderMesh)
-        
+
         for mesh_part in mesh_parts:
             mesh.Append(mesh_part)
         mesh.Faces.ConvertQuadsToTriangles()
@@ -197,8 +215,8 @@ class DFFace:
         return False
 
     @property
-    def id(self):
-        return self.__id
+    def uuid(self):
+        return self.__uuid
 
 @dataclass
 class DFJoint:
@@ -214,8 +232,14 @@ class DFJoint:
         self.id = self.id
         self.faces = self.faces or []
 
+        # this is an automatic identifier
+        self.__uuid = uuid.uuid4().int
+
     def __repr__(self):
         return f"Joint id: {self.id}, Faces: {len(self.faces)}"
+
+    def deepcopy(self):
+        return DFJoint(self.id, self.faces.deepcopy())
 
     def to_brep(self):
         """
@@ -223,7 +247,7 @@ class DFJoint:
         """
         brep = rg.Brep()
         for face in self.faces:
-            brep.Append(face.to_brep_face())
+            brep.Append(face.to_brep_face().ToBrep())
         brep.Compact()
         return brep
 
@@ -246,6 +270,11 @@ class DFJoint:
         mesh.Compact()
         return mesh
 
+    @property
+    def uuid(self):
+        """ It retrives the automatic identifier, not the one of the joint in the beam """
+        return self.__uuid
+
 @dataclass
 class DFBeam:
     """
@@ -263,6 +292,15 @@ class DFBeam:
 
         self._joints = []
 
+        # this should be used like a hash identifier
+        self.__uuid = uuid.uuid4().int
+        # this index is assigned only when the an beam is added to an assembly
+        self._index_assembly = None
+
+        self._center = None
+
+    def deepcopy(self):
+        return DFBeam(self.name, [face.deepcopy() for face in self.faces])
         self.__id = uuid.uuid4().int
         self.is_cylinder = None
 
@@ -287,7 +325,10 @@ class DFBeam:
         """
         brep = rg.Brep()
         for face in self.faces:
-            brep.Append(face.to_brep_face())
+            if isinstance(face.to_brep_face(), rg.Brep):
+                brep.Append(face.to_brep_face())
+            else:
+                brep.Append(face.to_brep_face().ToBrep())
         brep.Compact()
 
         return brep
@@ -314,8 +355,12 @@ class DFBeam:
         return f"Beam: {self.name}, Faces: {len(self.faces)}"
 
     @property
-    def id(self):
-        return self.__id
+    def uuid(self):
+        return self.__uuid
+
+    @property
+    def number_joints(self):
+        return max([joint.id for joint in self.joints]) + 1
 
     @property
     def joint_faces(self):
@@ -337,6 +382,17 @@ class DFBeam:
             temp_faces = [face for face in temp_faces if face.joint_id != joint_id]
         return joints
 
+    @property
+    def center(self):
+        self._center = self.to_brep().GetBoundingBox(True).Center
+        return self._center
+
+    @property
+    def index_assembly(self):
+        if self._index_assembly is None:
+            raise ValueError("The beam is not added to an assembly")
+        return self._index_assembly
+
 
 @dataclass
 class DFAssembly:
@@ -349,11 +405,16 @@ class DFAssembly:
 
     def __post_init__(self):
         self.beams = self.beams
+        for idx, beam in enumerate(self.beams):
+            beam._index_assembly = idx
+
+        self.__uuid = uuid.uuid4().int
+
         self.name = self.name or "Unnamed Assembly"
 
         self._all_jointfaces: typing.List[DFFace] = []
         self._all_sidefaces: typing.List[DFFace] = []
-
+        self._all_vertices: typing.List[DFVertex] = []
         self._all_joints: typing.List[DFJoint] = []
 
         for beam in self.beams:
@@ -362,15 +423,29 @@ class DFAssembly:
                 break
         else:
             self.contains_cylinders = False
-        
+
+        self._mass_center = None
+
     def __repr__(self):
         return f"Assembly: {self.name}, Beams: {len(self.beams)}"
 
+    def deepcopy(self):
+        """
+        Create a deep copy of the assembly
+        """
+        beams = [beam.deepcopy() for beam in self.beams]
+        return DFAssembly(beams, self.name)
+
     def add_beam(self, beam: DFBeam):
+        beam._index_assembly = len(self.beams)
         self.beams.append(beam)
 
-    def remove_beam(self, beam_id: int):
-        self.beams = [beam for beam in self.beams if beam.id != beam_id]
+    def remove_beam(self, beam_assembly_index: int):
+        """ Remove a beam from the assembly """
+        for idx, beam in enumerate(self.beams):
+            if beam.index_assembly == beam_assembly_index:
+                self.beams.pop(idx)
+                break
 
     def to_xml(self):
         """
@@ -381,7 +456,7 @@ class DFAssembly:
         """
         root = ET.Element("DFAssembly")
         root.set("name", self.name)
-        # dfbeams
+        # dfbeamsgra
         for beam in self.beams:
             beam_elem = ET.SubElement(root, "DFBeam")
             beam_elem.set("name", beam.name)
@@ -411,7 +486,6 @@ class DFAssembly:
                     facerhmesh_face_elem.set("v3", str(face.C))
                     facerhmesh_face_elem.set("v4", str(face.D))
 
-        tree = ET.ElementTree(root)
         xml_string = ET.tostring(root, encoding="unicode")
         dom = parseString(xml_string)
         pretty_xml = dom.toprettyxml()
@@ -432,19 +506,46 @@ class DFAssembly:
             f.write(pretty_xml)
 
     @property
+    def total_number_joints(self):
+        return max([joint.id for joint in self.all_joints]) + 1
+
+    @property
     def all_joint_faces(self):
+        self._all_jointfaces = []
         for beam in self.beams:
             self._all_jointfaces.extend(beam.joint_faces)
         return self._all_jointfaces
 
     @property
     def all_side_faces(self):
+        self._all_sidefaces = []
         for beam in self.beams:
             self._all_sidefaces.extend(beam.side_faces)
         return self._all_sidefaces
 
     @property
     def all_joints(self):
+        self._all_joints = []
         for beam in self.beams:
             self._all_joints.extend(beam.joints)
         return self._all_joints
+
+    @property
+    def all_vertices(self):
+        self._all_vertices = []
+        for beam in self.beams:
+            for face in beam.faces:
+                self._all_vertices.extend(face.all_loops[0])
+        return self._all_vertices
+
+    @property
+    def mass_center(self):
+        # calculate the mass center of the assembly
+        df_vertices = self.all_vertices
+        rh_vertices = [vertex.to_rg_point3d() for vertex in df_vertices]
+        self._mass_center = rg.BoundingBox(rh_vertices).Center
+        return self._mass_center
+
+    @property
+    def uuid(self):
+        return self.__uuid
