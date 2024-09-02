@@ -57,6 +57,7 @@ int main()
   {
     std::shared_ptr<diffCheck::geometry::DFPointCloud> unifiedSegment = std::make_shared<diffCheck::geometry::DFPointCloud>();
     unifiedSegment = diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes(
+      true,
       meshSrc[i], 
       segments, 
       .2, 
@@ -64,7 +65,8 @@ int main()
     unifiedSegments.push_back(unifiedSegment);
   }
 
-  diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters(segments, 
+  diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters(true, 
+    segments, 
     unifiedSegments, 
     meshSrc,
     .2, 
