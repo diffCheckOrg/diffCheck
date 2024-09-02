@@ -121,6 +121,16 @@ class JointDetector:
         Bounding_geometry.Transform(xform)
 
         # check if face's centers are inside the OBB
+        '''
+        the structure of the disctionnary is as follows:
+        {
+            face_id: (face, is_inside)
+            ...
+        }   
+            face_id is int
+            face is Rhino.Geometry.BrepFace
+            is_inside is bool
+        '''
         faces = {}
         for idx, face in enumerate(self.brep.Faces):
             face_centroid = rg.AreaMassProperties.Compute(face).Centroid
@@ -128,10 +138,30 @@ class JointDetector:
             projected_centroid = face.PointAt(coord[1], coord[2])
             faces[idx] = (face, Bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True))
         
+        # compute the adjacency list of each face
+        adjacency_of_faces = {}
+        '''
+        the structure of the disctionnary is as follows:
+        {
+            face_id: (face, [adj_face_id_1, adj_face_id_2, ...])
+            ...
+        }   
+            face_id is int
+            face is Rhino.Geometry.BrepFace
+            adj_face_id_1, adj_face_id_2, ... are int
+        '''
+        for idx, face in faces.items():
+            if not face[1]:
+                continue
+            adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and adj_face != idx])
+        adjacency_of_faces = diffCheck.df_util.merge_shared_indexes(adjacency_of_faces)
+        new_joint_face_ids = [[key] + value[1] for key, value in adjacency_of_faces.items()]
+        print("new_joint_face_ids: ",new_joint_face_ids)
+
         # get the proximity faces of the joint faces
         joint_face_ids = [[key] + [adj_face for adj_face in value[0].AdjacentFaces() if faces[adj_face][1] and adj_face != key] for key, value in faces.items() if value[1]]
-
-        face_ids = self._assign_ids(joint_face_ids)
+        print("joint_face_ids: ",joint_face_ids)
+        face_ids = self._assign_ids(new_joint_face_ids)
 
         self._faces = [(face, face_ids[idx]) for idx, face in enumerate(self.brep.Faces)]
 
