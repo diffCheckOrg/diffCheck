@@ -199,7 +199,7 @@ def merge_shared_indexes(original_dict):
                     keys_with_duplicates[key] = []
                 keys_with_duplicates[key].append(other_key)
     print("keys with duplicates; ",keys_with_duplicates)
-    
+
     # # Remove the cross-references
     # for first_key, first_duplicates in keys_with_duplicates.items():
     #     for second_key, second_duplicates in keys_with_duplicates.items():
@@ -210,5 +210,5 @@ def merge_shared_indexes(original_dict):
     # for key, duplicates in keys_with_duplicates.items():
     #     if key in duplicates:
     #         merged_dict[key] = (merged_dict[key][0], [index for index in merged_dict[key][1] if index != key])
-            
+
     return merged_dict

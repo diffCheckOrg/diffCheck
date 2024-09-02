@@ -136,7 +136,7 @@ class DFFace:
         df_face: DFFace = cls([], joint_id)
 
         # if brep_face.IsCylinder():
-            
+
         #     df_face = cls([[[], [], []]], joint_id)
         #     cls.is_cylinder = True
         #     df_face._rh_brepface = brep_face
@@ -298,11 +298,12 @@ class DFBeam:
         self._index_assembly = None
 
         self._center = None
+        self.__id = uuid.uuid4().int
+        self.is_cylinder = None
 
     def deepcopy(self):
         return DFBeam(self.name, [face.deepcopy() for face in self.faces])
-        self.__id = uuid.uuid4().int
-        self.is_cylinder = None
+
 
     @classmethod
     def from_brep_face(cls, brep):

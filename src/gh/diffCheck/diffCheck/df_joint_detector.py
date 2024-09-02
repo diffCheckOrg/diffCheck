@@ -50,7 +50,7 @@ class JointDetector:
     def is_cylinder_beam(self):
         """
             Detects if the brep is a cylinder beam.
-            This is done by finding the largest cylinder in the brep, 
+            This is done by finding the largest cylinder in the brep,
             and looking if all brep vertices are inside the cylinder.
 
             :return: True if the brep is detected as a cylinder beam, False otherwise
@@ -63,7 +63,7 @@ class JointDetector:
             if face.IsCylinder():
                 open_cylinder = face.ToBrep()
                 open_cylinders.append(open_cylinder)
-        
+
         # find largest cylinder
         largest_cylinder = None
         largest_srf = 0
@@ -72,17 +72,17 @@ class JointDetector:
                 largest_srf = cylinder.GetArea()
                 print(largest_srf)
                 largest_cylinder = cylinder.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance)
-        
+
         # Check if the cylinder exists
         if largest_cylinder is None:
             return False, None
-        
+
         # check if all vertices are inside the cylinder
         for vertex in self.brep.Vertices:
             if not largest_cylinder.IsPointInside(vertex.Location, sc.doc.ModelAbsoluteTolerance, False):
                 return False, None
         return True, largest_cylinder
-            
+
 
     def run(self):
         """
@@ -94,7 +94,7 @@ class JointDetector:
         """
         # check if the brep is a cylinder beam
         is_cylinder_beam, cylinder = self.is_cylinder_beam()
-            
+
         # brep vertices to cloud
         df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
         df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
@@ -126,7 +126,7 @@ class JointDetector:
         {
             face_id: (face, is_inside)
             ...
-        }   
+        }
             face_id is int
             face is Rhino.Geometry.BrepFace
             is_inside is bool
@@ -137,7 +137,7 @@ class JointDetector:
             coord = face.ClosestPoint(face_centroid)
             projected_centroid = face.PointAt(coord[1], coord[2])
             faces[idx] = (face, Bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True))
-        
+
         # compute the adjacency list of each face
         adjacency_of_faces = {}
         '''
@@ -145,7 +145,7 @@ class JointDetector:
         {
             face_id: (face, [adj_face_id_1, adj_face_id_2, ...])
             ...
-        }   
+        }
             face_id is int
             face is Rhino.Geometry.BrepFace
             adj_face_id_1, adj_face_id_2, ... are int
