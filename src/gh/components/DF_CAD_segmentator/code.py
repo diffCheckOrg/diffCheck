@@ -78,12 +78,3 @@ class DFCADSegmentator(component):
         o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
         return o_clusters
-
-# if __name__ == "__main__":
-#     com = DFCADSegmentator()
-#     o_clusters, rh_beams_meshes = com.RunScript(
-#         i_clouds,
-#         i_assembly,
-#         i_angle_threshold,
-#         i_association_threshold
-#         )
