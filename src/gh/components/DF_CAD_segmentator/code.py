@@ -54,7 +54,7 @@ class DFCADSegmentator(component):
                     association_threshold=i_association_threshold
                 )
             df_clusters.append(df_asssociated_cluster)
-    
+
         # clean the unassociated clusters depending on the type of assembly
         if i_assembly.contains_cylinders:
             dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
