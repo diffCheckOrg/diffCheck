@@ -299,7 +299,7 @@ class DFBeam:
 
         self._center = None
         self.__id = uuid.uuid4().int
-        self.is_cylinder = None
+        # self.is_cylinder = None
 
     def deepcopy(self):
         return DFBeam(self.name, [face.deepcopy() for face in self.faces])
