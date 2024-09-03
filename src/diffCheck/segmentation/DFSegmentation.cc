@@ -124,6 +124,10 @@ namespace diffCheck::segmentation
                 double faceDistance = std::numeric_limits<double>::max();
                 std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
 
+                std::vector<Eigen::Vector3d> minmax = face->GetTightBoundingBox();
+                Eigen::Vector3d min = minmax[0];
+                Eigen::Vector3d max = minmax[1];
+
                 if (clusters.size() == 0)
                 {
                     DIFFCHECK_WARN("No clusters to associate with the mesh faces. Returning an empty point cloud.");
@@ -157,7 +161,8 @@ namespace diffCheck::segmentation
                     // we consider the distance to the cylinder axis, not the cylinder center
                     Eigen::Vector3d projectedSegmentCenter = (segmentCenter - cylinderCenter).dot(cylinderAxis) * cylinderAxis + cylinderCenter;
                     double currentDistance = (cylinderCenter - projectedSegmentCenter).norm();
-                    if (std::abs(cylinderAxis.dot(segmentNormal)) < angleThreshold && currentDistance < faceDistance)
+                    double absoluteDistance = (segmentCenter - cylinderCenter).norm();
+                    if (std::abs(cylinderAxis.dot(segmentNormal)) < angleThreshold && currentDistance < faceDistance && absoluteDistance < (max - min).norm()*associationThreshold)
                     {
                         correspondingSegment = segment;
                         faceDistance = currentDistance;
@@ -363,19 +368,24 @@ namespace diffCheck::segmentation
                         Eigen::Vector3d faceNormal = Eigen::Vector3d::Zero();
                         if (isCylinder)
                         {
+                            std::vector<Eigen::Vector3d> minmax = meshFace->GetTightBoundingBox();
+                            Eigen::Vector3d min = minmax[0];
+                            Eigen::Vector3d max = minmax[1];
+
                             std::tuple<Eigen::Vector3d, Eigen::Vector3d> centerAndAxis = mesh[0]->GetCenterAndAxis();
                             Eigen::Vector3d center = std::get<0>(centerAndAxis);
                             Eigen::Vector3d axis = std::get<1>(centerAndAxis);
                             double dotProduct = clusterNormal.dot(axis);
                             dotProduct = std::max(-1.0, std::min(1.0, dotProduct));
 
-                            double currentDistance = (center - clusterCenter).norm() * std::abs(dotProduct);
+                            double currentDistance = (center - clusterCenter).norm() ;
+                            double adaptedDistance = currentDistance * std::abs(dotProduct);
 
-                            if (std::abs(dotProduct) < angleThreshold && currentDistance < distance)
+                            if (std::abs(dotProduct) < angleThreshold && adaptedDistance < distance && currentDistance < (max - min).norm()*associationThreshold)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;
-                                distance = currentDistance;
+                                distance = adaptedDistance;
                                 correspondingMeshFace = meshFace;
                             }
 
