@@ -88,6 +88,9 @@ class DFJointSegmentator(component):
                 o_transforms.append(transform)
                 o_reference_point_clouds.append(_joint_cloud)
             else:
-                ghenv.Component.AddRuntimeMessage(RML.Warning, "Some joints could not be segmented and were ignored.")  # noqa: F821
+                o_joint_segments.append(None)
+                o_transforms.append(None)
+                o_reference_point_clouds.append(None)
+                ghenv.Component.AddRuntimeMessage(RML.Warning, "Some joints could not be segmented and were replaced by 'None'")  # noqa: F821
 
         return o_joint_segments, o_transforms, o_reference_point_clouds

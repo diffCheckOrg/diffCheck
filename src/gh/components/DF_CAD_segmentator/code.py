@@ -4,6 +4,7 @@ import typing
 
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
+from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 
 import diffCheck
@@ -67,5 +68,12 @@ class DFCADSegmentator(component):
             )
 
         o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
+
+        #small cleanup
+        for o_cluster in o_clusters:
+            if not o_cluster.IsValid:
+                o_cluster = None
+                ghenv.Component.AddRuntimeMessage(RML.Warning, "Some beams could not be segmented and were replaced by 'None'")  # noqa: F821
+
 
         return o_clusters
