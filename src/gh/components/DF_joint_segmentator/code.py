@@ -61,8 +61,17 @@ class DFJointSegmentator(component):
             ref_rh_joint_clouds.append(df_cvt.cvt_dfcloud_2_rhcloud(ref_df_joint_cloud))
 
             # find the corresponding clusters and merge them
-            df_joint_segment = diffcheck_bindings.dfb_segmentation.DFSegmentation.associate_clusters(df_joint, df_cloud_clusters, i_angle_threshold, i_distance_threshold)
-            diffcheck_bindings.dfb_segmentation.DFSegmentation.clean_unassociated_clusters(df_cloud_clusters, [df_joint_segment], [df_joint], i_angle_threshold, i_distance_threshold)
+            df_joint_segment = diffcheck_bindings.dfb_segmentation.DFSegmentation.associate_clusters(False,
+                                                                                                     df_joint, 
+                                                                                                     df_cloud_clusters, 
+                                                                                                     i_angle_threshold, 
+                                                                                                     i_distance_threshold)
+            diffcheck_bindings.dfb_segmentation.DFSegmentation.clean_unassociated_clusters(False, 
+                                                                                           df_cloud_clusters, 
+                                                                                           [df_joint_segment], 
+                                                                                           [df_joint], 
+                                                                                           i_angle_threshold, 
+                                                                                           i_distance_threshold)
 
             # register the merged clusters to the reference point cloud
             registration = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DICP(df_joint_segment, ref_df_joint_cloud)

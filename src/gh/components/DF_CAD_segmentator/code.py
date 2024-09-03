@@ -37,21 +37,12 @@ class DFCADSegmentator(component):
             rh_beams_meshes.append(rh_b_mesh_faces)
 
             # different association depending on the type of beam
-            if df_b.is_cylinder:
-                df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
-                    is_cylinder=True,
-                    reference_mesh=df_b_mesh_faces,
-                    unassociated_clusters=df_clouds,
-                    angle_threshold=i_angle_threshold,
-                    association_threshold=i_association_threshold
-                )
-            else:
-                df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
-                    is_cylinder=False,
-                    reference_mesh=df_b_mesh_faces,
-                    unassociated_clusters=df_clouds,
-                    angle_threshold=i_angle_threshold,
-                    association_threshold=i_association_threshold
+            df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
+                is_cylinder=df_b.is_cylinder,
+                reference_mesh=df_b_mesh_faces,
+                unassociated_clusters=df_clouds,
+                angle_threshold=i_angle_threshold,
+                association_threshold=i_association_threshold
                 )
             df_clusters.append(df_asssociated_cluster)
 
