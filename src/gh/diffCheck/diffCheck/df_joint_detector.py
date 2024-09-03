@@ -68,19 +68,36 @@ class JointDetector:
         largest_cylinder = None
         largest_srf = 0
         for cylinder in open_cylinders:
-            if cylinder.GetArea() > largest_srf:
-                largest_srf = cylinder.GetArea()
-                print(largest_srf)
+            area = cylinder.GetArea()
+            if area > largest_srf:
+                largest_srf = area
                 largest_cylinder = cylinder.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance)
+        print(largest_srf)
 
         # Check if the cylinder exists
         if largest_cylinder is None:
+            print("No cylinder found")
             return False, None
+        
+        df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
+        df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
+        Bounding_geometry = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
+        rh_Bounding_geometry_center = Bounding_geometry.GetBoundingBox(True).Center
+        
+        # scale the bounding geometry in the longest edge direction by 1.5 from center on both directions
+        scale_factor = 0.2
+        xform = rg.Transform.Scale( rh_Bounding_geometry_center, 1 + scale_factor)
+        
+        largest_cylinder.Transform(xform)
 
         # check if all vertices are inside the cylinder
         for vertex in self.brep.Vertices:
             if not largest_cylinder.IsPointInside(vertex.Location, sc.doc.ModelAbsoluteTolerance, False):
+                print("Not all vertices are inside the cylinder !! bummer")
                 return False, None
+
+        largest_cylinder.Transform(xform.TryGetInverse()[1])
+        print("All vertices are inside the cylinder !! Yey" )
         return True, largest_cylinder
 
 
@@ -156,11 +173,9 @@ class JointDetector:
             adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and adj_face != idx])
         adjacency_of_faces = diffCheck.df_util.merge_shared_indexes(adjacency_of_faces)
         new_joint_face_ids = [[key] + value[1] for key, value in adjacency_of_faces.items()]
-        print("new_joint_face_ids: ",new_joint_face_ids)
 
         # get the proximity faces of the joint faces
         joint_face_ids = [[key] + [adj_face for adj_face in value[0].AdjacentFaces() if faces[adj_face][1] and adj_face != key] for key, value in faces.items() if value[1]]
-        print("joint_face_ids: ",joint_face_ids)
         face_ids = self._assign_ids(new_joint_face_ids)
 
         self._faces = [(face, face_ids[idx]) for idx, face in enumerate(self.brep.Faces)]
