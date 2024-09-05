@@ -4,9 +4,10 @@
     Rhino, the basic diffCheck data structures and the diffCheck bindings.
 """
 
-import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
+
+import System.Drawing
 
 from typing import Any
 
@@ -73,7 +74,7 @@ def cvt_dfcloud_2_rhcloud(df_cloud):
 
     df_cloud_points = [rg.Point3d(pt[0], pt[1], pt[2]) for pt in df_cloud_points]
     df_cloud_normals = [rg.Vector3d(n[0], n[1], n[2]) for n in df_cloud_normals]
-    df_cloud_colors = [Rhino.Geometry.Vector3d(c[0], c[1], c[2]) for c in df_cloud_colors]
+    df_cloud_colors = [System.Drawing.Color.FromArgb(c[0], c[1], c[2]) for c in df_cloud_colors]
 
     rh_cloud = rg.PointCloud()
 
