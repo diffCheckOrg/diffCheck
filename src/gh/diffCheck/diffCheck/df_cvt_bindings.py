@@ -7,6 +7,7 @@
 import Rhino.Geometry as rg
 import scriptcontext as sc
 
+import System
 import System.Drawing
 
 from typing import Any
