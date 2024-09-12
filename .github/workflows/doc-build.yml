@@ -47,12 +47,12 @@ jobs:
           Get-ChildItem -Path $env:GITHUB_WORKSPACE\build\Release -Filter *.pyd -Recurse | Move-Item -Destination $env:GITHUB_WORKSPACE\artifacts_pyds
         shell: pwsh
       - name: Upload artifacts - dlls
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: __build_artifacts_dlls__
           path: ${{ github.workspace }}/artifacts_dlls/*
       - name: Upload artifacts - pyds
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: __build_artifacts_pyds__
           path: ${{ github.workspace }}/artifacts_pyds/*
@@ -82,22 +82,22 @@ jobs:
 
         # download artifacts
       - name: Download dlls for doc folder
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: __build_artifacts_dlls__
           path: ${{github.workspace}}/doc
       - name: Download pyds for doc folder
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: __build_artifacts_pyds__
           path: ${{github.workspace}}/doc
       - name: Download dlls for diffCheck py package
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: __build_artifacts_dlls__
           path: ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
       - name: Download pyds for diffCheck py package
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: __build_artifacts_pyds__
           path: ${{github.workspace}}/src/gh/diffCheck/diffCheck
@@ -107,7 +107,7 @@ jobs:
           conda run --name diff_check --no-capture-output sphinx-build -b html -v doc _build
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: __build_sphx_docs__
           path: ${{ github.workspace }}/_build
@@ -132,7 +132,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download sphinx docs
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: __build_sphx_docs__
           path: ${{github.workspace}}/_build
