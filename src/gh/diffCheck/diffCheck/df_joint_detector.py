@@ -158,7 +158,7 @@ class JointDetector:
         # compute the adjacency list of each face
         adjacency_of_faces = {}
         '''
-        the structure of the disctionnary is as follows:
+        the structure of the dictionnary is as follows:
         {
             face_id: (face, [adj_face_id_1, adj_face_id_2, ...])
             ...
@@ -168,9 +168,9 @@ class JointDetector:
             adj_face_id_1, adj_face_id_2, ... are int
         '''
         for idx, face in faces.items():
-            if not face[1]:
+            if not face[1] or face[0].IsCylinder(tolerance=sc.doc.ModelAbsoluteTolerance):
                 continue
-            adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and adj_face != idx])
+            adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and not faces[adj_face][0].IsCylinder() and adj_face != idx])
         adjacency_of_faces = diffCheck.df_util.merge_shared_indexes(adjacency_of_faces)
         joint_face_ids = [[key] + value[1] for key, value in adjacency_of_faces.items()]
 
