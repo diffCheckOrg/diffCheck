@@ -25,7 +25,7 @@ Follow these steps to contribute to the project:
 1. Fork the diffCheck repository by clicking the **Fork** button on the [diffCheck repository](https://github.com/diffCheckOrg/diffCheck). Clone the repository to your local machine:
 
     ```console
-    git clone https://github.com/YOUR_USERNAME/diffCheck.git
+    git clone --recurse-submodules https://github.com/YOUR_USERNAME/diffCheck.git
     cd diffCheck
     ```
 
