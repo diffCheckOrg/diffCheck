@@ -22,9 +22,12 @@ class DFFastGlobalRegistration(component):
         i_iteration_number: int,
         i_max_tuple_count: int
     ) -> rg.Transform:
+        # preliminary checks
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
+        if not i_cloud_source.ContainsNormals or not i_cloud_target.ContainsNormals:
+            ghenv.Component.AddRuntimeMessage(RML.Error, "Please compute cloud's normals with a component before")  # noqa: F821
 
         # set default values
         if i_radius_kd_search is None:

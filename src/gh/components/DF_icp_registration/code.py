@@ -25,9 +25,12 @@ class DFICPRegistration(component):
         is_t_estimate_pt2pt: bool,  # valid only for 03dicp
         i_use_point_to_plane: bool  # valid only for 03dicp
     ) -> rg.Transform:
+        # preliminary checks
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
+        if not i_cloud_source.ContainsNormals or not i_cloud_target.ContainsNormals:
+            ghenv.Component.AddRuntimeMessage(RML.Error, "Please compute cloud's normals with a component before")  # noqa: F821
 
         # set default values
         if i_use_generalized_icp is None:
