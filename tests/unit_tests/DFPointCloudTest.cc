@@ -158,6 +158,15 @@ TEST_F(DFPointCloudTestFixture, ApplyColor) {
     }
 }
 
+TEST_F(DFPointCloudTestFixture, RemoveStatisticalOutliers) {
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloud3 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    dfPointCloud3->LoadFromPLY(diffCheck::io::GetPlanePCWithOneOutliers());
+    dfPointCloud3->RemoveStatisticalOutliers(50, 4.0);
+    EXPECT_EQ(dfPointCloud3->GetNumPoints(), 100);
+    EXPECT_EQ(dfPointCloud3->GetNumColors(), 100);
+    EXPECT_EQ(dfPointCloud3->GetNumNormals(), 100);
+}
+
 //-------------------------------------------------------------------------
 // Downsamplers
 //-------------------------------------------------------------------------
