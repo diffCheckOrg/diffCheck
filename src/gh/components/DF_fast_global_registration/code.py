@@ -6,10 +6,8 @@ from ghpythonlib.componentbase import executingcomponent as component
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
-import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
-import diffCheck.df_util
 
 
 class DFFastGlobalRegistration(component):
@@ -40,11 +38,6 @@ class DFFastGlobalRegistration(component):
             i_iteration_number = 128
         if i_max_tuple_count is None:
             i_max_tuple_count = 1000
-
-        # get the working unit of the Rhino document, if other than meters, set a multiplier factor
-        scalef = diffCheck.df_util.get_doc_2_meters_unitf()
-        i_radius_kd_search *= scalef
-        i_max_corrspondence_dist *= scalef
 
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
         df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
