@@ -15,6 +15,7 @@ class DFCsvExporter(component):
         i_file_name: str,
         i_export_seperate_files: bool,
         i_result: DFVizResults):
+
         if i_dump:
             # Ensure the export directory exists
             os.makedirs(i_export_dir, exist_ok=True)
@@ -35,6 +36,12 @@ class DFCsvExporter(component):
                     for list_of_values in i_result.distances:
                         writer.writerow([list_of_values])
 
-            o_success = "Successfully exported the values"
-
-            return o_success
+if __name__ == "__main__":
+    com = DFCsvExporter()
+    o_viz_settings = com.RunScript(
+        i_dump,
+        i_export_dir,
+        i_file_name,
+        i_export_seperate_files,
+        i_result
+        )
