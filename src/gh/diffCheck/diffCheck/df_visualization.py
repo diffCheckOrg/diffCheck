@@ -220,7 +220,7 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
         text_pt = rg.Point3d(1.25 * width + spacing, i * (height + spacing) + height / 10, 0)
         text_entity = rg.TextEntity()
         text_entity.Plane = rg.Plane(text_pt, rg.Vector3d.ZAxis)
-        #decide on resolution based on document units
+        # decide on resolution based on document units
         if RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Meters:
             text_entity.Text = f"{value:.4f}"
         elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Centimeters:
@@ -256,22 +256,22 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     return legend_geometry
 
 
-def create_histogram(values, min_value, max_value, steps=100,
+def create_histogram(values, min_value, max_value, res=100, steps=10,
                      plane=rg.Plane.WorldXY, total_height=10,
                      scaling_factor=0.01, spacing=0):
     """
     Create a histogram in Rhino with a polyline representing value frequencies.
     """
 
-    height = total_height/steps
+    height = total_height/res
 
     histogram_geometry = []
 
     # Calculate the size of each bin
-    bin_size = (max_value - min_value) / steps
+    bin_size = (max_value - min_value) / res
 
     # Initialize the frequency counts for each bin
-    frequencies = [0] * (steps + 1)
+    frequencies = [0] * (res + 1)
 
     # if values is nested list, flatten it
     if isinstance(values[0], list):
@@ -289,14 +289,36 @@ def create_histogram(values, min_value, max_value, steps=100,
 
     # Create points for the polyline representing the histogram
     points = []
-    for i in range(steps+1):
+    max_frequency = max(frequencies)
+
+    for i in range(res+1):
 
         bar_height = frequencies[i] * scaling_factor
-        points.append(rg.Point3d(- bar_height - (1.5 * height), i * (spacing + height), 0))
+        points.append(rg.Point3d(- bar_height, i * (spacing + height), 0))
 
     # Create the polyline and add it to the histogram geometry
     polyline = rg.Curve.CreateInterpolatedCurve(points, 1)
     histogram_geometry.append(polyline)
+
+    # Create rectangles to extend the value axis for better visualization
+    for i in range(steps):
+        rect_pts = [
+            rg.Point3d(0, i * (total_height/steps + spacing), 0),
+            rg.Point3d(-max_frequency*scaling_factor, i * (total_height/steps + spacing), 0),
+            rg.Point3d(-max_frequency*scaling_factor, (i + 1) * total_height/steps + i * spacing, 0),
+            rg.Point3d(0, (i + 1) * total_height/steps + i * spacing, 0),
+        ]
+        polyline = rg.Polyline(rect_pts)
+        histogram_geometry.append(polyline.ToPolylineCurve())
+
+    # Create the x-axis label only for the highest value (100%)
+    highest_value_pt = rg.Point3d(-max_frequency*scaling_factor - (total_height/steps)/5, -total_height/steps, 0)
+    highest_value_text = rg.TextEntity()
+    highest_value_text.Plane = rg.Plane(highest_value_pt, rg.Vector3d.YAxis, -rg.Vector3d.XAxis)  # Align text along Y-axis
+    highest_value_text.Text = str(max_frequency) + "%"
+    highest_value_text.TextHeight = (total_height/steps) / 5
+    highest_value_text.DimensionLengthDisplay = Rhino.DocObjects.DimensionStyle.LengthDisplay.Millmeters
+    histogram_geometry.append(highest_value_text)
 
     if plane != rg.Plane.WorldXY:
         trans = rg.Transform.PlaneToPlane(rg.Plane.WorldXY, plane)

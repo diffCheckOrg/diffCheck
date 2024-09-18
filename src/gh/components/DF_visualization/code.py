@@ -43,7 +43,8 @@ class DFVisualization(component):
         o_histogram = df_visualization.create_histogram(values,
                                                         min_value,
                                                         max_value,
-                                                        steps=100,
+                                                        res=100,
+                                                        steps=10,
                                                         plane=i_viz_settings.legend_plane,
                                                         total_height=i_viz_settings.legend_height,
                                                         scaling_factor=i_viz_settings.histogram_scale_factor)
