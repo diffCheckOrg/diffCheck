@@ -2,7 +2,8 @@
 """
     This module contains the utility functions to visualize differences
 """
-
+import Rhino
+import scriptcontext as sc
 import Rhino.Geometry as rg
 from System.Drawing import Color
 from diffCheck import df_visualization
@@ -170,6 +171,30 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     rect_pts = []
     previous_color = None
 
+    RhinoDoc = sc.doc
+    if RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Meters:
+        unit_str = "[m]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Centimeters:
+        unit_str = "[cm]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Millimeters:
+        unit_str = "[mm]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Inches:
+        unit_str = "[in]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Feet:
+        unit_str = "[ft]"
+    else:
+        unit_str = "[yd]"
+
+    # Add the unit label at the top of the legend
+    units_pt = rg.Point3d(0.5 * width , (steps + 1) * (height + spacing) - 0.5*height, 0)
+    units_text_entity = rg.TextEntity()
+    units_text_entity.Plane = rg.Plane(units_pt, rg.Vector3d.ZAxis)
+    units_text_entity.Text = unit_str
+    units_text_entity.TextHeight = height / 5
+    units_text_entity.Justification = rg.TextJustification.MiddleCenter
+    units_text_entity.DimensionLengthDisplay = Rhino.DocObjects.DimensionStyle.LengthDisplay.Millmeters
+    legend_geometry.append(units_text_entity)
+
     for i in range(steps+1):
 
         value = min_value + (max_value - min_value) * i / steps
@@ -195,8 +220,23 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
         text_pt = rg.Point3d(1.25 * width + spacing, i * (height + spacing) + height / 10, 0)
         text_entity = rg.TextEntity()
         text_entity.Plane = rg.Plane(text_pt, rg.Vector3d.ZAxis)
-        text_entity.Text = f"{value:.2f}"
+        #decide on resolution based on document units
+        if RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Meters:
+            text_entity.Text = f"{value:.4f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Centimeters:
+            text_entity.Text = f"{value:.3f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Millimeters:
+            text_entity.Text = f"{value:.2f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Inches:
+            text_entity.Text = f"{value:.2f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Feet:
+            text_entity.Text = f"{value:.2f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Yards:
+            text_entity.Text = f"{value:.2f}"
+
         text_entity.TextHeight = height / 5
+        #match grasshopper display to default
+        text_entity.DimensionLengthDisplay = Rhino.DocObjects.DimensionStyle.LengthDisplay.Millmeters
         legend_geometry.append(text_entity)
 
         rect_pts = [

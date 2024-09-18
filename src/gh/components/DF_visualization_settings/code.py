@@ -231,3 +231,16 @@ class DFVisualizationSettings(component):
                                                         i_histogram_scale_factor)
 
         return o_viz_settings
+
+if __name__ == "__main__":
+    com = DFVisualizationSettings()
+    o_viz_settings = com.RunScript(
+        i_value_type,
+        i_palette,
+        i_upper_threshold,
+        i_lower_threshold,
+        i_legend_height,
+        i_legend_width,
+        i_legend_plane,
+        i_histogram_scale_factor
+        )

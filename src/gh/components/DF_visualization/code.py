@@ -1,6 +1,5 @@
 #! python3
 
-
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
@@ -50,3 +49,10 @@ class DFVisualization(component):
                                                         scaling_factor=i_viz_settings.histogram_scale_factor)
 
         return o_colored_geo, o_legend, o_histogram
+
+if __name__ == "__main__":
+    com = DFVisualization()
+    o_colored_geo, o_legend, o_histogram = com.RunScript(
+        i_result,
+        i_viz_settings
+        )
