@@ -265,9 +265,9 @@ jobs:
   publish_test_pypi:
     needs: pypi_build
     runs-on: ubuntu-latest
-    # environment:
-    #   name: testpypi
-    #   url: https://test.pypi.org/p/diffCheck
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/diffCheck
     permissions:
       id-token: write
 
@@ -281,6 +281,3 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
-
-
-
