@@ -2,6 +2,8 @@
 
 import System
 
+import typing
+
 import Rhino.Geometry as rg
 
 from ghpythonlib.componentbase import executingcomponent as component
@@ -28,10 +30,15 @@ class DFPreviewAssembly(component):
     # Preview overrides
     def DrawViewportWires(self, args):
         for beam in self._dfassembly.beams:
+            #######################################
+            ## DFBeams
+            #######################################
             # beams' obb
             df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
-            df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in beam.to_brep().Vertices]
+            vertices_pt3d_rh : typing.List[rg.Point3d] = [vertex.to_rg_point3d() for vertex in beam.vertices]
+            df_cloud.points = [np.array([vertex.X, vertex.Y, vertex.Z]).reshape(3, 1) for vertex in vertices_pt3d_rh]
             obb: rg.Brep = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
+            args.Display.DrawBrepWires(obb, System.Drawing.Color.Red)
 
             # axis arrow
             obb_faces = obb.Faces
@@ -49,3 +56,7 @@ class DFPreviewAssembly(component):
                 System.Drawing.Color.Violet,
                 anchor_pt,
                 True, 18)
+
+            #######################################
+            ## DFJoints
+            #######################################
