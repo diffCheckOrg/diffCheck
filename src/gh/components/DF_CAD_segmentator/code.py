@@ -1,13 +1,13 @@
 #! python3
 
-import typing
+import System
 
+import Rhino
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
+from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 
-import diffCheck
-import diffCheck.df_geometries
 from diffCheck.diffcheck_bindings import dfb_segmentation
 
 from diffCheck import df_cvt_bindings
@@ -16,11 +16,14 @@ from diffCheck import df_cvt_bindings
 
 class DFCADSegmentator(component):
     def RunScript(self,
-        i_clouds : typing.List[rg.PointCloud],
-        i_assembly : diffCheck.df_geometries.DFAssembly,
-        i_angle_threshold : float,
-        i_association_threshold : float
-    ) -> rg.PointCloud:
+        i_clouds: System.Collections.Generic.IList[Rhino.Geometry.PointCloud],
+        i_assembly,
+        i_angle_threshold: float = 0.1,
+        i_association_threshold: float = 0.1) -> rg.PointCloud:
+
+        if i_clouds is None or i_assembly is None:
+            self.AddRuntimeMessage(RML.Warning, "Please provide a cloud and an assembly to segmentate")
+            return None
         o_clusters = []
         df_clusters = []
         # we make a deepcopy of the input clouds
