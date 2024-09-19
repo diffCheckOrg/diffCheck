@@ -82,6 +82,7 @@ jobs:
 
   build-ghusers:
     runs-on: windows-latest
+    # needs: sync-version  # FIXME: uncomment when ready for deploy
 
     steps:
       - uses: actions/checkout@v2
@@ -110,6 +111,7 @@ jobs:
 
   build-yak-package:
     runs-on: windows-latest
+    needs: build-ghusers
 
     steps:
       - uses: actions/checkout@v2
