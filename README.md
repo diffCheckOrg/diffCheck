@@ -21,6 +21,8 @@ The software is designed to be user-friendly and can be used either via a Grassh
 
 Visit the [DiffCheck website](https://diffcheckorg.github.io/diffCheck/) for more information and documentation.
 
+![demo](https://github.com/user-attachments/assets/3c9f353d-7707-4630-aa6d-fe59cbdeae2f)
+
 The software is developed by the [Laboratory of Timber Construction (IBOIS)](https://www.epfl.ch/labs/ibois/) and the [Laboratory for Creative Computation (CRCL)](https://www.epfl.ch/labs/crcl/) at [Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).
 
 
