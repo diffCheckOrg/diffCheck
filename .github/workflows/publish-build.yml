@@ -99,11 +99,13 @@ jobs:
       #     source: src/gh/components
       #     target: build/gh
 
-      - name: Invoke the componentizer
-        run: invoke ghcomponentize
+      
 
       - name: Flag the ghuser codes with the correct package version
         run: invoke flagerize
+
+      - name: Invoke the componentizer
+        run: invoke ghcomponentize
 
       - uses: actions/upload-artifact@v4
         with:
