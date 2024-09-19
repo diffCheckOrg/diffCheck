@@ -167,7 +167,7 @@ jobs:
       #   ref: main  # FIXME: to be uncommented when ready for deploy
 
     - name: Download artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: yak_package_artifact
         path: build/yak
