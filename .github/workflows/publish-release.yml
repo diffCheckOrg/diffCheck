@@ -277,7 +277,7 @@ jobs:
       with:
         name: diffcheck_pypi_dist
         path: dist/
-    - name: Publish distribution 📦 to TestPyPI
+    - name: Publish distribution to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
@@ -296,3 +296,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: diffcheck_pypi_dist
+
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
