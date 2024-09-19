@@ -35,7 +35,7 @@ jobs:
       run: invoke yakerize
 
     - name: Save artifact the yak package as an artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: yak_package_artifact
         path: build/yak/*.yak
