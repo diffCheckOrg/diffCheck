@@ -1,0 +1,52 @@
+{
+    "name": "DFBrepToMesh",
+    "nickname": "DFBrepToMesh",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Create unique point cloud from list of breps.",
+    "exposure": 4,
+    "instanceGuid": "ada32cb6-778f-40b8-860e-38ca7ccf4f38",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_breps",
+                "nickname": "i_breps",
+                "description": "The breps based on which a point cloud is created.",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "brep"
+            },
+            {
+                "name": "i_num_points",
+                "nickname": "i_num_points",
+                "description": "The number of points in the new point cloud.",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_pointcloud",
+                "nickname": "o_pointcloud",
+                "description": "The generated pointcloud.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
