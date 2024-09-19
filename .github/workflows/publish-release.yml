@@ -265,32 +265,9 @@ jobs:
   publish_test_pypi:
     needs: pypi_build
     runs-on: ubuntu-latest
-    # steps:
-    #   - name: Checkout repo
-    #     uses: actions/checkout@v2
-    #     # with:
-    #     #   ref: main  # FIXME: to be uncommented when ready for deploy
-
-    #   - name: Install Python and pythonnet
-    #     uses: actions/setup-python@v4
-    #     with:
-    #       python-version: '3.9.10'
-  
-    #   - name: Install Python dependencies
-    #     run: |
-    #         python -m pip install --upgrade pip
-    #         pip install invoke
-    #         pip install pythonnet
-
-    #   - name: Download artifact
-    #     uses: actions/download-artifact@v4
-    #     with:
-    #       name: diffcheck_pypi_dist
-
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/diffCheck
-
+    # environment:
+    #   name: testpypi
+    #   url: https://test.pypi.org/p/diffCheck
     permissions:
       id-token: write
 
