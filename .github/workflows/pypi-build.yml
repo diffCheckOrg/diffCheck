@@ -37,6 +37,11 @@ jobs:
         run: cmake --build build --config Release
 
       #FIXME: here we are probably missing to copy the dlls and pyds before building the wheel
+      # TODO: debuggin
+      - name: checking if dlls and pyd are in the right place
+        run: |
+          ls ${{github.workspace}}/src/gh/diffCheck/
+          ls ${{github.workspace}}/src/gh/diffCheck/dlls
 
       - name: Build wheel
         run: |
