@@ -92,6 +92,7 @@ jobs:
         run: |
           choco install python --version=3.9.10
           python -m pip install pythonnet==3.0.3
+          python -m pip install invoke
 
       # - uses: ./.github/actions/gh-action-componentizer
       #   with:
