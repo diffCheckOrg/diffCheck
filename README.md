@@ -7,8 +7,20 @@
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/gh-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/pypi-build.yml/badge.svg">
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/doc-build.yml/badge.svg">
+    <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/yak-build.yml/badge.svg">
     <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/diffCheck?style=flat&logo=pypi&logoColor=white&color=blue">
 </p>
+
+
+# DiffCheck: CAD-Scan comparison
+
+diffCheck(DF) allows to identify discrepancies across point clouds and 3D models of both individually machined timber pieces featuring various joints as well as fully assembled timber structures. It can help you quantify the differences between the CAD and scanned fabricated structure, providing a comprehensive report that highlights the discrepancies.
+
+The software is designed to be user-friendly and can be used either via a Grasshopper plug-in or its Python API.
+
+Visit the [DiffCheck website](https://diffcheckorg.github.io/diffCheck/) for more information and documentation.
+
+The software is developed by the [Laboratory of Timber Construction (IBOIS)](https://www.epfl.ch/labs/ibois/) and the [Laboratory for Creative Computation (CRCL)](https://www.epfl.ch/labs/crcl/) at [Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).
 
 
 ## Roadmap
@@ -36,69 +48,3 @@ gantt
     Fabrication of Robot Prototype      :crit, fabrob, 2024-07-01, 2024-08-30
     Data collection and evaluation      :dataeval, after fabrob, 4w
 ```
-
-
-## 3rd party libraries
-
-The project uses the following 3rd party libraries:
-- `Open3d 0.18.0` for 3D point cloud processing as pre-build binaries ([store here](https://github.com/diffCheckOrg/submodule-open3d.git))
-- `Eigen` for linear algebra
-- `CGAL` for general geometric processing and IO
-- `Boost` for general utilities as pre-build binaries ([store here](https://github.com/diffCheckOrg/submodule-boost.git))
-
-## How to build c++ project
-To build and test the project, follow the following steps:
-
-```terminal
-cmake/config.bat
-cmake/build.bat
-./build/bin/Release/diffCheckApp.exe <-- for prototyping in c++
-```
-
-## Prototype diffCheck in C++
-To prototype:
-1) add a header/source file in `src/diffCheck` and include the header in `diffCheck.hh` interface
-2) test it in `diffCheckApp` (the cmake will output an executable in bin)
-
-See the [CONTRIBUTING.md](https://github.com/diffCheckOrg/diffCheck/blob/main/CONTRIBUTING.md) for more information on how to prototype with diffCheck (code guidelines, visualizer, utilities, etc).
-
-## Component roadmap
-From the 3/5/2024 meeting, the architecture of the different grasshopper components was discussed as following:
-- [x] PLY loader point cloud: @eleni: loads the pointcloud ply files and converts it into rg.PointCloud (+ cvt submodule)
-- [x] PLY loader mesh: @eleni: loads the mesh ply files and converts it into rg.Mesh (+ cvt submodule)
-- [x] Global registration: @andrea: to align the scan to the reference model
-- [x] Refined registration: @andrea: to refine the alignement
-- [ ] Semantic segmentation additive: to identify the pieces or joints in the point cloud
-- [ ] Semantic segmentation subtractive: to identify the pieces or joints in the point cloud
-- [ ] Per-joint refinement to refine the global registration to each joints (only in the "substractive" case)
-- [ ] Error estimation to evaluate the error for each piece or joint
-- [ ] Error visualisation to visualise the error, only converts the data from error estimation, no calculation.
-The brep element in the graph is only here to visualize the fact that we need the breps as data, but it is not a diffCheck component.
-
-```mermaid
-stateDiagram
-
-classDef notAComponent fill:green
-    (brep):::notAComponent --> global_registration&ICP : [brep]
-    State diffCheck{
-        State for_additive_and_substractive {
-            PLY_loader --> global_registration&ICP : pointcloud
-            global_registration&ICP --> semantic_segmentation : pointcloud
-            global_registration&ICP --> semantic_segmentation : [brep]
-            semantic_segmentation --> error_estimation : [pointcloud]
-            semantic_segmentation --> error_estimation : [brep]
-            semantic_segmentation --> error_visualisation : [pointcloud]
-            semantic_segmentation --> error_visualisation : [brep]
-            semantic_segmentation --> per_joint_refinement : [pointcloud]
-            semantic_segmentation --> per_joint_refinement : [brep]
-            error_estimation --> error_visualisation : csv   
-            per_joint_refinement --> error_estimation : [[pointcloud]]
-            per_joint_refinement --> error_estimation : [brep]
-            }
-        State for_substractive {
-                per_joint_refinement
-            }
-    }
-    
-```
-Note : `[]` = list

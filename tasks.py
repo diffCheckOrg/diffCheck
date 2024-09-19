@@ -47,7 +47,7 @@ def flagerize(c, package_name="diffCheck"):
     path_flagerize = "./invokes/flagerize.py"
     c.run(f"python {path_flagerize} \
         --package {package_name} \
-        --source {DEBUG_DIR_IN_GHUSER_COMPONENTS} \
+        --source {DIR_IN_GHUSER_COMPONENTS} \
         --from-manifest \
         --path-manifest {PATH_MANIFEST}")
 
