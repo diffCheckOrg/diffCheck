@@ -14,6 +14,9 @@ on:
 #   workflow_dispatch:
 
 jobs:
+  ################################################################################
+  ## Building
+  ################################################################################
   # sync-version:
   #   runs-on: windows-latest
 
@@ -147,6 +150,58 @@ jobs:
         with:
           name: yak_package_artifact
           path: build/yak/*.yak
+
+
+  ################################################################################
+  ## Publishing
+  ################################################################################
+
+  publish_yak:
+    needs: build_yak
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        ref: main
+
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: yak_package_artifact
+        path: build/yak
+
+    - name: Publish to Yak test server
+      run: |
+        $YAK_FILE=$(ls *.yak)
+        echo "Yak file: $YAK_FILE"
+        ..\invoke\yaker\exec\Yak.exe push --source https://test.yak.rhino3d.com $YAK_FILE
+      working-directory: build/yak
+      env:
+        YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+      continue-on-error: true
+    - name: Verify the Yak test package
+      run: |
+        ..\invoke\yaker\exec\Yak.exe search --source https://test.yak.rhino3d.com --all --prerelease script-sync
+      working-directory: build/yak
+      env:
+          YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+    # - name: Publish to Yak server
+    #   run: |
+    #     $YAK_FILE=$(ls *.yak)
+    #     echo "Yak file: $YAK_FILE"
+    #     ..\invoke\yaker\exec\Yak.exe push $YAK_FILE
+    #   working-directory: build/yak
+    #   env:
+    #     YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+    # # check the real release
+    # - name: Verify the Yak test package
+    #   run: |
+    #     ..\invoke\yaker\exec\Yak.exe search --all --prerelease script-sync
+    #   working-directory: build/yak
+    #   env:
+    #       YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
 
 
 
