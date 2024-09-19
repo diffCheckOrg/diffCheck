@@ -12,6 +12,7 @@
     <img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fyak.rhino3d.com%2Fpackages%2FdiffCheck&query=%24.version&logo=rhinoceros&label=Yak&color=%23a3d6ff">
 </p>
 
+![demo](https://github.com/user-attachments/assets/3c9f353d-7707-4630-aa6d-fe59cbdeae2f)
 
 # DiffCheck: CAD-Scan comparison
 
@@ -20,8 +21,6 @@ diffCheck(DF) allows to identify discrepancies across point clouds and 3D models
 The software is designed to be user-friendly and can be used either via a Grasshopper plug-in or its Python API.
 
 Visit the [DiffCheck website](https://diffcheckorg.github.io/diffCheck/) for more information and documentation.
-
-![demo](https://github.com/user-attachments/assets/3c9f353d-7707-4630-aa6d-fe59cbdeae2f)
 
 The software is developed by the [Laboratory of Timber Construction (IBOIS)](https://www.epfl.ch/labs/ibois/) and the [Laboratory for Creative Computation (CRCL)](https://www.epfl.ch/labs/crcl/) at [Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).
 
