@@ -24,7 +24,8 @@ jobs:
           source: src/gh/components
           target: build
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ghuser-components
-          path: build
+      ## for debug only
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ghuser-components
+      #     path: build

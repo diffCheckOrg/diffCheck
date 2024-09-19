@@ -84,123 +84,227 @@ jobs:
   #       GITHUB_TOKEN: ${{ secrets.DF_COBOT_PAT_TOKEN }}
   #     shell: pwsh
 
-  build-ghusers:
+  # build-ghusers:
+  #   runs-on: windows-latest
+  #   # needs: sync-version  # FIXME: uncomment when ready for deploy
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: NuGet/setup-nuget@v1.0.5
+
+  #     - name: Install CPython and pythonnet package
+  #       run: |
+  #         choco install python --version=3.9.10
+  #         python -m pip install pythonnet==3.0.3
+  #         python -m pip install invoke
+
+  #     - name: create the build folder
+  #       run: mkdir build
+
+  #     - name: Flag the ghuser codes with the correct package version
+  #       run: invoke flagerize
+
+  #     - name: Invoke the componentizer
+  #       run: |
+  #         mkdir build/gh
+  #         invoke ghcomponentize
+
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ghuser-components
+  #         path: build/gh
+
+  # build-yak-package:
+  #   runs-on: windows-latest
+  #   needs: build-ghusers
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+
+  #     - name: Install Python and pythonnet
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.9.10'
+
+  #     - name: Install Python dependencies
+  #       run: |
+  #           python -m pip install --upgrade pip
+  #           pip install invoke
+  #           pip install pythonnet
+
+  #     - name: Download the ghuser components
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: ghuser-components
+  #         path: build/gh
+
+  #     - name: Build the yak package
+  #       run: invoke yakerize
+
+  #     - name: Save artifact the yak package as an artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: yak_package_artifact
+  #         path: build/yak/*.yak
+
+  #===============================================================================
+
+  pypi_build:
     runs-on: windows-latest
     # needs: sync-version  # FIXME: uncomment when ready for deploy
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: NuGet/setup-nuget@v1.0.5
+      - uses: actions/checkout@v4
 
-      - name: Install CPython and pythonnet package
-        run: |
-          choco install python --version=3.9.10
-          python -m pip install pythonnet==3.0.3
-          python -m pip install invoke
-
-      - name: create the build folder
-        run: mkdir build
-
-      - name: Flag the ghuser codes with the correct package version
-        run: invoke flagerize
-
-      - name: Invoke the componentizer
-        run: |
-          mkdir build/gh
-          invoke ghcomponentize
-
-      - uses: actions/upload-artifact@v4
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          name: ghuser-components
-          path: build/gh
+          auto-update-conda: true
+          python-version: 3.9.1
 
-  build-yak-package:
-    runs-on: windows-latest
-    needs: build-ghusers
+      - name: Create diff_check conda environment
+        run: conda env create -f environment.yml
+      
+      - name: Activate diff_check conda environment
+        run: conda activate diff_check
 
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install Python and pythonnet
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9.10'
-
-      - name: Install Python dependencies
+      - name: Cmake Configure
         run: |
-            python -m pip install --upgrade pip
-            pip install invoke
-            pip install pythonnet
+          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
+      - name: CMake Build
+        run: cmake --build build --config Release
 
-      - name: Download the ghuser components
-        uses: actions/download-artifact@v4
-        with:
-          name: ghuser-components
-          path: build/gh
+      - name: Copying the dlls/pyd for python pypi package
+        run: |
+          copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+          copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+          copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/src/gh/diffCheck/diffCheck
 
-      - name: Build the yak package
-        run: invoke yakerize
+      - name: Build wheel
+        run: |
+          cd ${{github.workspace}}/src/gh/diffCheck/
+          python setup.py bdist_wheel
+          cd ${{github.workspace}}
 
-      - name: Save artifact the yak package as an artifact
+      - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          name: yak_package_artifact
-          path: build/yak/*.yak
-
+          name: diffcheck_pypi_dist
+          path: ${{github.workspace}}/src/gh/diffCheck/dist/
 
   ################################################################################
   ## Publishing
   ################################################################################
 
-  publish_yak:
-    needs: build-yak-package
-    runs-on: windows-latest
+  # publish_test_yak:
+  #   needs: build-yak-package
+  #   runs-on: windows-latest
 
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-      # with:
-      #   ref: main  # FIXME: to be uncommented when ready for deploy
+  #   steps:
+  #   - name: Checkout repo
+  #     uses: actions/checkout@v2
+  #     # with:
+  #     #   ref: main  # FIXME: to be uncommented when ready for deploy
 
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: yak_package_artifact
-        path: build/yak
+  #   - name: Download artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: yak_package_artifact
+  #       path: build/yak
 
-    - name: Publish to Yak test server
-      run: |
-        $YAK_FILE=$(ls *.yak)
-        echo "Yak file: $YAK_FILE"
-        ..\..\invokes\yaker\exec\Yak.exe push --source https://test.yak.rhino3d.com $YAK_FILE
-      working-directory: build/yak
-      env:
-        YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
-      continue-on-error: true
-    - name: Verify the Yak test package
-      run: |
-        ..\..\invokes\yaker\exec\Yak.exe search --source https://test.yak.rhino3d.com --all --prerelease script-sync
-      working-directory: build/yak
-      env:
-          YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
-    # FIXME: to uncomment when ready for deploy
-    # - name: Publish to Yak server
-    #   run: |
-    #     $YAK_FILE=$(ls *.yak)
-    #     echo "Yak file: $YAK_FILE"
-    #     ..\..\invokes\yaker\exec\Yak.exe push $YAK_FILE
-    #   working-directory: build/yak
-    #   env:
-    #     YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
-    # # check the real release
-    # - name: Verify the Yak test package
-    #   run: |
-    #     ..\..\invokes\yaker\exec\Yak.exe search --all --prerelease script-sync
-    #   working-directory: build/yak
-    #   env:
-    #       YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+  #   - name: Publish to Yak test server
+  #     run: |
+  #       $YAK_FILE=$(ls *.yak)
+  #       echo "Yak file: $YAK_FILE"
+  #       ..\..\invokes\yaker\exec\Yak.exe push --source https://test.yak.rhino3d.com $YAK_FILE
+  #     working-directory: build/yak
+  #     env:
+  #       YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+  #     continue-on-error: true
+  #   - name: Verify the Yak test package
+  #     run: |
+  #       ..\..\invokes\yaker\exec\Yak.exe search --source https://test.yak.rhino3d.com --all --prerelease script-sync
+  #     working-directory: build/yak
+  #     env:
+  #         YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
 
+  # publish_to_yak:
+  #   needs: publish_test_yak
+  #   runs-on: windows-latest
 
+  #   steps:
+  #   - name: Checkout repo
+  #     uses: actions/checkout@v2
+  #     # with:
+  #     #   ref: main  # FIXME: to be uncommented when ready for deploy
+
+  #   - name: Download artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: yak_package_artifact
+  #       path: build/yak
+
+  #   - name: Publish to Yak server
+  #     run: |
+  #       $YAK_FILE=$(ls *.yak)
+  #       echo "Yak file: $YAK_FILE"
+  #       ..\..\invokes\yaker\exec\Yak.exe push $YAK_FILE
+  #     working-directory: build/yak
+  #     env:
+  #       YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+  #   # check the real release
+  #   - name: Verify the Yak test package
+  #     run: |
+  #       ..\..\invokes\yaker\exec\Yak.exe search --all --prerelease script-sync
+  #     working-directory: build/yak
+  #     env:
+  #         YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+
+  #===============================================================================
+
+  publish_test_pypi:
+    needs: pypi_build
+    runs-on: ubuntu-latest
+
+    # steps:
+    #   - name: Checkout repo
+    #     uses: actions/checkout@v2
+    #     # with:
+    #     #   ref: main  # FIXME: to be uncommented when ready for deploy
+
+    #   - name: Install Python and pythonnet
+    #     uses: actions/setup-python@v4
+    #     with:
+    #       python-version: '3.9.10'
+  
+    #   - name: Install Python dependencies
+    #     run: |
+    #         python -m pip install --upgrade pip
+    #         pip install invoke
+    #         pip install pythonnet
+
+    #   - name: Download artifact
+    #     uses: actions/download-artifact@v4
+    #     with:
+    #       name: diffcheck_pypi_dist
+
+      environment:
+      name: testpypi
+      url: https://test.pypi.org/p/diffCheck
+
+      permissions:
+        id-token: write
+
+      steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: diffcheck_pypi_dist
+          path: dist/
+      - name: Publish distribution 📦 to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
 
 
 
