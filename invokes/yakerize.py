@@ -53,21 +53,17 @@ def main(
     if not os.path.isfile(yak_exe_path):
         print(f"Yak.exe not found at {yak_exe_path}.")
         return False
-
     path_current : str = os.getcwd()
     os.chdir(build_dir)
     os.system("cd")
-
     try:
-        os.system(f"{yak_exe_path} build")
+        os.system(f"{yak_exe_path} build --platform win")
     except Exception as e:
         print(f"Failed to build the yak package: {e}")
         return False
-
     if not any([f.endswith(".yak") for f in os.listdir(build_dir)]):
         print("No .yak file was created in the build directory.")
         return False
-
     os.chdir(path_current)
 
     return True
