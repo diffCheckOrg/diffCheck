@@ -88,7 +88,7 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Update the version number everywhere in code base."
+        description="Update the version number everywhere in code base, by default taking the reference in the manifest.yml."
     )
     parser.add_argument(
         "--from-manifest",

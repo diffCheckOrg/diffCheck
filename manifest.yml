@@ -1,13 +1,13 @@
 ---
 name: diffCheck
-version: 0.0.24
+version: 0.0.26
 authors:
 - Andrea Settimi
 - Damien Gilliard
 - Eleni Skevaki
 - Marirena Kladeftira
 
-description: diffCheck allows to process point clouds of scans and compare it with a reference model. It is a tool for timber construction, but can be used for other applications as well.
+description: diffCheck allows to process point clouds of scans and compare it with a reference model. It has specific benchmark for timber structures and fabrications.
 url: https://github.com/diffCheckOrg/diffCheck
 keywords:
 - Rhino
