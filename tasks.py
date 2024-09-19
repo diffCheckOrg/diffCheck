@@ -55,7 +55,7 @@ def flagerize(c, package_name="diffCheck"):
 def yakerize(c):
     path_yakerize = "./invokes/yakerize.py"
     c.run(f"python {path_yakerize} \
-        --gh-components-dir {DIR_IN_GHUSER_COMPONENTS} \
+        --gh-components-dir {DIR_OUT_GHUER_COMPONENTS} \
         --build-dir {DIR_OUT_YAK} \
         --manifest-path {PATH_MANIFEST} \
         --logo-path {PATH_LOGO} \
