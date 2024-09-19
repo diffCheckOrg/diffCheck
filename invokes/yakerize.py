@@ -15,10 +15,24 @@ def main(
 ) -> bool:
     current_file_path = os.path.abspath(__file__)
     current_directory = os.path.dirname(current_file_path)
+    build_dir = os.path.abspath(build_dir)
 
     #####################################################################
     # Copy manifest, logo, misc folder (readme, license, etc)
     #####################################################################
+    # if not clean build dir, clean it
+    if os.path.isdir(build_dir):
+        for f in os.listdir(build_dir):
+            file_path = os.path.join(build_dir, f)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(f"Failed to delete {file_path}: {e}")
+                return False
+
     shutil.copy(manifest_path, build_dir)
     shutil.copy(logo_path, build_dir)
     path_miscdir : str = os.path.join(build_dir, "misc")
@@ -29,21 +43,31 @@ def main(
     for f in os.listdir(gh_components_dir):
         if f.endswith(".ghuser"):
             shutil.copy(os.path.join(gh_components_dir, f), build_dir)
+    print(f"Copied the manifest, logo, readme, license, and ghuser files to the dir {build_dir}.")
 
     #####################################################################
     # Yak exe
     #####################################################################
-    yak_exe_path : str = os.path.join(current_directory, "exec", "Yak.exe")
+    yak_exe_path : str = os.path.join(current_directory, "yaker", "exec", "Yak.exe")
     yak_exe_path = os.path.abspath(yak_exe_path)
+    if not os.path.isfile(yak_exe_path):
+        print(f"Yak.exe not found at {yak_exe_path}.")
+        return False
 
     path_current : str = os.getcwd()
     os.chdir(build_dir)
     os.system("cd")
+
     try:
         os.system(f"{yak_exe_path} build")
     except Exception as e:
         print(f"Failed to build the yak package: {e}")
         return False
+
+    if not any([f.endswith(".yak") for f in os.listdir(build_dir)]):
+        print("No .yak file was created in the build directory.")
+        return False
+
     os.chdir(path_current)
 
     return True

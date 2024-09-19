@@ -24,7 +24,7 @@ def main(
                     lines = f.readlines()
                 # check if the line # r: package_name is already in the first 10 lines, erase it
                 if any([re.search(r"# r: .+==", line) for line in lines[:10]]):
-                    print(f"File {path} is already stamped with the package version.")
+                    print(f"Overwriting file {path}: it was already stamped with the package version.")
                     lines = [line for line in lines if not re.search(r"# r: .+==", line)]
 
                 with open(path, "w") as f:
