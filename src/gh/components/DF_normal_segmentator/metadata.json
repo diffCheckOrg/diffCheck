@@ -88,8 +88,8 @@
         ],
         "outputParameters": [
             {
-                "name": "o_clusters",
-                "nickname": "o_clusters",
+                "name": "o_clouds",
+                "nickname": "o_clouds",
                 "description": "The segmented clouds.",
                 "optional": false,
                 "sourceCount": 0,
