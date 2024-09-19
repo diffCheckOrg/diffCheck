@@ -84,7 +84,9 @@ def cvt_dfcloud_2_rhcloud(df_cloud):
     elif df_cloud.has_normals():
         rh_cloud.AddRange(df_cloud_points, df_cloud_normals)
     elif df_cloud.has_colors():
-        rh_cloud.AddRange(df_cloud_points, df_cloud_colors)
+        rh_cloud.AddRange(df_cloud_points)
+        for i, color in enumerate(df_cloud_colors):
+            rh_cloud[i].Color = color
     else:
         rh_cloud.AddRange(df_cloud_points)
 
