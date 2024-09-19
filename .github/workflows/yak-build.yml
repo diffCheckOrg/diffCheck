@@ -61,14 +61,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
-      
-      # Get current branch name
-    - id: get_branch
-      run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-      
       # Create pull request
     - run: |
-        gh pr create --title "ACTION_BOT: Sync version for release" --body "Sync version for release" --base ${{ env.branch_name }} --head version-sync-branch --label ACTION_BOT
+        gh pr create --title "ACTION_BOT: Sync version for release" --body "Sync version for release" --base main --head version-sync-branch --label ACTION_BOT
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Merge pull request
