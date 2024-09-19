@@ -1,6 +1,6 @@
 import os
 
-__version__ = "0.0.24"
+__version__ = "0.0.26"
 
 # make the dlls available to the python interpreter
 PATH_TO_DLL = "dlls"
