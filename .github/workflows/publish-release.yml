@@ -159,6 +159,9 @@ jobs:
       - name: Activate diff_check conda environment
         run: conda activate diff_check
 
+      - name: Sync the version across the project (mainly for python package)
+        run: invoke versionize
+
       - name: Cmake Configure
         run: |
           cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
