@@ -299,7 +299,7 @@ class DFBeam:
 
         self._center = None
         self.__id = uuid.uuid4().int
-        # self.is_cylinder = None
+        self.is_cylinder = None
 
     def deepcopy(self):
         return DFBeam(self.name, [face.deepcopy() for face in self.faces])
@@ -312,8 +312,7 @@ class DFBeam:
         It also removes duplicates and creates a list of unique faces.
         """
         faces : typing.List[DFFace] = []
-        data_faces, is_cylinder = diffCheck.df_joint_detector.JointDetector(brep).run()
-        cls.is_cylinder = is_cylinder
+        data_faces, cls.is_cylinder = diffCheck.df_joint_detector.JointDetector(brep).run()
         for data in data_faces:
             face = DFFace.from_brep_face(data[0], data[1])
             faces.append(face)
@@ -353,7 +352,7 @@ class DFBeam:
         return mesh
 
     def __repr__(self):
-        return f"Beam: {self.name}, Faces: {len(self.faces)}"
+        return f"Beam: {self.name}, Is cylinder:{self.is_cylinder}, Faces: {len(self.faces)}"
 
     @property
     def uuid(self):

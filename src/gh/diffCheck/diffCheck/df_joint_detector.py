@@ -58,20 +58,20 @@ class JointDetector:
         """
 
         # extract all cylinders from the brep
-        open_cylinders = []
+        candidate_open_cylinders = []
         for face in self.brep.Faces:
-            if face.IsCylinder():
-                open_cylinder = face.ToBrep()
-                open_cylinders.append(open_cylinder)
+            if not face.IsPlanar():
+                candidate_open_cylinder = face.ToBrep()
+                candidate_open_cylinders.append(candidate_open_cylinder)
 
         # find largest cylinder
         largest_cylinder = None
         largest_srf = 0
-        for cylinder in open_cylinders:
-            area = cylinder.GetArea()
-            if area > largest_srf:
+        for candidate_cylinder in candidate_open_cylinders:
+            area = candidate_cylinder.GetArea()
+            if area > largest_srf and candidate_cylinder.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance):
                 largest_srf = area
-                largest_cylinder = cylinder.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance)
+                largest_cylinder = candidate_cylinder.CapPlanarHoles(sc.doc.ModelAbsoluteTolerance)
         print(largest_srf)
 
         # Check if the cylinder exists
@@ -82,11 +82,15 @@ class JointDetector:
         df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
         df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
         Bounding_geometry = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
-        rh_Bounding_geometry_center = Bounding_geometry.GetBoundingBox(True).Center
+        _rh_Bounding_geometry_center = Bounding_geometry.GetBoundingBox(True).Center
+        mean_X = sum([vertex.Location.X for vertex in self.brep.Vertices]) / self.brep.Vertices.Count
+        mean_Y = sum([vertex.Location.Y for vertex in self.brep.Vertices]) / self.brep.Vertices.Count
+        mean_Z = sum([vertex.Location.Z for vertex in self.brep.Vertices]) / self.brep.Vertices.Count
+        rh_Bounding_geometry_center = rg.Point3d(mean_X, mean_Y, mean_Z)
 
         # scale the bounding geometry in the longest edge direction by 1.5 from center on both directions
-        scale_factor = 0.2
-        xform = rg.Transform.Scale( rh_Bounding_geometry_center, 1 + scale_factor)
+        scale_factor = 1.2
+        xform = rg.Transform.Scale( rh_Bounding_geometry_center, scale_factor)
 
         largest_cylinder.Transform(xform)
 
@@ -110,12 +114,12 @@ class JointDetector:
             :return: a list of faces from joins and faces
         """
         # check if the brep is a cylinder beam
-        is_cylinder_beam, cylinder = self.is_cylinder_beam()
+        self.is_cylinder_beam, cylinder = self.is_cylinder_beam()
 
         # brep vertices to cloud
         df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
         df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
-        if is_cylinder_beam:
+        if self.is_cylinder_beam:
             Bounding_geometry = cylinder
         else:
             Bounding_geometry = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
@@ -128,7 +132,7 @@ class JointDetector:
 
         rh_Bounding_geometry_zaxis = rg.Vector3d(longest_edge.PointAt(1) - longest_edge.PointAt(0))
         rh_Bounding_geometry_plane = rg.Plane(rh_Bounding_geometry_center, rh_Bounding_geometry_zaxis)
-        scale_factor = 0.01
+        scale_factor = 0.1
         xform = rg.Transform.Scale(
             rh_Bounding_geometry_plane,
             1 - scale_factor,
@@ -179,4 +183,4 @@ class JointDetector:
 
         self._faces = [(face, face_ids[idx]) for idx, face in enumerate(self.brep.Faces)]
 
-        return self._faces, is_cylinder_beam
+        return self._faces, self.is_cylinder_beam
