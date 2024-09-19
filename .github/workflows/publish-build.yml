@@ -7,6 +7,12 @@ on:
   pull_request:
     branches: ["main"]
 
+# FIXME: to uncomment when ready for deploy
+# on:
+#   release:
+#     types: [published]
+#   workflow_dispatch:
+
 jobs:
   # sync-version:
   #   runs-on: windows-latest
@@ -86,10 +92,13 @@ jobs:
           choco install python --version=3.9.10
           python -m pip install pythonnet==3.0.3
 
-      - uses: ./.github/actions/gh-action-componentizer
-        with:
-          source: src/gh/components
-          target: build/gh
+      # - uses: ./.github/actions/gh-action-componentizer
+      #   with:
+      #     source: src/gh/components
+      #     target: build/gh
+
+      - name: Invoke the componentizer
+        run: invoke componentize
 
       - name: Flag the ghuser codes with the correct package version
         run: invoke flagerize
