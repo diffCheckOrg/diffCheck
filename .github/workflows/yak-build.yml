@@ -74,29 +74,32 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.DF_COBOT_PAT_TOKEN }}
       shell: pwsh
 
-  # build-ghusers:
-  #   runs-on: windows-latest
+  build-ghusers:
+    runs-on: windows-latest
 
-  #   steps:
-  #   - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
 
-  #   - name: Install Python and pythonnet
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: '3.9.10'
+      - name: Install CPython and pythonnet package
+        run: |
+          choco install python --version=3.9.10
+          python -m pip install pythonnet==3.0.3
 
-  #   - name: Install Python dependencies
-  #     run: |
-  #         python -m pip install --upgrade pip
-  #         pip install invoke
-  #         pip install pythonnet
+      - uses: ./.github/actions/gh-action-componentizer
+        with:
+          source: src/gh/components
+          target: build/gh
 
-  #   - name: Flag the ghuser codes with the correct package version
-  #     run: invoke flagerize
+      - name: Flag the ghuser codes with the correct package version
+        run: invoke flagerize
 
-  #   - name: commit the changes to the repo
-  #     run: git commit -am "Update the version across the project"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ghuser-components
+          path: build/gh
 
+      
 
 
 
