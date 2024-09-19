@@ -26,8 +26,17 @@ jobs:
 
     - name: Update the version across the project and commit the changes
       run: invoke versionize
+
+    - name: Install GitHub CLI
+      run: |
+        choco install gh
+    - name: Authenticate GitHub CLI
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+        
+    - name: Create a new branch and commit the version change
       # Delete branch remotely version-sync-branch (if exists)
-    - run: |
+      run: |
         git fetch --prune
         if git branch -r | grep -q 'origin/version-sync-branch'; then
           git push origin --delete version-sync-branch
