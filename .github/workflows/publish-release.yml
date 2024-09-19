@@ -310,6 +310,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: diffcheck_pypi_dist
+        path: dist/
 
     - name: Get YAK artifact path
       id: get_yak_path
@@ -319,7 +320,7 @@ jobs:
     - name: Get PyPI dist path
       id: get_pypi_dist_path
       run: |
-        echo "::set-output name=pypi_dist_path::$(find dist -name '*.whl')"
+        echo "::set-output name=pypi_dist_path::$(find dist/ -name '*.whl')"
       shell: bash
     - name: Print YAK artifact path
       run: |
