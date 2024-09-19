@@ -24,6 +24,11 @@ class DFCADSegmentator(component):
         if i_clouds is None or i_assembly is None:
             self.AddRuntimeMessage(RML.Warning, "Please provide a cloud and an assembly to segmentate")
             return None
+        if i_angle_threshold is None:
+            i_angle_threshold = 0.1
+        if i_association_threshold is None:
+            i_association_threshold = 0.1
+
         o_clusters = []
         df_clusters = []
         # we make a deepcopy of the input clouds
