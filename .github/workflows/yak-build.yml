@@ -71,7 +71,7 @@ jobs:
         $pr = gh pr list --head version-sync-branch --json number --jq '.[0].number'
         gh pr merge $pr --squash --delete-branch --admin
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.DF_COBOT_PAT_TOKEN }}
       shell: pwsh
 
   # build-ghusers:
