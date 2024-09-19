@@ -100,7 +100,7 @@ jobs:
       #     target: build/gh
 
       - name: Invoke the componentizer
-        run: invoke componentize
+        run: invoke ghcomponentize
 
       - name: Flag the ghuser codes with the correct package version
         run: invoke flagerize
