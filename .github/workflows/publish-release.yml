@@ -98,11 +98,6 @@ jobs:
           python -m pip install pythonnet==3.0.3
           python -m pip install invoke
 
-      # - uses: ./.github/actions/gh-action-componentizer
-      #   with:
-      #     source: src/gh/components
-      #     target: build/gh
-
       - name: create the build folder
         run: mkdir build
 
