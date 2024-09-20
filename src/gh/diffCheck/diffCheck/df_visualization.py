@@ -22,7 +22,8 @@ class DFVizSettings:
         legend_height,
         legend_width,
         legend_plane,
-        histogram_scale_factor):
+        histogram_scale_factor,
+        one_histogram_per_item):
 
         self.valueType = valueType
         self.palette = df_visualization.DFColorMap(palette)
@@ -32,6 +33,7 @@ class DFVizSettings:
         self.legend_width = legend_width
         self.legend_plane = legend_plane
         self.histogram_scale_factor = histogram_scale_factor
+        self.one_histogram_per_item = one_histogram_per_item
 
         self.str_repr = f"DFVizSettings: \n\t- Value type: {self.valueType}\n\t- Palette: {self.palette}\n\t- Upper threshold: {self.upper_threshold}\n\t- Lower threshold: {self.lower_threshold}\n\t- Legend height: {self.legend_height}\n\t- Legend width: {self.legend_width}\n\t- Legend plane: {self.legend_plane}\n\t- Histogram scale factor: {self.histogram_scale_factor}"
 
@@ -256,26 +258,19 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     return legend_geometry
 
 
-def create_histogram(values, min_value, max_value, res=100, steps=10,
-                     plane=rg.Plane.WorldXY, total_height=10,
-                     scaling_factor=0.01, spacing=0):
-    """
-    Create a histogram in Rhino with a polyline representing value frequencies.
-    """
-
-    height = total_height/res
-
-    histogram_geometry = []
-
-    # Calculate the size of each bin
-    bin_size = (max_value - min_value) / res
-
+def create_histogram_curve(values, min_value, max_value, res=100, bin_size=1,
+                           height=1, scaling_factor=0.01, spacing=0):
     # Initialize the frequency counts for each bin
     frequencies = [0] * (res + 1)
 
-    # if values is nested list, flatten it
-    if isinstance(values[0], list):
-        values = [item for sublist in values for item in sublist]
+    if isinstance(values, list):
+        # Check if the list is non-empty and the first element is a list
+        if len(values) > 0 and isinstance(values[0], list):
+            # Flatten the nested list
+            values = [item for sublist in values for item in sublist]
+    else:
+        # If values is a scalar, wrap it in a list
+        values = [values]
 
     # Count the frequencies of values in each bin
     for value in values:
@@ -286,6 +281,11 @@ def create_histogram(values, min_value, max_value, res=100, steps=10,
         bin_index = (value - min_value) // bin_size
         bin_index = int(bin_index)
         frequencies[bin_index] += 1
+
+    # Normalize frequencies to percentages
+    total_values = len(values)
+    for i in range(res + 1):
+        frequencies[i] = round((frequencies[i] / total_values) * 100, 2)
 
     # Create points for the polyline representing the histogram
     points = []
@@ -298,7 +298,41 @@ def create_histogram(values, min_value, max_value, res=100, steps=10,
 
     # Create the polyline and add it to the histogram geometry
     polyline = rg.Curve.CreateInterpolatedCurve(points, 1)
-    histogram_geometry.append(polyline)
+
+    return polyline, max_frequency
+
+def create_histogram(values, min_value, max_value, res=100, steps=10,
+                     plane=rg.Plane.WorldXY, total_height=10,
+                     scaling_factor=0.01, multiple_curves=False, spacing=0):
+    """
+    Create a histogram in Rhino with a polyline representing value frequencies.
+    """
+    print(multiple_curves)
+    print("test")
+
+    height = total_height/res
+
+    histogram_geometry = []
+
+    # Calculate the size of each bin
+    bin_size = (max_value - min_value) / res
+
+    max_frequency = 0
+
+    if multiple_curves:
+        for v in values:
+            polyline, max_freq = create_histogram_curve(v, min_value, max_value, res, 
+                                   bin_size, height,scaling_factor, spacing)
+
+            histogram_geometry.append(polyline)
+            if max_freq> max_frequency:
+                max_frequency = max_freq
+
+    else:
+        polyline, max_frequency = create_histogram_curve(values, min_value, max_value, res, 
+                                bin_size, height,scaling_factor, spacing)
+
+        histogram_geometry.append(polyline)
 
     # Create rectangles to extend the value axis for better visualization
     for i in range(steps):

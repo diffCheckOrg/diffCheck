@@ -182,7 +182,8 @@ class DFVisualizationSettings(component):
         i_legend_height: float,
         i_legend_width: float,
         i_legend_plane: rg.Plane,
-        i_histogram_scale_factor: float):
+        i_histogram_scale_factor: float,
+        i_one_histogram_per_item: bool):
 
         """
         Compiles all the visualization settings to feed to the visualization component
@@ -219,6 +220,8 @@ class DFVisualizationSettings(component):
             i_legend_plane = rg.Plane.WorldXY
         if i_histogram_scale_factor is None:
             i_histogram_scale_factor = 0.01
+        if i_one_histogram_per_item is None:
+            i_one_histogram_per_item  = False
 
         # pack settings
         o_viz_settings = df_visualization.DFVizSettings(i_value_type,
@@ -228,7 +231,8 @@ class DFVisualizationSettings(component):
                                                         i_legend_height,
                                                         i_legend_width,
                                                         i_legend_plane,
-                                                        i_histogram_scale_factor)
+                                                        i_histogram_scale_factor,
+                                                        i_one_histogram_per_item)
 
         return o_viz_settings
 
@@ -242,5 +246,6 @@ if __name__ == "__main__":
         i_legend_height,
         i_legend_width,
         i_legend_plane,
-        i_histogram_scale_factor
+        i_histogram_scale_factor,
+        i_one_histogram_per_item
         )
