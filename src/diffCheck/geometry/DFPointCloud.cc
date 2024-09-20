@@ -200,6 +200,22 @@ namespace diffCheck::geometry
         this->ApplyColor(color);
     }
 
+    void DFPointCloud::RemoveStatisticalOutliers(int nbNeighbors, double stdRatio)
+    {
+        std::shared_ptr<open3d::geometry::PointCloud> O3DPointCloud = this->Cvt2O3DPointCloud();
+        std::tuple<std::shared_ptr<open3d::geometry::PointCloud>, std::vector<size_t>> returnedTuple = O3DPointCloud->RemoveStatisticalOutliers(nbNeighbors, stdRatio);
+        std::shared_ptr<open3d::geometry::PointCloud> O3DPointCloudWithoutOutliers = std::get<0>(returnedTuple);
+        this->Points.clear();
+        for (auto &point : O3DPointCloudWithoutOutliers->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudWithoutOutliers->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudWithoutOutliers->normals_)
+            this->Normals.push_back(normal);
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
