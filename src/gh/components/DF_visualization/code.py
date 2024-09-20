@@ -14,7 +14,7 @@ class DFVisualization(component):
     def RunScript(self,
                   i_result: DFVizResults,
                   i_viz_settings: DFVizSettings):
-        
+ 
         values, min_value, max_value = i_result.filter_values_based_on_valuetype(i_viz_settings)
 
         # check if i_result.source is a list of pointclouds or a mesh
@@ -60,9 +60,9 @@ class DFVisualization(component):
 
         return o_colored_geo, o_legend, o_histogram
 
-if __name__ == "__main__":
-    com = DFVisualization()
-    o_colored_geo, o_legend, o_histogram = com.RunScript(
-        i_result,
-        i_viz_settings
-        )
+# if __name__ == "__main__":
+#     com = DFVisualization()
+#     o_colored_geo, o_legend, o_histogram = com.RunScript(
+#         i_result,
+#         i_viz_settings
+#         )

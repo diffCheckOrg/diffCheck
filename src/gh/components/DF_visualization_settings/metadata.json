@@ -120,6 +120,7 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "float"
+            }
         ],
         "outputParameters": [
             {

@@ -6,11 +6,12 @@ import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 from System.Windows.Forms import ToolStripSeparator
-
+import Grasshopper as gh
 import diffCheck
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
 from diffCheck.df_geometries import DFAssembly
+import Rhino
 
 
 class DFCloudMeshDistance(component):
@@ -46,7 +47,18 @@ class DFCloudMeshDistance(component):
         # calculate distances
         o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)
 
-        return o_result.distances, o_result.distances_rmse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
+        # Create a DataTree object
+        distances_tree = gh.DataTree[object]()
+
+        # Populate the DataTree with nested lists
+        for i, sublist in enumerate(o_result.distances):
+            for j, item in enumerate(sublist):
+                # Create a path for each branch (based on the index of the sublist)
+                path = gh.Kernel.Data.GH_Path(i)
+                # Add the item to the tree at the specified path
+                distances_tree.Add(item, path)
+
+        return distances_tree, o_result.distances_rmse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
 
 # if __name__ == "__main__":
 #     com = DFCloudMeshDistance()

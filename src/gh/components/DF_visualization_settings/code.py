@@ -221,7 +221,7 @@ class DFVisualizationSettings(component):
         if i_histogram_scale_factor is None:
             i_histogram_scale_factor = 0.01
         if i_one_histogram_per_item is None:
-            i_one_histogram_per_item  = False
+            i_one_histogram_per_item = False
 
         # pack settings
         o_viz_settings = df_visualization.DFVizSettings(i_value_type,
@@ -236,16 +236,16 @@ class DFVisualizationSettings(component):
 
         return o_viz_settings
 
-if __name__ == "__main__":
-    com = DFVisualizationSettings()
-    o_viz_settings = com.RunScript(
-        i_value_type,
-        i_palette,
-        i_upper_threshold,
-        i_lower_threshold,
-        i_legend_height,
-        i_legend_width,
-        i_legend_plane,
-        i_histogram_scale_factor,
-        i_one_histogram_per_item
-        )
+# if __name__ == "__main__":
+#     com = DFVisualizationSettings()
+#     o_viz_settings = com.RunScript(
+#         i_value_type,
+#         i_palette,
+#         i_upper_threshold,
+#         i_lower_threshold,
+#         i_legend_height,
+#         i_legend_width,
+#         i_legend_plane,
+#         i_histogram_scale_factor,
+#         i_one_histogram_per_item
+#         )
