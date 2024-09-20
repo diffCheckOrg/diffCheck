@@ -3,7 +3,6 @@
 import System
 
 import Rhino
-import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
