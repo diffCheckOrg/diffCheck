@@ -73,7 +73,7 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
 
    * - .. image:: ../src/gh/components/DF_remove_beam/icon.png
      - `gh_DFRemoveBeam <gh_DFRemoveBeam.html>`_
-     -
+     - 
      -
 
 

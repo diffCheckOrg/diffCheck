@@ -5,7 +5,7 @@
     "subcategory": "Cloud",
     "description": "Create unique point cloud from list of breps.",
     "exposure": 4,
-    "instanceGuid": "ada32cb6-778f-40b8-860e-38ca7ccf4f38",
+    "instanceGuid": "0194cbfc-1a6d-44a7-ae5d-7495db20edbe",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -16,7 +16,7 @@
             {
                 "name": "i_breps",
                 "nickname": "i_breps",
-                "description": "The breps based on which a point cloud is created.",
+                "description": "The breps to convert to point cloud.",
                 "optional": false,
                 "allowTreeAccess": false,
                 "showTypeHints": true,
@@ -42,7 +42,7 @@
             {
                 "name": "o_pointcloud",
                 "nickname": "o_pointcloud",
-                "description": "The generated pointcloud.",
+                "description": "The generated point cloud.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
