@@ -327,6 +327,10 @@ namespace diffCheck::segmentation
                 {
                     completed_segment->Points.push_back(point);
                     completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                    if (cluster->GetNumColors() > 0)
+                    {
+                        completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                    }
                 }
             }
             std::vector<int> indicesToRemove;
