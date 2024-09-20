@@ -1,0 +1,40 @@
+{
+    "name": "DFColorizeCloud",
+    "nickname": "ColorizeCloud",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Colorizes the point clouds of a list to differentiate them.",
+    "exposure": 4,
+    "instanceGuid": "9f2c57d5-38bc-4525-8176-9f17c3e58a3d",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_clouds",
+                "nickname": "i_clouds",
+                "description": "The pointclouds to be colorized.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_clouds",
+                "nickname": "o_clouds",
+                "description": "The downsampled cloud.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
