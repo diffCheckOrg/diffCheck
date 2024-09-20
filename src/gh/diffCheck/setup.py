@@ -22,7 +22,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
     ],
-    # include_package_data=True,
+    include_package_data=True,
     package_data={
         "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd"]
         },
