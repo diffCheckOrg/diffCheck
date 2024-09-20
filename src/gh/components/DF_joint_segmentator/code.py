@@ -47,37 +47,35 @@ class DFJointSegmentator(component):
                 df_joints[joint.id].append(df_cvt.cvt_rhmesh_2_dfmesh(face))
 
         o_reference_point_clouds = []
-        transforms = []
-        all_rh_joint_faces_segments = []
+        o_joint_faces_segments = []
         df_cloud_clusters = [df_cvt.cvt_rhcloud_2_dfcloud(cluster) for cluster in i_clusters]
         df_joint_clouds = []
-        # for each joint, find the corresponding clusters and merge them, generate a reference point cloud, and register the merged clusters to the reference point cloud
+
+        # for each joint, find the corresponding faces, store them as such but also merge them, generate a reference point cloud, and register the merged clusters to the reference point cloud
         for df_joint in df_joints:
             rh_joint_faces_segments = []
+
             # create the reference point cloud
             ref_df_joint_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
-            df_joint_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
             for face in df_joint:
                 ref_face_cloud = face.sample_points_uniformly(1000)
                 ref_df_joint_cloud.add_points(ref_face_cloud)
-
             o_reference_point_clouds.append(df_cvt.cvt_dfcloud_2_rhcloud(ref_df_joint_cloud))
 
             # find the corresponding clusters and merge them
+            df_joint_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
             df_joint_face_segments = diffcheck_bindings.dfb_segmentation.DFSegmentation.associate_clusters(df_joint, df_cloud_clusters, i_angle_threshold, i_distance_threshold)
             for df_joint_face_segment in df_joint_face_segments:
                         df_joint_cloud.add_points(df_joint_face_segment)
 
-            # register the merged clusters to the reference point cloud
+            # register the joint faces to the reference point cloud
             transform = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DICP(df_joint_cloud, ref_df_joint_cloud, max_correspondence_distance = i_correspondence_distance)
             for df_joint_face_segment in df_joint_face_segments:
                 df_joint_face_segment.apply_transformation(transform)
                 rh_joint_faces_segments.append(df_cvt.cvt_dfcloud_2_rhcloud(df_joint_face_segment))
-            transforms.append(transform)
             df_joint_clouds.append(df_joint_cloud)
-            all_rh_joint_faces_segments.append(rh_joint_faces_segments)
+            o_joint_faces_segments.append(rh_joint_faces_segments)
 
-        o_joint_faces_segments = all_rh_joint_faces_segments
         o_joint_segments = [df_cvt.cvt_dfcloud_2_rhcloud(df_joint_cloud) for df_joint_cloud in df_joint_clouds]
 
         return o_joint_faces_segments, o_joint_segments, o_reference_point_clouds

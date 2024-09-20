@@ -64,7 +64,7 @@
             {
                 "name": "i_correspondence_distance",
                 "nickname": "i_correspondence_distance",
-                "description": "The maximum correspondence distance for the local ICP registration that re-aligns the joints for per-face analysis of each joint.",
+                "description": "The maximum correspondence distance for the local ICP registration that re-aligns the joints for per-face analysis of each joint. The default value is 0.005",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
