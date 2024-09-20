@@ -65,4 +65,4 @@ class DFCADSegmentator(component):
 
         o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
-        return o_clusters, rh_beams_meshes
+        return o_clusters
