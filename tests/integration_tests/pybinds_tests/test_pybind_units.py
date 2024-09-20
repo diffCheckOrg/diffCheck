@@ -62,6 +62,13 @@ def get_two_connected_planes_ply_path():
         raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
     return ply_file_path
 
+def get_ply_plane_with_one_outlier_path():
+    base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
+    ply_file_path = os.path.join(base_test_data_dir, "test_pc_for_SOR_101pts_with_1_outlier.ply")
+    if not os.path.exists(ply_file_path):
+        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    return ply_file_path
+
 #------------------------------------------------------------------------------
 # dfb_geometry namespace
 #------------------------------------------------------------------------------
@@ -123,6 +130,12 @@ def create_DFMeshCube():
     df_mesh.load_from_PLY(get_ply_mesh_cube_path())
     yield df_mesh
 
+@pytest.fixture
+def create_DFPointCloudOneOutlier():
+    df_pcd = dfb.dfb_geometry.DFPointCloud()
+    df_pcd.load_from_PLY(get_ply_plane_with_one_outlier_path())
+    yield df_pcd
+
 # point cloud tests
 
 def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
@@ -163,6 +176,13 @@ def test_DFPointCloud_apply_color(create_DFPointCloudSampleRoof):
     pc.apply_color(255, 0, 0)
     for color in pc.colors:
         assert (color[0] == 1 and color[1] == 0 and color[2] == 0), "All colors should be (255, 0, 0)"
+
+def test_DFPointCloud_remove_statistical_outliers(create_DFPointCloudOneOutlier):
+    pc = create_DFPointCloudOneOutlier
+    pc.remove_statistical_outliers(50, 4)
+    assert pc.points.__len__() == 100, "DFPointCloud should have 100 points"
+    assert pc.normals.__len__() == pc.points.__len__(), "DFPointCloud should have as many normals as points"
+    assert pc.colors.__len__() == pc.points.__len__(), "DFPointCloud should have as many colors as points"
 
 def test_DFPointCloud_voxel_func(create_DFPointCloudSampleRoof):
     pc = create_DFPointCloudSampleRoof

@@ -79,6 +79,16 @@ namespace diffCheck::geometry
         void ApplyColor(const Eigen::Vector3d &color);
         void ApplyColor(int r, int g, int b);
 
+        /**
+         * @brief Remove the statistical outilers from the point cloud
+         * 
+         * @param nbNeighbors the number of neighbors to consider
+         * @param stdRatio the standard deviation ratio
+         * 
+         * @see https://www.open3d.org/docs/latest/cpp_api/classopen3d_1_1geometry_1_1_point_cloud.html#a9c34dee60f36ec36a7de4ae2d55623cd
+         */
+        void RemoveStatisticalOutliers(int nbNeighbors, double stdRatio);
+
     public:  ///< Downsamplers
         /**
          * @brief Downsample the point cloud with voxel grid

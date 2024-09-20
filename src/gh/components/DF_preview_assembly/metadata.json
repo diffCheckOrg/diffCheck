@@ -24,6 +24,18 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "ghdoc"
+            },
+            {
+                "name": "i_are_joints_visible",
+                "nickname": "i_are_joints_visible",
+                "description": "Show the joints' identifiers widgets.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
             }
         ],
         "outputParameters": [
