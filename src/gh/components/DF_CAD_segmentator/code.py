@@ -8,6 +8,7 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 
 from diffCheck.diffcheck_bindings import dfb_segmentation
+from diffCheck.diffcheck_bindings import dfb_geometry
 
 from diffCheck import df_cvt_bindings
 
@@ -18,7 +19,7 @@ class DFCADSegmentator(component):
         i_clouds: System.Collections.Generic.IList[Rhino.Geometry.PointCloud],
         i_assembly,
         i_angle_threshold: float = 0.1,
-        i_association_threshold: float = 0.1) -> rg.PointCloud:
+        i_association_threshold: float = 0.1) -> Rhino.Geometry.PointCloud:
 
         if i_clouds is None or i_assembly is None:
             self.AddRuntimeMessage(RML.Warning, "Please provide a cloud and an assembly to segmentate")
@@ -43,12 +44,15 @@ class DFCADSegmentator(component):
             df_beams_meshes.append(df_b_mesh_faces)
             rh_beams_meshes.append(rh_b_mesh_faces)
 
-            df_asssociated_cluster = dfb_segmentation.DFSegmentation.associate_clusters(
+            df_asssociated_cluster = dfb_geometry.DFPointCloud()
+            df_asssociated_cluster_faces = dfb_segmentation.DFSegmentation.associate_clusters(
                 reference_mesh=df_b_mesh_faces,
                 unassociated_clusters=df_clouds,
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold
             )
+            for df_associated_face in df_asssociated_cluster_faces:
+                df_asssociated_cluster.add_points(df_associated_face)
             df_clusters.append(df_asssociated_cluster)
 
         dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
