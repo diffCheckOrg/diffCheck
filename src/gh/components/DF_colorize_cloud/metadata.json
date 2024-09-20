@@ -1,11 +1,11 @@
 {
     "name": "DFColorizeCloud",
-    "nickname": "ColorizeCloud",
+    "nickname": "DFColorizeCloud",
     "category": "diffCheck",
     "subcategory": "Cloud",
-    "description": "Colorizes the point clouds of a list to differentiate them.",
+    "description": "Colorizes randomly a list of point clouds.",
     "exposure": 4,
-    "instanceGuid": "9f2c57d5-38bc-4525-8176-9f17c3e58a3d",
+    "instanceGuid": "c18ff8d2-6c5a-431d-a0b7-c44e2d7a690a",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -30,7 +30,7 @@
             {
                 "name": "o_clouds",
                 "nickname": "o_clouds",
-                "description": "The downsampled cloud.",
+                "description": "The point clouds now colorized.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
