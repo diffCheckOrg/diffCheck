@@ -2,7 +2,7 @@
 
 import System
 import typing
-
+import Rhino
 import Rhino.Geometry as rg
 
 from ghpythonlib.componentbase import executingcomponent as component

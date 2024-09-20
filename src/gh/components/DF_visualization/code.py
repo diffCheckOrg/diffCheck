@@ -3,7 +3,7 @@
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
-
+import Rhino
 from diffCheck import df_cvt_bindings
 from diffCheck import df_visualization
 from diffCheck.df_visualization import DFVizSettings
