@@ -1,0 +1,3 @@
+include README.md
+include diffCheck/dlls/*.dll
+include diffCheck/*.pyd

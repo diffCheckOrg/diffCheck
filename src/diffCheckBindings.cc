@@ -52,6 +52,9 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("apply_color", (void (diffCheck::geometry::DFPointCloud::*)(int, int, int)) &diffCheck::geometry::DFPointCloud::ApplyColor,
             py::arg("r"), py::arg("g"), py::arg("b"))
 
+        .def("remove_statistical_outliers", &diffCheck::geometry::DFPointCloud::RemoveStatisticalOutliers, 
+            py::arg("nb_neighbors"), py::arg("std_ratio"))
+
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
         .def("add_points", &diffCheck::geometry::DFPointCloud::AddPoints)
 

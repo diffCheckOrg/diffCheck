@@ -1,30 +1,29 @@
 #! python3
 
 
-import Rhino.Geometry as rg
+import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
-import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
-import diffCheck.df_util
 
 
 class DFFastGlobalRegistration(component):
     def RunScript(self,
-        i_cloud_source: rg.PointCloud,
-        i_cloud_target: rg.PointCloud,
-        i_radius_kd_search: float,
-        i_neighbours_kd_search: int,
-        i_max_corrspondence_dist: float,
-        i_iteration_number: int,
-        i_max_tuple_count: int
-    ) -> rg.Transform:
+            i_cloud_source: Rhino.Geometry.PointCloud,
+            i_cloud_target: Rhino.Geometry.PointCloud,
+            i_radius_kd_search: float,
+            i_neighbours_kd_search: int,
+            i_max_corrspondence_dist: float,
+            i_iteration_number: int,
+            i_max_tuple_count: int) -> Rhino.Geometry.Transform:
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
+        if not i_cloud_source.ContainsNormals or not i_cloud_target.ContainsNormals:
+            ghenv.Component.AddRuntimeMessage(RML.Error, "Please compute cloud's normals with a component before")  # noqa: F821
 
         # set default values
         if i_radius_kd_search is None:
@@ -37,11 +36,6 @@ class DFFastGlobalRegistration(component):
             i_iteration_number = 128
         if i_max_tuple_count is None:
             i_max_tuple_count = 1000
-
-        # get the working unit of the Rhino document, if other than meters, set a multiplier factor
-        scalef = diffCheck.df_util.get_doc_2_meters_unitf()
-        i_radius_kd_search *= scalef
-        i_max_corrspondence_dist *= scalef
 
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
         df_cloud_target = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_target)
@@ -64,11 +58,11 @@ class DFFastGlobalRegistration(component):
 
         # cvt df xform to rhino xform
         df_xform_matrix = df_xform.transformation_matrix
-        rh_form = rg.Transform()
+        rh_form = Rhino.Geometry.Transform()
         for i in range(4):
             for j in range(4):
                 rh_form[i, j] = df_xform_matrix[i, j]
-        if rh_form == rg.Transform.Identity:
+        if rh_form == Rhino.Geometry.Transform.Identity:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")  # noqa: F821
             return None
 

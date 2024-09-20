@@ -9,7 +9,7 @@ from diffCheck import df_cvt_bindings as df_cvt
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 from ghpythonlib.componentbase import executingcomponent as component
 
-import typing
+import System
 
 ABSTOL = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance
 
@@ -17,7 +17,7 @@ class DFJointSegmentator(component):
     def __init__(self):
         super(DFJointSegmentator, self).__init__()
     def RunScript(self,
-                  i_clusters: typing.List[Rhino.Geometry.PointCloud],
+                  i_clusters: System.Collections.Generic.List[Rhino.Geometry.PointCloud],
                   i_assembly: diffCheck.df_geometries.DFAssembly,
                   i_angle_threshold: float,
                   i_distance_threshold: float):

@@ -14,18 +14,6 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_recompute",
-                "nickname": "i_recompute",
-                "description": "Connect a button to recompute the registration.",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
-            {
                 "name": "i_use_generalized_icp",
                 "nickname": "i_use_generalized_icp",
                 "description": "Insert a toggle. If set to true, it will use the generalized ICP algorithm. If false, it will use the standard ICP algorithm.",
