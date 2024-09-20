@@ -16,8 +16,7 @@ class DFBrepToCloud(component):
 
         mesh_versions = []
 
-        if i_breps is None:
-            self.AddRuntimeMessage(RML.Warning, "Please provide a brep to convert to a cloud")
+        if i_breps is None or i_num_points is None:
             return None
 
         for i_brep in i_breps:

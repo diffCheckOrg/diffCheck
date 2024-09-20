@@ -76,6 +76,11 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
      - .. image:: ../src/gh/components/DF_colorize_cloud/icon.png
      - `gh_DFColorizeCloud <gh_DFColorizeCloud.html>`_
 
+   * - .. image:: ../src/gh/components/DF_brep_to_cloud/icon.png
+     - `gh_DFBrepToCloud <gh_DFBrepToCloud.html>`_
+     - 
+     -
+
 
 
 .. toctree::
@@ -108,3 +113,4 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
    gh_DFPreviewAssembly
    gh_DFRemoveBeam
    gh_DFColorizeCloud
+   gh_DFBrepToCloud
