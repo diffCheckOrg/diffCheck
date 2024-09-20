@@ -78,8 +78,8 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
 
    * - .. image:: ../src/gh/components/DF_brep_to_cloud/icon.png
      - `gh_DFBrepToCloud <gh_DFBrepToCloud.html>`_
-     - 
-     -
+     - .. image:: ../src/gh/components/DF_remove_statistical_outliers/icon.png
+     - `gh_DFRemoveStatisticalOutliers <gh_DFRemoveStatisticalOutliers.html>`_
 
 
 
