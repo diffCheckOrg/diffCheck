@@ -1,7 +1,7 @@
 #! python3
 
 
-import Rhino.Geometry as rg
+import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
@@ -12,8 +12,8 @@ from diffCheck import df_cvt_bindings
 
 class DFRANSACGlobalRegistration(component):
     def RunScript(self,
-        i_cloud_source: rg.PointCloud,
-        i_cloud_target: rg.PointCloud,
+        i_cloud_source: Rhino.Geometry.PointCloud,
+        i_cloud_target: Rhino.Geometry.PointCloud,
         i_radius_kd_search: float,
         i_neighbours_kd_search: int,
         i_max_corrspondence_dist: float,
@@ -23,8 +23,7 @@ class DFRANSACGlobalRegistration(component):
         i_similarity_threshold: float,
         i_max_iterations: int,
         i_confidence_threshold: float
-    ) -> rg.Transform:
-        # preliminary checks
+    ) -> Rhino.Geometry.Transform:
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
@@ -78,11 +77,11 @@ class DFRANSACGlobalRegistration(component):
 
         # cvt df xform to rhino xform
         df_xform_matrix = df_xform.transformation_matrix
-        rh_form = rg.Transform()
+        rh_form = Rhino.Geometry.Transform()
         for i in range(4):
             for j in range(4):
                 rh_form[i, j] = df_xform_matrix[i, j]
-        if rh_form == rg.Transform.Identity:
+        if rh_form == Rhino.Geometry.Transform.Identity:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The transformation matrix is identity, no transformation is applied")  # noqa: F821
             return None
 
