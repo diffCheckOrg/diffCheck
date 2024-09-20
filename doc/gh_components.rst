@@ -73,8 +73,8 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
 
    * - .. image:: ../src/gh/components/DF_remove_beam/icon.png
      - `gh_DFRemoveBeam <gh_DFRemoveBeam.html>`_
-     -
-     -
+     - .. image:: ../src/gh/components/DF_colorize_cloud/icon.png
+     - `gh_DFColorizeCloud <gh_DFColorizeCloud.html>`_
 
 
 
@@ -107,3 +107,4 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
    gh_DFXMLExporter
    gh_DFPreviewAssembly
    gh_DFRemoveBeam
+   gh_DFColorizeCloud
