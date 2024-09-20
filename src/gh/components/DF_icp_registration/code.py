@@ -6,10 +6,8 @@ from ghpythonlib.componentbase import executingcomponent as component
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
-import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
-import diffCheck.df_util
 
 
 class DFICPRegistration(component):
@@ -25,9 +23,12 @@ class DFICPRegistration(component):
         is_t_estimate_pt2pt: bool,  # valid only for 03dicp
         i_use_point_to_plane: bool  # valid only for 03dicp
     ) -> rg.Transform:
+        # preliminary checks
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
+        if not i_cloud_source.ContainsNormals or not i_cloud_target.ContainsNormals:
+            ghenv.Component.AddRuntimeMessage(RML.Error, "Please compute cloud's normals with a component before")  # noqa: F821
 
         # set default values
         if i_use_generalized_icp is None:
@@ -36,10 +37,6 @@ class DFICPRegistration(component):
             i_max_corrspondence_dist = 5
         if i_max_iteration is None:
             i_max_iteration = 50
-
-        # get the working unit of the Rhino document, if other than meters, set a multiplier factor
-        scalef = diffCheck.df_util.get_doc_2_meters_unitf()
-        i_max_corrspondence_dist *= scalef
 
         # conversion
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)

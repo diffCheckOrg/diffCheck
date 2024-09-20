@@ -6,10 +6,9 @@ from ghpythonlib.componentbase import executingcomponent as component
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
-import diffCheck
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings
-import diffCheck.df_util
+
 
 class DFRANSACGlobalRegistration(component):
     def RunScript(self,
@@ -25,9 +24,12 @@ class DFRANSACGlobalRegistration(component):
         i_max_iterations: int,
         i_confidence_threshold: float
     ) -> rg.Transform:
+        # preliminary checks
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to align")  # noqa: F821
             return None
+        if not i_cloud_source.ContainsNormals or not i_cloud_target.ContainsNormals:
+            ghenv.Component.AddRuntimeMessage(RML.Error, "Please compute cloud's normals with a component before")  # noqa: F821
 
         # set default values
         if i_radius_kd_search is None:
@@ -48,12 +50,6 @@ class DFRANSACGlobalRegistration(component):
             i_max_iterations = 5000
         if i_confidence_threshold is None:
             i_confidence_threshold = 0.999
-
-        # get the working unit of the Rhino document, if other than meters, set a multiplier factor
-        scalef = diffCheck.df_util.get_doc_2_meters_unitf()
-        i_radius_kd_search *= scalef
-        i_max_corrspondence_dist *= scalef
-        i_checker_dist *= scalef
 
         # conversion
         df_cloud_source = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source)
