@@ -123,10 +123,19 @@ namespace diffCheck::segmentation
 
                 double faceDistance = std::numeric_limits<double>::max();
                 std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
-
-                std::vector<Eigen::Vector3d> minmax = face->GetTightBoundingBox();
-                Eigen::Vector3d min = minmax[0];
-                Eigen::Vector3d max = minmax[1];
+                
+                Eigen::Vector3d min = face->Vertices[0];
+                Eigen::Vector3d max = face->Vertices[0];
+                for (auto vertex : face->Vertices)
+                {
+                    if(vertex.x() < min.x()){min.x() = vertex.x();}
+                    if(vertex.y() < min.y()){min.y() = vertex.y();}
+                    if(vertex.z() < min.z()){min.z() = vertex.z();}
+                    if(vertex.x() > max.x()){max.x() = vertex.x();}
+                    if(vertex.y() > max.y()){max.y() = vertex.y();}
+                    if(vertex.z() > max.z()){max.z() = vertex.z();}
+                    
+                }
 
                 if (clusters.size() == 0)
                 {

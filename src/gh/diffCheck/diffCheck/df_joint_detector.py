@@ -47,13 +47,10 @@ class JointDetector:
 
         return extended_ids
 
-    def is_cylinder_beam(self):
+    def find_largest_cylinder(self):
         """
-            Detects if the brep is a cylinder beam.
-            This is done by finding the largest cylinder in the brep,
-            and looking if all brep vertices are inside the cylinder.
+            Finds and returns the largest cylinder in the brep
 
-            :return: True if the brep is detected as a cylinder beam, False otherwise
             :return: the largest cylinder if beam detected as a cylinder, None otherwise
         """
 
@@ -77,35 +74,12 @@ class JointDetector:
         # Check if the cylinder exists
         if largest_cylinder is None:
             print("No cylinder found")
-            return False, None
+            return None
 
-        df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
-        df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
-        Bounding_geometry = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
-        _rh_Bounding_geometry_center = Bounding_geometry.GetBoundingBox(True).Center
-        mean_X = sum([vertex.Location.X for vertex in self.brep.Vertices]) / self.brep.Vertices.Count
-        mean_Y = sum([vertex.Location.Y for vertex in self.brep.Vertices]) / self.brep.Vertices.Count
-        mean_Z = sum([vertex.Location.Z for vertex in self.brep.Vertices]) / self.brep.Vertices.Count
-        rh_Bounding_geometry_center = rg.Point3d(mean_X, mean_Y, mean_Z)
-
-        # scale the bounding geometry in the longest edge direction by 1.5 from center on both directions
-        scale_factor = 1.2
-        xform = rg.Transform.Scale( rh_Bounding_geometry_center, scale_factor)
-
-        largest_cylinder.Transform(xform)
-
-        # check if all vertices are inside the cylinder
-        for vertex in self.brep.Vertices:
-            if not largest_cylinder.IsPointInside(vertex.Location, sc.doc.ModelAbsoluteTolerance, False):
-                print("Not all vertices are inside the cylinder !! bummer")
-                return False, None
-
-        largest_cylinder.Transform(xform.TryGetInverse()[1])
-        print("All vertices are inside the cylinder !! Yey" )
-        return True, largest_cylinder
+        return largest_cylinder
 
 
-    def run(self):
+    def run(self, is_cylinder_beam):
         """
             Run the joint detector. We use a dictionary to store the faces of the cuts based wethear they are cuts or holes.
             - for cuts: If it is a cut we return the face, and the id of the joint the faces belongs to.
@@ -113,13 +87,12 @@ class JointDetector:
 
             :return: a list of faces from joins and faces
         """
-        # check if the brep is a cylinder beam
-        self.is_cylinder_beam, cylinder = self.is_cylinder_beam()
 
         # brep vertices to cloud
         df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
         df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
-        if self.is_cylinder_beam:
+        if is_cylinder_beam:
+            cylinder = self.find_largest_cylinder()
             Bounding_geometry = cylinder
         else:
             Bounding_geometry = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
@@ -153,11 +126,15 @@ class JointDetector:
             is_inside is bool
         '''
         faces = {}
-        for idx, face in enumerate(self.brep.Faces):
-            face_centroid = rg.AreaMassProperties.Compute(face).Centroid
-            coord = face.ClosestPoint(face_centroid)
-            projected_centroid = face.PointAt(coord[1], coord[2])
-            faces[idx] = (face, Bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True))
+        if is_cylinder_beam:
+            for idx, face in enumerate(self.brep.Faces):
+                faces[idx] = (face, face.IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance))
+        else:
+            for idx, face in enumerate(self.brep.Faces):
+                face_centroid = rg.AreaMassProperties.Compute(face).Centroid
+                coord = face.ClosestPoint(face_centroid)
+                projected_centroid = face.PointAt(coord[1], coord[2])
+                faces[idx] = (face, Bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True))
 
         # compute the adjacency list of each face
         adjacency_of_faces = {}
@@ -172,9 +149,9 @@ class JointDetector:
             adj_face_id_1, adj_face_id_2, ... are int
         '''
         for idx, face in faces.items():
-            if not face[1] or face[0].IsCylinder(tolerance=sc.doc.ModelAbsoluteTolerance):
+            if not face[1]:
                 continue
-            adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and not faces[adj_face][0].IsCylinder() and adj_face != idx])
+            adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and faces[adj_face][0].IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance) and adj_face != idx]) # used to be not faces[adj_face][0].IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance)
         adjacency_of_faces = diffCheck.df_util.merge_shared_indexes(adjacency_of_faces)
         joint_face_ids = [[key] + value[1] for key, value in adjacency_of_faces.items()]
 
@@ -183,4 +160,4 @@ class JointDetector:
 
         self._faces = [(face, face_ids[idx]) for idx, face in enumerate(self.brep.Faces)]
 
-        return self._faces, self.is_cylinder_beam
+        return self._faces
