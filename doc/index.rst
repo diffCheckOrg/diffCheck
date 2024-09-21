@@ -170,7 +170,6 @@ The software is developed by the `Laboratory of Timber Construction (IBOIS)`_ an
     diffCheck_PythonAPI
     dev_documentation
     glossary
-    change_log
 
 
 .. _Laboratory of Timber Construction (IBOIS): https://www.epfl.ch/labs/ibois/
