@@ -3,6 +3,7 @@
 import System
 
 import Rhino
+import ghpythonlib.treehelpers
 
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings as df_cvt
@@ -22,6 +23,8 @@ class DFJointSegmentator(component):
             i_distance_threshold: float,
             i_correspondence_distance: float,):
 
+        if i_clusters is None or i_assembly is None:
+            return None
         if i_angle_threshold is None:
             i_angle_threshold = 0.1
         if i_distance_threshold is None:
@@ -77,4 +80,6 @@ class DFJointSegmentator(component):
 
         o_joint_segments = [df_cvt.cvt_dfcloud_2_rhcloud(df_joint_cloud) for df_joint_cloud in df_joint_clouds]
 
-        return o_joint_faces_segments, o_joint_segments, o_reference_point_clouds
+        o_gh_tree_joint_faces_segments = ghpythonlib.treehelpers.list_to_tree(o_joint_faces_segments)
+
+        return o_gh_tree_joint_faces_segments, o_joint_segments, o_reference_point_clouds
