@@ -36,6 +36,18 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "brep"
+            },
+            {
+                "name": "i_is_cylinder",
+                "nickname": "i_is_cylinder",
+                "description": "Whether the beams are cylinders or not.",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
             }
         ],
         "outputParameters": [
