@@ -5,7 +5,7 @@
     "subcategory": "Segmentation",
     "description": "Extracts the joints from a point cloud.",
     "exposure": 4,
-    "instanceGuid": "fd804928-bf11-43eb-a29f-8afabefa660d",
+    "instanceGuid": "bf27b323-6b03-42f2-a2de-638aeb2c08f9",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -50,9 +50,21 @@
                 "typeHintID": "float"
             },
             {
-                "name": "i_association_threshold",
-                "nickname": "i_association_threshold",
+                "name": "i_distance_threshold",
+                "nickname": "i_distance_threshold",
                 "description": "From 0 to infinite. By default 0.1. The closer to 0 the less permissive your point.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_correspondence_distance",
+                "nickname": "i_correspondence_distance",
+                "description": "The maximum correspondence distance for the local ICP registration that re-aligns the joints for per-face analysis of each joint. The default value is 0.005",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -64,17 +76,17 @@
         ],
         "outputParameters": [
             {
-                "name": "o_joint_segments",
-                "nickname": "o_joint_segments",
-                "description": "The extracted joints.",
+                "name": "o_joint_face_segments",
+                "nickname": "o_joint_face_segments",
+                "description": "The individual faces of the extracted joints.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
             },
             {
-                "name": "o_transforms",
-                "nickname": "o_transforms",
-                "description": "The transformations for each joint.",
+                "name": "o_joint_segments",
+                "nickname": "o_joint_segments",
+                "description": "The extracted joints.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
