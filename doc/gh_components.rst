@@ -114,3 +114,4 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
    gh_DFRemoveBeam
    gh_DFColorizeCloud
    gh_DFBrepToCloud
+   gh_DFRemoveStatisticalOutliers
