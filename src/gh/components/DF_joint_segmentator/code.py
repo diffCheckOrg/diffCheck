@@ -1,4 +1,3 @@
-"""Extracts the joints from a point cloud."""
 #! python3
 
 import System

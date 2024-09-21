@@ -168,13 +168,7 @@ namespace diffCheck::segmentation
                 bool pointInFace = false;
                 if (face->IsPointOnFace(point, associationThreshold))
                 {
-                    std::cout << "Point is on face" << std::endl;
-                    std::cout << point << std::endl;
-                    std::cout << correspondingSegment->Normals[std::distance(correspondingSegment->Points.begin(), std::find(correspondingSegment->Points.begin(), correspondingSegment->Points.end(), point))] << std::endl;
-                    std::cout << correspondingSegment->Colors[std::distance(correspondingSegment->Points.begin(), std::find(correspondingSegment->Points.begin(), correspondingSegment->Points.end(), point))] << std::endl;
-                    std::cout << "pipopu" << std::endl;
                     facePoints->Points.push_back(point);
-                    std::cout << "pipopou_bis" << std::endl;
                     facePoints->Normals.push_back(
                         correspondingSegment->Normals[std::distance(
                             correspondingSegment->Points.begin(), 
@@ -182,7 +176,6 @@ namespace diffCheck::segmentation
                             correspondingSegment->Points.end(), 
                             point))]
                         );
-                    std::cout << "pipopou_bis_bis" << std::endl;
                     if (hasColors)
                     {
                         facePoints->Colors.push_back(
@@ -193,11 +186,9 @@ namespace diffCheck::segmentation
                                 point))]
                             );
                     }
-                    std::cout << "pipopououou" << std::endl;
                 }
             }
             
-            std::cout << "pipopouououou_encore" << std::endl;
             for(Eigen::Vector3d point : facePoints->Points)
             {
                 correspondingSegment->Points.erase(
@@ -207,10 +198,8 @@ namespace diffCheck::segmentation
                         point), 
                     correspondingSegment->Points.end());
             }
-            std::cout << "pipopouououou_encore_bis" << std::endl;
         jointFaces.push_back(facePoints);
         }
-        std::cout << "pipopouououou_encore_ter" << std::endl;
         return jointFaces;
     }
 

@@ -5,7 +5,7 @@
     "subcategory": "Segmentation",
     "description": "Extracts the joints from a point cloud.",
     "exposure": 4,
-    "instanceGuid": "fd804928-bf11-43eb-a29f-8afabefa660d",
+    "instanceGuid": "bf27b323-6b03-42f2-a2de-638aeb2c08f9",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
