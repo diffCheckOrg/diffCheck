@@ -10,11 +10,11 @@ import os
 
 class DFCsvExporter(component):
     def RunScript(self,
-        i_dump: bool,
-        i_export_dir: str,
-        i_file_name: str,
-        i_export_seperate_files: bool,
-        i_result: DFVizResults):
+                  i_dump: bool,
+                  i_export_dir: str,
+                  i_file_name: str,
+                  i_export_seperate_files: bool,
+                  i_result: DFVizResults):
 
         if i_dump:
             # Ensure the export directory exists
@@ -36,12 +36,12 @@ class DFCsvExporter(component):
                     for list_of_values in i_result.distances:
                         writer.writerow([list_of_values])
 
-if __name__ == "__main__":
-    com = DFCsvExporter()
-    o_viz_settings = com.RunScript(
-        i_dump,
-        i_export_dir,
-        i_file_name,
-        i_export_seperate_files,
-        i_result
-        )
+# if __name__ == "__main__":
+#     com = DFCsvExporter()
+#     o_viz_settings = com.RunScript(
+#         i_dump,
+#         i_export_dir,
+#         i_file_name,
+#         i_export_seperate_files,
+#         i_result
+#         )

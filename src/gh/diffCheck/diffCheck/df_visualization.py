@@ -321,7 +321,7 @@ def create_histogram(values, min_value, max_value, res=100, steps=10,
 
     if multiple_curves:
         for v in values:
-            polyline, max_freq = create_histogram_curve(v, min_value, max_value, res, 
+            polyline, max_freq = create_histogram_curve(v, min_value, max_value, res,
                                    bin_size, height,scaling_factor, spacing)
 
             histogram_geometry.append(polyline)
@@ -329,7 +329,7 @@ def create_histogram(values, min_value, max_value, res=100, steps=10,
                 max_frequency = max_freq
 
     else:
-        polyline, max_frequency = create_histogram_curve(values, min_value, max_value, res, 
+        polyline, max_frequency = create_histogram_curve(values, min_value, max_value, res,
                                 bin_size, height,scaling_factor, spacing)
 
         histogram_geometry.append(polyline)

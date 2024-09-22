@@ -3,18 +3,18 @@
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
-import Rhino
 from diffCheck import df_cvt_bindings
 from diffCheck import df_visualization
 from diffCheck.df_visualization import DFVizSettings
 from diffCheck.df_error_estimation import DFVizResults
 from diffCheck import diffcheck_bindings
 
+
 class DFVisualization(component):
     def RunScript(self,
                   i_result: DFVizResults,
                   i_viz_settings: DFVizSettings):
- 
+
         values, min_value, max_value = i_result.filter_values_based_on_valuetype(i_viz_settings)
 
         # check if i_result.source is a list of pointclouds or a mesh

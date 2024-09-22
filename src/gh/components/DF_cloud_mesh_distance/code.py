@@ -4,12 +4,10 @@ import System
 import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
-from System.Windows.Forms import ToolStripSeparator
 import Grasshopper as gh
 import diffCheck
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
-from diffCheck.df_geometries import DFAssembly
 
 
 class DFCloudMeshDistance(component):
