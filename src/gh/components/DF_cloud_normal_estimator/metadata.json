@@ -50,8 +50,8 @@
                 "typeHintID": "int"
             },
             {
-                "name": "i_bool",
-                "nickname": "i_bool",
+                "name": "i_switch_mode",
+                "nickname": "i_switch_mode",
                 "description": "Switch between Open3d (true) or Cilantro (false) library. Default is Open3d.",
                 "optional": true,
                 "allowTreeAccess": true,
