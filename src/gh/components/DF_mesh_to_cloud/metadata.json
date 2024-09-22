@@ -14,13 +14,13 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_mesh",
-                "nickname": "i_mesh",
-                "description": "Mesh to sample into a point cloud.",
+                "name": "i_meshes",
+                "nickname": "i_meshes",
+                "description": "Meshes to sample into a point cloud.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "item",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "mesh"

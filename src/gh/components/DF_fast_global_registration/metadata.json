@@ -14,18 +14,6 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_recompute",
-                "nickname": "i_recompute",
-                "description": "Connect a button to recompute the registration.",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
-            {
                 "name": "i_cloud_source",
                 "nickname": "i_cloud_source",
                 "description": "The source point cloud.",

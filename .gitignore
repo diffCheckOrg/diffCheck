@@ -20,6 +20,11 @@
 *.dll
 # except for GH_IO.dll
 !GH_IO.dll
+!DocoptNet.dll
+!Newtonsoft.Json.Rhino.dll
+!Yak.Core.dll
+!YamlDotNet.dll
+!Grasshopper.dll
 
 # Fortran module files
 *.mod
@@ -33,6 +38,7 @@
 
 # Executables
 *.exe
+!Yak.exe
 *.out
 *.app
 

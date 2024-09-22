@@ -34,7 +34,7 @@ namespace diffCheck::segmentation
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
          * @return std::shared_ptr<geometry::DFPointCloud> The unified segments
          */
-        static std::shared_ptr<geometry::DFPointCloud> DFSegmentation::AssociateClustersToMeshes(
+        static std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::AssociateClustersToMeshes(
             bool isCylinder,
             std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,

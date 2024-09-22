@@ -95,21 +95,20 @@ namespace diffCheck::segmentation
         return segments;
     }
 
-    std::shared_ptr<geometry::DFPointCloud> DFSegmentation::AssociateClustersToMeshes(
+    std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::AssociateClustersToMeshes(
         bool isCylinder,
         std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
         std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
         double angleThreshold,
         double associationThreshold)
     {
-        std::shared_ptr<geometry::DFPointCloud> unifiedPointCloud = std::make_shared<geometry::DFPointCloud>();
+        std::vector<std::shared_ptr<geometry::DFPointCloud>> faceSegments = std::vector<std::shared_ptr<geometry::DFPointCloud>>();
 
         // iterate through the mesh faces given as function argument
         if (referenceMesh.size() == 0)
         {
             DIFFCHECK_WARN("No mesh faces to associate with the clusters. Returning an empty point cloud.");
-            return unifiedPointCloud;
-
+            return std::vector<std::shared_ptr<geometry::DFPointCloud>>();
         }
 
         //differentiate between cylinder and other shapes
@@ -123,7 +122,8 @@ namespace diffCheck::segmentation
 
                 double faceDistance = std::numeric_limits<double>::max();
                 std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
-                
+                std::shared_ptr<geometry::DFPointCloud> facePoints = std::make_shared<geometry::DFPointCloud>();
+
                 Eigen::Vector3d min = face->Vertices[0];
                 Eigen::Vector3d max = face->Vertices[0];
                 for (auto vertex : face->Vertices)
@@ -140,7 +140,7 @@ namespace diffCheck::segmentation
                 if (clusters.size() == 0)
                 {
                     DIFFCHECK_WARN("No clusters to associate with the mesh faces. Returning an empty point cloud.");
-                    return unifiedPointCloud;
+                    return std::vector<std::shared_ptr<geometry::DFPointCloud>>();
                 }
                 for (auto segment : clusters)
                 {
@@ -182,25 +182,33 @@ namespace diffCheck::segmentation
                     DIFFCHECK_WARN("No segment found for the face. Skipping the face.");
                     continue;
                 }
+                bool hasColors = correspondingSegment->GetNumColors() > 0;
                 for (Eigen::Vector3d point : correspondingSegment->Points)
                 {
                     bool pointInFace = false;
-
-                    unifiedPointCloud->Points.push_back(point);
-                    unifiedPointCloud->Normals.push_back(
-                        correspondingSegment->Normals[std::distance(
-                            correspondingSegment->Points.begin(), 
-                            std::find(correspondingSegment->Points.begin(), 
-                            correspondingSegment->Points.end(),
-                            point))]);
+                    if (face->IsPointOnFace(point, associationThreshold))
+                    {
+                        facePoints->Points.push_back(point);
+                        facePoints->Normals.push_back(
+                            correspondingSegment->Normals[std::distance(
+                                correspondingSegment->Points.begin(), 
+                                std::find(correspondingSegment->Points.begin(), 
+                                correspondingSegment->Points.end(), 
+                                point))]
+                            );
+                        if (hasColors)
+                        {
+                            facePoints->Colors.push_back(
+                                correspondingSegment->Colors[std::distance(
+                                    correspondingSegment->Points.begin(), 
+                                    std::find(correspondingSegment->Points.begin(), 
+                                    correspondingSegment->Points.end(), 
+                                    point))]
+                                );
+                        }
+                    }
                 }
-                // removing points from the segment that are in the face
-                if (unifiedPointCloud->GetNumPoints() == 0)
-                {
-                    DIFFCHECK_WARN("No point was associated to this segment. Skipping the segment.");
-                    continue;
-                }
-                for(Eigen::Vector3d point : unifiedPointCloud->Points)
+                for(Eigen::Vector3d point : facePoints->Points)
                 {
                     correspondingSegment->Points.erase(
                         std::remove(
@@ -219,6 +227,7 @@ namespace diffCheck::segmentation
                             correspondingSegment), 
                         clusters.end());
                 }
+                faceSegments.push_back(facePoints);
             }
             
         }
@@ -227,6 +236,7 @@ namespace diffCheck::segmentation
             for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
             {
                 std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
+                std::shared_ptr<geometry::DFPointCloud> facePoints = std::make_shared<geometry::DFPointCloud>();
 
                 // Getting the center of the mesh
                 Eigen::Vector3d faceCenter = face->Cvt2O3DTriangleMesh()->GetCenter();
@@ -239,7 +249,7 @@ namespace diffCheck::segmentation
                 if (clusters.size() == 0)
                 {
                     DIFFCHECK_WARN("No clusters to associate with the mesh faces. Returning an empty point cloud.");
-                    return unifiedPointCloud;
+                    return std::vector<std::shared_ptr<geometry::DFPointCloud>>();
                 }
                 for (auto segment : clusters)
                 {   
@@ -256,10 +266,8 @@ namespace diffCheck::segmentation
                         DIFFCHECK_WARN("Empty segment. Skipping the segment.");
                         continue;
                     }
-
                     for (auto normal : segment->Normals){segmentNormal += normal;}
                     segmentNormal.normalize();
-
                     double currentDistance = (faceCenter - segmentCenter).norm();
                     // if the distance is smaller than the previous one, update the distance and the corresponding segment
                     if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance < faceDistance)
@@ -267,7 +275,6 @@ namespace diffCheck::segmentation
                         correspondingSegment = segment;
                         faceDistance = currentDistance;
                     }
-                    
                 }
 
                 if (correspondingSegment == nullptr)
@@ -275,28 +282,35 @@ namespace diffCheck::segmentation
                     DIFFCHECK_WARN("No segment found for the face. Skipping the face.");
                     continue;
                 }
+                bool hasColors = correspondingSegment->GetNumColors() > 0;
+
                 for (Eigen::Vector3d point : correspondingSegment->Points)
                 {
                     bool pointInFace = false;
                     if (face->IsPointOnFace(point, associationThreshold))
                     {
-                        unifiedPointCloud->Points.push_back(point);
-                        unifiedPointCloud->Normals.push_back(
+                        facePoints->Points.push_back(point);
+                        facePoints->Normals.push_back(
                             correspondingSegment->Normals[std::distance(
                                 correspondingSegment->Points.begin(), 
                                 std::find(correspondingSegment->Points.begin(), 
                                 correspondingSegment->Points.end(), 
                                 point))]
                             );
+                        if (hasColors)
+                        {
+                            facePoints->Colors.push_back(
+                                correspondingSegment->Colors[std::distance(
+                                    correspondingSegment->Points.begin(), 
+                                    std::find(correspondingSegment->Points.begin(), 
+                                    correspondingSegment->Points.end(), 
+                                    point))]
+                                );
+                        }
                     }
                 }
-                // removing points from the segment that are in the face
-                if (unifiedPointCloud->GetNumPoints() == 0)
-                {
-                    DIFFCHECK_WARN("No point was associated to this segment. Skipping the segment.");
-                    continue;
-                }
-                for(Eigen::Vector3d point : unifiedPointCloud->Points)
+                
+                for(Eigen::Vector3d point : facePoints->Points)
                 {
                     correspondingSegment->Points.erase(
                         std::remove(
@@ -305,9 +319,10 @@ namespace diffCheck::segmentation
                             point), 
                         correspondingSegment->Points.end());
                 }
+                faceSegments.push_back(facePoints);
             }
         }
-        return unifiedPointCloud;
+        return faceSegments;
     }
 
     void DFSegmentation::CleanUnassociatedClusters(
@@ -455,13 +470,14 @@ namespace diffCheck::segmentation
                     {
                         completed_segment->Points.push_back(point);
                         completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
-                        
+                        completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
                     }
                     else
                         if (correspondingMeshFace->IsPointOnFace(point, associationThreshold))
                         {
                             completed_segment->Points.push_back(point);
                             completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                            completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
                         }
                 }
                 std::vector<int> indicesToRemove;
@@ -479,6 +495,8 @@ namespace diffCheck::segmentation
                     cluster->Points.pop_back();
                     std::swap(cluster->Normals[*it], cluster->Normals.back());
                     cluster->Normals.pop_back();
+                    std::swap(cluster->Colors[*it], cluster->Colors.back());
+                    cluster->Colors.pop_back();
                 }
             }
         }

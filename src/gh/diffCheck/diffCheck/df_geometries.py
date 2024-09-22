@@ -289,6 +289,7 @@ class DFBeam:
         self.faces = self.faces or []
         self._joint_faces = []
         self._side_faces = []
+        self._vertices = []
 
         self._joints = []
 
@@ -392,6 +393,15 @@ class DFBeam:
         if self._index_assembly is None:
             raise ValueError("The beam is not added to an assembly")
         return self._index_assembly
+
+    @property
+    def vertices(self):
+        self._vertices = []
+        for face in self.faces:
+            all_loops_cpy = face.all_loops.copy()
+            for loop in all_loops_cpy:
+                self._vertices.extend(loop)
+        return self._vertices
 
 
 @dataclass

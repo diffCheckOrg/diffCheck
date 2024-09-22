@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="diffCheck",
-    version="0.0.24",
+    version="0.0.37",
     packages=find_packages(),
     install_requires=[
         "numpy",
@@ -22,7 +22,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
     ],
-    # include_package_data=True,
+    include_package_data=True,
     package_data={
         "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd"]
         },

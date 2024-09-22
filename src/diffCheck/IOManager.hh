@@ -33,4 +33,6 @@ namespace diffCheck::io
     std::string GetTestDataDir();
     /// @brief Get the path to the roof quarter ply test file
     std::string GetRoofQuarterPlyPath();
+    /// @brief Get the path to the plane point cloud with one outlier
+    std::string GetPlanePCWithOneOutliers();
 } // namespace diffCheck::io
