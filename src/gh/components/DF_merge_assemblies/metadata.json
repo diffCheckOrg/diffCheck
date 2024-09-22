@@ -14,8 +14,8 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_new_assembly_name",
-                "nickname": "i_new_assembly_name",
+                "name": "i_new_name",
+                "nickname": "i_new_name",
                 "description": "The new name of the assembly to export.",
                 "optional": false,
                 "allowTreeAccess": true,
