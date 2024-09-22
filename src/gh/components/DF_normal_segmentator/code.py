@@ -1,7 +1,7 @@
 #! python3
 
 
-import Rhino.Geometry as rg
+import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 
 
@@ -12,13 +12,13 @@ from diffCheck import df_cvt_bindings
 
 class DFCloudNormalSegmentator(component):
     def RunScript(self,
-        i_cloud,
+        i_cloud: Rhino.Geometry.PointCloud,
         i_normal_threshold_degree=None,
         i_min_cluster_size=None,
         i_use_knn_neighborhood=None,
         i_knn_neighborhood_size=None,
         i_radius_neighborhood_size=None
-    ) -> rg.PointCloud:
+    ) -> Rhino.Geometry.PointCloud:
         o_clusters = []
         df_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud)
 

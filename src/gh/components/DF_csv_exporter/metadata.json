@@ -51,7 +51,7 @@
             },
             {
                 "name": "i_export_seperate_files",
-                "nickname": "i_export_seperate_file",
+                "nickname": "i_export_seperate_files",
                 "description": "Whether to export one single file or seperate files per element.",
                 "optional": true,
                 "allowTreeAccess": true,

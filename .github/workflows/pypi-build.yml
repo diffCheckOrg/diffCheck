@@ -36,7 +36,11 @@ jobs:
       - name: CMake Build
         run: cmake --build build --config Release
 
-      #FIXME: here we are probably missing to copy the dlls and pyds before building the wheel
+      - name: Copying the dlls/pyd for python pypi package
+        run: |
+          copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+          copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+          copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/src/gh/diffCheck/diffCheck
 
       - name: Build wheel
         run: |
@@ -44,8 +48,9 @@ jobs:
           python setup.py bdist_wheel
           cd ${{github.workspace}}
 
-      - name: Upload wheel
-        uses: actions/upload-artifact@v2
-        with:
-          name: wheel
-          path: ${{github.workspace}}/src/gh/diffCheck/dist/
+      ## for debug only
+      # - name: Upload wheel
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: wheel
+      #     path: ${{github.workspace}}/src/gh/diffCheck/dist/

@@ -1,8 +1,7 @@
 #! python3
 
-import typing
 import System
-import Rhino.Geometry as rg
+import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 from System.Windows.Forms import ToolStripSeparator
@@ -11,17 +10,16 @@ import diffCheck
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
 from diffCheck.df_geometries import DFAssembly
-import Rhino
 
 
 class DFCloudMeshDistance(component):
 
     def RunScript(self,
-        i_cloud_source: typing.List[rg.PointCloud],
-        i_assembly: DFAssembly,
-        i_signed_flag: bool,
-        i_swap: bool,
-        i_analysis_resolution):
+            i_cloud_source: System.Collections.Generic.List[Rhino.Geometry.PointCloud],
+            i_assembly,
+            i_signed_flag: bool,
+            i_swap: bool,
+            i_analysis_resolution: float):
 
         if i_analysis_resolution is None:
             scalef = diffCheck.df_util.get_doc_2_meters_unitf()

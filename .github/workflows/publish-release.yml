@@ -1,0 +1,363 @@
+name: publish-release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  ################################################################################
+  ## Building
+  ################################################################################
+  sync-version:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Python and pythonnet
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9.10'
+
+    - name: Install Python dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip install invoke
+
+    - name: Update the version across the project and commit the changes
+      run: invoke versionize
+
+    - name: Install GitHub CLI
+      run: |
+        choco install gh
+    - name: Authenticate GitHub CLI
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+
+    - name: Create a new branch and commit the version change
+      # Delete branch remotely version-sync-branch (if exists)
+      run: |
+        git fetch --prune
+        if git branch -r | grep -q 'origin/version-sync-branch'; then
+          git push origin --delete version-sync-branch
+        else
+          echo "Branch version-sync-branch does not exist."
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+      # Create new branch and commit version change
+    - run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git checkout -b version-sync-branch
+        git commit -am "ACTION_BOT: Sync version for release"
+        git push --set-upstream origin version-sync-branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Close existing pull requests for version-sync-branch
+    - run: |
+        gh pr list --state open --head version-sync-branch --json number --jq '.[].number' | ForEach-Object { gh pr close $_ }
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: pwsh
+      # Create pull request
+    - run: |
+        gh pr create --title "ACTION_BOT: Sync version for release" --body "Sync version for release" --base main --head version-sync-branch --label ACTION_BOT
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Merge pull request
+    - run: |
+        $pr = gh pr list --head version-sync-branch --json number --jq '.[0].number'
+        gh pr merge $pr --squash --delete-branch --admin
+      env:
+        GITHUB_TOKEN: ${{ secrets.DF_COBOT_PAT_TOKEN }}
+      shell: pwsh
+
+  build-ghusers:
+    runs-on: windows-latest
+    needs: sync-version
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Install CPython and pythonnet package
+        run: |
+          choco install python --version=3.9.10
+          python -m pip install pythonnet==3.0.3
+          python -m pip install invoke
+
+      - name: create the build folder
+        run: mkdir build
+
+      - name: Flag the ghuser codes with the correct package version
+        run: invoke flagerize
+
+      - name: Invoke the componentizer
+        run: |
+          mkdir build/gh
+          invoke ghcomponentize
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ghuser-components
+          path: build/gh
+
+  build-yak-package:
+    runs-on: windows-latest
+    needs: build-ghusers
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Python and pythonnet
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.10'
+
+      - name: Install Python dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install invoke
+            pip install pythonnet
+
+      - name: Download the ghuser components
+        uses: actions/download-artifact@v4
+        with:
+          name: ghuser-components
+          path: build/gh
+
+      - name: Build the yak package
+        run: invoke yakerize
+
+      - name: Save artifact the yak package as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yak_package_artifact
+          path: build/yak/*.yak
+
+  #===============================================================================
+
+  pypi_build:
+    runs-on: windows-latest
+    needs: sync-version
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python and pythonnet
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.10'
+      - name: Install Python dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install invoke
+      - name: Sync the version across the project (mainly for python package)
+        run: invoke versionize
+
+      - name: Setup conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9.1
+
+      - name: Create diff_check conda environment
+        run: conda env create -f environment.yml
+      
+      - name: Activate diff_check conda environment
+        run: conda activate diff_check
+
+
+      - name: Cmake Configure
+        run: |
+          cmake -S . -B build -A x64 -DBUILD_PYTHON_MODULE=ON -DBUILD_TESTS=OFF -DRUN_TESTS=OFF
+      - name: CMake Build
+        run: cmake --build build --config Release
+
+      - name: Copying the dlls/pyd for python pypi package
+        run: |
+          copy ${{github.workspace}}/build/bin/Release/diffCheck.dll ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+          copy ${{github.workspace}}/build/bin/Release/Open3D.dll ${{github.workspace}}/src/gh/diffCheck/diffCheck/dlls
+          copy ${{github.workspace}}/build/Release/*.pyd ${{github.workspace}}/src/gh/diffCheck/diffCheck
+
+      - name: Build wheel
+        run: |
+          cd ${{github.workspace}}/src/gh/diffCheck/
+          python setup.py bdist_wheel
+          cd ${{github.workspace}}
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: diffcheck_pypi_dist
+          path: ${{github.workspace}}/src/gh/diffCheck/dist/
+
+  ################################################################################
+  ## Publishing
+  ################################################################################
+
+  publish_test_yak:
+    needs: build-yak-package
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: yak_package_artifact
+        path: build/yak
+
+    - name: Publish to Yak test server
+      run: |
+        $YAK_FILE=$(ls *.yak)
+        echo "Yak file: $YAK_FILE"
+        ..\..\invokes\yaker\exec\Yak.exe push --source https://test.yak.rhino3d.com $YAK_FILE
+      working-directory: build/yak
+      env:
+        YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+      continue-on-error: true
+    - name: Verify the Yak test package
+      run: |
+        ..\..\invokes\yaker\exec\Yak.exe search --source https://test.yak.rhino3d.com --all --prerelease script-sync
+      working-directory: build/yak
+      env:
+          YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+
+  publish_to_yak:
+    needs: publish_test_yak
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: yak_package_artifact
+        path: build/yak
+
+    - name: Publish to Yak server
+      run: |
+        $YAK_FILE=$(ls *.yak)
+        echo "Yak file: $YAK_FILE"
+        ..\..\invokes\yaker\exec\Yak.exe push $YAK_FILE
+      working-directory: build/yak
+      env:
+        YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+    # check the real release
+    - name: Verify the Yak test package
+      run: |
+        ..\..\invokes\yaker\exec\Yak.exe search --all --prerelease script-sync
+      working-directory: build/yak
+      env:
+          YAK_TOKEN: ${{ secrets.YAK_DF_TOKEN }}
+
+  #===============================================================================
+
+  publish_test_pypi:
+    needs: pypi_build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/diffCheck
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: diffcheck_pypi_dist
+        path: dist/
+    - name: Publish distribution to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
+  publish_to_pypi:
+    needs: publish_test_pypi
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/diffCheck
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: diffcheck_pypi_dist
+        path: dist/
+
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+
+
+  ################################################################################
+  ## Upload release artifacts
+  ################################################################################
+  release_artifacts:
+    needs: [build-yak-package, pypi_build]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Download yak artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: yak_package_artifact
+        path: build/yak
+    - name: Download pypi dist artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: diffcheck_pypi_dist
+        path: dist/
+
+    - name: Get YAK artifact path
+      id: get_yak_path
+      run: |
+        echo "::set-output name=yak_path::$(find build/yak -name '*.yak')"
+      shell: bash
+    - name: Get PyPI dist path
+      id: get_pypi_dist_path
+      run: |
+        echo "::set-output name=pypi_dist_path::$(find dist/ -name '*.whl')"
+      shell: bash
+    - name: Print YAK artifact path
+      run: |
+        echo ${{ steps.get_yak_path.outputs.yak_path }}
+      shell: bash
+    - name: Print PyPI dist path
+      run: |
+        echo ${{ steps.get_pypi_dist_path.outputs.pypi_dist_path }}
+      shell: bash
+
+    - name: Upload .yak artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }} 
+        asset_path: ${{ steps.get_yak_path.outputs.yak_path }}
+        asset_name: diffCheck.yak
+        asset_content_type: application/octet-stream
+    - name: Upload .whl artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }} 
+        asset_path: ${{ steps.get_pypi_dist_path.outputs.pypi_dist_path }}
+        asset_name: diffCheck-py-dist.whl
+        asset_content_type: application/octet-stream

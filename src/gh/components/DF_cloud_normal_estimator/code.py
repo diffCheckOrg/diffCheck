@@ -1,19 +1,17 @@
 #! python3
 
-
-import Rhino.Geometry as rg
+import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 
 from diffCheck import df_cvt_bindings
 
 class DFCloudNormalEstimator(component):
     def RunScript(self,
-        i_cloud : rg.PointCloud = None,
-        i_knn : int = None,
-        i_radius : float = None,
-        i_switch_mode : bool = True
-    ):
-        o_cloud = rg.PointCloud()
+            i_cloud: Rhino.Geometry.PointCloud,
+            i_knn: int,
+            i_radius: int,
+            i_switch_mode: bool):
+        o_cloud = Rhino.Geometry.PointCloud()
 
         df_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud)
 

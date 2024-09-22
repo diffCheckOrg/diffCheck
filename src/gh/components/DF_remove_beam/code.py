@@ -1,19 +1,14 @@
 #! python3
 
-import typing
+import System
 
 from ghpythonlib.componentbase import executingcomponent as component
-
-import diffCheck
-import diffCheck.df_geometries
-import diffCheck.diffcheck_bindings
-import diffCheck.df_util
 
 
 class DFRemoveBeam(component):
     def RunScript(self,
-            i_assembly : diffCheck.df_geometries.DFAssembly=None,
-            i_idx_2_remove : typing.List[int]=None):
+            i_assembly,
+            i_idx_2_remove: System.Collections.Generic.List[int]):
 
         if i_assembly is None or i_idx_2_remove is None:
             return None

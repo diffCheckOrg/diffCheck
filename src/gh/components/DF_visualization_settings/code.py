@@ -3,8 +3,6 @@
 import System
 import typing
 import Rhino
-import Rhino.Geometry as rg
-
 from ghpythonlib.componentbase import executingcomponent as component
 import Grasshopper as gh
 from Grasshopper import Instances
@@ -181,7 +179,7 @@ class DFVisualizationSettings(component):
         i_lower_threshold: float,
         i_legend_height: float,
         i_legend_width: float,
-        i_legend_plane: rg.Plane,
+        i_legend_plane: Rhino.Geometry.Plane,
         i_histogram_scale_factor: float,
         i_one_histogram_per_item: bool):
 
@@ -217,7 +215,7 @@ class DFVisualizationSettings(component):
         if i_legend_width is None:
             i_legend_width = 0.5
         if i_legend_plane is None:
-            i_legend_plane = rg.Plane.WorldXY
+            i_legend_plane = Rhino.Geometry.Plane.WorldXY
         if i_histogram_scale_factor is None:
             i_histogram_scale_factor = 0.01
         if i_one_histogram_per_item is None:

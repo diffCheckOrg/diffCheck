@@ -1,8 +1,8 @@
 #! python3
 
-import typing
+import System
 
-import Rhino.Geometry as rg
+import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
@@ -14,8 +14,8 @@ from diffCheck import df_error_estimation
 
 class DFCloudCloudDistance(component):
     def RunScript(self,
-        i_cloud_source:  typing.List[rg.PointCloud],
-        i_cloud_target: typing.List[rg.PointCloud],
+        i_cloud_source: System.Collections.Generic.List[Rhino.Geometry.PointCloud],
+        i_cloud_target: System.Collections.Generic.List[Rhino.Geometry.PointCloud],
         i_swap: bool):
         if i_cloud_source is None or i_cloud_target is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide both objects of type point clouds to compare")  # noqa: F821

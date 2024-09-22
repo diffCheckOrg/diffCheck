@@ -1,16 +1,12 @@
 #! python3
 
-import typing
-
+import System
 
 from ghpythonlib.componentbase import executingcomponent as component
 
-from diffCheck.df_geometries import DFBeam
-
 
 class DFDeconstructBeam(component):
-    def RunScript(self,
-            i_beams : typing.List[DFBeam]):
+    def RunScript(self, i_beams: System.Collections.Generic.List[object]):
         o_side_faces, o_joint_faces, o_joint_ids = [], [], []
 
         for i_b in i_beams:
