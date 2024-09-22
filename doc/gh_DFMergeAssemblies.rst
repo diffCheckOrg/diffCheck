@@ -3,6 +3,6 @@
     :width: 40px
 
 ``DFMergeAssemblies`` component
-===========================
+===============================
 
 .. ghcomponent_to_rst:: ../src/gh/components/DF_merge_assemblies
