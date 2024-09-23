@@ -116,7 +116,7 @@ namespace diffCheck::segmentation
         {
             for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
             {
-                std::tuple<Eigen::Vector3d, Eigen::Vector3d> centerAndAxis = face->GetCenterAndAxis();
+                std::tuple<Eigen::Vector3d, Eigen::Vector3d> centerAndAxis = face->ComputeOBBCenterAndAxis();
                 Eigen::Vector3d cylinderCenter = std::get<0>(centerAndAxis);
                 Eigen::Vector3d cylinderAxis = std::get<1>(centerAndAxis);
 
@@ -396,7 +396,7 @@ namespace diffCheck::segmentation
                             Eigen::Vector3d min = minmax[0];
                             Eigen::Vector3d max = minmax[1];
 
-                            std::tuple<Eigen::Vector3d, Eigen::Vector3d> centerAndAxis = mesh[0]->GetCenterAndAxis();
+                            std::tuple<Eigen::Vector3d, Eigen::Vector3d> centerAndAxis = mesh[0]->ComputeOBBCenterAndAxis();
                             Eigen::Vector3d center = std::get<0>(centerAndAxis);
                             Eigen::Vector3d axis = std::get<1>(centerAndAxis);
                             double dotProduct = clusterNormal.dot(axis);
