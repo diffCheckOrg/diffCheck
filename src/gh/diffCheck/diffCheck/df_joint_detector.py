@@ -101,7 +101,9 @@ def _find_joint_faces(self, bounding_geometry):
             face_centroid = rg.AreaMassProperties.Compute(face).Centroid
             coord = face.ClosestPoint(face_centroid)
             projected_centroid = face.PointAt(coord[1], coord[2])
-            faces[idx] = (face, bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True))
+            faces[idx] = (face,
+                          bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True)
+                          * face.IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance))
 
         return faces
 
