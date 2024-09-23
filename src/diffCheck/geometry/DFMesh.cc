@@ -148,7 +148,7 @@ namespace diffCheck::geometry
         return false;
     }
 
-    std::tuple<Eigen::Vector3d, Eigen::Vector3d> DFMesh::GetCenterAndAxis()
+    std::tuple<Eigen::Vector3d, Eigen::Vector3d> DFMesh::ComputeOBBCenterAndAxis()
     {
         Eigen::Vector3d center = Eigen::Vector3d::Zero();
         Eigen::Vector3d axis = Eigen::Vector3d::Zero();

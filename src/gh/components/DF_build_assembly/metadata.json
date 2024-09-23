@@ -38,9 +38,9 @@
                 "typeHintID": "brep"
             },
             {
-                "name": "i_is_cylinder",
-                "nickname": "i_is_cylinder",
-                "description": "Whether the beams are cylinders or not.",
+                "name": "i_is_roundwood",
+                "nickname": "i_is_roundwood",
+                "description": "Whether the beams are of roundwood type or not.",
                 "optional": true,
                 "allowTreeAccess": false,
                 "showTypeHints": true,

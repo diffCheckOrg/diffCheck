@@ -93,7 +93,7 @@ class DFFace:
         # if df_face is created from a rhino brep face, we store the rhino brep face
         self._rh_brepface = None
 
-        self.is_cylinder = False
+        self.is_roundwood = False
 
     def __repr__(self):
         return f"Face id: {(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
@@ -159,7 +159,7 @@ class DFFace:
         if self._rh_brepface is not None:
             return self._rh_brepface
 
-        if self.is_cylinder:
+        if self.is_roundwood:
             ghenv.Component.AddRuntimeMessage(  # noqa: F821
                 RML.Warning, "The DFFace was a cylinder created from scratch \n \
                  , it cannot convert to brep.")
@@ -280,6 +280,8 @@ class DFBeam:
     def __post_init__(self):
         self.name = self.name or "Unnamed Beam"
         self.faces = self.faces or []
+        self.is_roundwood = False
+
         self._joint_faces = []
         self._side_faces = []
         self._vertices = []
@@ -299,18 +301,18 @@ class DFBeam:
 
 
     @classmethod
-    def from_brep_face(cls, brep, is_cylinder=False):
+    def from_brep_face(cls, brep, is_roundwood=False):
         """
         Create a DFBeam from a RhinoBrep object.
         It also removes duplicates and creates a list of unique faces.
         """
         faces : typing.List[DFFace] = []
-        data_faces = diffCheck.df_joint_detector.JointDetector(brep).run(is_cylinder)
+        data_faces = diffCheck.df_joint_detector.JointDetector(brep, is_roundwood).run()
         for data in data_faces:
             face = DFFace.from_brep_face(data[0], data[1])
             faces.append(face)
         beam = cls("Beam", faces)
-        beam.is_cylinder = is_cylinder
+        beam.is_roundwood = is_roundwood
         return beam
 
     def to_brep(self):
@@ -346,7 +348,7 @@ class DFBeam:
         return mesh
 
     def __repr__(self):
-        return f"Beam: {self.name}, Is cylinder:{self.is_cylinder}, Faces: {len(self.faces)}"
+        return f"Beam: {self.name}, Faces: {len(self.faces)}"
 
     @property
     def uuid(self):
@@ -421,7 +423,7 @@ class DFAssembly:
         self._all_joints: typing.List[DFJoint] = []
 
         for beam in self.beams:
-            if beam.is_cylinder:
+            if beam.is_roundwood:
                 self.contains_cylinders = True
                 break
         else:

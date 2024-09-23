@@ -14,14 +14,13 @@ class DFBuildAssembly(component):
     def RunScript(self,
             i_assembly_name,
             i_breps : System.Collections.Generic.IList[Rhino.Geometry.Brep],
-            i_is_cylinder : bool):
+            i_is_roundwood : bool):
         beams: typing.List[DFBeam] = []
-        if i_is_cylinder is None:
-            i_is_cylinder = False
+        if i_is_roundwood is None:
+            i_is_roundwood = False
 
         for brep in i_breps:
-            beam = DFBeam.from_brep_face(brep)
-            beam.is_cylinder = i_is_cylinder
+            beam = DFBeam.from_brep_face(brep, i_is_roundwood)
             beams.append(beam)
 
         o_assembly = DFAssembly(beams, i_assembly_name)
