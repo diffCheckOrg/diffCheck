@@ -93,13 +93,13 @@ class JointDetector:
         df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
         if is_cylinder_beam:
             cylinder = self.find_largest_cylinder()
-            Bounding_geometry = cylinder
+            bounding_geometry = cylinder
         else:
-            Bounding_geometry = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
+            bounding_geometry = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
 
         # scale the bounding geometry in the longest edge direction by 1.5 from center on both directions
-        rh_Bounding_geometry_center = Bounding_geometry.GetBoundingBox(True).Center
-        edges = Bounding_geometry.Edges
+        rh_Bounding_geometry_center = bounding_geometry.GetBoundingBox(True).Center
+        edges = bounding_geometry.Edges
         edge_lengths = [edge.GetLength() for edge in edges]
         longest_edge = edges[edge_lengths.index(max(edge_lengths))]
 
@@ -112,7 +112,7 @@ class JointDetector:
             1 - scale_factor,
             1 + scale_factor
         )
-        Bounding_geometry.Transform(xform)
+        bounding_geometry.Transform(xform)
 
         # check if face's centers are inside the OBB
         '''
@@ -134,7 +134,7 @@ class JointDetector:
                 face_centroid = rg.AreaMassProperties.Compute(face).Centroid
                 coord = face.ClosestPoint(face_centroid)
                 projected_centroid = face.PointAt(coord[1], coord[2])
-                faces[idx] = (face, Bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True))
+                faces[idx] = (face, bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True))
 
         # compute the adjacency list of each face
         adjacency_of_faces = {}
@@ -151,7 +151,7 @@ class JointDetector:
         for idx, face in faces.items():
             if not face[1]:
                 continue
-            adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and faces[adj_face][0].IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance) and adj_face != idx]) # used to be not faces[adj_face][0].IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance)
+            adjacency_of_faces[idx] = (face[0], [adj_face for adj_face in face[0].AdjacentFaces() if faces[adj_face][1] and faces[adj_face][0].IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance) and adj_face != idx])
         adjacency_of_faces = diffCheck.df_util.merge_shared_indexes(adjacency_of_faces)
         joint_face_ids = [[key] + value[1] for key, value in adjacency_of_faces.items()]
 

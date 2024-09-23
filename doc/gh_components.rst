@@ -82,7 +82,7 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
      - `gh_DFRemoveStatisticalOutliers <gh_DFRemoveStatisticalOutliers.html>`_
 
    * - .. image:: ../src/gh/components/DF_merge_assemblies/icon.png
-     - `gh_DFJointSegmentator <gh_DFJointSegmentator.html>`_
+     - `gh_DFMergeAssemblies <gh_DFMergeAssemblies.html>`_
      - 
      - 
 

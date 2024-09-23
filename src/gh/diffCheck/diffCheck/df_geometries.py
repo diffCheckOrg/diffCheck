@@ -135,13 +135,6 @@ class DFFace:
         all_loops = []
         df_face: DFFace = cls([], joint_id)
 
-        # if brep_face.IsCylinder():
-
-        #     df_face = cls([[[], [], []]], joint_id)
-        #     cls.is_cylinder = True
-        #     df_face._rh_brepface = brep_face
-        #     return df_face
-
         for idx, loop in enumerate(brep_face.Loops):
             loop_curve = loop.To3dCurve()
             loop_curve = loop_curve.ToNurbsCurve()

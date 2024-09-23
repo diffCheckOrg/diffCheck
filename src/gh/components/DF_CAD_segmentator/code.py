@@ -45,7 +45,6 @@ class DFCADSegmentator(component):
             rh_beams_meshes.append(rh_b_mesh_faces)
 
             # different association depending on the type of beam
-            print(df_b.is_cylinder)
             df_asssociated_cluster_faces = dfb_segmentation.DFSegmentation.associate_clusters(
                 is_cylinder=df_b.is_cylinder,
                 reference_mesh=df_b_mesh_faces,
@@ -71,7 +70,6 @@ class DFCADSegmentator(component):
 
         o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
-        #small cleanup
         for o_cluster in o_clusters:
             if not o_cluster.IsValid:
                 o_cluster = None
