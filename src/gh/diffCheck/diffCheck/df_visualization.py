@@ -7,6 +7,7 @@ import scriptcontext as sc
 import Rhino.Geometry as rg
 from System.Drawing import Color
 from diffCheck import df_visualization
+import numpy as np
 
 
 class DFVizSettings:
@@ -152,10 +153,16 @@ def color_rh_mesh(mesh, values, min_value, max_value, palette):
 
     for i, vertex in enumerate(mesh.Vertices):
         # check if values is a list
-        if isinstance(values, list):
+
+        if isinstance(values, np.ndarray) and values.size == 0:
+            mapped_color = Color.FromArgb(255, 255, 255)  # Color it white
+        elif isinstance(values, list):
+             # If values is a non-empty list
             mapped_color = palette.value_to_color(values[i], min_value, max_value)
         else:
+            # If values is not None and not empty (assuming it's a single value)
             mapped_color = palette.value_to_color(values, min_value, max_value)
+
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
 
     return mesh
@@ -237,7 +244,7 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
             text_entity.Text = f"{value:.2f}"
 
         text_entity.TextHeight = height / 5
-        #match grasshopper display to default
+        # match grasshopper display to default
         text_entity.DimensionLengthDisplay = Rhino.DocObjects.DimensionStyle.LengthDisplay.Millmeters
         legend_geometry.append(text_entity)
 
@@ -301,6 +308,7 @@ def create_histogram_curve(values, min_value, max_value, res=100, bin_size=1,
 
     return polyline, max_frequency
 
+
 def create_histogram(values, min_value, max_value, res=100, steps=10,
                      plane=rg.Plane.WorldXY, total_height=10,
                      scaling_factor=0.01, multiple_curves=False, spacing=0):
@@ -325,7 +333,7 @@ def create_histogram(values, min_value, max_value, res=100, steps=10,
                                    bin_size, height,scaling_factor, spacing)
 
             histogram_geometry.append(polyline)
-            if max_freq> max_frequency:
+            if max_freq > max_frequency:
                 max_frequency = max_freq
 
     else:
