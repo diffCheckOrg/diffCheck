@@ -2,9 +2,7 @@
 
 import System
 import typing
-
 import Rhino
-
 from ghpythonlib.componentbase import executingcomponent as component
 import Grasshopper as gh
 from Grasshopper import Instances
@@ -182,7 +180,23 @@ class DFVisualizationSettings(component):
         i_legend_height: float,
         i_legend_width: float,
         i_legend_plane: Rhino.Geometry.Plane,
-        i_histogram_scale_factor: float):
+        i_histogram_scale_factor: float,
+        i_one_histogram_per_item: bool):
+
+        """
+        Compiles all the visualization settings to feed to the visualization component
+
+        :param i_value_type: selected type indicates Which values to display. Possible values: "dist", "RMSE", "MAX", "MIN", "STD"
+        :param i_palette: Select a color palette to map the values to. Possible values: "Jet", "Rainbow", "RdPu", "Viridis"
+        :param i_upper_threshold: Thresholds the values with a maximum value
+        :param i_lower_threshold: Thresholds the values with a minimum value
+        :param i_legend_height: the total height of the legend
+        :param i_legend_width: the total width of the legend
+        :param i_legend_plane: the construction plane of the legend
+        :param i_histogram_scale_factor: Scales the height of the histogram with a factor
+
+        :returns o_viz_settings: the results of the comparison all in one object
+        """
         # set default values
         if i_value_type is not None:
             if i_value_type not in self.poss_value_types:
@@ -204,6 +218,8 @@ class DFVisualizationSettings(component):
             i_legend_plane = Rhino.Geometry.Plane.WorldXY
         if i_histogram_scale_factor is None:
             i_histogram_scale_factor = 0.01
+        if i_one_histogram_per_item is None:
+            i_one_histogram_per_item = False
 
         # pack settings
         o_viz_settings = df_visualization.DFVizSettings(i_value_type,
@@ -213,6 +229,21 @@ class DFVisualizationSettings(component):
                                                         i_legend_height,
                                                         i_legend_width,
                                                         i_legend_plane,
-                                                        i_histogram_scale_factor)
+                                                        i_histogram_scale_factor,
+                                                        i_one_histogram_per_item)
 
         return o_viz_settings
+
+# if __name__ == "__main__":
+#     com = DFVisualizationSettings()
+#     o_viz_settings = com.RunScript(
+#         i_value_type,
+#         i_palette,
+#         i_upper_threshold,
+#         i_lower_threshold,
+#         i_legend_height,
+#         i_legend_width,
+#         i_legend_plane,
+#         i_histogram_scale_factor,
+#         i_one_histogram_per_item
+#         )

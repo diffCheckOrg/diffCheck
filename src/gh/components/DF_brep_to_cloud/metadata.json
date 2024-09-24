@@ -1,6 +1,6 @@
 {
-    "name": "DFBrepToMesh",
-    "nickname": "DFBrepToMesh",
+    "name": "DFBrepToCloud",
+    "nickname": "DFBrepToCloud",
     "category": "diffCheck",
     "subcategory": "Cloud",
     "description": "Create unique point cloud from list of breps.",

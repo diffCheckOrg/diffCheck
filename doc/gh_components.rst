@@ -81,6 +81,10 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
      - .. image:: ../src/gh/components/DF_remove_statistical_outliers/icon.png
      - `gh_DFRemoveStatisticalOutliers <gh_DFRemoveStatisticalOutliers.html>`_
 
+   * - .. image:: ../src/gh/components/DF_merge_assemblies/icon.png
+     - `gh_DFMergeAssemblies <gh_DFMergeAssemblies.html>`_
+     - 
+     - 
 
 
 .. toctree::
@@ -114,3 +118,5 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
    gh_DFRemoveBeam
    gh_DFColorizeCloud
    gh_DFBrepToCloud
+   gh_DFRemoveStatisticalOutliers
+   gh_DFMergeAssemblies

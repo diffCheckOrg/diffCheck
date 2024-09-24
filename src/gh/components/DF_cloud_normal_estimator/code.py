@@ -18,6 +18,9 @@ class DFCloudNormalEstimator(component):
         if i_knn is None:
             i_knn = 100
 
+        if i_switch_mode is None:
+            i_switch_mode = False
+
         df_cloud.estimate_normals(
             use_cilantro_evaluator=i_switch_mode,
             knn=i_knn,

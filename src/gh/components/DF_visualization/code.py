@@ -1,9 +1,7 @@
 #! python3
 
-
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
-
 
 from diffCheck import df_cvt_bindings
 from diffCheck import df_visualization
@@ -11,10 +9,15 @@ from diffCheck.df_visualization import DFVizSettings
 from diffCheck.df_error_estimation import DFVizResults
 from diffCheck import diffcheck_bindings
 
+
 class DFVisualization(component):
     def RunScript(self,
                   i_result: DFVizResults,
                   i_viz_settings: DFVizSettings):
+
+        if i_result is None or i_viz_settings is None:
+            return None, None, None
+
         values, min_value, max_value = i_result.filter_values_based_on_valuetype(i_viz_settings)
 
         # check if i_result.source is a list of pointclouds or a mesh
@@ -41,12 +44,21 @@ class DFVisualization(component):
                                                   width=i_viz_settings.legend_width,
                                                   total_height=i_viz_settings.legend_height)
 
+        # add option to create a histogram for each item
+
+        if len(i_result.source) > 1 and i_viz_settings.one_histogram_per_item:
+            multiple_curves = True
+        else:
+            multiple_curves = False
+
         o_histogram = df_visualization.create_histogram(values,
                                                         min_value,
                                                         max_value,
-                                                        steps=100,
+                                                        res=100,
+                                                        steps=10,
                                                         plane=i_viz_settings.legend_plane,
                                                         total_height=i_viz_settings.legend_height,
-                                                        scaling_factor=i_viz_settings.histogram_scale_factor)
+                                                        scaling_factor=i_viz_settings.histogram_scale_factor,
+                                                        multiple_curves = multiple_curves)
 
         return o_colored_geo, o_legend, o_histogram
