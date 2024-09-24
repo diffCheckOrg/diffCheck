@@ -108,6 +108,18 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "float"
+            },
+            {
+                "name": "i_one_histogram_per_item",
+                "nickname": "i_one_histogram_per_item",
+                "description": "make one curve per item",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
             }
         ],
         "outputParameters": [

@@ -2,10 +2,12 @@
 """
     This module contains the utility functions to visualize differences
 """
-
+import Rhino
+import scriptcontext as sc
 import Rhino.Geometry as rg
 from System.Drawing import Color
 from diffCheck import df_visualization
+import numpy as np
 
 
 class DFVizSettings:
@@ -21,7 +23,8 @@ class DFVizSettings:
         legend_height,
         legend_width,
         legend_plane,
-        histogram_scale_factor):
+        histogram_scale_factor,
+        one_histogram_per_item):
 
         self.valueType = valueType
         self.palette = df_visualization.DFColorMap(palette)
@@ -31,6 +34,7 @@ class DFVizSettings:
         self.legend_width = legend_width
         self.legend_plane = legend_plane
         self.histogram_scale_factor = histogram_scale_factor
+        self.one_histogram_per_item = one_histogram_per_item
 
         self.str_repr = f"DFVizSettings: \n\t- Value type: {self.valueType}\n\t- Palette: {self.palette}\n\t- Upper threshold: {self.upper_threshold}\n\t- Lower threshold: {self.lower_threshold}\n\t- Legend height: {self.legend_height}\n\t- Legend width: {self.legend_width}\n\t- Legend plane: {self.legend_plane}\n\t- Histogram scale factor: {self.histogram_scale_factor}"
 
@@ -149,10 +153,16 @@ def color_rh_mesh(mesh, values, min_value, max_value, palette):
 
     for i, vertex in enumerate(mesh.Vertices):
         # check if values is a list
-        if isinstance(values, list):
+
+        if isinstance(values, np.ndarray) and values.size == 0:
+            mapped_color = Color.FromArgb(255, 255, 255)  # Color it white
+        elif isinstance(values, list):
+             # If values is a non-empty list
             mapped_color = palette.value_to_color(values[i], min_value, max_value)
         else:
+            # If values is not None and not empty (assuming it's a single value)
             mapped_color = palette.value_to_color(values, min_value, max_value)
+
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
 
     return mesh
@@ -169,6 +179,30 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     legend_geometry = []
     rect_pts = []
     previous_color = None
+
+    RhinoDoc = sc.doc
+    if RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Meters:
+        unit_str = "[m]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Centimeters:
+        unit_str = "[cm]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Millimeters:
+        unit_str = "[mm]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Inches:
+        unit_str = "[in]"
+    elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Feet:
+        unit_str = "[ft]"
+    else:
+        unit_str = "[yd]"
+
+    # Add the unit label at the top of the legend
+    units_pt = rg.Point3d(0.5 * width , (steps + 1) * (height + spacing) - 0.5*height, 0)
+    units_text_entity = rg.TextEntity()
+    units_text_entity.Plane = rg.Plane(units_pt, rg.Vector3d.ZAxis)
+    units_text_entity.Text = unit_str
+    units_text_entity.TextHeight = height / 5
+    units_text_entity.Justification = rg.TextJustification.MiddleCenter
+    units_text_entity.DimensionLengthDisplay = Rhino.DocObjects.DimensionStyle.LengthDisplay.Millmeters
+    legend_geometry.append(units_text_entity)
 
     for i in range(steps+1):
 
@@ -195,8 +229,23 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
         text_pt = rg.Point3d(1.25 * width + spacing, i * (height + spacing) + height / 10, 0)
         text_entity = rg.TextEntity()
         text_entity.Plane = rg.Plane(text_pt, rg.Vector3d.ZAxis)
-        text_entity.Text = f"{value:.2f}"
+        # decide on resolution based on document units
+        if RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Meters:
+            text_entity.Text = f"{value:.4f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Centimeters:
+            text_entity.Text = f"{value:.3f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Millimeters:
+            text_entity.Text = f"{value:.2f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Inches:
+            text_entity.Text = f"{value:.2f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Feet:
+            text_entity.Text = f"{value:.2f}"
+        elif RhinoDoc.ModelUnitSystem == Rhino.UnitSystem.Yards:
+            text_entity.Text = f"{value:.2f}"
+
         text_entity.TextHeight = height / 5
+        # match grasshopper display to default
+        text_entity.DimensionLengthDisplay = Rhino.DocObjects.DimensionStyle.LengthDisplay.Millmeters
         legend_geometry.append(text_entity)
 
         rect_pts = [
@@ -216,26 +265,19 @@ def create_legend(min_value, max_value, palette, steps=10, plane=rg.Plane.WorldX
     return legend_geometry
 
 
-def create_histogram(values, min_value, max_value, steps=100,
-                     plane=rg.Plane.WorldXY, total_height=10,
-                     scaling_factor=0.01, spacing=0):
-    """
-    Create a histogram in Rhino with a polyline representing value frequencies.
-    """
-
-    height = total_height/steps
-
-    histogram_geometry = []
-
-    # Calculate the size of each bin
-    bin_size = (max_value - min_value) / steps
-
+def create_histogram_curve(values, min_value, max_value, res=100, bin_size=1,
+                           height=1, scaling_factor=0.01, spacing=0):
     # Initialize the frequency counts for each bin
-    frequencies = [0] * (steps + 1)
+    frequencies = [0] * (res + 1)
 
-    # if values is nested list, flatten it
-    if isinstance(values[0], list):
-        values = [item for sublist in values for item in sublist]
+    if isinstance(values, list):
+        # Check if the list is non-empty and the first element is a list
+        if len(values) > 0 and isinstance(values[0], list):
+            # Flatten the nested list
+            values = [item for sublist in values for item in sublist]
+    else:
+        # If values is a scalar, wrap it in a list
+        values = [values]
 
     # Count the frequencies of values in each bin
     for value in values:
@@ -247,16 +289,78 @@ def create_histogram(values, min_value, max_value, steps=100,
         bin_index = int(bin_index)
         frequencies[bin_index] += 1
 
+    # Normalize frequencies to percentages
+    total_values = len(values)
+    for i in range(res + 1):
+        frequencies[i] = round((frequencies[i] / total_values) * 100, 2)
+
     # Create points for the polyline representing the histogram
     points = []
-    for i in range(steps+1):
+    max_frequency = max(frequencies)
+
+    for i in range(res+1):
 
         bar_height = frequencies[i] * scaling_factor
-        points.append(rg.Point3d(- bar_height - (1.5 * height), i * (spacing + height), 0))
+        points.append(rg.Point3d(- bar_height, i * (spacing + height), 0))
 
     # Create the polyline and add it to the histogram geometry
     polyline = rg.Curve.CreateInterpolatedCurve(points, 1)
-    histogram_geometry.append(polyline)
+
+    return polyline, max_frequency
+
+
+def create_histogram(values, min_value, max_value, res=100, steps=10,
+                     plane=rg.Plane.WorldXY, total_height=10,
+                     scaling_factor=0.01, multiple_curves=False, spacing=0):
+    """
+    Create a histogram in Rhino with a polyline representing value frequencies.
+    """
+    print(multiple_curves)
+    print("test")
+
+    height = total_height/res
+
+    histogram_geometry = []
+
+    # Calculate the size of each bin
+    bin_size = (max_value - min_value) / res
+
+    max_frequency = 0
+
+    if multiple_curves:
+        for v in values:
+            polyline, max_freq = create_histogram_curve(v, min_value, max_value, res,
+                                   bin_size, height,scaling_factor, spacing)
+
+            histogram_geometry.append(polyline)
+            if max_freq > max_frequency:
+                max_frequency = max_freq
+
+    else:
+        polyline, max_frequency = create_histogram_curve(values, min_value, max_value, res,
+                                bin_size, height,scaling_factor, spacing)
+
+        histogram_geometry.append(polyline)
+
+    # Create rectangles to extend the value axis for better visualization
+    for i in range(steps):
+        rect_pts = [
+            rg.Point3d(0, i * (total_height/steps + spacing), 0),
+            rg.Point3d(-max_frequency*scaling_factor, i * (total_height/steps + spacing), 0),
+            rg.Point3d(-max_frequency*scaling_factor, (i + 1) * total_height/steps + i * spacing, 0),
+            rg.Point3d(0, (i + 1) * total_height/steps + i * spacing, 0),
+        ]
+        polyline = rg.Polyline(rect_pts)
+        histogram_geometry.append(polyline.ToPolylineCurve())
+
+    # Create the x-axis label only for the highest value (100%)
+    highest_value_pt = rg.Point3d(-max_frequency*scaling_factor - (total_height/steps)/5, -total_height/steps, 0)
+    highest_value_text = rg.TextEntity()
+    highest_value_text.Plane = rg.Plane(highest_value_pt, rg.Vector3d.YAxis, -rg.Vector3d.XAxis)  # Align text along Y-axis
+    highest_value_text.Text = str(max_frequency) + "%"
+    highest_value_text.TextHeight = (total_height/steps) / 5
+    highest_value_text.DimensionLengthDisplay = Rhino.DocObjects.DimensionStyle.LengthDisplay.Millmeters
+    histogram_geometry.append(highest_value_text)
 
     if plane != rg.Plane.WorldXY:
         trans = rg.Transform.PlaneToPlane(rg.Plane.WorldXY, plane)

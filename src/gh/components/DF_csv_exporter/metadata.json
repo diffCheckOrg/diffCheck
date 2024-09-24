@@ -74,15 +74,6 @@
                 "typeHintID": "ghdoc"
             }
         ],
-        "outputParameters": [
-            {
-                "name": "o_success",
-                "nickname": "o_success",
-                "description": "Whether the values exported successfully",
-                "optional": false,
-                "sourceCount": 0,
-                "graft": false
-            }
-        ]
+        "outputParameters": []
     }
 }

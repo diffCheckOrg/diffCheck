@@ -5,7 +5,7 @@
     "subcategory": "Utility",
     "description": "This component is testing diffCheck imports and bindings.",
     "exposure": 4,
-    "instanceGuid": "7a600924-29bb-4682-8b95-a37752cefdbc",
+    "instanceGuid": "d0dcb2e4-a801-4c2d-9bd4-f2b03f3feb50",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
