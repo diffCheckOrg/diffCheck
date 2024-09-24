@@ -37,7 +37,7 @@ class DFJointSegmentator(component):
             raise ValueError("The input clusters must be PointClouds.")
 
         # get number of joints
-        n_joints = i_assembly.total_number_joints
+        n_joints = i_assembly.all_joints
 
         # prepping the reference meshes
         df_joints = [[] for _ in range(n_joints)]

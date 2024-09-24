@@ -13,11 +13,11 @@ from diffCheck import df_error_estimation
 class DFCloudMeshDistance(component):
 
     def RunScript(self,
-            i_cloud_source: Grasshopper.DataTree[Rhino.Geometry.PointCloud],
-            i_assembly,
-            i_signed_flag: bool,
-            i_swap: bool,
-            i_analysis_resolution: float):
+        i_cloud_source: Grasshopper.DataTree[Rhino.Geometry.PointCloud],
+        i_assembly,
+        i_signed_flag: bool,
+        i_swap: bool,
+        i_analysis_resolution: float):
 
         if i_cloud_source is None or i_assembly is None:
             return None, None, None, None, None, None
@@ -47,7 +47,12 @@ class DFCloudMeshDistance(component):
             return None, None, None, None, None, None
 
         # conversion
-        df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_s) for i_cl_s in i_cloud_list]
+        siffed_df_cloud_source_list = []
+        siffed_rh_mesh_target_list = []
+        for i in range(len(i_cloud_source)):
+            if i_cloud_source[i] is not None:
+                siffed_df_cloud_source_list.append(df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source[i]))
+                siffed_rh_mesh_target_list.append(rh_mesh_target_list[i])
 
         # calculate distances
         o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(siffed_df_cloud_source_list, siffed_rh_mesh_target_list, i_signed_flag, i_swap)
