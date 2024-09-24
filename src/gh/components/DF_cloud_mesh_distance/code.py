@@ -50,7 +50,7 @@ class DFCloudMeshDistance(component):
         df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_s) for i_cl_s in i_cloud_list]
 
         # calculate distances
-        o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(siffed_df_cloud_source_list, siffed_rh_mesh_target_list, i_signed_flag, i_swap)
+        o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(i_assembly, df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)
 
         # distances to tree
         distances_tree = Grasshopper.DataTree[object]()

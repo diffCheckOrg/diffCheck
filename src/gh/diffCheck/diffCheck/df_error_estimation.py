@@ -6,6 +6,7 @@
 import numpy as np
 from diffCheck import diffcheck_bindings  # type: ignore
 import Rhino.Geometry as rg
+from diffCheck.df_geometries import DFAssembly
 
 
 def df_cloud_2_df_cloud_comparison(source_list, target_list):
@@ -13,7 +14,7 @@ def df_cloud_2_df_cloud_comparison(source_list, target_list):
         Compute the Euclidean distance for every point of a source pcd to its
         closest point on a target pointcloud
     """
-    results = DFVizResults()
+    results = DFVizResults(DFAssembly())
     for source, target in zip(source_list, target_list):
         distances = np.asarray(source.compute_distance(target))
         results.add(source, target, distances)
@@ -21,11 +22,11 @@ def df_cloud_2_df_cloud_comparison(source_list, target_list):
     return results
 
 
-def df_cloud_2_rh_mesh_comparison(cloud_source_list, rhino_mesh_target_list, signed_flag, swap):
+def df_cloud_2_rh_mesh_comparison(assembly, cloud_source_list, rhino_mesh_target_list, signed_flag, swap):
     """
         Computes distances between a pcd and a mesh
     """
-    results = DFVizResults()
+    results = DFVizResults(assembly)
 
     for source, target in zip(cloud_source_list, rhino_mesh_target_list):
 
@@ -123,7 +124,7 @@ class DFVizResults:
     This class compiles the resluts of the error estimation into one object
     """
 
-    def __init__(self):
+    def __init__(self, assembly):
 
         self.source = []
         self.target = []
@@ -133,6 +134,7 @@ class DFVizResults:
         self.distances_min_deviation = []
         self.distances_sd_deviation = []
         self.distances = []
+        self.assembly = assembly
 
     def add(self, source, target, distances):
 
