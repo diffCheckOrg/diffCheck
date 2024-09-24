@@ -1,11 +1,11 @@
 {
-    "name": "DFBuildAssembly",
-    "nickname": "DFBuildAssembly",
+    "name": "DFMergeAssemblies",
+    "nickname": "DFMergeAssemblies",
     "category": "diffCheck",
     "subcategory": "Structure",
-    "description": "This component parse a series of breps representing a timber structure or a timber elements into a DFAssembly object.",
+    "description": "This component parse a series of DFAssemblies into a unique DFAssembly object.",
     "exposure": 4,
-    "instanceGuid": "bf6f47fe-2a7e-47b5-b1c4-c716c524d245",
+    "instanceGuid": "f6f0f6ca-0944-4311-828f-7308321b289f",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -14,9 +14,9 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_assembly_name",
-                "nickname": "i_assembly_name",
-                "description": "The name of the assembly to export.",
+                "name": "i_new_name",
+                "nickname": "i_new_name",
+                "description": "The new name of the assembly to export.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -26,28 +26,16 @@
                 "typeHintID": "str"
             },
             {
-                "name": "i_breps",
-                "nickname": "i_breps",
-                "description": "The breps of the structure.",
+                "name": "i_assemblies",
+                "nickname": "i_assemblies",
+                "description": "The assemblies to merge.",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "brep"
-            },
-            {
-                "name": "i_is_roundwood",
-                "nickname": "i_is_roundwood",
-                "description": "Whether the beams are of roundwood type or not.",
-                "optional": true,
-                "allowTreeAccess": false,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
+                "typeHintID": "ghdoc"
             }
         ],
         "outputParameters": [
