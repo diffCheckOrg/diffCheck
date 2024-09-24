@@ -112,29 +112,65 @@ namespace diffCheck::geometry
             Eigen::Vector3d v1 = this->Vertices[triangle[1]];
             Eigen::Vector3d v2 = this->Vertices[triangle[2]];
             Eigen::Vector3d n = (v1 - v0).cross(v2 - v0);
-            double normOfNormal = n.norm();
             n.normalize();
 
-            Eigen::Vector3d projectedPoint = point - n * (n.dot(point - v0)) ;
+            // Project the point onto the plane of the triangle
+            Eigen::Vector3d projectedPoint = point - n * (n.dot(point - v0));
 
-            double referenceTriangleArea = normOfNormal*0.5;
-            Eigen::Vector3d n1 = (v1 - v0).cross(projectedPoint - v0);
-            double area1 = n1.norm()*0.5;
-            Eigen::Vector3d n2 = (v2 - v1).cross(projectedPoint - v1);
-            double area2 = n2.norm()*0.5;
-            Eigen::Vector3d n3 = (v0 - v2).cross(projectedPoint - v2);
-            double area3 = n3.norm()*0.5;
-            double res = (area1 + area2 + area3 - referenceTriangleArea) / referenceTriangleArea;
+            // Compute vectors
+            Eigen::Vector3d v0v1 = v1 - v0;
+            Eigen::Vector3d v0v2 = v2 - v0;
+            Eigen::Vector3d v0p = projectedPoint - v0;
 
-            // arbitrary value to avoid false positives (points that, when projected on the triangle, are in it, but that are actually located too far from the mesh to actually belong to it)
-            double maxProjectionDistance = std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()}) / 2;
+            // Compute dot products
+            double dot00 = v0v2.dot(v0v2);
+            double dot01 = v0v2.dot(v0v1);
+            double dot02 = v0v2.dot(v0p);
+            double dot11 = v0v1.dot(v0v1);
+            double dot12 = v0v1.dot(v0p);
 
-            if (std::abs(res) < associationThreshold && (projectedPoint - point).norm() < maxProjectionDistance)
+            // Compute barycentric coordinates
+            double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
+            double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+            double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+            // Check if point is in triangle
+            if ((u >= -associationThreshold) && (v >= -associationThreshold) && (u + v <= 1 + associationThreshold))
             {
-                return true;
+                // Check if the point is close enough to the face
+                double maxProjectionDistance = std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()}) ;
+                if ((projectedPoint - point).norm() < maxProjectionDistance)
+                {
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    std::tuple<Eigen::Vector3d, Eigen::Vector3d> DFMesh::ComputeOBBCenterAndAxis()
+    {
+        Eigen::Vector3d center = Eigen::Vector3d::Zero();
+        Eigen::Vector3d axis = Eigen::Vector3d::Zero();
+
+        std::vector<Eigen::Vector3d> tightBoundingBox = this->GetTightBoundingBox();
+
+        Eigen::Vector3d deltaFirstDir = tightBoundingBox[1] - tightBoundingBox[0];
+        Eigen::Vector3d deltaSecondDir = tightBoundingBox[2] - tightBoundingBox[0];
+        Eigen::Vector3d deltaThirdDir = tightBoundingBox[3] - tightBoundingBox[0];
+
+        for (Eigen::Vector3d direction : {deltaFirstDir, deltaSecondDir, deltaThirdDir})
+        {
+            if (direction.norm() > axis.norm())
+            {
+                axis = direction;
+            }
+        }
+        axis.normalize();
+
+        center = tightBoundingBox[0] + deltaFirstDir/2 + deltaSecondDir/2 + deltaThirdDir/2;
+    
+        return std::make_tuple(center, axis);
     }
 
     void DFMesh::LoadFromPLY(const std::string &path)

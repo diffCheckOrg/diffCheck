@@ -35,10 +35,15 @@ class DFCloudMeshDistance(component):
             return None, None, None, None, None, None
 
         # conversion
-        df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cl_s) for i_cl_s in i_cloud_source]
+        siffed_df_cloud_source_list = []
+        siffed_rh_mesh_target_list = []
+        for i in range(len(i_cloud_source)):
+            if i_cloud_source[i] is not None:
+                siffed_df_cloud_source_list.append(df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source[i]))
+                siffed_rh_mesh_target_list.append(rh_mesh_target_list[i])
 
 
         # calculate distances
-        o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)
+        o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(siffed_df_cloud_source_list, siffed_rh_mesh_target_list, i_signed_flag, i_swap)
 
         return o_result.distances, o_result.distances_rmse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
