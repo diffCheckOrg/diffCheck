@@ -1,14 +1,13 @@
-"""Computes the distance between a point cloud and a mesh"""
 #! python3
 
+import Rhino
+import Grasshopper
 from ghpythonlib.componentbase import executingcomponent as component
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
-import Grasshopper as gh
+
 import diffCheck
 from diffCheck import df_cvt_bindings
 from diffCheck import df_error_estimation
-import Rhino
-import Grasshopper
 
 
 class DFCloudMeshDistance(component):
@@ -20,6 +19,9 @@ class DFCloudMeshDistance(component):
             i_swap: bool,
             i_analysis_resolution: float):
 
+        if i_cloud_source is None or i_assembly is None:
+            return None, None, None, None, None, None
+
         if i_analysis_resolution is None:
             scalef = diffCheck.df_util.get_doc_2_meters_unitf()
             i_analysis_resolution = 0.1 / scalef
@@ -29,7 +31,6 @@ class DFCloudMeshDistance(component):
         for branch in i_cloud_source.Branches:
             flat_list.extend(list(branch))
         i_cloud_list = flat_list
-
 
         # Based on cloud source input + beam size, decide whether to calculate joints or entire assembly and output respective message
         if len(i_assembly.beams) == len(i_cloud_list):
@@ -51,25 +52,11 @@ class DFCloudMeshDistance(component):
         # calculate distances
         o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)
 
-        # Create a DataTree object
-        distances_tree = gh.DataTree[object]()
-
-        # Populate the DataTree with nested lists
+        # distances to tree
+        distances_tree = Grasshopper.DataTree[object]()
         for i, sublist in enumerate(o_result.distances):
             for j, item in enumerate(sublist):
-                # Create a path for each branch (based on the index of the sublist)
-                path = gh.Kernel.Data.GH_Path(i)
-                # Add the item to the tree at the specified path
+                path = Grasshopper.Kernel.Data.GH_Path(i)
                 distances_tree.Add(item, path)
 
         return distances_tree, o_result.distances_rmse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
-
-# if __name__ == "__main__":
-#     com = DFCloudMeshDistance()
-#     o_viz_settings = com.RunScript(
-#         i_cloud_source,
-#         i_assembly,
-#         i_signed_flag,
-#         i_swap,
-#         i_analysis_resolution
-#         )
