@@ -46,7 +46,7 @@ class DFCADSegmentator(component):
 
             # different association depending on the type of beam
             df_asssociated_cluster_faces = dfb_segmentation.DFSegmentation.associate_clusters(
-                is_cylinder=df_b.is_cylinder,
+                is_roundwood=df_b.is_roundwood,
                 reference_mesh=df_b_mesh_faces,
                 unassociated_clusters=df_clouds,
                 angle_threshold=i_angle_threshold,
@@ -58,7 +58,7 @@ class DFCADSegmentator(component):
                 df_asssociated_cluster.add_points(df_associated_face)
 
             dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
-                is_cylinder=df_b.is_cylinder,
+                is_roundwood=df_b.is_roundwood,
                 unassociated_clusters=df_clouds,
                 associated_clusters=[df_asssociated_cluster],
                 reference_mesh=[df_b_mesh_faces],
