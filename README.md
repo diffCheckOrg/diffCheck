@@ -10,6 +10,7 @@
     <img src="https://github.com/diffCheckOrg/diffCheck/actions/workflows/yak-build.yml/badge.svg">
     <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/diffCheck?style=flat&logo=pypi&logoColor=white&color=blue">
     <img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fyak.rhino3d.com%2Fpackages%2FdiffCheck&query=%24.version&logo=rhinoceros&label=Yak&color=%23a3d6ff">
+    <a href="https://doi.org/10.5281/zenodo.13843959"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.13843959.svg" alt="DOI"></a>
 </p>
 
 ![demo](https://github.com/user-attachments/assets/3c9f353d-7707-4630-aa6d-fe59cbdeae2f)
