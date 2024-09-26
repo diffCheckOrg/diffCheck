@@ -55,7 +55,7 @@ class DFCloudMeshDistance(component):
                 siffed_rh_mesh_target_list.append(rh_mesh_target_list[i])
 
         # calculate distances
-        o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(i_assembly, df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)
+        o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(i_assembly, df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)  # noqa: F821
 
         # distances to tree
         distances_tree = Grasshopper.DataTree[object]()
