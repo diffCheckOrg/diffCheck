@@ -20,7 +20,7 @@
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "list",
+                "scriptParamAccess": "tree",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "pointcloud"
