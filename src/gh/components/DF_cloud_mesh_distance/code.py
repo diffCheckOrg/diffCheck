@@ -1,4 +1,6 @@
+"""Computes the distance between a point cloud and a mesh"""
 #! python3
+# r: diffCheck==1.0.0
 
 import Rhino
 import Grasshopper
@@ -46,13 +48,8 @@ class DFCloudMeshDistance(component):
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The input number of objects to compare matches neither the number of beams nor the number of joints")  # noqa: F821
             return None, None, None, None, None, None
 
-        # conversion
-        siffed_df_cloud_source_list = []
-        siffed_rh_mesh_target_list = []
-        for i in range(len(i_cloud_source)):
-            if i_cloud_source[i] is not None:
-                siffed_df_cloud_source_list.append(df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud_source[i]))
-                siffed_rh_mesh_target_list.append(rh_mesh_target_list[i])
+        #conversion to DFCloud
+        df_cloud_source_list = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(rh_cloud) for rh_cloud in i_cloud_list]
 
         # calculate distances
         o_result = df_error_estimation.df_cloud_2_rh_mesh_comparison(i_assembly, df_cloud_source_list, rh_mesh_target_list, i_signed_flag, i_swap)  # noqa: F821
