@@ -90,6 +90,8 @@ class DFPreviewAssembly(component):
 
     # Preview overrides
     def DrawViewportWires(self, args):
+        if self._dfassembly is None:
+            return
         for beam in self._dfassembly.beams:
             #######################################
             ## DFBeams
