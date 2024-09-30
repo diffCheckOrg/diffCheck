@@ -66,9 +66,9 @@ class DFJointSegmentator(component):
 
             # find the corresponding clusters and merge them
             df_joint_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
-            df_joint_face_segments = diffcheck_bindings.dfb_segmentation.DFSegmentation.associate_clusters(i_assembly.contains_cylinders, df_joint, df_cloud_clusters, i_angle_threshold, i_distance_threshold)
+            df_joint_face_segments = diffcheck_bindings.dfb_segmentation.DFSegmentation.associate_clusters(False, df_joint, df_cloud_clusters, i_angle_threshold, i_distance_threshold)
             for df_joint_face_segment in df_joint_face_segments:
-                        df_joint_cloud.add_points(df_joint_face_segment)
+                df_joint_cloud.add_points(df_joint_face_segment)
 
             # register the joint faces to the reference point cloud
             transform = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DICP(df_joint_cloud, ref_df_joint_cloud, max_correspondence_distance = i_correspondence_distance)
