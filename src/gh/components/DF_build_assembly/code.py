@@ -17,7 +17,7 @@ class DFBuildAssembly(component):
             i_is_roundwood : bool):
         beams: typing.List[DFBeam] = []
 
-        if i_assembly_name or i_breps is None:
+        if i_assembly_name is None or i_breps is None:
             return None
 
         if i_is_roundwood is None:

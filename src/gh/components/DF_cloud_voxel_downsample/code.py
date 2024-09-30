@@ -11,7 +11,7 @@ class DFCloudVoxelDownsample(component):
     def RunScript(self,
         i_cloud: Rhino.Geometry.PointCloud,
         i_voxel_size: float) -> Rhino.Geometry.PointCloud:
-        if i_cloud or i_voxel_size is None:
+        if i_cloud is None or i_voxel_size is None:
             return None
         df_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud)
         df_cloud.voxel_downsample(i_voxel_size)
