@@ -16,6 +16,10 @@ class DFBuildAssembly(component):
             i_breps : System.Collections.Generic.IList[Rhino.Geometry.Brep],
             i_is_roundwood : bool):
         beams: typing.List[DFBeam] = []
+
+        if i_assembly_name or i_breps is None:
+            return None
+
         if i_is_roundwood is None:
             i_is_roundwood = False
 
