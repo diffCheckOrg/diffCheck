@@ -127,20 +127,24 @@ class DFPreviewAssembly(component):
                 for idx_joint, joint in enumerate(beam.joints):
                     joint_faces = joint.faces
                     for idx_face, face in enumerate(joint_faces):
+                        clr: System.Drawing.Color = System.Drawing.Color.Magenta
+                        if len(self._dfassembly.beams) > 1:
+                            clr = self._joint_rnd_clr[idx_joint]
+
                         face_center = face.to_brep_face().GetBoundingBox(False).Center
-                        args.Display.DrawPoint(face_center, self._joint_rnd_clr[idx_joint])
+                        args.Display.DrawPoint(face_center, clr)
 
                         vector_face_center_2_beam_center = face_center - beam.center
                         vector_face_center_2_beam_center.Unitize()
                         vector_face_center_2_beam_center *= 0.4 * extension_length
 
                         ln = rg.Line(face_center, face_center + vector_face_center_2_beam_center)
-                        args.Display.DrawDottedLine(ln, self._joint_rnd_clr[idx_joint])
+                        args.Display.DrawDottedLine(ln, clr)
 
                         ghenv.Component.AddRuntimeMessage(RML.Remark, "legend joint naming: the beam index - the joint index - the face index by list order")  # noqa: F821
                         name_face_joint: str = f"{beam.index_assembly}-{joint.id}-{idx_face}"
                         args.Display.Draw2dText(
                             name_face_joint,
-                            self._joint_rnd_clr[idx_joint],
+                            clr,
                             ln.To,
                             True, 18)
