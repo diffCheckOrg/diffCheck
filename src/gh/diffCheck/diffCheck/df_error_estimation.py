@@ -39,7 +39,6 @@ def df_cloud_2_rh_mesh_comparison(assembly, cloud_source_list, rhino_mesh_target
             else:
                 # this means we want to visualize the result on the source pcd
                 distances = df_cloud_2_rh_mesh_distance(source, target, signed_flag)
-
         if swap:
             results.add(target, source, distances)
         else:
@@ -66,7 +65,6 @@ def rh_mesh_2_df_cloud_distance(source, target, signed=False):
             tree.Insert(rg.Point3d(ver[0], ver[1], ver[2]), i)
 
         for idx, p in enumerate(source.Vertices):
-
             # find the index on the target that the vertex is closest to
             search_point = p
             sphere = rg.Sphere(search_point, distances[idx]*1.0001) #to change later, hack to avoid not finding the point
@@ -129,6 +127,7 @@ class DFVizResults:
         self.source = []
         self.target = []
 
+        self.distances_mean = []
         self.distances_rmse = []
         self.distances_max_deviation = []
         self.distances_min_deviation = []
@@ -142,12 +141,14 @@ class DFVizResults:
         self.target.append(target)
 
         if distances.size == 0:
+            self.distances_mean.append(None)
             self.distances_rmse.append(None)
             self.distances_max_deviation.append(None)
             self.distances_min_deviation.append(None)
             self.distances_sd_deviation.append(None)
             self.distances.append(np.empty(0))
         else:
+            self.distances_mean.append(np.mean(distances))
             self.distances_rmse.append(np.sqrt(np.mean(distances ** 2)))
             self.distances_max_deviation.append(np.max(distances))
             self.distances_min_deviation.append(np.min(distances))
@@ -157,21 +158,22 @@ class DFVizResults:
     def filter_values_based_on_valuetype(self, settings):
 
         if settings.valueType == "Dist":
-
             valid_sublists = [sublist for sublist in self.distances if len(sublist) > 0]
-
             min_value = min(min(sublist) for sublist in valid_sublists)
             max_value = max(max(sublist) for sublist in valid_sublists)
             values = self.distances
 
-        elif settings.valueType == "RMSE":
+        elif settings.valueType == "MEAN":
+            values = self.distances_mean
+            min_value = min(values)
+            max_value = max(values)
 
+        elif settings.valueType == "RMSE":
             values = self.distances_rmse
             min_value = min(values)
             max_value = max(values)
 
         elif settings.valueType == "MAX":
-
             values = self.distances_max_deviation
             min_value = min(values)
             max_value = max(values)
@@ -182,7 +184,6 @@ class DFVizResults:
             max_value = max(values)
 
         elif settings.valueType == "STD":
-
             values = self.distances_sd_deviation
             min_value = min(values)
             max_value = max(values)

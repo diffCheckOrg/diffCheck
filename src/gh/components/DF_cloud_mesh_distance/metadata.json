@@ -84,6 +84,14 @@
                 "graft": false
             },
             {
+                "name": "o_mean",
+                "nickname": "o_mean",
+                "description": "The mean of the distances.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
                 "name": "o_rmse",
                 "nickname": "o_rmse",
                 "description": "average squared difference between source and target.",

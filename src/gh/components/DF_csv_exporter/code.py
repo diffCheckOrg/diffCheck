@@ -33,7 +33,7 @@ class DFCsvExporter(component):
         """ Write the CSV file """
         with open(file_path, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([f"{self.prefix} id", "distances", "min_deviation", "max_deviation", "std_deviation", "rmse"])
+            writer.writerow([f"{self.prefix} id", "distances", "min_deviation", "max_deviation", "std_deviation", "rmse", "mean"])
             writer.writerows(rows)
 
     def _prepare_row(self, idx, i_result):
@@ -43,8 +43,9 @@ class DFCsvExporter(component):
         max_dev = round(i_result.distances_max_deviation[idx], 4)
         std_dev = round(i_result.distances_sd_deviation[idx], 4)
         rmse = round(i_result.distances_rmse[idx], 4)
+        mean = round(i_result.distances_mean[idx], 4)
         distances_str = ";".join(map(str, distances))
-        return [self._get_id(idx, i_result), distances_str, min_dev, max_dev, std_dev, rmse]
+        return [self._get_id(idx, i_result), distances_str, min_dev, max_dev, std_dev, rmse, mean]
 
     def RunScript(self,
                   i_dump: bool,

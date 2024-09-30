@@ -1,6 +1,4 @@
-"""Computes the distance between a point cloud and a mesh"""
 #! python3
-# r: diffCheck==1.0.0
 
 import Rhino
 import Grasshopper
@@ -61,4 +59,4 @@ class DFCloudMeshDistance(component):
                 path = Grasshopper.Kernel.Data.GH_Path(i)
                 distances_tree.Add(item, path)
 
-        return distances_tree, o_result.distances_rmse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
+        return distances_tree, o_result.distances_mean, o_result.distances_rmse, o_result.distances_max_deviation, o_result.distances_min_deviation, o_result.distances_sd_deviation, o_result
