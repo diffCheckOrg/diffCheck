@@ -179,13 +179,13 @@ namespace diffCheck::segmentation
                 }
                 if (correspondingSegment == nullptr)
                 {
-                    DIFFCHECK_WARN("No segment found for the face. Skipping the face.");
+                    DIFFCHECK_WARN("No segment found for the face. Returning an empty point cloud for this face.");
+                    faceSegments.push_back(facePoints);
                     continue;
                 }
                 bool hasColors = correspondingSegment->GetNumColors() > 0;
                 for (Eigen::Vector3d point : correspondingSegment->Points)
                 {
-                    bool pointInFace = false;
                     if (face->IsPointOnFace(point, associationThreshold))
                     {
                         facePoints->Points.push_back(point);
@@ -279,7 +279,8 @@ namespace diffCheck::segmentation
 
                 if (correspondingSegment == nullptr)
                 {
-                    DIFFCHECK_WARN("No segment found for the face. Skipping the face.");
+                    DIFFCHECK_WARN("No segment found for the face. Returning an empty point cloud for this face.");
+                    faceSegments.push_back(facePoints);
                     continue;
                 }
                 bool hasColors = correspondingSegment->GetNumColors() > 0;
