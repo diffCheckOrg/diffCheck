@@ -5,6 +5,8 @@ from dataclasses import dataclass
 import typing
 from typing import Optional
 
+from enum import Enum
+
 import uuid
 
 import Rhino
@@ -18,6 +20,9 @@ from xml.dom.minidom import parseString
 import diffCheck.df_joint_detector
 import diffCheck.df_util
 
+class InvalidScanElement(Enum):
+    out_of_tolerance = 0
+    missing_pcd = 1
 
 @dataclass
 class DFVertex:
