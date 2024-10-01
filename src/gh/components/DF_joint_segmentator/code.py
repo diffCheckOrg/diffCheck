@@ -124,6 +124,10 @@ class DFJointSegmentator(component):
             df_joint_clouds.append(df_joint_cloud)
             o_joint_faces_segments.append(rh_joint_faces_segments)
 
+        for rh_joint_faces, rh_joint in zip(o_joint_faces_segments, o_joint_segments):
+            for joint_face in rh_joint_faces:
+                joint_face.SetUserString("df_sanity_scan_check", rh_joint.GetUserString("df_sanity_scan_check"))
+
         o_gh_tree_joint_faces_segments = ghpythonlib.treehelpers.list_to_tree(o_joint_faces_segments)
 
         return o_gh_tree_joint_faces_segments, o_joint_segments, o_reference_point_clouds
