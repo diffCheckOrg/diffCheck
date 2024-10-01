@@ -164,29 +164,34 @@ class DFVizResults:
             values = self.distances
 
         elif settings.valueType == "MEAN":
+            valid_values = [value for value in self.distances_mean if value is not None]
+            min_value = min(valid_values)
+            max_value = max(valid_values)
             values = self.distances_mean
-            min_value = min(values)
-            max_value = max(values)
 
         elif settings.valueType == "RMSE":
+            valid_values = [value for value in self.distances_rmse if value is not None]
+            min_value = min(valid_values)
+            max_value = max(valid_values)
             values = self.distances_rmse
-            min_value = min(values)
-            max_value = max(values)
 
         elif settings.valueType == "MAX":
+            valid_values = [value for value in self.distances_max_deviation if value is not None]
+            min_value = min(valid_values)
+            max_value = max(valid_values)
             values = self.distances_max_deviation
-            min_value = min(values)
-            max_value = max(values)
 
         elif settings.valueType == "MIN":
+            valid_values = [value for value in self.distances_min_deviation if value is not None]
+            min_value = min(valid_values)
+            max_value = max(valid_values)
             values = self.distances_min_deviation
-            min_value = min(values)
-            max_value = max(values)
 
         elif settings.valueType == "STD":
+            valid_values = [value for value in self.distances_sd_deviation if value is not None]
+            min_value = min(valid_values)
+            max_value = max(valid_values)
             values = self.distances_sd_deviation
-            min_value = min(values)
-            max_value = max(values)
 
         # threshold values
         if settings.lower_threshold is not None:
