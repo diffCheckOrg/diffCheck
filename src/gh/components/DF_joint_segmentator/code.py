@@ -1,12 +1,15 @@
+"""Extracts the joints from a point cloud."""
 #! python3
 
 import System
+import math
 
 import Rhino
 import ghpythonlib.treehelpers
 
 from diffCheck import diffcheck_bindings
 from diffCheck import df_cvt_bindings as df_cvt
+from diffCheck import df_geometries
 
 from ghpythonlib.componentbase import executingcomponent as component
 
@@ -21,7 +24,8 @@ class DFJointSegmentator(component):
             i_assembly,
             i_angle_threshold: float,
             i_distance_threshold: float,
-            i_correspondence_distance: float,):
+            i_correspondence_distance: float,
+            i_joint_displacement_tolerance: float):
 
         if i_clusters is None or i_assembly is None:
             return None
@@ -31,6 +35,8 @@ class DFJointSegmentator(component):
             i_distance_threshold = 0.1
         if i_correspondence_distance is None:
             i_correspondence_distance = 0.005
+        if i_joint_displacement_tolerance is None:
+            i_joint_displacement_tolerance =0.05
         if len(i_clusters) == 0:
             raise ValueError("No clusters given.")
         if not isinstance(i_clusters[0], Rhino.Geometry.PointCloud):
@@ -41,21 +47,32 @@ class DFJointSegmentator(component):
 
         # prepping the reference meshes
         df_joints = [[] for _ in range(n_joints)]
+        rh_joints = [[] for _ in range(n_joints)]
         for joint in i_assembly.all_joints:
             for face in joint.faces:
                 face = face.to_mesh()
                 face.Subdivide()
                 face.Faces.ConvertQuadsToTriangles()
+                rh_joints[joint.id].append(face)
                 df_joints[joint.id].append(df_cvt.cvt_rhmesh_2_dfmesh(face))
-
         o_reference_point_clouds = []
         o_joint_faces_segments = []
         df_cloud_clusters = [df_cvt.cvt_rhcloud_2_dfcloud(cluster) for cluster in i_clusters]
         df_joint_clouds = []
+        # compute the center of the joints
+        rh_joint_centers = []
+        for rh_joint in rh_joints:
+            vertices = []
+            for face in rh_joint:
+                for vertice in face.Vertices:
+                    vertices.append(Rhino.Geometry.Point3d(vertice.X, vertice.Y, vertice.Z))
+            joint_center = Rhino.Geometry.BoundingBox(vertices).Center
+            rh_joint_centers.append([joint_center.X, joint_center.Y, joint_center.Z])
 
         # for each joint, find the corresponding faces, store them as such but also merge them, generate a reference point cloud, and register the merged clusters to the reference point cloud
-        for df_joint in df_joints:
+        for i, df_joint in enumerate(df_joints):
             rh_joint_faces_segments = []
+            reference_joint_center = rh_joint_centers[i]
 
             # create the reference point cloud
             ref_df_joint_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
@@ -70,15 +87,45 @@ class DFJointSegmentator(component):
             for df_joint_face_segment in df_joint_face_segments:
                 df_joint_cloud.add_points(df_joint_face_segment)
 
+            # get the center of the segment
+            if len(df_joint_cloud.points)>0:
+                df_cloud_bb_points = df_joint_cloud.get_tight_bounding_box()
+                x, y, z = 0, 0, 0
+                for i in range(len(df_cloud_bb_points)):
+                    x += df_cloud_bb_points[i][0]
+                    y += df_cloud_bb_points[i][1]
+                    z += df_cloud_bb_points[i][2]
+                x = x/8 # because a bb has 8 corners
+                y = y/8
+                z = z/8
+                segment_center = [x, y, z]
+                segment_dist_to_ref = math.sqrt(math.pow(segment_center[0]-reference_joint_center[0], 2)
+                                                + math.pow(segment_center[1]-reference_joint_center[1], 2)
+                                                + math.pow(segment_center[2]-reference_joint_center[2], 2))
+                if segment_dist_to_ref > i_joint_displacement_tolerance:
+                    df_joint_face_segments = df_geometries.DFInvalidScanElement(0) # out_of_tolerance
+                    df_joint_cloud = df_geometries.DFInvalidScanElement(0)
+            else:
+                df_joint_face_segments = df_geometries.DFInvalidScanElement(1)
+                df_joint_cloud = df_geometries.DFInvalidScanElement(1)
             # register the joint faces to the reference point cloud
-            transform = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DICP(df_joint_cloud, ref_df_joint_cloud, max_correspondence_distance = i_correspondence_distance)
-            for df_joint_face_segment in df_joint_face_segments:
-                df_joint_face_segment.apply_transformation(transform)
-                rh_joint_faces_segments.append(df_cvt.cvt_dfcloud_2_rhcloud(df_joint_face_segment))
+            if isinstance(df_joint_cloud, diffcheck_bindings.dfb_geometry.DFPointCloud):
+                transform = diffcheck_bindings.dfb_registrations.DFRefinedRegistration.O3DICP(df_joint_cloud, ref_df_joint_cloud, max_correspondence_distance = i_correspondence_distance)
+            if isinstance(df_joint_face_segments, list):
+                for df_joint_face_segment in df_joint_face_segments:
+                    df_joint_face_segment.apply_transformation(transform)
+                    rh_joint_faces_segments.append(df_cvt.cvt_dfcloud_2_rhcloud(df_joint_face_segment))
+            elif isinstance(df_joint_face_segments, df_geometries.DFInvalidScanElement):
+                rh_joint_faces_segments.append(df_joint_face_segments)
             df_joint_clouds.append(df_joint_cloud)
             o_joint_faces_segments.append(rh_joint_faces_segments)
 
-        o_joint_segments = [df_cvt.cvt_dfcloud_2_rhcloud(df_joint_cloud) for df_joint_cloud in df_joint_clouds]
+        o_joint_segments = []
+        for df_joint_cloud in df_joint_clouds:
+            if isinstance(df_joint_cloud, diffcheck_bindings.dfb_geometry.DFPointCloud):
+                o_joint_segments.append(df_cvt.cvt_dfcloud_2_rhcloud(df_joint_cloud))
+            elif isinstance(df_joint_cloud, df_geometries.DFInvalidScanElement):
+                o_joint_segments.append(df_joint_cloud)
 
         o_gh_tree_joint_faces_segments = ghpythonlib.treehelpers.list_to_tree(o_joint_faces_segments)
 
