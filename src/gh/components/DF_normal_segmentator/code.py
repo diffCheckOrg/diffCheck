@@ -19,6 +19,10 @@ class DFCloudNormalSegmentator(component):
         i_knn_neighborhood_size=None,
         i_radius_neighborhood_size=None
     ) -> Rhino.Geometry.PointCloud:
+
+        if i_cloud is None:
+            return None
+
         o_clusters = []
         df_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud)
 
