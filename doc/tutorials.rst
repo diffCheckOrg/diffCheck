@@ -8,7 +8,5 @@ diffCheck tutorials
 
    quickstart
    key-concepts
-   pre-processing
-   assembly_intro
-   segmentation_intro
-   compute_error_intro
+   joints-evaluation
+   assembly-evaluation
