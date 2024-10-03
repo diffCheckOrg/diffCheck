@@ -56,14 +56,7 @@ class DFVizResults:
 
         self.sanity_check.append(sanity_check)
 
-        if distances.size == 0 and self.sanity_check == DFInvalidData.VALID:
-            self.distances_mean.append(None)
-            self.distances_rmse.append(None)
-            self.distances_max_deviation.append(None)
-            self.distances_min_deviation.append(None)
-            self.distances_sd_deviation.append(None)
-            self.distances.append(np.empty(0))
-        elif sanity_check == DFInvalidData.OUT_OF_TOLERANCE:
+        if sanity_check == DFInvalidData.OUT_OF_TOLERANCE:
             self.distances_mean.append(DFInvalidData.OUT_OF_TOLERANCE)
             self.distances_rmse.append(DFInvalidData.OUT_OF_TOLERANCE)
             self.distances_max_deviation.append(DFInvalidData.OUT_OF_TOLERANCE)
@@ -182,7 +175,7 @@ def rh_cloud_2_rh_mesh_comparison(
         if sanity_check_value == DFInvalidData.OUT_OF_TOLERANCE.value:
             out_of_tol_distances = np.asarray([DFInvalidData.OUT_OF_TOLERANCE] * len(source_df_pts))
             results.add(source_df, target, out_of_tol_distances, sanity_check=DFInvalidData.OUT_OF_TOLERANCE)
-        elif sanity_check_value == DFInvalidData.MISSING_PCD.value:
+        elif sanity_check_value == DFInvalidData.MISSING_PCD.value or len(source_df_pts) == 0:
             results.add(source_df, target, np.empty(0), sanity_check=DFInvalidData.MISSING_PCD)
         else:
             if swap:
