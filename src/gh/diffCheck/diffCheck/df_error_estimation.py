@@ -185,11 +185,15 @@ def rh_cloud_2_rh_mesh_comparison(
         elif sanity_check_value == DFInvalidData.MISSING_PCD.value:
             results.add(source_df, target, np.empty(0), sanity_check=DFInvalidData.MISSING_PCD)
         else:
-            distances = np.empty(0) if len(source_df_pts) == 0 else df_cloud_2_rh_mesh_distance(source_df, target, signed_flag)
+            if swap:
+                # this mean we want to visualize the result on the target mesh
+                distances = rh_mesh_2_df_cloud_distance(source_df, target, signed_flag)
+            else:
+                # this means we want to visualize the result on the source pcd
+                distances = df_cloud_2_rh_mesh_distance(source_df, target, signed_flag)
             results.add(source_df, target, distances)
 
     return results
-
 
 def rh_mesh_2_df_cloud_distance(source, target, signed=False):
     """
