@@ -4,12 +4,28 @@
 """
 
 import typing
+from enum import Enum
 
 import numpy as np
-from diffCheck import diffcheck_bindings  # type: ignore
+
+import Rhino
 import Rhino.Geometry as rg
+
+from diffCheck import diffcheck_bindings  # type: ignore
+from diffCheck import df_cvt_bindings
 from diffCheck.df_geometries import DFAssembly
 
+
+class DFInvalidData(Enum):
+    """
+    Enum to define the type of invalid data for joint or assembly analysis
+    """
+    # healty data
+    VALID = 0
+    # the joint or  beam is way to out of the tolerance established in the joint/assembly segmentator
+    OUT_OF_TOLERANCE = 1
+    # we are missing scan points to evaluate
+    MISSING_PCD = 2
 
 class DFVizResults:
     """
@@ -29,17 +45,37 @@ class DFVizResults:
         self.distances = []
         self.assembly = assembly
 
-    def add(self, source, target, distances):
+        self.sanity_check = []
+
+        self._is_source_cloud = True  # if False it's a mesh
+
+    def add(self, source, target, distances, sanity_check: DFInvalidData = DFInvalidData.VALID):
 
         self.source.append(source)
         self.target.append(target)
 
-        if distances.size == 0:
+        self.sanity_check.append(sanity_check)
+
+        if distances.size == 0 and self.sanity_check == DFInvalidData.VALID:
             self.distances_mean.append(None)
             self.distances_rmse.append(None)
             self.distances_max_deviation.append(None)
             self.distances_min_deviation.append(None)
             self.distances_sd_deviation.append(None)
+            self.distances.append(np.empty(0))
+        elif sanity_check == DFInvalidData.OUT_OF_TOLERANCE:
+            self.distances_mean.append(DFInvalidData.OUT_OF_TOLERANCE)
+            self.distances_rmse.append(DFInvalidData.OUT_OF_TOLERANCE)
+            self.distances_max_deviation.append(DFInvalidData.OUT_OF_TOLERANCE)
+            self.distances_min_deviation.append(DFInvalidData.OUT_OF_TOLERANCE)
+            self.distances_sd_deviation.append(DFInvalidData.OUT_OF_TOLERANCE)
+            self.distances.append(distances.tolist())
+        elif sanity_check == DFInvalidData.MISSING_PCD:
+            self.distances_mean.append(DFInvalidData.MISSING_PCD)
+            self.distances_rmse.append(DFInvalidData.MISSING_PCD)
+            self.distances_max_deviation.append(DFInvalidData.MISSING_PCD)
+            self.distances_min_deviation.append(DFInvalidData.MISSING_PCD)
+            self.distances_sd_deviation.append(DFInvalidData.MISSING_PCD)
             self.distances.append(np.empty(0))
         else:
             self.distances_mean.append(np.mean(distances))
@@ -95,6 +131,10 @@ class DFVizResults:
 
         return values, min_value, max_value
 
+    @property
+    def is_source_cloud(self):
+        return type(self.source[0]) is diffcheck_bindings.dfb_geometry.DFPointCloud
+
 
 def df_cloud_2_df_cloud_comparison(source_list, target_list):
     """
@@ -109,9 +149,9 @@ def df_cloud_2_df_cloud_comparison(source_list, target_list):
     return results
 
 
-def df_cloud_2_rh_mesh_comparison(
+def rh_cloud_2_rh_mesh_comparison(
     assembly: DFAssembly,
-    cloud_source_list: typing.List[diffcheck_bindings.dfb_geometry.DFPointCloud],
+    rh_cloud_source_list: typing.List[Rhino.Geometry.PointCloud],
     rhino_mesh_target_list: typing.List[rg.Mesh],
     signed_flag: bool,
     swap: bool,
@@ -120,7 +160,7 @@ def df_cloud_2_rh_mesh_comparison(
         Computes distances between a pcd and a mesh and return the results
 
         :param assembly: the DFAssembly object
-        :param cloud_source_list: list of point clouds after segmentation
+        :param rh_cloud_source_list: list of point clouds after segmentation in Rhino format
         :param rhino_mesh_target_list: list of rhino meshes
         :param signed_flag: flag to compute signed distances
         :param swap: this mean we want to visualize the result on the target mesh (or viceversa)
@@ -129,19 +169,24 @@ def df_cloud_2_rh_mesh_comparison(
     """
     results = DFVizResults(assembly)
 
-    for source, target in zip(cloud_source_list, rhino_mesh_target_list):
+    for idx, source_rh in enumerate(rh_cloud_source_list):
+        source_df = df_cvt_bindings.cvt_rhcloud_2_dfcloud(source_rh)
+        target = rhino_mesh_target_list[idx]
 
-        if len(source.points) == 0:
-            distances = np.empty(0)
-        else:
-            if swap:
-                distances = rh_mesh_2_df_cloud_distance(target, source, signed_flag)
-            else:
-                distances = df_cloud_2_rh_mesh_distance(source, target, signed_flag)
+        source_df_pts = source_df.points
+
         if swap:
-            results.add(target, source, distances)
+            source_df, target = target, source_df
+
+        sanity_check_value = int(source_rh.GetUserString("df_sanity_scan_check"))
+        if sanity_check_value == DFInvalidData.OUT_OF_TOLERANCE.value:
+            out_of_tol_distances = np.asarray([DFInvalidData.OUT_OF_TOLERANCE] * len(source_df_pts))
+            results.add(source_df, target, out_of_tol_distances, sanity_check=DFInvalidData.OUT_OF_TOLERANCE)
+        elif sanity_check_value == DFInvalidData.MISSING_PCD.value:
+            results.add(source_df, target, np.empty(0), sanity_check=DFInvalidData.MISSING_PCD)
         else:
-            results.add(source, target, distances)
+            distances = np.empty(0) if len(source_df_pts) == 0 else df_cloud_2_rh_mesh_distance(source_df, target, signed_flag)
+            results.add(source_df, target, distances)
 
     return results
 

@@ -5,8 +5,6 @@ from dataclasses import dataclass
 import typing
 from typing import Optional
 
-from enum import Enum
-
 import uuid
 
 import Rhino
@@ -19,11 +17,6 @@ from xml.dom.minidom import parseString
 
 import diffCheck.df_joint_detector
 import diffCheck.df_util
-
-class DFInvalidScanElement(Enum):
-    """ Enum used for indicating corrupted or invalid scan elements to evaluate """
-    out_of_tolerance = 0  # the joint is way too far from the expected position (see DFJointSegmentator)
-    missing_pcd = 1  # there is not enough point data in the scan (e.g. due to occlusion)
 
 @dataclass
 class DFVertex:

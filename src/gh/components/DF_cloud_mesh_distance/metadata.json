@@ -20,10 +20,11 @@
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "tree",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "pointcloud"
+                "typeHintID": "pointcloud",
+                "flatten": true
             },
             {
                 "name": "i_assembly",
