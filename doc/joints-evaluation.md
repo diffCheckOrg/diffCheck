@@ -50,6 +50,15 @@ Here we convert the model of our structure into the internal datatype of diffche
     src="./_static/tutorials/fig_subtrative_high_res_2.png" width="500">
 </p>
 
+```{hint}
+If you are evaluating round sections e.g. logs, you can set the `i_is_roundwood` input to `True` in the `DFBuildAssembly` component. This will allow DF to detect automatically the joints on the roundwood.
+
+<p align="center">
+    <img style="background-color: transparent;"
+    src="./_static/tutorials/fig_subtractive_log.png" width="600">
+</p>
+```
+
 > DF's components:
 > * [`DFAssebmly`](gh_DFBuildAssembly)
 
