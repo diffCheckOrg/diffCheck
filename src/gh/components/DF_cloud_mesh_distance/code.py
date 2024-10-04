@@ -34,7 +34,10 @@ class DFCloudMeshDistance(component):
             rh_mesh_target_list = [joint.to_mesh(i_analysis_resolution) for joint in i_assembly._all_joints]
         elif len(i_assembly.all_joint_faces) == len(i_cloud_source):
             ghenv.Component.Message = "Per Joint Face"  # noqa: F821
-            rh_mesh_target_list = [joint_face.to_mesh() for joint_face in i_assembly.all_joint_faces]
+            rh_mesh_target_list = []
+            for joint in i_assembly._all_joints:
+                for face in joint.faces:
+                    rh_mesh_target_list.append(face.to_mesh())
         else:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "The input number of objects to compare matches neither the number of beams nor the number of joints")  # noqa: F821
             return None, None, None, None, None, None
