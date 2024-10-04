@@ -11,7 +11,6 @@ import Grasshopper as gh
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 import diffCheck
-from diffCheck.df_geometries import DFAssembly
 import diffCheck.diffcheck_bindings
 import diffCheck.df_util
 
@@ -68,10 +67,7 @@ class DFPreviewAssembly(component):
                     input_indx, X_cord, Y_cord)
 
 
-    def RunScript(self,
-        i_assembly: DFAssembly=None,
-        i_are_joints_visible: bool=None
-        ):
+    def RunScript(self, i_assembly, i_are_joints_visible: bool):
         if i_assembly is None:
             return None
         if i_are_joints_visible is None:
@@ -92,7 +88,7 @@ class DFPreviewAssembly(component):
     def DrawViewportWires(self, args):
         if self._dfassembly is None:
             return
-        for beam in self._dfassembly.beams:
+        for idx_beam, beam in enumerate(self._dfassembly.beams):
             #######################################
             ## DFBeams
             #######################################
@@ -125,12 +121,12 @@ class DFPreviewAssembly(component):
             ## DFJoints
             #######################################
             if self._are_joints_visible:
+                clr = self._joint_rnd_clr[idx_beam]
                 for idx_joint, joint in enumerate(beam.joints):
                     joint_faces = joint.faces
                     for idx_face, face in enumerate(joint_faces):
-                        clr: System.Drawing.Color = System.Drawing.Color.Magenta
-                        if len(self._dfassembly.beams) > 1:
-                            clr = self._joint_rnd_clr[idx_joint]
+                        if len(self._dfassembly.beams) == 1:
+                            clr: System.Drawing.Color = System.Drawing.Color.Magenta
 
                         face_center = face.to_brep_face().GetBoundingBox(False).Center
                         args.Display.DrawPoint(face_center, clr)
