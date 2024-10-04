@@ -24,7 +24,7 @@ class DFCsvExporter(component):
             for idx_b, beam in enumerate(i_result.assembly.beams):
                 for idx_j, joint in enumerate(beam.joints):
                     if counter == idx:
-                        return f"{idx_b}--{idx_b}--{idx_j}"
+                        return f"{idx_b}--{idx_j}--{0}"
                     counter += 1
         elif self.prefix == "joint_face":
             for idx_b, beam in enumerate(i_result.assembly.beams):
