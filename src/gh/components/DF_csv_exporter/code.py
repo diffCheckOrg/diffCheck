@@ -3,12 +3,17 @@
 
 from ghpythonlib.componentbase import executingcomponent as component
 
-from diffCheck.df_error_estimation import DFVizResults
+from diffCheck.df_error_estimation import DFInvalidData
 import csv
 import os
 
 
 class DFCsvExporter(component):
+    def __init__(self):
+        super(DFCsvExporter, self).__init__()
+        self.prefix = ""
+        self.counter = 0
+
     def _get_id(self, idx, i_result):
         """ Get the ID of the element """
         counter = 0
@@ -19,7 +24,7 @@ class DFCsvExporter(component):
             for idx_b, beam in enumerate(i_result.assembly.beams):
                 for idx_j, joint in enumerate(beam.joints):
                     if counter == idx:
-                        return f"{idx_b}--{idx_b}--{idx_j}"
+                        return f"{idx_b}--{idx_j}--{0}"
                     counter += 1
         elif self.prefix == "joint_face":
             for idx_b, beam in enumerate(i_result.assembly.beams):
@@ -33,25 +38,30 @@ class DFCsvExporter(component):
         """ Write the CSV file """
         with open(file_path, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([f"{self.prefix} id", "distances", "min_deviation", "max_deviation", "std_deviation", "rmse"])
+            writer.writerow([f"{self.prefix} id", "distances", "min_deviation", "max_deviation", "std_deviation", "rmse", "mean"])
             writer.writerows(rows)
 
     def _prepare_row(self, idx, i_result):
         """ Prepare a row for the CSV file """
+        if i_result.sanity_check[idx].value != DFInvalidData.VALID.value:
+            invalid_type = i_result.sanity_check[idx].name
+            return [self._get_id(idx, i_result), invalid_type, invalid_type, invalid_type, invalid_type, invalid_type, invalid_type]
+
         distances = [round(value, 4) for value in i_result.distances[idx]]
         min_dev = round(i_result.distances_min_deviation[idx], 4)
         max_dev = round(i_result.distances_max_deviation[idx], 4)
         std_dev = round(i_result.distances_sd_deviation[idx], 4)
         rmse = round(i_result.distances_rmse[idx], 4)
+        mean = round(i_result.distances_mean[idx], 4)
         distances_str = ";".join(map(str, distances))
-        return [self._get_id(idx, i_result), distances_str, min_dev, max_dev, std_dev, rmse]
+        return [self._get_id(idx, i_result), distances_str, min_dev, max_dev, std_dev, rmse, mean]
 
     def RunScript(self,
-                  i_dump: bool,
-                  i_export_dir: str,
-                  i_file_name: str,
-                  i_export_seperate_files: bool,
-                  i_result: DFVizResults):
+            i_dump: bool,
+            i_export_dir: str,
+            i_file_name: str,
+            i_export_seperate_files: bool,
+            i_result):
 
         if i_dump:
             os.makedirs(i_export_dir, exist_ok=True)

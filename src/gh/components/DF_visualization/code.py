@@ -1,14 +1,11 @@
 #! python3
 
-import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
 from diffCheck import df_cvt_bindings
 from diffCheck import df_visualization
 from diffCheck.df_visualization import DFVizSettings
-from diffCheck.df_error_estimation import DFVizResults
-from diffCheck import diffcheck_bindings
-
+from diffCheck.df_error_estimation import DFVizResults, DFInvalidData
 
 class DFVisualization(component):
     def RunScript(self,
@@ -18,22 +15,26 @@ class DFVisualization(component):
         if i_result is None or i_viz_settings is None:
             return None, None, None
 
-        values, min_value, max_value = i_result.filter_values_based_on_valuetype(i_viz_settings)
+        # make a DFVizResult copy to avoid modifying the original result to be exported in csv
+        result_cp = DFVizResults(i_result.assembly)
+        exclude_indices = [idx for idx, sanity_val in enumerate(i_result.sanity_check) if sanity_val.value != DFInvalidData.VALID.value]
+        result_cp.source = [val for idx, val in enumerate(i_result.source) if idx not in exclude_indices]
+        result_cp.target = [val for idx, val in enumerate(i_result.target) if idx not in exclude_indices]
+        result_cp.distances = [val for idx, val in enumerate(i_result.distances) if idx not in exclude_indices]
+        result_cp.distances_mean = [val for idx, val in enumerate(i_result.distances_mean) if idx not in exclude_indices]
+        result_cp.distances_rmse = [val for idx, val in enumerate(i_result.distances_rmse) if idx not in exclude_indices]
+        result_cp.distances_max_deviation = [val for idx, val in enumerate(i_result.distances_rmse) if idx not in exclude_indices]
+        result_cp.distances_min_deviation = [val for idx, val in enumerate(i_result.distances_min_deviation) if idx not in exclude_indices]
+        result_cp.distances_sd_deviation = [val for idx, val in enumerate(i_result.distances_sd_deviation) if idx not in exclude_indices]
 
-        # check if i_result.source is a list of pointclouds or a mesh
-        if type(i_result.source[0]) is diffcheck_bindings.dfb_geometry.DFPointCloud:
+        values, min_value, max_value = result_cp.filter_values_based_on_valuetype(i_viz_settings)
 
-            # convert to Rhino PCD
-            o_source = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(src) for src in i_result.source]
-
-            # color geometry
+        # check if result_cp.source is a list of pointclouds or a mesh
+        if result_cp.is_source_cloud:
+            o_source = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(src) for src in result_cp.source]
             o_colored_geo = [df_visualization.color_rh_pcd(src, dist, min_value, max_value, i_viz_settings.palette) for src, dist in zip(o_source, values)]
-
-        elif type(i_result.source[0]) is rg.Mesh:
-            # convert to Rhino Mesh
-            o_source = i_result.source
-
-            # color geometry
+        else:
+            o_source = result_cp.source
             o_colored_geo = [df_visualization.color_rh_mesh(src, dist, min_value, max_value, i_viz_settings.palette) for src, dist in zip(o_source, values)]
 
         o_legend = df_visualization.create_legend(min_value,
@@ -44,9 +45,7 @@ class DFVisualization(component):
                                                   width=i_viz_settings.legend_width,
                                                   total_height=i_viz_settings.legend_height)
 
-        # add option to create a histogram for each item
-
-        if len(i_result.source) > 1 and i_viz_settings.one_histogram_per_item:
+        if len(result_cp.source) > 1 and i_viz_settings.one_histogram_per_item:
             multiple_curves = True
         else:
             multiple_curves = False

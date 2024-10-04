@@ -94,7 +94,7 @@ class JointDetector:
         faces = {}
         if self.is_roundwood:
             for idx, face in enumerate(self.brep.Faces):
-                faces[idx] = (face, face.IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance))
+                faces[idx] = (face, face.IsPlanar(1 * sc.doc.ModelAbsoluteTolerance))
         else:
             for idx, face in enumerate(self.brep.Faces):
                 face_centroid = rg.AreaMassProperties.Compute(face).Centroid
@@ -102,7 +102,7 @@ class JointDetector:
                 projected_centroid = face.PointAt(coord[1], coord[2])
                 faces[idx] = (face,
                             bounding_geometry.IsPointInside(projected_centroid, sc.doc.ModelAbsoluteTolerance, True)
-                            * face.IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance))
+                            * face.IsPlanar(1 * sc.doc.ModelAbsoluteTolerance))
 
         return faces
 
@@ -127,7 +127,7 @@ class JointDetector:
                                     [adj_face
                                         for adj_face in face[0].AdjacentFaces()
                                         if faces[adj_face][1]
-                                            and faces[adj_face][0].IsPlanar(1000 * sc.doc.ModelAbsoluteTolerance)
+                                            and faces[adj_face][0].IsPlanar(1 * sc.doc.ModelAbsoluteTolerance)
                                             and adj_face != idx])
 
         return adjacency_of_faces

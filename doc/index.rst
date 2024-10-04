@@ -154,7 +154,6 @@ The software is developed by the `Laboratory of Timber Construction (IBOIS)`_ an
     :maxdepth: 2
     :caption: Getting Started
 
-    installation
     quickstart
     tutorials
 

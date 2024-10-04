@@ -72,6 +72,18 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "float"
+            },
+            {
+                "name": "i_joint_displacement_tolerance",
+                "nickname": "i_joint_displacement_tolerance",
+                "description": "The maximum distance for a joint segment to be considered as valid for the reference we are comparing to. The default value is 0.05 (5 cm).",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
             }
         ],
         "outputParameters": [

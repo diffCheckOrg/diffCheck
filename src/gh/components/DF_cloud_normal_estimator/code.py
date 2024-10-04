@@ -13,6 +13,9 @@ class DFCloudNormalEstimator(component):
             i_switch_mode: bool):
         o_cloud = Rhino.Geometry.PointCloud()
 
+        if i_cloud is None:
+            return None
+
         df_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(i_cloud)
 
         if i_knn is None:

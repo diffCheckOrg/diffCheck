@@ -159,8 +159,10 @@ def color_rh_mesh(mesh, values, min_value, max_value, palette):
         elif isinstance(values, list):
              # If values is a non-empty list
             mapped_color = palette.value_to_color(values[i], min_value, max_value)
-        else:
+        elif values is None:
             # If values is not None and not empty (assuming it's a single value)
+            mapped_color = Color.FromArgb(255, 255, 255)
+        else:
             mapped_color = palette.value_to_color(values, min_value, max_value)
 
         mesh.VertexColors.Add(mapped_color.R, mapped_color.G, mapped_color.B)
@@ -281,6 +283,8 @@ def create_histogram_curve(values, min_value, max_value, res=100, bin_size=1,
 
     # Count the frequencies of values in each bin
     for value in values:
+        if value is None:
+            continue
         if value < min_value:
             value = min_value
         elif value > max_value:
@@ -329,6 +333,8 @@ def create_histogram(values, min_value, max_value, res=100, steps=10,
 
     if multiple_curves:
         for v in values:
+            if v is None:
+                continue
             polyline, max_freq = create_histogram_curve(v, min_value, max_value, res,
                                    bin_size, height,scaling_factor, spacing)
 
@@ -337,6 +343,9 @@ def create_histogram(values, min_value, max_value, res=100, steps=10,
                 max_frequency = max_freq
 
     else:
+        if values is None:
+            return None
+
         polyline, max_frequency = create_histogram_curve(values, min_value, max_value, res,
                                 bin_size, height,scaling_factor, spacing)
 

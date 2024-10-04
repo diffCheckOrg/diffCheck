@@ -123,7 +123,7 @@ def add_plane_object(self,
 
 class DFVisualizationSettings(component):
     def __init__(self):
-        self.poss_value_types = ["Dist", "RMSE", "MAX", "MIN", "STD"]
+        self.poss_value_types = ["Dist", "MEAN", "RMSE", "MAX", "MIN", "STD"]
         self.poss_palettes = ["Jet", "Rainbow", "RdPu", "Viridis"]
 
         ghenv.Component.ExpireSolution(True)  # noqa: F821
@@ -200,7 +200,7 @@ class DFVisualizationSettings(component):
         # set default values
         if i_value_type is not None:
             if i_value_type not in self.poss_value_types:
-                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, RMSE, MAX, MIN, STD")  # noqa: F821
+                ghenv.Component.AddRuntimeMessage(RML.Warning, "Possible values for i_value_type are: dist, MEAN, RMSE, MAX, MIN, STD")  # noqa: F821
                 return None
         else:
             i_value_type = "Dist"
@@ -233,17 +233,3 @@ class DFVisualizationSettings(component):
                                                         i_one_histogram_per_item)
 
         return o_viz_settings
-
-# if __name__ == "__main__":
-#     com = DFVisualizationSettings()
-#     o_viz_settings = com.RunScript(
-#         i_value_type,
-#         i_palette,
-#         i_upper_threshold,
-#         i_lower_threshold,
-#         i_legend_height,
-#         i_legend_width,
-#         i_legend_plane,
-#         i_histogram_scale_factor,
-#         i_one_histogram_per_item
-#         )

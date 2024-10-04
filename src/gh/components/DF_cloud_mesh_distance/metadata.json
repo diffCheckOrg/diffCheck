@@ -20,10 +20,11 @@
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "tree",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "pointcloud"
+                "typeHintID": "pointcloud",
+                "flatten": true
             },
             {
                 "name": "i_assembly",
@@ -79,6 +80,14 @@
                 "name": "o_distances",
                 "nickname": "o_distances",
                 "description": "list of calculated distances for each point of the source.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_mean",
+                "nickname": "o_mean",
+                "description": "The mean of the distances.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

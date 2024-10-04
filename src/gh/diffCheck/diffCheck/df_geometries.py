@@ -18,7 +18,6 @@ from xml.dom.minidom import parseString
 import diffCheck.df_joint_detector
 import diffCheck.df_util
 
-
 @dataclass
 class DFVertex:
     """

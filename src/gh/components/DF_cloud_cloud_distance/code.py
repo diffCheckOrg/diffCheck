@@ -34,4 +34,4 @@ class DFCloudCloudDistance(component):
         # calculate distances
         o_results = df_error_estimation.df_cloud_2_df_cloud_comparison(df_cloud_source_list, df_cloud_target_list)
 
-        return o_results.distances, o_results.distances_rmse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
+        return o_results.distances, o_results.distances_mean, o_results.distances_rmse, o_results.distances_max_deviation, o_results.distances_min_deviation, o_results.distances_sd_deviation, o_results
