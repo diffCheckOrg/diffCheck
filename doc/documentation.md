@@ -15,7 +15,7 @@ invoke documentize
 ```
 and to open the documentation in your browser:
 ```console
-start _build/html/index.html
+start _build/index.html
 ```
 If you modify the `doc`s files and refresh the pages updates will be visible.
 
