@@ -17,13 +17,41 @@
 
 # DiffCheck: CAD-Scan comparison
 
-diffCheck(DF) allows to identify discrepancies across point clouds and 3D models of both individually machined timber pieces featuring various joints as well as fully assembled timber structures. It can help you quantify the differences between the CAD and scanned fabricated structure, providing a comprehensive report that highlights the discrepancies.
+With `diffCheck`, you can easily compare your scans and 3D models of timber structures or joinery to measure precision and see the differences at a glance, [here](https://diffcheckorg.github.io/diffCheck/quickstart.html)!
 
-The software is designed to be user-friendly and can be used either via a Grasshopper plug-in or its Python API.
+`diffCheck` can also function as a general purpose  point cloud processing toolset and we hope that the digital community will use it, see the interest, and contribute to this open-source project we starting!
 
-Visit the [DiffCheck website](https://diffcheckorg.github.io/diffCheck/) for more information and documentation.
+`diffCheck` is originally developed and now maintained by Andrea Settimi (PhD), Damien Gilliard (PhD) from the [Laboratory of Timber Construction (IBOIS, lab head: Prof. Yves Weinand)](https://www.epfl.ch/labs/ibois/), Eleni Skevaki (PhD) and Dr. Marirena Kladeftira (Post-Doc) from the [Laboratory for Creative Computation (CRCL, lab head: Prof. Stefana Parascho)](https://www.epfl.ch/labs/crcl/) here at [Ecole Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).
 
-The software is developed by the [Laboratory of Timber Construction (IBOIS)](https://www.epfl.ch/labs/ibois/) and the [Laboratory for Creative Computation (CRCL)](https://www.epfl.ch/labs/crcl/) at [Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).
+`diffCheck` is designed to be user-friendly and can be used either via a Grasshopper plug-in, we provide tutorials and online documentation for each component and its Python API.
+
+## Quickstart
+
+The main interface is a Grasshopper plug-in, it's distributed via the yak package manager so just type the `_PackageManager` in Rhino and type 
+
+```
+diffCheck
+```
+
+Open your Grasshopper canvas and search for the `DF` components!
+
+## Functionalities
+
+`diffCheck` is a toolset that allows you to compare a 3D model of a structure to evaluate its assembly or joint's quality and accuracy.
+
+<div align="center">
+    <img src="./assets/img/placeholder_additive.png" width="600">
+    <p>Example of several structures assembled with different digital technologies.</p>
+</div>
+<div align="center">
+    <img src="./assets/img/placeholder_subtractive.png" width="600">
+    <p>Example of joinery evaluation.</p>
+</div>
+
+
+## Documentation
+
+The full documentation, with tutorials, automatic documentation for GHComponents and PythonAPI is available [here](https://diffcheckorg.github.io/diffCheck/).
 
 
 ## Roadmap
@@ -51,3 +79,20 @@ gantt
     Fabrication of Robot Prototype      :crit, fabrob, 2024-07-01, 2024-08-30
     Data collection and evaluation      :dataeval, after fabrob, 4w
 ```
+
+## How to contribute
+
+If you want to contribute to the project, please refer to the [contribution guidelines]([./CONTRIBUTING.md](https://diffcheckorg.github.io/diffCheck/contribute.html)).
+
+## How to cite
+
+If you use diffCheck in your research, while we are preparing the publication, please cite the software as:
+
+```bibtex
+@software{diffCheck,
+  doi = {10.5281/ZENODO.13843959},
+  url = {https://github.com/diffCheckOrg/diffCheck},
+  author = {A. Settimi, and D. Gilliard, and E. Skevaki, M. Kladeftira,  and J. Gamerro, and S. Parascho, and Y. Weinand many others},
+  title = {diffCheckOrg/diffCheck: v1.0.0: diffCheck v1},
+  year = {2024}
+}
