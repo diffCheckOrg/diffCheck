@@ -170,33 +170,13 @@ def merge_shared_indexes(original_dict):
     :param original_dict: the dictionary to merge
     :return: the merged dictionary
     """
-    merged_dict = {}
-    index_to_key = {}
+    new_dict = {}
 
     for key, (face, indexes) in original_dict.items():
-        merged_indexes = set(indexes)
-        keys_to_merge = set()
+        for other_key, (other_face, other_indexes) in original_dict.items():
+            if key != other_key:
+                if set(indexes).intersection(set(other_indexes)):
+                    new_dict[key] = (face, list(set(indexes).union(set(other_indexes))))
+                    break
 
-        for index in indexes:
-            if index in index_to_key:
-                keys_to_merge.add(index_to_key[index])
-
-        for merge_key in keys_to_merge:
-            merged_indexes.update(merged_dict[merge_key][1])
-            # del merged_dict[merge_key]
-
-        for index in merged_indexes:
-            index_to_key[index] = key
-
-        merged_dict[key] =  (face, list(merged_indexes))
-
-    keys_with_duplicates = {}
-
-    for key in merged_dict.keys():
-        for other_key, (face, indexes) in merged_dict.items():
-            if key in indexes:
-                if key not in keys_with_duplicates:
-                    keys_with_duplicates[key] = []
-                keys_with_duplicates[key].append(other_key)
-
-    return merged_dict
+    return new_dict
