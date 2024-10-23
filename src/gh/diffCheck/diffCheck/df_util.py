@@ -173,10 +173,13 @@ def merge_shared_indexes(original_dict):
     new_dict = {}
 
     for key, (face, indexes) in original_dict.items():
+        intersection_found = False
         for other_key, (other_face, other_indexes) in original_dict.items():
             if key != other_key:
                 if set(indexes).intersection(set(other_indexes)):
                     new_dict[key] = (face, list(set(indexes).union(set(other_indexes))))
-                    break
+                    intersection_found = True
+        if not intersection_found:
+            new_dict[key] = (face, indexes)
 
     return new_dict
