@@ -2,7 +2,7 @@
 
 ## Objective
 
-The following tutorial will guide you through the evaluation of an assembly of timber elements with DF. As a studycase we fabricated a spatial structure with a total of thirteen elements of square section connected through bolted face lap joints. The setup included two ABB GoFa CRB 15000-5 and a human.
+As a studycase for the robotic assembly, we fabricated a spatial structure with a total of thirteen elements of square section connected through bolted face lap joints. The setup included two ABB GoFa CRB 15000-5 and a human.
 
 <br>
 
@@ -28,7 +28,7 @@ The following tutorial will guide you through the evaluation of an assembly of t
 ## Steps
 
 ### 1. Input the data
-First things first, let's import your cleaned scan and corresponding polysurface model in Rhino.
+First things first, let's import your cleaned scan and corresponding polysurface model in Rhino. For this tutorial, we assume that the two are already aligned to each other as the location of the robotically assembled structure is known.
 
 <p align="center">
     <img style="background-color: transparent;"
@@ -106,12 +106,12 @@ DF allows you to quickly visualize the errors in the Rhino viewport. The color o
 
 <div style="display: flex; justify-content: space-around; align-items: center;">
     <figure style="margin: 10px;">
-        <img src="./_static/tutorials/fig_subtractive_detail_viz.png" alt="subtr detail" style="height: 400px; background-color: transparent;">
-        <figcaption>View on the visualization of the analysed clouds on the CAD model itself. To not that only the points considered as valid are considered for the analysis. </figcaption>
+        <img src="./_static/tutorials/fig_additive_robotic_results1.png" alt="subtr detail" style="height: 400px; background-color: transparent;">
+        <figcaption>View of the visualization of the mean error for the analysed clouds on the CAD model itself. </figcaption>
     </figure>
     <figure style="margin: 10px;">
-        <img src="./_static/tutorials/fig_subtractive_graph_viz.png" alt="subtr graph" style="height: 400px; background-color: transparent;">
-        <figcaption>View of the graph of the corresponding distribution of the total error directly in Rhino.</figcaption>
+        <img src="./_static/tutorials/fig_additive_robotic_graph_viz.png" alt="subtr graph" style="height: 400px; background-color: transparent;">
+        <figcaption>View of the graph of the corresponding distribution of the mean error directly in Rhino.</figcaption>
     </figure>
 </div>
 
