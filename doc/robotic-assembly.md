@@ -124,7 +124,7 @@ The results can be also exported in a CSV file for further analysis or documenta
 
 <p align="center">
     <img style="background-color: transparent;"
-    src="./_static/tutorials/fig_subtrative_high_res_7.png" width="500">
+    src="./_static/tutorials/fig_additive_robotic_export.png" width="500">
 </p>
 
 CSV can be exporting the value per element..
