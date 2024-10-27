@@ -2,14 +2,22 @@
 
 ## Objective
 
-The following tutorial will guide you through the evaluation of an assembly of timber elements with DF. As a studycase we fabricated a spatial structure with a total of thirteen elements of square section connected through bolted face lap joints. The setup included two ABB GoFa CRB 15000-5 and a human.
+As a studycase for the manual assembly, we fabricated a roof structure detail connected with half-lap scarf joints and half-lap cross joints that were manually fabricated with Augmented Reality (AR) assistance and assembled with the aid of standard construction tools and equipment.
 
+<br>
+
+<p align="center">
+    <img style="background-color: transparent;"
+    src="./_static/tutorials/fig_additive_roof.png" width="600">
+</p>
+
+<br>
 <br>
 
 ```{eval-rst}
 .. raw:: html
 
-    <a href="./_static/example_files/additive_gh_robotic_v1.gh" download style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #28a745; text-align: center; text-decoration: none; border-radius: 5px;">
+    <a href="./_static/example_files/additive_gh_roof_v1.gh" download style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #28a745; text-align: center; text-decoration: none; border-radius: 5px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
         </svg>
@@ -27,33 +35,20 @@ First things first, let's import your cleaned scan and corresponding polysurface
 
 <p align="center">
     <img style="background-color: transparent;"
-    src="./_static/tutorials/fig_additive_robotic_start.png" width="600">
+    src="./_static/tutorials/fig_additive_roof_inputs.png" width="600">
 </p>
-
-```{hint}
-We assume that the tranformation between the scan and the CAD model is known. If this is not the case, refer to the Registration step of the manual-assembly
-
-<p align="center">
-    <img style="background-color: transparent;"
-    src="./_static/tutorials/fig_subtractive_log.png" width="600">
-</p>
-```
 
 ### 2. Build the DFAssembly
 Here we convert the model of our structure into the internal datatype of diffcheck, DFAssembly.
 
 <p align="center">
     <img style="background-color: transparent;"
-    src="./_static/tutorials/fig_subtrative_high_res_2.png" width="500">
+    src="./_static/tutorials/fig_additive_roof_DFassembly.png" width="500">
 </p>
 
 ```{hint}
-If you are evaluating round sections e.g. logs, you can set the `i_is_roundwood` input to `True` in the `DFBuildAssembly` component. This will allow DF to detect automatically the joints on the roundwood.
+If you are evaluating round sections e.g. logs, you can set the `i_is_roundwood` input to `True` in the `DFBuildAssembly` component.
 
-<p align="center">
-    <img style="background-color: transparent;"
-    src="./_static/tutorials/fig_subtractive_log.png" width="600">
-</p>
 ```
 
 > DF's components:
@@ -64,7 +59,7 @@ The registration is the process of aligning the CAD model with the scan. This is
 
 <p align="center">
     <img style="background-color: transparent;"
-    src="./_static/tutorials/fig_subtrative_high_res_3.png" width="1000">
+    src="./_static/tutorials/fig_additive_roof_reg.png" width="1000">
 </p>
 
 > DF's components:
@@ -79,13 +74,13 @@ Once the scan and the CAD model are aligned, we can segment the scan to isolate 
 
 <p align="center">
     <img style="background-color: transparent;"
-    src="./_static/tutorials/fig_subtrative_high_res_4.png" width="1000">
+    src="./_static/tutorials/fig_additive_roof_seg.png" width="1000">
 </p>
 
 > DF's components:
 > * [`DFCloudNormalSegmentator`](gh_DFCloudNormalSegmentator)
 > * [`DFRemoveStatisticalOutliers`](gh_DFRemoveStatisticalOutliers)
-> * [`DFJointSegmentator`](gh_DFJointSegmentator)
+> * [`DFCADSegmentator`](gh_DFCADSegmentator)
 > * [`DFColorizeCloud`](gh_DFColorizeCloud)
 
 ### 5. Error computation
