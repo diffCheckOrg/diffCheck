@@ -3,6 +3,13 @@
 Assembly Evaluation
 ===================
 
+Objective
+-------------------
+
+The goal is to quantify deviations between the CAD model and the scanned data for each element of an assembly. These discrepancies may arise from variations in beam dimensions, placement errors, or beams not being straight, among other factors. At this stage of development, DF only reports the deviations without providing further information on the specific error.
+
+Case Studies
+-------------------
 
 The following tutorias will guide you through the evaluation of assemblies in timber construction with DF. We tested three assembly study cases:
 
