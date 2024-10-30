@@ -128,14 +128,21 @@ class DFVizResults:
     def is_source_cloud(self):
         return type(self.source[0]) is diffcheck_bindings.dfb_geometry.DFPointCloud
 
-
-def df_cloud_2_df_cloud_comparison(source_list, target_list):
+# FIXME: ths is currently broken, we need to fix it
+def df_cloud_2_df_cloud_comparison(
+    assembly: DFAssembly,
+    df_cloud_source_list: typing.List[diffcheck_bindings.dfb_geometry.DFPointCloud],
+    df_cloud_target_list: typing.List[diffcheck_bindings.dfb_geometry.DFPointCloud]
+    ) -> DFVizResults:
     """
         Compute the Euclidean distance for every point of a source pcd to its
         closest point on a target pointcloud
     """
-    results = DFVizResults(DFAssembly())
-    for source, target in zip(source_list, target_list):
+    results = DFVizResults(
+        DFAssembly(
+            [], "cloud-cloud-dummy-dfassembly"
+        ))
+    for source, target in zip(df_cloud_source_list, df_cloud_target_list):
         distances = np.asarray(source.compute_distance(target))
         results.add(source, target, distances)
 
