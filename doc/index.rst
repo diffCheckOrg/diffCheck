@@ -151,7 +151,7 @@ The software is developed by the `Laboratory of Timber Construction (IBOIS)`_ an
 
 .. toctree::
     :hidden:
-    :maxdepth: 2
+    :maxdepth: 4
     :caption: Getting Started
 
     quickstart

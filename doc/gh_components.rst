@@ -41,11 +41,6 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
      - .. image:: ../src/gh/components/DF_cloud_uniform_downsample/icon.png
      - `gh_DFCloudUniformDownsample <gh_DFCloudUniformDownsample.html>`_
 
-   * - .. image:: ../src/gh/components/DF_cloud_voxel_downsample/icon.png
-     - `gh_DFCloudVoxelDownsample <gh_DFCloudVoxelDownsample.html>`_
-     - .. image:: ../src/gh/components/DF_cloud_cloud_distance/icon.png
-     - `gh_DFCloudCloudDistance <gh_DFCloudCloudDistance.html>`_
-
    * - .. image:: ../src/gh/components/DF_cloud_mesh_distance/icon.png
      - `gh_DFCloudMeshDistance <gh_DFCloudMeshDistance.html>`_
      - .. image:: ../src/gh/components/DF_csv_exporter/icon.png
@@ -83,8 +78,8 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
 
    * - .. image:: ../src/gh/components/DF_merge_assemblies/icon.png
      - `gh_DFMergeAssemblies <gh_DFMergeAssemblies.html>`_
-     - 
-     - 
+     - .. image:: ../src/gh/components/DF_cloud_voxel_downsample/icon.png
+     - `gh_DFCloudVoxelDownsample <gh_DFCloudVoxelDownsample.html>`_
 
 
 .. toctree::
@@ -93,7 +88,6 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
 
    gh_DFBuildAssembly
    gh_DFCADSegmentator
-   gh_DFCloudCloudDistance
    gh_DFCloudMeshDistance
    gh_DFCloudNormalEstimator
    gh_DFCloudSizeDownsample

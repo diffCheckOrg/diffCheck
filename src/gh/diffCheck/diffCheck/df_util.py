@@ -163,10 +163,8 @@ def get_doc_2_meters_unitf():
 def merge_shared_indexes(original_dict):
     """
     Merge the shared indexes of a dictionary
-
     Assume we have a dictionary with lists of indexes as values.
     We want to merge the lists that share some indexes, in order to have a dictionary with, for each key, indexes that are not present under other keys.
-
     :param original_dict: the dictionary to merge
     :return: the merged dictionary
     """
@@ -181,5 +179,4 @@ def merge_shared_indexes(original_dict):
                     intersection_found = True
         if not intersection_found:
             new_dict[key] = (face, indexes)
-
     return new_dict
