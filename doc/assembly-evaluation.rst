@@ -28,6 +28,6 @@ You can dive deeper into each case by following the respective tutorials:
    :maxdepth: 1
    :titlesonly:
 
-   (1), (2) Manual Assembly <manual-assembly>
+   Manual Assembly <manual-assembly>
 
-   (3) Robotic Assembly <robotic-assembly>
+   Robotic Assembly <robotic-assembly>
