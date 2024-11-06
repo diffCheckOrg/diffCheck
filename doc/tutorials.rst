@@ -10,4 +10,3 @@ diffCheck tutorials
    key-concepts
    joints-evaluation
    assembly-evaluation
-   

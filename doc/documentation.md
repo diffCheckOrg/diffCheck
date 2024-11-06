@@ -69,4 +69,3 @@ If you need to add a new page to the [tutorials](tutorials.rst) (e.g. a [new tut
 ```{eval-rst}
 .. literalinclude:: tutorials.rst
    :language: rst
-   :lines: 6-14
