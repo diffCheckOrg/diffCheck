@@ -178,9 +178,6 @@ def rh_cloud_2_rh_mesh_comparison(
         if swap:
             source_df, target = target, source_df
 
-        # FIXME: this is a hack to avoid that the assembly segmentator breaks this
-        # snippet because it is not stamping the rhino pout cloud with the sanity check
-        # user string value.
         sanity_check_value_uncasted = source_rh.GetUserString("df_sanity_scan_check")
         sanity_check_value = None
         if sanity_check_value_uncasted is None:
