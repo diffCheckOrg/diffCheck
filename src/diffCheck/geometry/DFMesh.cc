@@ -129,16 +129,16 @@ namespace diffCheck::geometry
             double dot11 = v0v1.dot(v0v1);
             double dot12 = v0v1.dot(v0p);
 
-            // Compute barycentric coordinates
+            // create u,v isoparametric mapping to the triangle where (u,v) = (1,0) if projectedPoint = v2, (u,v) = (0,1) if projectedPoint = v1 and (u,v) = (0,0) if projectedPoint = v0
             double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
             double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
             double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
             // Check if point is in triangle
-            if ((u >= -associationThreshold) && (v >= -associationThreshold) && (u + v <= 1 + associationThreshold))
+            if ((u >= -associationThreshold / 100) && (v >= -associationThreshold / 100) && (u + v <= 1 + associationThreshold / 100))
             {
                 // Check if the point is close enough to the face
-                double maxProjectionDistance = std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()}) ;
+                double maxProjectionDistance = associationThreshold * std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()}) ;
                 if ((projectedPoint - point).norm() < maxProjectionDistance)
                 {
                     return true;
