@@ -17,12 +17,10 @@ The following tutorias will guide you through the evaluation of assemblies in ti
 2. Frame structure with four wood logs connected by CNC-fabricated half-lap cross joints.
 3. Spatial structure assembled by two robots and a human.
 
-.. image:: ../_build/_static/tutorials/fig_additive_all.png
-   :alt: Alternative text
-   :width: 800px
-   :align: center
-
-| 
+.. .. image:: ../_build/_static/tutorials/fig_additive_all.png
+..    :alt: Alternative text
+..    :width: 800px
+..    :align: center
 
 You can dive deeper into each case by following the respective tutorials:
 
