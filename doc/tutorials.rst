@@ -4,7 +4,7 @@ diffCheck tutorials
 ===================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    quickstart
    key-concepts

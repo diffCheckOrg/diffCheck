@@ -83,16 +83,3 @@ gantt
 ## How to contribute
 
 If you want to contribute to the project, please refer to the [contribution guidelines]([./CONTRIBUTING.md](https://diffcheckorg.github.io/diffCheck/contribute.html)).
-
-## How to cite
-
-If you use diffCheck in your research, while we are preparing the publication, please cite the software as:
-
-```bibtex
-@software{diffCheck,
-  doi = {10.5281/ZENODO.13843959},
-  url = {https://github.com/diffCheckOrg/diffCheck},
-  author = {A. Settimi, and D. Gilliard, and E. Skevaki, M. Kladeftira,  and J. Gamerro, and S. Parascho, and Y. Weinand many others},
-  title = {diffCheckOrg/diffCheck: v1.0.0: diffCheck v1},
-  year = {2024}
-}

@@ -15,7 +15,7 @@ invoke documentize
 ```
 and to open the documentation in your browser:
 ```console
-start _build/html/index.html
+start _build/index.html
 ```
 If you modify the `doc`s files and refresh the pages updates will be visible.
 
@@ -69,4 +69,3 @@ If you need to add a new page to the [tutorials](tutorials.rst) (e.g. a [new tut
 ```{eval-rst}
 .. literalinclude:: tutorials.rst
    :language: rst
-   :lines: 6-14
