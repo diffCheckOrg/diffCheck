@@ -1,12 +1,45 @@
 #! python3
 
+import System
 import csv
 import os
 import typing
 
 from ghpythonlib.componentbase import executingcomponent as component
+import Grasshopper as gh
 
 from diffCheck.df_error_estimation import DFInvalidData, DFVizResults
+
+
+def add_bool_toggle(self,
+    nickname: str,
+    indx: int,
+    X_param_coord: float,
+    Y_param_coord: float,
+    X_offset: int=87
+    ) -> None:
+    """
+        Adds a boolean toggle to the component input
+
+        :param nickname: the nickname of the value list
+        :param indx: the index of the input parameter
+        :param X_param_coord: the x coordinate of the input parameter
+        :param Y_param_coord: the y coordinate of the input parameter
+        :param X_offset: the offset of the value list from the input parameter
+    """
+    param = ghenv.Component.Params.Input[indx]  # noqa: F821
+    if param.SourceCount == 0:
+        toggle = gh.Kernel.Special.GH_BooleanToggle()
+        toggle.NickName = nickname
+        toggle.Description = "Toggle the value to use with DFVizSettings"
+        toggle.CreateAttributes()
+        toggle.Attributes.Pivot = System.Drawing.PointF(
+            X_param_coord - (toggle.Attributes.Bounds.Width) - X_offset,
+            Y_param_coord - (toggle.Attributes.Bounds.Height / 2 + 0.1)
+            )
+        toggle.Attributes.ExpireLayout()
+        gh.Instances.ActiveCanvas.Document.AddObject(toggle, False)
+        ghenv.Component.Params.Input[indx].AddSource(toggle)  # noqa: F821
 
 
 class DFCsvExporter(component):
@@ -14,6 +47,24 @@ class DFCsvExporter(component):
         super(DFCsvExporter, self).__init__()
         self.prefix = ""
         self.counter = 0
+
+        ghenv.Component.ExpireSolution(True)  # noqa: F821
+        ghenv.Component.Attributes.PerformLayout()  # noqa: F821
+        params = getattr(ghenv.Component.Params, "Input")  # noqa: F821
+        for j in range(len(params)):
+            Y_cord = params[j].Attributes.InputGrip.Y + 1
+            X_cord = params[j].Attributes.Pivot.X + 10
+            input_indx = j
+            if "i_export_seperate_files" == params[j].NickName:
+                add_bool_toggle(
+                    ghenv.Component,  # noqa: F821
+                    "export_asfiles",
+                    input_indx, X_cord, Y_cord)
+            if "i_export_distances" == params[j].NickName:
+                add_bool_toggle(
+                    ghenv.Component,  # noqa: F821
+                    "export_dist",
+                    input_indx, X_cord, Y_cord)
 
     def _get_id(self,
         idx: int,
