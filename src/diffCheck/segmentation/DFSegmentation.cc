@@ -269,8 +269,9 @@ namespace diffCheck::segmentation
                     for (auto normal : segment->Normals){segmentNormal += normal;}
                     segmentNormal.normalize();
                     double currentDistance = (faceCenter - segmentCenter).norm();
+                    double currentAngle = std::abs(sin(acos(faceNormal.dot(faceCenter - segmentCenter))));
                     // if the distance is smaller than the previous one, update the distance and the corresponding segment
-                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance < faceDistance)
+                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance < faceDistance && std::abs(1 - currentAngle) < angleThreshold)
                     {
                         correspondingSegment = segment;
                         faceDistance = currentDistance;
@@ -440,7 +441,7 @@ namespace diffCheck::segmentation
                             
                             double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle))
                             / std::min(std::abs(clusterNormal.dot(faceNormal)), 0.05) ;
-                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < distance)
+                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < distance && std::abs(1 - std::sin(clusterNormalToJunctionLineAngle)) < associationThreshold)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;
