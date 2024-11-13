@@ -153,6 +153,13 @@ namespace diffCheck::geometry
          */
         void LoadFromPLY(const std::string &path);
 
+        /**
+         * @brief Save a point cloud to a file as a PLY
+         * 
+         * @param filename the path to the file with the extension
+         */
+        void SaveToPLY(const std::string &path);
+
     public:  ///< Distance calculations
         /**
          * @brief Compute the distance between two point clouds.

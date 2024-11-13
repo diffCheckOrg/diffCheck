@@ -5,11 +5,16 @@
 
 import typing
 from enum import Enum
+from datetime import datetime
+import os
+
+import pickle
 
 import numpy as np
 
 import Rhino
 import Rhino.Geometry as rg
+from Rhino.FileIO import SerializationOptions
 
 from diffCheck import diffcheck_bindings  # type: ignore
 from diffCheck import df_cvt_bindings
@@ -31,11 +36,14 @@ class DFVizResults:
     """
     This class compiles the resluts of the error estimation into one object
     """
-
     def __init__(self, assembly):
 
-        self.source = []
-        self.target = []
+        self.assembly: DFAssembly = assembly
+        self.source: typing.List[diffcheck_bindings.dfb_geometry.DFPointCloud] = []
+        self.target: typing.List[Rhino.Geometry.Mesh] = []
+
+        self.sanity_check: typing.List[DFInvalidData] = []
+        self._is_source_cloud = True  # if False it's a mesh
 
         self.distances_mean = []
         self.distances_rmse = []
@@ -43,11 +51,59 @@ class DFVizResults:
         self.distances_min_deviation = []
         self.distances_sd_deviation = []
         self.distances = []
-        self.assembly = assembly
 
-        self.sanity_check = []
+        self.__serial_file_extenion: str = ".diffCheck"
 
-        self._is_source_cloud = True  # if False it's a mesh
+    def __repr__(self):
+        return f"DFVizResults of({self.assembly})"
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        if "source" in state and state["source"] is not None:
+            state["source"] = [df_cvt_bindings.cvt_dfcloud_2_dict(pcd) for pcd in state["source"]]
+        if "target" in state and state["target"] is not None:
+            state["target"] = [mesh.ToJSON(SerializationOptions()) for mesh in state["target"]]
+        return state
+
+    def __setstate__(self, state: typing.Dict):
+        if "source" in state and state["source"] is not None:
+            self.source = [df_cvt_bindings.cvt_dict_2_dfcloud(state["source"][i]) for i in range(len(state["source"]))]
+        if "target" in state and state["target"] is not None:
+            self.target = [rg.Mesh.FromJSON(state["target"][i]) for i in range(len(state["target"]))]
+        self.__dict__.update(state)
+
+    def dump_pickle(self, dir: str) -> None:
+        """ Dump the results into a pickle file for serialization """
+        if not os.path.exists(os.path.dirname(dir)):
+            try:
+                os.makedirs(os.path.dirname(dir))
+            except OSError as exc:
+                raise exc
+
+        timestamp: str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        assembly_name: str = self.assembly.name
+        serial_file_path = os.path.join(dir, f"{assembly_name}_{timestamp}{self.__serial_file_extenion}")
+
+        try:
+            with open(serial_file_path, "wb") as f:
+                pickle.dump(self, f)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def load_pickle(file_path: str):
+        """ Load the results from a pickle file """
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File {file_path} not found")
+        if not file_path.endswith(".diffCheck"):
+            raise ValueError(f"File {file_path} is not a valid diffCheck file")
+        try:
+            with open(file_path, "rb") as f:
+                obj = pickle.load(f)
+        except Exception as e:
+            raise e
+        return obj
+
 
     def add(self, source, target, distances, sanity_check: DFInvalidData = DFInvalidData.VALID):
 

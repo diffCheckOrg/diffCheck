@@ -81,6 +81,16 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
      - .. image:: ../src/gh/components/DF_cloud_voxel_downsample/icon.png
      - `gh_DFCloudVoxelDownsample <gh_DFCloudVoxelDownsample.html>`_
 
+   * - .. image:: ../src/gh/components/DF_export_cloud_to_file/icon.png
+     - `DFExportCloudToFile <gh_DFExportCloudToFile.html>`_
+     - .. image:: ../src/gh/components/DF_export_results/icon.png
+     - `DFExportResults <gh_DFExportResults.html>`_
+
+   * - .. image:: ../src/gh/components/DF_import_results/icon.png
+     - `DFImportResults <gh_DFImportResults.html>`_
+     - .. image:: ../src/gh/components/DF_inspect_results/icon.png
+     - `DFInspectResults <gh_DFInspectResults.html>`_
+
 
 .. toctree::
    :maxdepth: 1
@@ -114,3 +124,7 @@ DF has a Grasshopper_ plugin with a set of components that allows the user to in
    gh_DFBrepToCloud
    gh_DFRemoveStatisticalOutliers
    gh_DFMergeAssemblies
+   gh_DFExportCloudToFile
+   gh_DFExportResults
+   gh_DFImportResults
+   gh_DFInspectResults

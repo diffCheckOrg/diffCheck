@@ -260,3 +260,31 @@ def cvt_ndarray_2_rh_transform(matrix) -> rg.Transform:
     transfo.M32 = matrix[3, 2]
     transfo.M33 = matrix[3, 3]
     return transfo
+
+
+def cvt_dfcloud_2_dict(df_cloud: diffcheck_bindings.dfb_geometry.DFPointCloud) -> dict:
+    """
+        Convert a diffCheck cloud to a dictionary mainly for pickling and serialization.
+
+        :param df_cloud: diffCheck cloud
+        :return cloud_dict: the cloud dictionary
+    """
+    cloud_dict = {
+        "points": df_cloud.points,
+        "normals": df_cloud.normals,
+        "colors": df_cloud.colors
+    }
+    return cloud_dict
+
+def cvt_dict_2_dfcloud(cloud_dict: dict) -> diffcheck_bindings.dfb_geometry.DFPointCloud:
+    """
+        Convert a dictionary to a diffCheck cloud mainly for pickling and deserialization.
+
+        :param cloud_dict: the cloud dictionary
+        :return df_cloud: diffCheck cloud
+    """
+    df_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
+    df_cloud.points = cloud_dict["points"]
+    df_cloud.normals = cloud_dict["normals"]
+    df_cloud.colors = cloud_dict["colors"]
+    return df_cloud
