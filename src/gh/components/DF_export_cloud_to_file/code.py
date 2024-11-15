@@ -64,7 +64,7 @@ class DFExportCloudToFile(component):
 
         # check that the i_file_path is a valid path and it has the .ply extension
         if not i_file_path.endswith(".ply"):
-            ghenv.Component.AddRuntimeMessage(RML.Warning, exception)  # noqa: F821
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "Attention: the format should be .ply")  # noqa: F821
             return None
 
         if i_dump:
