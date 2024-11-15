@@ -52,6 +52,7 @@ class DFExportResults(component):
         if i_dump is None or i_export_dir is None or i_results is None:
             return None
 
-        i_results.dump_pickle(i_export_dir)
+        if i_dump:
+            i_results.dump_serialization(i_export_dir)
 
         return None

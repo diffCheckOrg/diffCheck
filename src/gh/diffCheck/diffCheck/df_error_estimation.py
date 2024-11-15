@@ -8,7 +8,7 @@ from enum import Enum
 from datetime import datetime
 import os
 
-import pickle
+import json
 
 import numpy as np
 
@@ -20,6 +20,13 @@ from diffCheck import diffcheck_bindings  # type: ignore
 from diffCheck import df_cvt_bindings
 from diffCheck.df_geometries import DFAssembly
 
+
+class NumpyEncoder(json.JSONEncoder):
+    """ Special json encoder for numpy ndarray types. """
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super().default(obj)
 
 class DFInvalidData(Enum):
     """
@@ -36,6 +43,8 @@ class DFVizResults:
     """
     This class compiles the resluts of the error estimation into one object
     """
+    __serial_file_extenion: str = ".diffCheck"
+
     def __init__(self, assembly):
 
         self.assembly: DFAssembly = assembly
@@ -52,28 +61,46 @@ class DFVizResults:
         self.distances_sd_deviation = []
         self.distances = []
 
-        self.__serial_file_extenion: str = ".diffCheck"
-
     def __repr__(self):
         return f"DFVizResults of({self.assembly})"
 
     def __getstate__(self):
         state = self.__dict__.copy()
+        if "assembly" in state and state["assembly"] is not None:
+            state["assembly"] = self.assembly.__getstate__()
         if "source" in state and state["source"] is not None:
             state["source"] = [df_cvt_bindings.cvt_dfcloud_2_dict(pcd) for pcd in state["source"]]
         if "target" in state and state["target"] is not None:
             state["target"] = [mesh.ToJSON(SerializationOptions()) for mesh in state["target"]]
+        if "sanity_check" in state and state["sanity_check"] is not None:
+            state["sanity_check"] = [s.value if isinstance(s, DFInvalidData) else s for s in self.sanity_check]
         return state
 
     def __setstate__(self, state: typing.Dict):
+        if "assembly" in state and state["assembly"] is not None:
+            assembly = DFAssembly.__new__(DFAssembly)
+            assembly.__setstate__(state["assembly"])
+            state["assembly"] = assembly
         if "source" in state and state["source"] is not None:
-            self.source = [df_cvt_bindings.cvt_dict_2_dfcloud(state["source"][i]) for i in range(len(state["source"]))]
+            source = []
+            for pcd_dict in state["source"]:
+                pcd = diffcheck_bindings.dfb_geometry.DFPointCloud()
+                pcd = df_cvt_bindings.cvt_dict_2_dfcloud(pcd_dict)
+                source.append(pcd)
+            state["source"] = source
         if "target" in state and state["target"] is not None:
-            self.target = [rg.Mesh.FromJSON(state["target"][i]) for i in range(len(state["target"]))]
+            target = []
+            for mesh_json in state["target"]:
+                mesh = rg.Mesh()
+                mesh = mesh.FromJSON(mesh_json)
+                target.append(mesh)
+            state["target"] = target
+        if "sanity_check" in state and state["sanity_check"] is not None:
+            state["sanity_check"] = [DFInvalidData(s) for s in state["sanity_check"]]
         self.__dict__.update(state)
 
-    def dump_pickle(self, dir: str) -> None:
-        """ Dump the results into a pickle file for serialization """
+    def dump_serialization(self, dir: str) -> str:
+        """ Dump the results into a JSON file for serialization """
         if not os.path.exists(os.path.dirname(dir)):
             try:
                 os.makedirs(os.path.dirname(dir))
@@ -85,21 +112,25 @@ class DFVizResults:
         serial_file_path = os.path.join(dir, f"{assembly_name}_{timestamp}{self.__serial_file_extenion}")
 
         try:
-            with open(serial_file_path, "wb") as f:
-                pickle.dump(self, f)
+            with open(serial_file_path, "w") as f:
+                json.dump(self.__getstate__(), f, cls=NumpyEncoder)
         except Exception as e:
             raise e
 
+        return serial_file_path
+
     @staticmethod
-    def load_pickle(file_path: str):
-        """ Load the results from a pickle file """
+    def load_serialization(file_path: str) -> 'DFVizResults':
+        """ Load the results from a JSON file """
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File {file_path} not found")
-        if not file_path.endswith(".diffCheck"):
+        if not file_path.endswith(DFVizResults.__serial_file_extenion):
             raise ValueError(f"File {file_path} is not a valid diffCheck file")
         try:
-            with open(file_path, "rb") as f:
-                obj = pickle.load(f)
+            with open(file_path, "r") as f:
+                state = json.load(f)
+                obj = DFVizResults.__new__(DFVizResults)
+                obj.__setstate__(state)
         except Exception as e:
             raise e
         return obj

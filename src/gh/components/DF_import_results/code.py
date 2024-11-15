@@ -10,6 +10,6 @@ class DFImportResults(component):
         if i_import_path is None:
             return None
 
-        o_results = DFVizResults.load_pickle(i_import_path)
+        o_results = DFVizResults.load_serialization(i_import_path)
 
         return o_results

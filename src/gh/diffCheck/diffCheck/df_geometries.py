@@ -36,6 +36,12 @@ class DFVertex:
 
         self.__uuid = uuid.uuid4().int
 
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, state: typing.Dict):
+        self.__dict__.update(state)
+
     def __repr__(self):
         return f"Vertex: X={self.x}, Y={self.y}, Z={self.z}"
 
@@ -94,13 +100,29 @@ class DFFace:
 
     def __getstate__(self):
         state = self.__dict__.copy()
+        if "all_loops" in state and state["all_loops"] is not None:
+            state["all_loops"] = [[vertex.__getstate__() for vertex in loop] for loop in state["all_loops"]]
+        # note: rg.BrepFaces cannot be serialized, so we need to convert it to a Surface >> JSON >> brep >> brepface (and vice versa)
         if "_rh_brepface" in state and state["_rh_brepface"] is not None:
-            state["_rh_brepface"] = self._rh_brepface.ToJSON(SerializationOptions())
+            state["_rh_brepface"] = self.to_brep_face().DuplicateFace(True).ToJSON(SerializationOptions())
+        return state
 
     def __setstate__(self, state: typing.Dict):
+        if "all_loops" in state and state["all_loops"] is not None:
+            all_loops = []
+            for loop_state in state["all_loops"]:
+                loop = [DFVertex.__new__(DFVertex) for _ in loop_state]
+                for vertex, vertex_state in zip(loop, loop_state):
+                    vertex.__setstate__(vertex_state)
+                all_loops.append(loop)
+            state["all_loops"] = all_loops
+        # note: rg.BrepFaces cannot be serialized, so we need to convert it to a Surface >> JSON >> brep >> brepface (and vice versa)
         if "_rh_brepface" in state and state["_rh_brepface"] is not None:
-            state["_rh_brepface"] = rg.BrepFace.FromJSON(state["_rh_brepface"])
+            state["_rh_brepface"] = rg.Surface.FromJSON(state["_rh_brepface"]).Faces[0]
         self.__dict__.update(state)
+        if self._rh_brepface is not None:
+            self.from_brep_face(self._rh_brepface, self.joint_id)
+
 
     def __repr__(self):
         return f"Face id: {(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
@@ -235,6 +257,22 @@ class DFJoint:
         # this is an automatic identifier
         self.__uuid = uuid.uuid4().int
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        if "faces" in state and state["faces"] is not None:
+            state["faces"] = [face.__getstate__() for face in self.faces]
+        return state
+
+    def __setstate__(self, state: typing.Dict):
+        if "faces" in state and state["faces"] is not None:
+            faces = []
+            for face_state in state["faces"]:
+                face = DFFace.__new__(DFFace)
+                face.__setstate__(face_state)
+                faces.append(face)
+            state["faces"] = faces
+        self.__dict__.update(state)
+
     def __repr__(self):
         return f"Joint id: {self.id}, Faces: {len(self.faces)}"
 
@@ -305,11 +343,56 @@ class DFBeam:
 
     def __getstate__(self):
         state = self.__dict__.copy()
+        if "faces" in state and state["faces"] is not None:
+            state["faces"] = [face.__getstate__() for face in self.faces]
+        if "_joint_faces" in state and state["_joint_faces"] is not None:
+            state["_joint_faces"] = [face.__getstate__() for face in state["_joint_faces"]]
+        if "_side_faces" in state and state["_side_faces"] is not None:
+            state["_side_faces"] = [face.__getstate__() for face in state["_side_faces"]]
+        if "_vertices" in state and state["_vertices"] is not None:
+            state["_vertices"] = [vertex.__getstate__() for vertex in state["_vertices"]]
+        if "_joints" in state and state["_joints"] is not None:
+            state["_joints"] = [joint.__getstate__() for joint in state["_joints"]]
         if "_center" in state and state["_center"] is not None:
             state["_center"] = self._center.ToJSON(SerializationOptions())
         return state
 
     def __setstate__(self, state: typing.Dict):
+        if "faces" in state and state["faces"] is not None:
+            faces = []
+            for face_state in state["faces"]:
+                face = DFFace.__new__(DFFace)
+                face.__setstate__(face_state)
+                faces.append(face)
+            state["faces"] = faces
+        if "_joint_faces" in state and state["_joint_faces"] is not None:
+            joint_faces = []
+            for face_state in state["_joint_faces"]:
+                face = DFFace.__new__(DFFace)
+                face.__setstate__(face_state)
+                joint_faces.append(face)
+            state["_joint_faces"] = joint_faces
+        if "_side_faces" in state and state["_side_faces"] is not None:
+            side_faces = []
+            for face_state in state["_side_faces"]:
+                face = DFFace.__new__(DFFace)
+                face.__setstate__(face_state)
+                side_faces.append(face)
+            state["_side_faces"] = side_faces
+        if "_vertices" in state and state["_vertices"] is not None:
+            vertices = []
+            for vertex_state in state["_vertices"]:
+                vertex = DFVertex.__new__(DFVertex)
+                vertex.__setstate__(vertex_state)
+                vertices.append(vertex)
+            state["_vertices"] = vertices
+        if "_joints" in state and state["_joints"] is not None:
+            joints = []
+            for joint_state in state["_joints"]:
+                joint = DFJoint.__new__(DFJoint)
+                joint.__setstate__(joint_state)
+                joints.append(joint)
+            state["_joints"] = joints
         if "_center" in state and state["_center"] is not None:
             state["_center"] = rg.Point3d.FromJSON(state["_center"])
         self.__dict__.update(state)
@@ -445,13 +528,58 @@ class DFAssembly:
 
     def __getstate__(self):
         state = self.__dict__.copy()
+        if "beams" in state and state["beams"] is not None:
+            state["beams"] = [beam.__getstate__() for beam in self.beams]
         if "_mass_center" in state and state["_mass_center"] is not None:
             state["_mass_center"] = self._mass_center.ToJSON(SerializationOptions())
+        if "_all_jointfaces" in state and state["_all_jointfaces"] is not None:
+            state["_all_jointfaces"] = [face.__getstate__() for face in state["_all_jointfaces"]]
+        if "_all_sidefaces" in state and state["_all_sidefaces"] is not None:
+            state["_all_sidefaces"] = [face.__getstate__() for face in state["_all_sidefaces"]]
+        if "_all_vertices" in state and state["_all_vertices"] is not None:
+            state["_all_vertices"] = [vertex.__getstate__() for vertex in state["_all_vertices"]]
+        if "_all_joints" in state and state["_all_joints"] is not None:
+            state["_all_joints"] = [joint.__getstate__() for joint in state["_all_joints"]]
         return state
 
     def __setstate__(self, state: typing.Dict):
+        if "beams" in state and state["beams"] is not None:
+            beams = []
+            for beam_state in state["beams"]:
+                beam = DFBeam.__new__(DFBeam)
+                beam.__setstate__(beam_state)
+                beams.append(beam)
+            state["beams"] = beams
         if "_mass_center" in state and state["_mass_center"] is not None:
             state["_mass_center"] = rg.Point3d.FromJSON(state["_mass_center"])
+        if "_all_jointfaces" in state and state["_all_jointfaces"] is not None:
+            joint_faces = []
+            for face_state in state["_all_jointfaces"]:
+                face = DFFace.__new__(DFFace)
+                face.__setstate__(face_state)
+                joint_faces.append(face)
+            state["_all_jointfaces"] = joint_faces
+        if "_all_sidefaces" in state and state["_all_sidefaces"] is not None:
+            side_faces = []
+            for face_state in state["_all_sidefaces"]:
+                face = DFFace.__new__(DFFace)
+                face.__setstate__(face_state)
+                side_faces.append(face)
+            state["_all_sidefaces"] = side_faces
+        if "_all_vertices" in state and state["_all_vertices"] is not None:
+            vertices = []
+            for vertex_state in state["_all_vertices"]:
+                vertex = DFVertex.__new__(DFVertex)
+                vertex.__setstate__(vertex_state)
+                vertices.append(vertex)
+            state["_all_vertices"] = vertices
+        if "_all_joints" in state and state["_all_joints"] is not None:
+            joints = []
+            for joint_state in state["_all_joints"]:
+                joint = DFJoint.__new__(DFJoint)
+                joint.__setstate__(joint_state)
+                joints.append(joint)
+            state["_all_joints"] = joints
         self.__dict__.update(state)
 
     def __repr__(self):
