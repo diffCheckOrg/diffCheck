@@ -2,6 +2,7 @@
 
 import System
 
+import Rhino  # noqa: F401
 import Rhino.Geometry as rg
 from ghpythonlib.componentbase import executingcomponent as component
 
