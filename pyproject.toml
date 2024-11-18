@@ -29,10 +29,13 @@ module = "pefile"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "diffCheck"
-ignore_undefined_attributes = true
+module = "df_geometries"
+disable_error_code = "annotation-unchecked"
+check_untyped_defs = false
 
-
+[[tool.mypy.overrides]]
+module = "src.gh.diffCheck.diffCheck.df_geometries"
+disable_error_code = "annotation-unchecked"
 
 [tool.ruff]
 exclude = [

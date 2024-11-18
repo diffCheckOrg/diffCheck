@@ -277,6 +277,12 @@ namespace diffCheck::geometry
         this->Normals = cloud->Normals;
     }
 
+    void DFPointCloud::SaveToPLY(const std::string &path)
+    {
+        auto cloud_ptr = std::make_shared<DFPointCloud>(this->Points, this->Colors, this->Normals);
+        diffCheck::io::WritePLYPointCloud(cloud_ptr, path);
+    }
+
     std::vector<double> DFPointCloud::ComputeDistance(std::shared_ptr<geometry::DFPointCloud> target)
     {
         std::vector<double> errors;

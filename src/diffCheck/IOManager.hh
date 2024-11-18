@@ -25,6 +25,13 @@ namespace diffCheck::io
      */
     std::shared_ptr<diffCheck::geometry::DFMesh> ReadPLYMeshFromFile(const std::string &filename);
 
+    /**
+     * @brief Write a point cloud to a file as a PLY
+     * 
+     * @param pointCloud the point cloud to write
+     * @param filename the path to the file with the extension
+     */
+    void WritePLYPointCloud(const std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud, const std::string &filename);
 
     //////////////////////////////////////////////////////////////////////////
     // IO for test suite and tests data

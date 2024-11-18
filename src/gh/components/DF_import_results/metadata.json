@@ -1,0 +1,40 @@
+{
+    "name": "DFImportResults",
+    "nickname": "DFImportResults",
+    "category": "diffCheck",
+    "subcategory": "Results",
+    "description": "It loads the DF result object from a file .diffCheck.",
+    "exposure": 4,
+    "instanceGuid": "c2b67d2c-a53b-47c4-bfbf-772f60136049",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_import_path",
+                "nickname": "i_import_path",
+                "description": "The path to the file of the .diffCheck file.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_results",
+                "nickname": "o_results",
+                "description": "The loaded DF result object.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

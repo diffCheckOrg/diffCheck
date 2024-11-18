@@ -28,6 +28,15 @@ namespace diffCheck::io
         return mesh;
     }
 
+    void WritePLYPointCloud(const std::shared_ptr<diffCheck::geometry::DFPointCloud> &pointCloud, const std::string &filename)
+    {
+        auto open3dPointCloud = pointCloud->Cvt2O3DPointCloud();
+        open3d::io::WritePointCloudToPLY(
+            filename,
+            *open3dPointCloud,
+            open3d::io::WritePointCloudOption());
+    }
+
     std::string GetTestDataDir()
     {
         // for github action conviniency

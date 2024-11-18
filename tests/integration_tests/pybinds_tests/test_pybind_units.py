@@ -90,6 +90,15 @@ def test_DFPointCloud_load_from_PLY():
     assert pc.normals.__len__() == 7379, "DFPointCloud should have 7379 normals"
     assert pc.colors.__len__() == 7379, "DFPointCloud should have 7379 colors"
 
+def test_DFPointCloud_save_to_PLY():
+    pc = dfb.dfb_geometry.DFPointCloud()
+    pc.load_from_PLY(get_ply_cloud_roof_quarter_path())
+
+    temp_ply_path = os.path.join(os.path.dirname(__file__), "temp_ply.ply")
+    pc.save_to_PLY(temp_ply_path)
+    assert os.path.exists(temp_ply_path), "The PLY file should be saved to the specified path"
+    os.remove(temp_ply_path)
+
 @pytest.fixture
 def create_DFPointCloudSampleRoof():
     df_pcd = dfb.dfb_geometry.DFPointCloud()
