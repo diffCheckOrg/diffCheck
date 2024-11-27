@@ -3,7 +3,7 @@
 import System
 
 from ghpythonlib.componentbase import executingcomponent as component
-import Grasshopper as gh
+import Grasshopper
 
 
 def add_button(self,
@@ -24,7 +24,7 @@ def add_button(self,
     """
     param = ghenv.Component.Params.Input[indx]    # noqa: F821
     if param.SourceCount == 0:
-        button = gh.Kernel.Special.GH_ButtonObject()
+        button = Grasshopper.Kernel.Special.GH_ButtonObject()
         button.NickName = ""
         button.Description = ""
         button.CreateAttributes()
@@ -33,7 +33,7 @@ def add_button(self,
             Y_param_coord - (button.Attributes.Bounds.Height / 2 - 0.1)
             )
         button.Attributes.ExpireLayout()
-        gh.Instances.ActiveCanvas.Document.AddObject(button, False)
+        Grasshopper.Instances.ActiveCanvas.Document.AddObject(button, False)
         ghenv.Component.Params.Input[indx].AddSource(button)    # noqa: F821
 
 class DFExportResults(component):
@@ -52,7 +52,8 @@ class DFExportResults(component):
         if i_dump is None or i_export_dir is None or i_results is None:
             return None
 
+        o_path = None
         if i_dump:
-            i_results.dump_serialization(i_export_dir)
+            o_path = i_results.dump_serialization(i_export_dir)
 
-        return None
+        return o_path

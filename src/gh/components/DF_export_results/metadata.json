@@ -50,6 +50,15 @@
                 "typeHintID": "ghdoc"
             }
         ],
-        "outputParameters": []
+        "outputParameters": [
+            {
+                "name": "o_path",
+                "nickname": "o_path",
+                "description": "The file path of the generated .diffCheck files.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
     }
 }
