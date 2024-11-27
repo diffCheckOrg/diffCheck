@@ -43,7 +43,7 @@ class DFVertex:
         self.__dict__.update(state)
 
     def __repr__(self):
-        return f"Vertex: X={self.x}, Y={self.y}, Z={self.z}"
+        return f"DFVertex: X={self.x}, Y={self.y}, Z={self.z}"
 
     def __hash__(self):
         return hash((self.x, self.y, self.z))
@@ -97,6 +97,7 @@ class DFFace:
         # if df_face is created from a rhino brep face, we store the rhino brep face
         self._rh_brepface: rg.BrepFace = None
         self.is_roundwood = False
+        self._center: DFVertex = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -122,7 +123,6 @@ class DFFace:
         self.__dict__.update(state)
         if self._rh_brepface is not None:
             self.from_brep_face(self._rh_brepface, self.joint_id)
-
 
     def __repr__(self):
         return f"Face id: {(self.id)}, IsJoint: {self.is_joint} Loops: {len(self.all_loops)}"
@@ -240,6 +240,13 @@ class DFFace:
     def uuid(self):
         return self.__uuid
 
+    @property
+    def center(self):
+        if self._center is None:
+            vertices = [vertex.to_rg_point3d() for vertex in self.all_loops[0]]
+            self._center = DFVertex.from_rg_point3d(rg.BoundingBox(vertices).Center)
+        return self._center
+
 @dataclass
 class DFJoint:
     """
@@ -256,6 +263,8 @@ class DFJoint:
 
         # this is an automatic identifier
         self.__uuid = uuid.uuid4().int
+
+        self._center: DFVertex = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -313,6 +322,16 @@ class DFJoint:
         """ It retrives the automatic identifier, not the one of the joint in the beam """
         return self.__uuid
 
+    @property
+    def center(self):
+        if self._center is None:
+            vertices = []
+            for face in self.faces:
+                vertices.extend(face.all_loops[0])
+            vertices = [vertex.to_rg_point3d() for vertex in vertices]
+            self._center = DFVertex.from_rg_point3d(rg.BoundingBox(vertices).Center)
+        return self._center
+
 @dataclass
 class DFBeam:
     """
@@ -339,6 +358,8 @@ class DFBeam:
         self._index_assembly: int = None
 
         self._center: rg.Point3d = None
+        self._axis: rg.Vector3d = self.compute_axis()
+
         self.__id = uuid.uuid4().int
 
     def __getstate__(self):
@@ -355,6 +376,8 @@ class DFBeam:
             state["_joints"] = [joint.__getstate__() for joint in state["_joints"]]
         if "_center" in state and state["_center"] is not None:
             state["_center"] = self._center.ToJSON(SerializationOptions())
+        if "_axis" in state and state["_axis"] is not None:
+            state["_axis"] = self._axis.ToJSON(SerializationOptions())
         return state
 
     def __setstate__(self, state: typing.Dict):
@@ -395,6 +418,8 @@ class DFBeam:
             state["_joints"] = joints
         if "_center" in state and state["_center"] is not None:
             state["_center"] = rg.Point3d.FromJSON(state["_center"])
+        if "_axis" in state and state["_axis"] is not None:
+            state["_axis"] = rg.Vector3d.FromJSON(state["_axis"])
         self.__dict__.update(state)
 
     def __repr__(self):
@@ -402,6 +427,39 @@ class DFBeam:
 
     def deepcopy(self):
         return DFBeam(self.name, [face.deepcopy() for face in self.faces])
+
+    def compute_axis(self, is_unitized: bool = True) -> rg.Vector3d:
+        """
+        This is an utility function that computes the axis of the beam.
+        The axis is calculated as the vector passing through the two most distance joint's centroids.
+
+        :param is_unitized: If True, the beam's axis is unitized
+        :return axis: The axis of the beam
+        """
+        joints = self.joints
+        joint1 = joints[0]
+        joint2 = joints[1]
+        max_distance = 0
+        if len(joints) > 2:
+            for j1 in joints:
+                for j2 in joints:
+                    distance = rg.Point3d.DistanceTo(
+                        j1.center.to_rg_point3d(),
+                        j2.center.to_rg_point3d())
+                    if distance > max_distance:
+                        max_distance = distance
+                        joint1 = j1
+                        joint2 = j2
+
+        axis = rg.Vector3d(
+            joint1.center.to_rg_point3d(),
+            joint2.center.to_rg_point3d()
+            )
+
+        if is_unitized:
+            axis.Unitize()
+
+        return axis
 
     @classmethod
     def from_brep_face(cls, brep, is_roundwood=False):
@@ -497,6 +555,11 @@ class DFBeam:
             for loop in all_loops_cpy:
                 self._vertices.extend(loop)
         return self._vertices
+
+    @property
+    def axis(self):
+        self._axis = self.compute_axis()
+        return self._axis
 
 
 @dataclass
