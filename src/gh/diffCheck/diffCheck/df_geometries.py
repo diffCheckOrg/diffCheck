@@ -419,7 +419,7 @@ class DFBeam:
         if "_center" in state and state["_center"] is not None:
             state["_center"] = rg.Point3d.FromJSON(state["_center"])
         if "_axis" in state and state["_axis"] is not None:
-            state["_axis"] = rg.Vector3d.FromJSON(state["_axis"])
+            state["_axis"] = rg.Line.FromJSON(state["_axis"])
         self.__dict__.update(state)
 
     def __repr__(self):
@@ -428,13 +428,12 @@ class DFBeam:
     def deepcopy(self):
         return DFBeam(self.name, [face.deepcopy() for face in self.faces])
 
-    def compute_axis(self, is_unitized: bool = True) -> rg.Vector3d:
+    def compute_axis(self, is_unitized: bool = True) -> rg.Line:
         """
-        This is an utility function that computes the axis of the beam.
+        This is an utility function that computes the axis of the beam as a line.
         The axis is calculated as the vector passing through the two most distance joint's centroids.
 
-        :param is_unitized: If True, the beam's axis is unitized
-        :return axis: The axis of the beam
+        :return axis: The axis of the beam as a line
         """
         joints = self.joints
         joint1 = joints[0]
@@ -451,15 +450,12 @@ class DFBeam:
                         joint1 = j1
                         joint2 = j2
 
-        axis = rg.Vector3d(
+        axis_ln = rg.Line(
             joint1.center.to_rg_point3d(),
             joint2.center.to_rg_point3d()
             )
 
-        if is_unitized:
-            axis.Unitize()
-
-        return axis
+        return axis_ln
 
     @classmethod
     def from_brep_face(cls, brep, is_roundwood=False):
