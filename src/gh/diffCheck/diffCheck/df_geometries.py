@@ -37,7 +37,8 @@ class DFVertex:
         self.__uuid = uuid.uuid4().int
 
     def __getstate__(self):
-        return self.__dict__
+        state = self.__dict__.copy()
+        return state
 
     def __setstate__(self, state: typing.Dict):
         self.__dict__.update(state)
@@ -98,6 +99,8 @@ class DFFace:
         self._rh_brepface: rg.BrepFace = None
         self.is_roundwood = False
         self._center: DFVertex = None
+        # the normal of the face
+        self._normal: typing.List[float] = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -106,6 +109,8 @@ class DFFace:
         # note: rg.BrepFaces cannot be serialized, so we need to convert it to a Surface >> JSON >> brep >> brepface (and vice versa)
         if "_rh_brepface" in state and state["_rh_brepface"] is not None:
             state["_rh_brepface"] = self.to_brep_face().DuplicateFace(True).ToJSON(SerializationOptions())
+        if "_center" in state and state["_center"] is not None:
+            state["_center"] = state["_center"].__getstate__()
         return state
 
     def __setstate__(self, state: typing.Dict):
@@ -117,6 +122,8 @@ class DFFace:
                     vertex.__setstate__(vertex_state)
                 all_loops.append(loop)
             state["all_loops"] = all_loops
+        if "_center" in state and state["_center"] is not None:
+            state["_center"] = DFVertex.__new__(DFVertex).__setstate__(state["_center"])
         # note: rg.BrepFaces cannot be serialized, so we need to convert it to a Surface >> JSON >> brep >> brepface (and vice versa)
         if "_rh_brepface" in state and state["_rh_brepface"] is not None:
             state["_rh_brepface"] = rg.Surface.FromJSON(state["_rh_brepface"]).Faces[0]
@@ -247,6 +254,13 @@ class DFFace:
             self._center = DFVertex.from_rg_point3d(rg.BoundingBox(vertices).Center)
         return self._center
 
+    @property
+    def normal(self):
+        if self._normal is None:
+            normal_rg = self.to_brep_face().NormalAt(0, 0)
+            self._normal = [normal_rg.X, normal_rg.Y, normal_rg.Z]
+        return self._normal
+
 @dataclass
 class DFJoint:
     """
@@ -263,13 +277,16 @@ class DFJoint:
 
         # this is an automatic identifier
         self.__uuid = uuid.uuid4().int
-
+        # the center from the AABB of the joint
         self._center: DFVertex = None
+        self.distance_to_beam_midpoint: float = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
         if "faces" in state and state["faces"] is not None:
             state["faces"] = [face.__getstate__() for face in self.faces]
+        if "_center" in state and state["_center"] is not None:
+            state["_center"] = state["_center"].__getstate__()
         return state
 
     def __setstate__(self, state: typing.Dict):
@@ -280,6 +297,8 @@ class DFJoint:
                 face.__setstate__(face_state)
                 faces.append(face)
             state["faces"] = faces
+        if "_center" in state and state["_center"] is not None:
+            state["_center"] = DFVertex.__new__(DFVertex).__setstate__(state["_center"])
         self.__dict__.update(state)
 
     def __repr__(self):
@@ -332,6 +351,7 @@ class DFJoint:
             self._center = DFVertex.from_rg_point3d(rg.BoundingBox(vertices).Center)
         return self._center
 
+
 @dataclass
 class DFBeam:
     """
@@ -349,18 +369,17 @@ class DFBeam:
         self._joint_faces: typing.List[DFFace] = []
         self._side_faces: typing.List[DFFace] = []
         self._vertices: typing.List[DFVertex] = []
-
         self._joints: typing.List[DFJoint] = []
 
-        # this should be used like a hash identifier
-        self.__uuid = uuid.uuid4().int
-        # this index is assigned only when the an beam is added to an assembly
         self._index_assembly: int = None
 
         self._center: rg.Point3d = None
-        self._axis: rg.Vector3d = self.compute_axis()
+        self._axis: rg.Line = self.compute_axis()
+        self._length: float = self._axis.Length
 
+        self.__uuid = uuid.uuid4().int
         self.__id = uuid.uuid4().int
+
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -374,10 +393,17 @@ class DFBeam:
             state["_vertices"] = [vertex.__getstate__() for vertex in state["_vertices"]]
         if "_joints" in state and state["_joints"] is not None:
             state["_joints"] = [joint.__getstate__() for joint in state["_joints"]]
-        if "_center" in state and state["_center"] is not None:
-            state["_center"] = self._center.ToJSON(SerializationOptions())
         if "_axis" in state and state["_axis"] is not None:
-            state["_axis"] = self._axis.ToJSON(SerializationOptions())
+            state["_axis"] = [
+                state["_axis"].From.X,
+                state["_axis"].From.Y,
+                state["_axis"].From.Z,
+                state["_axis"].To.X,
+                state["_axis"].To.Y,
+                state["_axis"].To.Z
+            ]
+        if "_center" in state and state["_center"] is not None:
+            state["_center"] = DFVertex(self._center.X, self._center.Y, self._center.Z).__getstate__()
         return state
 
     def __setstate__(self, state: typing.Dict):
@@ -416,10 +442,15 @@ class DFBeam:
                 joint.__setstate__(joint_state)
                 joints.append(joint)
             state["_joints"] = joints
-        if "_center" in state and state["_center"] is not None:
-            state["_center"] = rg.Point3d.FromJSON(state["_center"])
         if "_axis" in state and state["_axis"] is not None:
-            state["_axis"] = rg.Line.FromJSON(state["_axis"])
+            state["_axis"] = rg.Line(
+                rg.Point3d(state["_axis"][0], state["_axis"][1], state["_axis"][2]),
+                rg.Point3d(state["_axis"][3], state["_axis"][4], state["_axis"][5])
+            )
+        if "_center" in state and state["_center"] is not None:
+            center = DFVertex.__new__(DFVertex)
+            center.__setstate__(state["_center"])
+            state["_center"] = rg.Point3d(center.x, center.y, center.z)
         self.__dict__.update(state)
 
     def __repr__(self):
@@ -456,6 +487,66 @@ class DFBeam:
             )
 
         return axis_ln
+
+    def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
+        """
+            This function computes the distances from the center of the beam to each joint.
+        """
+        def _project_point_to_line(point, line):
+            """ Compute the projection of a point onto a line """
+
+            line_start = line.From
+            line_end = line.To
+            line_direction = rg.Vector3d(line_end - line_start)
+
+            line_direction.Unitize()
+
+            vector_to_point = rg.Vector3d(point - line_start)
+            dot_product = rg.Vector3d.Multiply(vector_to_point, line_direction)
+            projected_point = line_start + line_direction * dot_product
+
+            return projected_point
+
+        distances = []
+        for idx, joint in enumerate(self.joints):
+            joint_ctr = joint.center.to_rg_point3d()
+            ln = self.axis
+            ln.Extend(self.axis.Length, self.axis.Length)
+
+            projected_point = _project_point_to_line(joint_ctr, ln)
+
+            dist = rg.Point3d.DistanceTo(
+                self.center,
+                projected_point
+            )
+            distances.append(dist)
+        return distances
+
+    def compute_joint_angles(self) -> typing.List[float]:
+        """
+        This function computes the angles between the beam's axis and the joints'jointfaces' normals.
+        The angles are remapped between 0 and 90 degrees, where -1 indicates the bottom of any half-lap joint.
+
+        :return angles: The angles between the beam's axis and the joints'jointfaces' normals
+        """
+        jointface_angles = []
+        for joint in self.joints:
+            jointfaces_angles = []
+            for joint_face in joint.faces:
+                joint_normal = joint_face.normal
+                joint_normal = rg.Vector3d(joint_normal[0], joint_normal[1], joint_normal[2])
+                angle = rg.Vector3d.VectorAngle(self.axis.Direction, joint_normal)
+                angle_degree = Rhino.RhinoMath.ToDegrees(angle)
+                jointfaces_angles.append(angle_degree)
+                angle_degree = int(angle_degree)
+
+                if angle_degree > 90:
+                    angle_degree = 180 - angle_degree
+                if angle_degree >= 89 and angle_degree <= 90:
+                    angle_degree = -1
+
+                jointface_angles.append(angle_degree)
+        return jointface_angles
 
     @classmethod
     def from_brep_face(cls, brep, is_roundwood=False):
@@ -557,6 +648,10 @@ class DFBeam:
         self._axis = self.compute_axis()
         return self._axis
 
+    @property
+    def length(self):
+        self._length = self._axis.Length
+        return self._length
 
 @dataclass
 class DFAssembly:
@@ -584,6 +679,8 @@ class DFAssembly:
         self.contains_cylinders: bool = any(beam.is_roundwood for beam in self.beams)
 
         self._mass_center: rg.Point3d = None
+
+        self._has_onle_one_beam: bool = False
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -661,6 +758,24 @@ class DFAssembly:
             if beam.index_assembly == beam_assembly_index:
                 self.beams.pop(idx)
                 break
+
+    def compute_all_joint_distances_to_midpoint(self) -> typing.List[float]:
+        """
+        This function computes the distances from the center of the assembly to each joint.
+        """
+        distances = []
+        for beam in self.beams:
+            distances.extend(beam.compute_joint_distances_to_midpoint())
+        return distances
+
+    def compute_all_joint_angles(self) -> typing.List[float]:
+        """
+        This function computes the angles between the beam's axis and the joints'jointfaces' normals.
+        """
+        angles = []
+        for beam in self.beams:
+            angles.extend(beam.compute_joint_angles())
+        return angles
 
     def to_xml(self):
         """
@@ -764,3 +879,9 @@ class DFAssembly:
     @property
     def uuid(self):
         return self.__uuid
+
+    @property
+    def has_only_one_beam(self):
+        if len(self.beams) == 1:
+            self._has_onle_one_beam = True
+        return self._has_onle_one_beam

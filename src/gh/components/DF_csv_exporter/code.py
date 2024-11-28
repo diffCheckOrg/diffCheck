@@ -66,44 +66,29 @@ class DFCsvExporter(component):
                     "export_dist",
                     input_indx, X_cord, Y_cord)
 
-    def _get_id(self,
-        idx: int,
-        i_result: DFVizResults
-        ) -> str:
-        """ Get the ID of the element """
-        counter = 0
-
-        if self.prefix == "beam":
-            return idx
-        elif self.prefix == "joint":
-            for idx_b, beam in enumerate(i_result.assembly.beams):
-                for idx_j, joint in enumerate(beam.joints):
-                    if counter == idx:
-                        return f"{idx_b}--{idx_j}--{0}"
-                    counter += 1
-        elif self.prefix == "joint_face":
-            for idx_b, beam in enumerate(i_result.assembly.beams):
-                for idx_j, joint in enumerate(beam.joints):
-                    for idx_f, face in enumerate(joint.faces):
-                        if counter == idx:
-                            return f"{idx_b}--{idx_j}--{idx_f}"
-                        counter += 1
-
     def _prepare_row(self,
             idx: int,
             i_result: DFVizResults
-        ) -> typing.Dict:
+        ) -> typing.Dict[str, typing.Any]:
         """
             Convert the results contained in the DFVizResults object to a dict to be written in the CSV file
 
             :param idx: Index of the element
             :param i_result: DFVizResults object containing all the values
 
-            :return: Dict of values containng as keys the header and as items the values to be written in the CSV file
+            :return: Dict of values containing as keys the header and as items the values to be written in the CSV file
         """
         if i_result.sanity_check[idx].value != DFInvalidData.VALID.value:
             invalid_type = i_result.sanity_check[idx].name
-            return [self._get_id(idx, i_result), invalid_type, invalid_type, invalid_type, invalid_type, invalid_type, invalid_type]
+            return {
+                f"{self.prefix} id": i_result.find_id(idx),
+                "invalid_type": invalid_type,
+                "min_deviation": invalid_type,
+                "max_deviation": invalid_type,
+                "std_deviation": invalid_type,
+                "rmse": invalid_type,
+                "mean": invalid_type
+            }
 
         distances = [round(value, 4) for value in i_result.distances[idx]]
         min_dev = round(i_result.distances_min_deviation[idx], 4)
@@ -112,8 +97,8 @@ class DFCsvExporter(component):
         rmse = round(i_result.distances_rmse[idx], 4)
         mean = round(i_result.distances_mean[idx], 4)
 
-        row: typing.Dict = {
-            f"{self.prefix} id": self._get_id(idx, i_result),
+        row: typing.Dict[str, typing.Any] = {
+            f"{self.prefix} id": i_result.find_id(idx),
             "distances": distances,
             "min_deviation": min_dev,
             "max_deviation": max_dev,
@@ -121,18 +106,39 @@ class DFCsvExporter(component):
             "rmse": rmse,
             "mean": mean
         }
+
+        # FIXME: find a good design system
+        # Add extra geometric info based on analysis type
+        if i_result.analysis_type == "beam":
+            row.update({
+                "beam_length": i_result.assembly.beams[idx].length
+            })
+        elif i_result.analysis_type == "joint":
+            # NB:: for conviniency, if there is only one beam, we add the lenght of the beam i nthe joint csv analysis output
+            if i_result.assembly.has_only_one_beam:
+                row.update({
+                    "beam_length": i_result.assembly.beams[0].length
+                })
+            row.update({
+                "joint_distance_to_beam_midpoint": i_result.assembly.compute_all_joint_distances_to_midpoint()[idx]
+            })
+        elif i_result.analysis_type == "joint_face":
+            row.update({
+                "jointface_angle": i_result.assembly.compute_all_joint_angles()[idx]
+            })
+
         return row
 
     def _write_csv(self,
         csv_path: str,
-        rows: typing.List[typing.Dict],
+        rows: typing.List[typing.Dict[str, typing.Any]],
         is_writing_only_distances: bool = False
         ) -> None:
         """
             Write the CSV file
 
             :param csv_path: Path of the CSV file
-            :param rows: Dict of values to be written in the CSV file
+            :param rows: List of dictionaries containing values to be written in the CSV file
             :param is_writing_only_distances: Flag to check if to write ONLY distances or the whole analysis
 
             :return: None
@@ -157,7 +163,7 @@ class DFCsvExporter(component):
             i_file_name: str,
             i_export_seperate_files: bool,
             i_export_distances: bool,
-            i_result):
+            i_result: DFVizResults) -> None:
 
         csv_analysis_path: str = None
         csv_distances_path: str = None
@@ -165,12 +171,7 @@ class DFCsvExporter(component):
         if i_dump:
             os.makedirs(i_export_dir, exist_ok=True)
 
-            if len(i_result.assembly.beams) == len(i_result.source):
-                self.prefix = "beam"
-            elif len(i_result.assembly.all_joints) == len(i_result.source):
-                self.prefix = "joint"
-            elif len(i_result.assembly.all_joint_faces) == len(i_result.source):
-                self.prefix = "joint_face"
+            self.prefix = i_result.analysis_type
 
             if i_export_seperate_files:
                 for idx in range(len(i_result.source)):
