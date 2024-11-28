@@ -1,5 +1,9 @@
 #! python3
-
+"""
+Yakerize.py was originally developed as part of the DiffCheck plugin by
+Andrea Settimi, Damien Gilliard, Eleni Skevaki, Marirena Kladeftira (IBOIS, CRCL, EPFL) in 2024.
+It is distributed under the MIT License, provided this attribution is retained.
+"""
 import os
 import sys
 import argparse
