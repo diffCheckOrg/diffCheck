@@ -1,0 +1,55 @@
+{
+    "name": "DFExportCloudToFile",
+    "nickname": "DFExportCloudToFile",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Export a point cloud to a file of PLY format.",
+    "exposure": 4,
+    "instanceGuid": "aa2c0229-90b9-48be-890b-aded2bfc2b24",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_dump",
+                "nickname": "i_dump",
+                "description": "Button to save the point cloud.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_file_path",
+                "nickname": "i_file_path",
+                "description": "The path of the file with extension .ply to save.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_cloud",
+                "nickname": "i_cloud",
+                "description": "The cloud to save.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            }
+        ],
+        "outputParameters": []
+    }
+}

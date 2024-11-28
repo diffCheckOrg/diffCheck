@@ -1,0 +1,104 @@
+{
+    "name": "DFInspectResults",
+    "nickname": "DFInspectResults",
+    "category": "diffCheck",
+    "subcategory": "Results",
+    "description": "Access the components of the DFVizResults object.",
+    "exposure": 4,
+    "instanceGuid": "efc619ea-7f00-4681-ad79-18219c0471af",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_results",
+                "nickname": "i_results",
+                "description": "The path to the file of the .diffCheck file.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_assembly",
+                "nickname": "o_assembly",
+                "description": "The DFAssembly object.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_source",
+                "nickname": "o_source",
+                "description": "The point cloud used for calculating the results.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_target",
+                "nickname": "o_target",
+                "description": "The target mesh of the structure.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_distances_mean",
+                "nickname": "o_distances_mean",
+                "description": "-",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_distances_rmse",
+                "nickname": "o_distances_rmse",
+                "description": "-",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_distances_max_deviation",
+                "nickname": "o_distances_max_deviation",
+                "description": "-",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_distances_min_deviation",
+                "nickname": "o_distances_min_deviation",
+                "description": "-",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_distances_sd_deviation",
+                "nickname": "o_distances_sd_deviation",
+                "description": "-",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_distances",
+                "nickname": "o_distances",
+                "description": "-",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

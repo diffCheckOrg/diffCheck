@@ -56,6 +56,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("nb_neighbors"), py::arg("std_ratio"))
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
+        .def("save_to_PLY", &diffCheck::geometry::DFPointCloud::SaveToPLY)
+        
         .def("add_points", &diffCheck::geometry::DFPointCloud::AddPoints)
 
         .def("get_tight_bounding_box", &diffCheck::geometry::DFPointCloud::GetTightBoundingBox)

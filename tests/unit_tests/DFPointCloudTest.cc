@@ -59,6 +59,16 @@ TEST_F(DFPointCloudTestFixture, LoadFromPLY) {
     EXPECT_EQ(dfPointCloud.GetNumNormals(), 7379);
 }
 
+TEST_F(DFPointCloudTestFixture, SaveToPLY) {
+    std::string path = "./test_save.ply";
+    dfPointCloud.SaveToPLY(path);
+    diffCheck::geometry::DFPointCloud dfPointCloud2;
+    dfPointCloud2.LoadFromPLY(path);
+    EXPECT_EQ(dfPointCloud.GetNumPoints(), dfPointCloud2.GetNumPoints());
+    EXPECT_EQ(dfPointCloud.GetNumColors(), dfPointCloud2.GetNumColors());
+    EXPECT_EQ(dfPointCloud.GetNumNormals(), dfPointCloud2.GetNumNormals());
+}
+
 //-------------------------------------------------------------------------
 // properties
 //-------------------------------------------------------------------------

@@ -62,6 +62,18 @@
                 "typeHintID": "bool"
             },
             {
+                "name": "i_export_distances",
+                "nickname": "i_export_distances",
+                "description": "Whether to export the calculated error distances for each point of the analysed point cloud.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
                 "name": "i_result",
                 "nickname": "i_result",
                 "description": "The result of the distance calculation to export",

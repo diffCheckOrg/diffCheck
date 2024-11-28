@@ -1,0 +1,55 @@
+{
+    "name": "DFExportResults",
+    "nickname": "DFExportResults",
+    "category": "diffCheck",
+    "subcategory": "Results",
+    "description": "It saves the computed DF results in a file .diffCheck to be exported later. This is done by pickling/serializing the DFVizResults object.",
+    "exposure": 4,
+    "instanceGuid": "fbc0c1be-1485-4167-98f4-9c6106852a90",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_dump",
+                "nickname": "i_dump",
+                "description": "Save it!",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_export_dir",
+                "nickname": "i_export_dir",
+                "description": "The directory where the .diffCheck file will be saved.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            },
+            {
+                "name": "i_results",
+                "nickname": "i_results",
+                "description": "The DFVizResults object to be saved.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            }
+        ],
+        "outputParameters": []
+    }
+}

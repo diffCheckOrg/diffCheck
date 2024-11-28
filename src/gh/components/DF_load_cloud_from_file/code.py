@@ -11,7 +11,11 @@ class DFLoadCloudFromFile(component):
     def RunScript(self,
         i_path: str,
         i_scalef: float) -> rg.PointCloud:
-        # import and convert to Rhino Cloud
+        if i_path is None:
+            return None
+        if i_scalef is None:
+            i_scalef = 1.0
+
         df_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
         df_cloud.load_from_PLY(i_path)
         rh_cloud = df_cvt_bindings.cvt_dfcloud_2_rhcloud(df_cloud)
