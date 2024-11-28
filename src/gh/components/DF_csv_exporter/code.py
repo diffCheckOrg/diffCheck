@@ -107,8 +107,7 @@ class DFCsvExporter(component):
             "mean": mean
         }
 
-        # FIXME: find a good design system
-        # Add extra geometric info based on analysis type
+        # Add extra geometric info based on analysis type here:
         if i_result.analysis_type == "beam":
             row.update({
                 "beam_length": i_result.assembly.beams[idx].length
