@@ -467,10 +467,12 @@ class DFBeam:
         :return axis: The axis of the beam as a line
         """
         joints = self.joints
-        joint1 = joints[0]
-        joint2 = joints[1]
-        max_distance = 0
+        joint1 = None
+        joint2 = None
         if len(joints) > 2:
+            joint1 = joints[0]
+            joint2 = joints[1]
+            max_distance = 0
             for j1 in joints:
                 for j2 in joints:
                     distance = rg.Point3d.DistanceTo(
@@ -480,6 +482,22 @@ class DFBeam:
                         max_distance = distance
                         joint1 = j1
                         joint2 = j2
+        else:
+            #get the two farthest dffaces for simplicity
+            df_faces = [face for face in self.faces]
+            max_distance = 0
+            for i in range(len(df_faces)):
+                for j in range(i+1, len(df_faces)):
+                    distance = rg.Point3d.DistanceTo(
+                        df_faces[i].center.to_rg_point3d(),
+                        df_faces[j].center.to_rg_point3d())
+                    if distance > max_distance:
+                        max_distance = distance
+                        joint1 = df_faces[i]
+                        joint2 = df_faces[j]
+
+        if joint1 is None or joint2 is None:
+            raise ValueError("The beam axis cannot be calculated")
 
         axis_ln = rg.Line(
             joint1.center.to_rg_point3d(),
