@@ -26,6 +26,8 @@ class NumpyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
+        elif isinstance(obj, Enum):
+            return obj.value  # or use obj.name if you prefer
         return super().default(obj)
 
 class DFInvalidData(Enum):
@@ -41,7 +43,7 @@ class DFInvalidData(Enum):
 
 class DFVizResults:
     """
-    This class compiles the resluts of the error estimation into one object
+    This class compiles the results of the error estimation into one object
     """
     __serial_file_extenion: str = ".diffCheck"
 
@@ -60,6 +62,8 @@ class DFVizResults:
         self.distances_min_deviation = []
         self.distances_sd_deviation = []
         self.distances = []
+
+        self._analysis_type: str = None
 
     def __repr__(self):
         return f"DFVizResults of({self.assembly})"
@@ -109,7 +113,8 @@ class DFVizResults:
 
         timestamp: str = datetime.now().strftime("%Y%m%d_%H%M%S")
         assembly_name: str = self.assembly.name
-        serial_file_path = os.path.join(dir, f"{assembly_name}_{timestamp}{self.__serial_file_extenion}")
+        result_type: str = self.analysis_type
+        serial_file_path = os.path.join(dir, f"{assembly_name}_{result_type}_{timestamp}{self.__serial_file_extenion}")
 
         try:
             with open(serial_file_path, "w") as f:
@@ -135,6 +140,49 @@ class DFVizResults:
             raise e
         return obj
 
+    def _compute_dfresult_type(self):
+        """
+            Detect if the DFVizResults object contains results of beam, joint of joint_face level analysis
+        """
+        # check that source and target have the same length
+        if len(self.source) != len(self.target):
+            raise ValueError("Source and target have different length, cannot determine the type of analysis")
+        if len(self.assembly.beams) == len(self.source):
+            self._analysis_type = "beam"
+        elif len(self.assembly.all_joints) == len(self.source):
+            self._analysis_type = "joint"
+        elif len(self.assembly.all_joint_faces) == len(self.source):
+            self._analysis_type = "joint_face"
+        return self._analysis_type
+
+    def find_id(self, idx: int,) -> str:
+        """
+            Return the ID in str format of the element. This func is used during
+            the csv export. With the following format:
+            - beam: idx
+            - joint: idx_b--idx_j--0
+            - joint_face: idx_b--idx_j--idx_f
+
+            :param idx: the index of the element
+        """
+        counter = 0
+
+        if self.analysis_type == "beam":
+            return str(idx)
+        elif self.analysis_type == "joint":
+            for idx_b, beam in enumerate(self.assembly.beams):
+                for idx_j, joint in enumerate(beam.joints):
+                    if counter == idx:
+                        return f"{idx_b}--{idx_j}--{0}"
+                    counter += 1
+        elif self.analysis_type == "joint_face":
+            for idx_b, beam in enumerate(self.assembly.beams):
+                for idx_j, joint in enumerate(beam.joints):
+                    for idx_f, face in enumerate(joint.faces):
+                        if counter == idx:
+                            return f"{idx_b}--{idx_j}--{idx_f}"
+                        counter += 1
+        return ""
 
     def add(self, source, target, distances, sanity_check: DFInvalidData = DFInvalidData.VALID):
 
@@ -214,6 +262,11 @@ class DFVizResults:
     @property
     def is_source_cloud(self):
         return type(self.source[0]) is diffcheck_bindings.dfb_geometry.DFPointCloud
+
+    @property
+    def analysis_type(self):
+        self._analysis_type = self._compute_dfresult_type()
+        return self._analysis_type
 
 # FIXME: ths is currently broken, we need to fix it
 def df_cloud_2_df_cloud_comparison(
