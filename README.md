@@ -53,7 +53,16 @@ Open your Grasshopper canvas and search for the `DF` components!
 
 The full documentation, with tutorials, automatic documentation for GHComponents and PythonAPI is available [here](https://diffcheckorg.github.io/diffCheck/).
 
+## New Goals (copied from slack)
 
+1. Test with different hardware and scans
+2. Bring in more case studies
+3. Clear roadmap and futures list for someone to contribute
+4. import general pcd processing tools (coackroach)
+5. New dev axe on live benchmarking
+6. component with a web socket reading PCD batches. (GitHub - behrooz-tahanzadeh/Bengesht: A collection of components for Grasshopper3D)
+7. Error diagnosis (example displacement direction compared to face)
+8. Add ai-based segmentation methods
 
 ## Roadmap
 
