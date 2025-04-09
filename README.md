@@ -13,6 +13,7 @@
     <a href="https://doi.org/10.5281/zenodo.13843959"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.13843959.svg" alt="DOI"></a>
 </p>
 
+
 ![demo](https://github.com/user-attachments/assets/3c9f353d-7707-4630-aa6d-fe59cbdeae2f)
 
 # DiffCheck: CAD-Scan comparison
