@@ -216,6 +216,59 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    std::vector<Eigen::Vector3d> DFPointCloud::GetPrincipalAxes(int nComponents)
+    {
+        std::vector<Eigen::Vector3d> principalAxes;
+
+        if (! this->HasNormals())
+        {
+            DIFFCHECK_WARN("The point cloud has no normals. Normals will be estimated with knn = 20.");
+            this->EstimateNormals(true, 20);
+        }
+
+        // Convert normals to Eigen matrix
+        Eigen::Matrix<double, 3, Eigen::Dynamic> normalMatrix(3, this->Normals.size());
+        for (size_t i = 0; i < this->Normals.size(); ++i)
+        {
+            normalMatrix.col(i) = this->Normals[i].cast<double>();
+        }
+
+        cilantro::KMeans<double, 3> kmeans(normalMatrix); 
+        kmeans.cluster(nComponents);
+
+        const auto& centroids = kmeans.getClusterCentroids();
+        const auto& assignments = kmeans.getPointToClusterIndexMap();
+
+        std::vector<std::pair<int, Eigen::Vector3d>> clusters(nComponents);
+        for (size_t i = 0; i < nComponents; ++i) 
+        {
+        clusters[i] = {i, centroids.col(i)};
+        }
+        std::sort(clusters.begin(), clusters.end(), [](const auto& a, const auto& b) 
+        {
+            return a.second.norm() < b.second.norm();
+        });
+
+        std::vector<std::pair<int, Eigen::Vector3d>> sortedClusters(nComponents);    
+        std::vector<int> clusterSizes(nComponents, 0);
+
+        std::vector<std::pair<int, Eigen::Vector3d>> sortedClustersBySize(nComponents);
+        for (size_t i = 0; i < nComponents; ++i) 
+        {
+            sortedClustersBySize[i] = {clusterSizes[i], centroids.col(i)};
+        }
+        std::sort(sortedClustersBySize.begin(), sortedClustersBySize.end(), [](const auto& a, const auto& b) 
+        {
+            return a.first > b.first;
+        });
+
+        for(size_t i = 0; i < nComponents; ++i) 
+        {
+            principalAxes.push_back(sortedClustersBySize[i].second);
+        }
+        return principalAxes;
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
