@@ -1,5 +1,5 @@
 from scriptcontext import sticky as rh_sticky_dict
-
+import json
 from dataclasses import dataclass, field
 
 @dataclass
@@ -65,3 +65,10 @@ class DFPosesAssembly:
         """
         self.n_step = 0
         rh_sticky_dict.clear()
+
+    def save(self, file_path: str):
+        """
+        Save the assembly poses to a JSON file.
+        """
+        with open(file_path, 'w') as f:
+            json.dump(self.poses_per_element_dictionary, f, default=lambda o: o.__dict__, indent=4)
