@@ -35,7 +35,7 @@
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "boolean"
+                "typeHintID": "bool"
             }
         ],
         "outputParameters": [
