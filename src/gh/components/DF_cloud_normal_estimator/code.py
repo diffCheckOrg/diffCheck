@@ -32,4 +32,4 @@ class DFCloudNormalEstimator(component):
 
         o_cloud = df_cvt_bindings.cvt_dfcloud_2_rhcloud(df_cloud)
 
-        return o_cloud
+        return [o_cloud]
