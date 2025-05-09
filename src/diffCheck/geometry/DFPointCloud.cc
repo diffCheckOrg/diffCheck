@@ -236,22 +236,14 @@ namespace diffCheck::geometry
         cilantro::KMeans<double, 3> kmeans(normalMatrix); 
         kmeans.cluster(nComponents);
 
-        const auto& centroids = kmeans.getClusterCentroids();
-        const auto& assignments = kmeans.getPointToClusterIndexMap();
-
-        std::vector<std::pair<int, Eigen::Vector3d>> clusters(nComponents);
-        for (size_t i = 0; i < nComponents; ++i) 
-        {
-        clusters[i] = {i, centroids.col(i)};
-        }
-        std::sort(clusters.begin(), clusters.end(), [](const auto& a, const auto& b) 
-        {
-            return a.second.norm() < b.second.norm();
-        });
-
-        std::vector<std::pair<int, Eigen::Vector3d>> sortedClusters(nComponents);    
+        const cilantro::VectorSet3d& centroids = kmeans.getClusterCentroids();
+        const std::vector<size_t>& assignments = kmeans.getPointToClusterIndexMap();
         std::vector<int> clusterSizes(nComponents, 0);
-
+        for (size_t i = 0; i < assignments.size(); ++i) 
+        {
+            clusterSizes[assignments[i]]++;
+        }
+        // Sort clusters by size
         std::vector<std::pair<int, Eigen::Vector3d>> sortedClustersBySize(nComponents);
         for (size_t i = 0; i < nComponents; ++i) 
         {
