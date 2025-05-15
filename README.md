@@ -64,22 +64,28 @@ gantt
     title       diffCheck - general overview
     excludes    weekends
 
-    section Publication
-    Abstract edition                    :active, absed, 2024-03-01, 2024-03-15
-    Submission abstract ICSA            :milestone, icsaabs, 2024-03-15, 0d
-    Paper edition                       :paperd, 2024-10-01, 2024-10-30
-    Submission paper ICSA               :milestone, icsapap, 2024-10-30, 0d
+    section Workshop
+    Workshop dryrun                         :milestone, crit, dryrun, 2025-09-15, 1d
+    Workshop in Boston                      :workshop, 2025-11-16, 2d
 
-    section Code development
-    Backend development                 :backenddev, after icsaabs, 6w
-    Rhino/Grasshopper integration       :rhghinteg, after backenddev, 6w
-    Documentation & Interface           :docuint, after fabar, 3w
+    section Component development
+    Pose estimation                         :CD1, 2025-05-15, 1w
+    Communication w/ hardware               :CD2, after CD1, 3w
+    Pose comparison                         :CD3, after CD1, 3w
+    General PC manipulation                 :CD4, after CD1, 6w
+    Data analysis component                 :CD5, after CD3, 3w
+
+    section Workshop preparation
+    Workshop scenario                       :doc1, 2025-08-01, 1w
+    New compilation documentation           :doc2, after mac, 2w
+    New components documentation            :doc2, 2025-08-01, 4w
+    Development of special pipeline for data:doc3, after doc1, 3w
+
+    section Cross-platform
+    adaptation of CMake for mac compilation :mac, 2025-07-01, 3w
 
     section Prototype testing
-    Fabrication of AR Prototype         :crit, fabar, 2024-07-01, 2024-08-30
-    Fabrication of CNC Prototype        :crit, fabcnc, 2024-07-01, 2024-08-30
-    Fabrication of Robot Prototype      :crit, fabrob, 2024-07-01, 2024-08-30
-    Data collection and evaluation      :dataeval, after fabrob, 4w
+    Fabrication of iterative prototype      :fab, 2025-08-01, 2w
 ```
 
 ## How to contribute
