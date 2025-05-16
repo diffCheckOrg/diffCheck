@@ -14,13 +14,13 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_cloud",
+                "name": "i_clouds",
                 "nickname": "i_cloud",
                 "description": "cloud whose main axes are to be calculated",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "item",
+                "scriptParamAccess": "list",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "pointcloud"
