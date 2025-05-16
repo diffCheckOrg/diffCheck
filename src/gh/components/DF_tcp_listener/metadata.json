@@ -1,0 +1,76 @@
+{
+    "name": "DFTCPListener",
+    "nickname": "TCPIn",
+    "category": "diffCheck",
+    "subcategory": "IO",
+    "description": "This component get data from a tcp sender",
+    "exposure": 4,
+    "instanceGuid": "61a9cc27-864d-4892-bd39-5d97dbccbefb",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_load",
+                "nickname": "i_load",
+                "description": "Button to get a new PCD batch",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_reset",
+                "nickname": "i_reset",
+                "description": "Reset the port",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_port",
+                "nickname": "i_port",
+                "description": "The port for the connection",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "i_host",
+                "nickname": "i_host",
+                "description": "The host for the connection",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The pcd that was received.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

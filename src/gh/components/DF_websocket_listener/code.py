@@ -27,8 +27,7 @@ class DFHTTPListener(component):
                 if not url.lower().endswith('.ply'):
                     raise ValueError("URL must end in .ply")
 
-                resp = requests.get(url, timeout=30)
-                resp.raise_for_status()
+                resp = requests.get(url, timeout=30); resp.raise_for_status()
                 fn = os.path.basename(url)
                 tmp = os.path.join(tempfile.gettempdir(), fn)
                 with open(tmp, 'wb') as f:
@@ -62,19 +61,16 @@ class DFHTTPListener(component):
                 sc.sticky['imported_geom']  = geom
                 count = geom.Count if isinstance(geom, rg.PointCloud) else geom.Vertices.Count
                 if isinstance(geom, rg.PointCloud):
-                    sc.sticky['status_message'] = f"Done: {count} points"
-                else:
-                    sc.sticky['status_message'] = f"Done: {count} vertices"
+                    sc.sticky['status_message'] = f"Done: {count} points" 
+                else: sc.sticky['status_message'] = f"Done: {count} vertices"
                 ghenv.Component.Message = sc.sticky.get('status_message')
 
             except Exception as e:
                 sc.sticky['imported_geom'] = None
                 sc.sticky['status_message'] = f"Error: {e}"
             finally:
-                try:
-                    os.remove(tmp)
-                except:
-                    pass
+                try: os.remove(tmp)
+                except: pass
                 sc.sticky['thread_running'] = False
                 ghenv.Component.ExpireSolution(True)
 

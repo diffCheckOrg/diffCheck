@@ -1,0 +1,52 @@
+{
+    "name": "DFWEBSOCKETListener",
+    "nickname": "WSIn",
+    "category": "diffCheck",
+    "subcategory": "IO",
+    "description": "This component reads a ply file from the internet.",
+    "exposure": 4,
+    "instanceGuid": "909d9a4f-2698-4fbf-8dcb-2005f51e047f",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_load",
+                "nickname": "i_load",
+                "description": "Button to import ply from url.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_ply_url",
+                "nickname": "i_ply_url",
+                "description": "The url where to get the pointcloud",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_geometry",
+                "nickname": "o_geo",
+                "description": "The mesh or pcd that was imported.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
