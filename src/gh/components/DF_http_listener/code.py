@@ -65,7 +65,7 @@ class DFHTTPListener(component):
                     sc.sticky['status_message'] = f"Done: {count} points"
                 else:
                     sc.sticky['status_message'] = f"Done: {count} vertices"
-                ghenv.Component.Message = sc.sticky.get('status_message')
+                ghenv.Component.Message = sc.sticky.get('status_message')  # noqa: F821
 
             except Exception as e:
                 sc.sticky['imported_geom'] = None
@@ -73,10 +73,10 @@ class DFHTTPListener(component):
             finally:
                 try:
                     os.remove(tmp)
-                except:
+                except Exception:
                     pass
                 sc.sticky['thread_running'] = False
-                ghenv.Component.ExpireSolution(True)
+                ghenv.Component.ExpireSolution(True)  # noqa: F821
 
         if sc.sticky['ply_url'] != i_ply_url:
             sc.sticky['ply_url'] = i_ply_url
@@ -90,7 +90,7 @@ class DFHTTPListener(component):
             threading.Thread(target=_import_job, args=(i_ply_url,), daemon=True).start()
 
         sc.sticky['prev_load'] = i_load
-        ghenv.Component.Message = sc.sticky.get('status_message', "")
+        ghenv.Component.Message = sc.sticky.get('status_message', "")  # noqa: F821
 
         # output
         o_geometry = sc.sticky.get('imported_geom')

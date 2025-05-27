@@ -27,7 +27,8 @@ class DFHTTPListener(component):
                 if not url.lower().endswith('.ply'):
                     raise ValueError("URL must end in .ply")
 
-                resp = requests.get(url, timeout=30); resp.raise_for_status()
+                resp = requests.get(url, timeout=30)
+                resp.raise_for_status()
                 fn = os.path.basename(url)
                 tmp = os.path.join(tempfile.gettempdir(), fn)
                 with open(tmp, 'wb') as f:
@@ -61,24 +62,27 @@ class DFHTTPListener(component):
                 sc.sticky['imported_geom']  = geom
                 count = geom.Count if isinstance(geom, rg.PointCloud) else geom.Vertices.Count
                 if isinstance(geom, rg.PointCloud):
-                    sc.sticky['status_message'] = f"Done: {count} points" 
-                else: sc.sticky['status_message'] = f"Done: {count} vertices"
-                ghenv.Component.Message = sc.sticky.get('status_message')
+                    sc.sticky['status_message'] = f"Done: {count} points"
+                else:
+                    sc.sticky['status_message'] = f"Done: {count} vertices"
+                ghenv.Component.Message = sc.sticky.get('status_message')  # noqa: F821
 
             except Exception as e:
                 sc.sticky['imported_geom'] = None
                 sc.sticky['status_message'] = f"Error: {e}"
             finally:
-                try: os.remove(tmp)
-                except: pass
+                try:
+                    os.remove(tmp)
+                except Exception:
+                    pass
                 sc.sticky['thread_running'] = False
-                ghenv.Component.ExpireSolution(True)
+                ghenv.Component.ExpireSolution(True)  # noqa: F821
 
         if sc.sticky['ply_url'] != i_ply_url:
             sc.sticky['ply_url'] = i_ply_url
             sc.sticky['status_message'] = "URL changed. Press Load"
             sc.sticky['thread_running'] = False
-            sc.sticky['prev_load']      = False
+            sc.sticky['prev_load'] = False
 
         if i_load and not sc.sticky['prev_load'] and not sc.sticky['thread_running']:
             sc.sticky['status_message'] = "Loading..."
@@ -86,7 +90,7 @@ class DFHTTPListener(component):
             threading.Thread(target=_import_job, args=(i_ply_url,), daemon=True).start()
 
         sc.sticky['prev_load'] = i_load
-        ghenv.Component.Message = sc.sticky.get('status_message', "")
+        ghenv.Component.Message = sc.sticky.get('status_message', "")  # noqa: F821
 
         # output
         o_geometry = sc.sticky.get('imported_geom')

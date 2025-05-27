@@ -25,8 +25,10 @@ class DFHTTPListener(component):
             # close old socket if any
             old = sc.sticky.get('server_sock')
             try:
-                if old: old.close()
-            except: pass
+                if old:
+                    old.close()
+            except Exception:
+                pass
 
             sc.sticky['listen_addr'] = addr
             sc.sticky['server_sock'] = None
@@ -34,7 +36,7 @@ class DFHTTPListener(component):
             sc.sticky['cloud_buffer_raw'] = []
             sc.sticky['latest_cloud'] = None
             sc.sticky['status_message'] = "Reset" if i_reset else f"Addr → {i_host}:{i_port}"
-        ghenv.Component.Message = sc.sticky['status_message']
+        ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
 
         # Client handler
         def handle_client(conn):
@@ -52,7 +54,7 @@ class DFHTTPListener(component):
                                 raw = json.loads(line.decode())
                             except Exception as e:
                                 sc.sticky['status_message'] = f"JSON error: {e}"
-                                ghenv.Component.Message = sc.sticky['status_message']
+                                ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
                                 continue
 
                             if isinstance(raw, list) and all(isinstance(pt, list) and len(pt)==6 for pt in raw):
@@ -60,10 +62,10 @@ class DFHTTPListener(component):
                                 sc.sticky['status_message'] = f"Buffered {len(raw)} pts"
                             else:
                                 sc.sticky['status_message'] = "Unexpected format"
-                            ghenv.Component.Message = sc.sticky['status_message']
+                            ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
                     except Exception as e:
                         sc.sticky['status_message'] = f"Socket error: {e}"
-                        ghenv.Component.Message = sc.sticky['status_message']
+                        ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
                         break
 
         def accept_loop(srv_sock):
@@ -71,10 +73,10 @@ class DFHTTPListener(component):
                 try:
                     conn, _ = srv_sock.accept()
                     threading.Thread(target=handle_client, args=(conn,), daemon=True).start()
-                except:
+                except Exception:
                     break
 
-        #Start server
+        # Start server
         def start_server():
             try:
                 srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -84,11 +86,11 @@ class DFHTTPListener(component):
                 sc.sticky['server_sock'] = srv
                 sc.sticky['server_started'] = True
                 sc.sticky['status_message'] = f"Listening on {i_host}:{i_port}"
-                ghenv.Component.Message = sc.sticky['status_message']
+                ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
                 threading.Thread(target=accept_loop, args=(srv,), daemon=True).start()
             except Exception as e:
                 sc.sticky['status_message'] = f"Server error: {e}"
-                ghenv.Component.Message = sc.sticky['status_message']
+                ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
 
         if not sc.sticky['server_started']:
             start_server()
@@ -104,8 +106,7 @@ class DFHTTPListener(component):
                 sc.sticky['status_message'] = f"Retrieved {pc.Count} pts"
             else:
                 sc.sticky['status_message'] = "No data buffered"
-            ghenv.Component.Message = sc.sticky['status_message']
-
+            ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
         sc.sticky['prev_load'] = i_load
 
         return [sc.sticky['latest_cloud']]
