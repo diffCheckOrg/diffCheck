@@ -14,9 +14,9 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_load",
-                "nickname": "i_load",
-                "description": "Button to get a new PCD batch",
+                "name": "i_start",
+                "nickname": "i_start",
+                "description": "Button to start the TCP server",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -26,9 +26,21 @@
                 "typeHintID": "bool"
             },
             {
-                "name": "i_reset",
-                "nickname": "i_reset",
-                "description": "Reset the port",
+                "name": "i_load",
+                "nickname": "i_load",
+                "description": "Button to get the latest PCD from the buffer",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_stop",
+                "nickname": "i_stop",
+                "description": "Stop the server and release the port",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,

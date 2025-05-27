@@ -16,27 +16,38 @@ class DFHTTPListener(component):
             i_load: bool,
             i_ply_url: str):
 
-        sc.sticky.setdefault('ply_url', None)
-        sc.sticky.setdefault('imported_geom', None)
-        sc.sticky.setdefault('status_message','Idle')
-        sc.sticky.setdefault('prev_load', False)
-        sc.sticky.setdefault('thread_running', False)
+        sc.sticky.setdefault('ply_url', None) #last url processed
+        sc.sticky.setdefault('imported_geom', None) #geo imported from ply
+        sc.sticky.setdefault('status_message','Idle') #status message on component
+        sc.sticky.setdefault('prev_load', False) #previous state of toggle
+        sc.sticky.setdefault('thread_running', False) #is an import thread active?
 
         def _import_job(url):
+            """
+            Background job:
+            - Downloads the .ply file from the URL
+            - Imports it into the active Rhino document
+            - Extracts the new geometry (point cloud or mesh)
+            - Cleans up the temporary file and document objects
+            - Updates sticky state and status message
+            """
             try:
                 if not url.lower().endswith('.ply'):
                     raise ValueError("URL must end in .ply")
 
                 resp = requests.get(url, timeout=30)
                 resp.raise_for_status()
+                # save om temporary file
                 fn = os.path.basename(url)
                 tmp = os.path.join(tempfile.gettempdir(), fn)
                 with open(tmp, 'wb') as f:
                     f.write(resp.content)
 
                 doc = Rhino.RhinoDoc.ActiveDoc
+                # recordd existing object IDs to detect new ones
                 before_ids = {o.Id for o in doc.Objects}
 
+                # import PLY using Rhino's API
                 opts = Rhino.FileIO.FilePlyReadOptions()
                 ok = Rhino.FileIO.FilePly.Read(tmp, doc, opts)
                 if not ok:
@@ -44,7 +55,7 @@ class DFHTTPListener(component):
 
                 after_ids = {o.Id for o in doc.Objects}
                 new_ids = after_ids - before_ids
-
+                # get new pcd or mesh from document
                 geom = None
                 for guid in new_ids:
                     g = doc.Objects.FindId(guid).Geometry
@@ -54,11 +65,12 @@ class DFHTTPListener(component):
                     elif isinstance(g, rg.Mesh):
                         geom = g.DuplicateMesh()
                         break
-
+                # remove imported objects
                 for guid in new_ids:
                     doc.Objects.Delete(guid, True)
                 doc.Views.Redraw()
 
+                # store new geometry
                 sc.sticky['imported_geom']  = geom
                 count = geom.Count if isinstance(geom, rg.PointCloud) else geom.Vertices.Count
                 if isinstance(geom, rg.PointCloud):
@@ -75,15 +87,18 @@ class DFHTTPListener(component):
                     os.remove(tmp)
                 except Exception:
                     pass
+                # mark thread as finished
                 sc.sticky['thread_running'] = False
                 ghenv.Component.ExpireSolution(True)  # noqa: F821
 
+        # check if the URL input has changed
         if sc.sticky['ply_url'] != i_ply_url:
             sc.sticky['ply_url'] = i_ply_url
             sc.sticky['status_message'] = "URL changed. Press Load"
             sc.sticky['thread_running'] = False
-            sc.sticky['prev_load']      = False
+            sc.sticky['prev_load'] = False
 
+        # start importing if Load toggle is pressed and import thread is not already running
         if i_load and not sc.sticky['prev_load'] and not sc.sticky['thread_running']:
             sc.sticky['status_message'] = "Loading..."
             sc.sticky['thread_running'] = True
