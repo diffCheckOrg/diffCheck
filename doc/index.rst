@@ -9,6 +9,7 @@ The software is designed to be user-friendly and can be used either via a Grassh
 
 The software is developed by the `Laboratory of Timber Construction (IBOIS)`_ and the `Laboratory for Creative Computation (CRCL)`_ at `Polytechnique Fédérale de Lausanne (EPFL)`_.
 
+
 .. raw:: html
 
    <div style="text-align: center;">
