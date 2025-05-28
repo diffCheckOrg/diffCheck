@@ -1,98 +1,118 @@
 #! python3
 
 from ghpythonlib.componentbase import executingcomponent as component
-import os
-import tempfile
-import requests
-import threading
-import Rhino
-import Rhino.Geometry as rg
+# import threading
+# import asyncio
+# import json
 import scriptcontext as sc
+# import Rhino.Geometry as rg
+# import System.Drawing as sd
+#import websockets
 
 
-class DFHTTPListener(component):
-
+class DFWSServerListener(component):
     def RunScript(self,
+            i_start: bool,
             i_load: bool,
-            i_ply_url: str):
+            i_stop: bool,
+            i_host: str,
+            i_port: int):     # Port to bind
 
-        sc.sticky.setdefault('ply_url', None)
-        sc.sticky.setdefault('imported_geom', None)
-        sc.sticky.setdefault('status_message','Idle')
+        # --- Persistent state across runs ---
+        sc.sticky.setdefault('ws_thread', None)
+        sc.sticky.setdefault('ws_loop', None)
+        sc.sticky.setdefault('ws_server', None)
+        sc.sticky.setdefault('ws_buffer', [])
+        sc.sticky.setdefault('ws_latest', None)
+        sc.sticky.setdefault('status', 'Idle')
+        sc.sticky.setdefault('prev_start', False)
+        sc.sticky.setdefault('prev_stop', False)
         sc.sticky.setdefault('prev_load', False)
-        sc.sticky.setdefault('thread_running', False)
 
-        def _import_job(url):
-            try:
-                if not url.lower().endswith('.ply'):
-                    raise ValueError("URL must end in .ply")
+        # async def handler(ws, path):
+        #     """Receive JSON-encoded dicts and buffer valid points."""
+        #     try:
+        #         async for msg in ws:
+        #             data = json.loads(msg)
+        #             if isinstance(data, dict) and {'x','y','z'}.issubset(data):
+        #                 sc.sticky['ws_buffer'].append(data)
+        #                 sc.sticky['status'] = f"Buffered {len(sc.sticky['ws_buffer'])} pts"
+        #                 ghenv.Component.ExpireSolution(True)  # noqa: F821
+        #     except Exception:
+        #         pass
 
-                resp = requests.get(url, timeout=30)
-                resp.raise_for_status()
-                fn = os.path.basename(url)
-                tmp = os.path.join(tempfile.gettempdir(), fn)
-                with open(tmp, 'wb') as f:
-                    f.write(resp.content)
+        # def server_thread():
+        #     # Create and set a new event loop in this thread
+        #     loop = asyncio.new_event_loop()
+        #     sc.sticky['ws_loop'] = loop
+        #     asyncio.set_event_loop(loop)
+        #     try:
+        #         # Start the WebSocket server on this loop
+        #         start_srv = websockets.serve(handler, i_host, i_port)
+        #         server = loop.run_until_complete(start_srv)
+        #         sc.sticky['ws_server'] = server
+        #         sc.sticky['status'] = f"Listening ws://{i_host}:{i_port}"
+        #         ghenv.Component.ExpireSolution(True)  # noqa: F821
+        #         # Serve forever until stopped
+        #         loop.run_forever()
+        #     except Exception as ex:
+        #         sc.sticky['status'] = f"Server error: {type(ex).__name__}: {ex}"
+        #         ghenv.Component.ExpireSolution(True)  # noqa: F821
+        #     finally:
+        #         # Cleanup: wait for server to close then shutdown loop
+        #         srv = sc.sticky.get('ws_server')
+        #         if srv:
+        #             loop.run_until_complete(srv.wait_closed())
+        #         loop.close()
+        #         sc.sticky['ws_loop'] = None
+        #         sc.sticky['ws_server'] = None
 
-                doc = Rhino.RhinoDoc.ActiveDoc
-                before_ids = {o.Id for o in doc.Objects}
+        # def start():
+        #     # Begin server thread on rising edge
+        #     if sc.sticky['ws_thread'] is None:
+        #         sc.sticky['status'] = 'Starting WebSocket server...'
+        #         ghenv.Component.Message = sc.sticky['status']  # noqa: F821
+        #         t = threading.Thread(target=server_thread, daemon=True)
+        #         sc.sticky['ws_thread'] = t
+        #         t.start()
 
-                opts = Rhino.FileIO.FilePlyReadOptions()
-                ok = Rhino.FileIO.FilePly.Read(tmp, doc, opts)
-                if not ok:
-                    raise RuntimeError("Rhino.FilePly.Read failed")
+        # def stop():
+        #     # Signal server and loop to stop
+        #     server = sc.sticky.get('ws_server')
+        #     loop   = sc.sticky.get('ws_loop')
+        #     if server and loop:
+        #         loop.call_soon_threadsafe(server.close)
+        #         loop.call_soon_threadsafe(loop.stop)
+        #     sc.sticky['status'] = 'Stopped'
+        #     sc.sticky['ws_buffer'] = []
+        #     sc.sticky['ws_thread'] = None
+        #     ghenv.Component.Message = sc.sticky['status']  # noqa: F821
 
-                after_ids = {o.Id for o in doc.Objects}
-                new_ids = after_ids - before_ids
+        # # Handle toggles
+        # if i_start and not sc.sticky['prev_start']:
+        #     start()
+        # if i_stop and not sc.sticky['prev_stop']:
+        #     stop()
+        # if i_load and not sc.sticky['prev_load']:
+        #     buf = sc.sticky['ws_buffer']
+        #     if buf:
+        #         pc = rg.PointCloud()
+        #         for pt in buf:
+        #             pc.Add(rg.Point3d(pt['x'], pt['y'], pt['z']), sd.Color.White)
+        #         sc.sticky['ws_latest'] = pc
+        #         sc.sticky['status'] = f"Retrieved {pc.Count} pts"
+        #         sc.sticky['ws_buffer'] = []
+        #     else:
+        #         sc.sticky['status'] = 'No data buffered'
+        #     ghenv.Component.Message = sc.sticky['status']  # noqa: F821
 
-                geom = None
-                for guid in new_ids:
-                    g = doc.Objects.FindId(guid).Geometry
-                    if isinstance(g, rg.PointCloud):
-                        geom = g.Duplicate()
-                        break
-                    elif isinstance(g, rg.Mesh):
-                        geom = g.DuplicateMesh()
-                        break
+        # # Update previous states
+        # sc.sticky['prev_start'] = i_start
+        # sc.sticky['prev_stop']  = i_stop
+        # sc.sticky['prev_load']  = i_load
 
-                for guid in new_ids:
-                    doc.Objects.Delete(guid, True)
-                doc.Views.Redraw()
+        # # Always update message
+        # ghenv.Component.Message = sc.sticky['status']  # noqa: F821
 
-                sc.sticky['imported_geom']  = geom
-                count = geom.Count if isinstance(geom, rg.PointCloud) else geom.Vertices.Count
-                if isinstance(geom, rg.PointCloud):
-                    sc.sticky['status_message'] = f"Done: {count} points"
-                else:
-                    sc.sticky['status_message'] = f"Done: {count} vertices"
-                ghenv.Component.Message = sc.sticky.get('status_message')  # noqa: F821
-
-            except Exception as e:
-                sc.sticky['imported_geom'] = None
-                sc.sticky['status_message'] = f"Error: {e}"
-            finally:
-                try:
-                    os.remove(tmp)
-                except Exception:
-                    pass
-                sc.sticky['thread_running'] = False
-                ghenv.Component.ExpireSolution(True)  # noqa: F821
-
-        if sc.sticky['ply_url'] != i_ply_url:
-            sc.sticky['ply_url'] = i_ply_url
-            sc.sticky['status_message'] = "URL changed. Press Load"
-            sc.sticky['thread_running'] = False
-            sc.sticky['prev_load'] = False
-
-        if i_load and not sc.sticky['prev_load'] and not sc.sticky['thread_running']:
-            sc.sticky['status_message'] = "Loading..."
-            sc.sticky['thread_running'] = True
-            threading.Thread(target=_import_job, args=(i_ply_url,), daemon=True).start()
-
-        sc.sticky['prev_load'] = i_load
-        ghenv.Component.Message = sc.sticky.get('status_message', "")  # noqa: F821
-
-        # output
-        o_geometry = sc.sticky.get('imported_geom')
-
-        return [o_geometry]
+        # o_cloud = sc.sticky.get('ws_latest')
+        # return [o_cloud]

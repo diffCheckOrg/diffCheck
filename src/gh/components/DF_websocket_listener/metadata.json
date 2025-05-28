@@ -1,11 +1,11 @@
 {
-    "name": "DFWEBSOCKETListener",
+    "name": "DFWSListener",
     "nickname": "WSIn",
     "category": "diffCheck",
     "subcategory": "IO",
-    "description": "This component reads a ply file from the internet.",
+    "description": "This component receives a pcd via websocket connection.",
     "exposure": 4,
-    "instanceGuid": "909d9a4f-2698-4fbf-8dcb-2005f51e047f",
+    "instanceGuid": "4e87cc43-8f9f-4f8f-a63a-49f76229db3e",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -14,9 +14,9 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_load",
-                "nickname": "i_load",
-                "description": "Button to import ply from url.",
+                "name": "i_start",
+                "nickname": "i_start",
+                "description": "Button to start the TCP server",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -26,9 +26,45 @@
                 "typeHintID": "bool"
             },
             {
-                "name": "i_ply_url",
-                "nickname": "i_ply_url",
-                "description": "The url where to get the pointcloud",
+                "name": "i_load",
+                "nickname": "i_load",
+                "description": "Button to get the latest PCD from the buffer",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_stop",
+                "nickname": "i_stop",
+                "description": "Stop the server and release the port",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_port",
+                "nickname": "i_port",
+                "description": "The port for the connection",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            },
+            {
+                "name": "i_host",
+                "nickname": "i_host",
+                "description": "The host for the connection",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -40,9 +76,9 @@
         ],
         "outputParameters": [
             {
-                "name": "o_geometry",
-                "nickname": "o_geo",
-                "description": "The mesh or pcd that was imported.",
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The pcd that was received.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
