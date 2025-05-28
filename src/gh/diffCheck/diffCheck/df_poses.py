@@ -53,7 +53,9 @@ class DFPosesAssembly:
         for i, pose in enumerate(new_poses):
             if f"element_{i}" not in self.poses_per_element_dictionary:
                 self.poses_per_element_dictionary[f"element_{i}"] = DFPosesBeam({}, 4)
-            self.poses_per_element_dictionary[f"element_{i}"].add_pose(pose, self.n_step + 1)
+                for j in range(self.n_step):
+                    self.poses_per_element_dictionary[f"element_{i}"].add_pose(None, j)
+            self.poses_per_element_dictionary[f"element_{i}"].add_pose(pose, self.n_step)
         self.n_step += 1
 
     def get_last_poses(self):
@@ -64,7 +66,7 @@ class DFPosesAssembly:
             return None
         last_poses = []
         for i in range(len(self.poses_per_element_dictionary)):
-            last_poses.append(self.poses_per_element_dictionary[f"element_{i}"].poses_dictionnary[f"pose_{self.n_step}"])
+            last_poses.append(self.poses_per_element_dictionary[f"element_{i}"].poses_dictionnary[f"pose_{self.n_step-1}"])
         return last_poses
 
     def reset(self):
