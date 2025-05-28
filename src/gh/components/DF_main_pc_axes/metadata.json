@@ -15,8 +15,8 @@
         "inputParameters": [
             {
                 "name": "i_clouds",
-                "nickname": "i_cloud",
-                "description": "cloud whose main axes are to be calculated",
+                "nickname": "i_clouds",
+                "description": "clouds whose main axes are to be calculated",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
