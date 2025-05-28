@@ -42,4 +42,6 @@ namespace diffCheck::io
     std::string GetRoofQuarterPlyPath();
     /// @brief Get the path to the plane point cloud with one outlier
     std::string GetPlanePCWithOneOutliers();
+    /// @brief Get the path to the two connected planes ply test file
+    std::string GetTwoConnectedPlanesPlyPath();
 } // namespace diffCheck::io

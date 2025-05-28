@@ -68,4 +68,11 @@ namespace diffCheck::io
         std::filesystem::path pathCloud = pathTestData / "test_pc_for_SOR_101pts_with_1_outlier.ply";
         return pathCloud.string();
     }
+
+    std::string GetTwoConnectedPlanesPlyPath()
+    {
+        std::filesystem::path pathTestData = GetTestDataDir();
+        std::filesystem::path pathCloud = pathTestData / "two_connected_planes_with_normals.ply";
+        return pathCloud.string();
+    }
 } // namespace diffCheck::io

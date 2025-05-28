@@ -8,6 +8,8 @@
 
 #include <cilantro/utilities/point_cloud.hpp>
 #include <cilantro/core/nearest_neighbors.hpp>
+#include <cilantro/clustering/kmeans.hpp>
+
 
 namespace diffCheck::geometry
 {
@@ -88,6 +90,14 @@ namespace diffCheck::geometry
          * @see https://www.open3d.org/docs/latest/cpp_api/classopen3d_1_1geometry_1_1_point_cloud.html#a9c34dee60f36ec36a7de4ae2d55623cd
          */
         void RemoveStatisticalOutliers(int nbNeighbors, double stdRatio);
+
+        /**
+         * @brief Get the nCompoments principal axes of the normals of the point cloud
+         * It is used to compute the pose of "boxy" point clouds. It relies on KMeans clustering to find the main axes of the point cloud.
+         *  @param nComponents the number of components to compute (default 6, each of 3 main axes in both directions)
+         * @return std::vector<Eigen::Vector3d> the principal axes of the point cloud ordered by number of normals
+         */
+        std::vector<Eigen::Vector3d> GetPrincipalAxes(int nComponents = 6);
 
     public:  ///< Downsamplers
         /**
