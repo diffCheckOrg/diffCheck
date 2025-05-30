@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: diffCheck
-Version: 0.0.37
+Version: 1.3.0
 Summary: DiffCheck is a package to check the differences between two timber structures
 Home-page: https://github.com/diffCheckOrg/diffCheck
 Author: Andrea Settimi, Damien Gilliard, Eleni Skevaki, Marirena Kladeftira, Julien Gamerro, Stefana Parascho, and Yves Weinand
@@ -11,6 +11,14 @@ Classifier: Programming Language :: Python :: 3.9
 Description-Content-Type: text/markdown
 Requires-Dist: numpy
 Requires-Dist: pybind11>=2.5.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary
 
 # DiffCheck: CAD-Scan comparison
 
@@ -22,4 +30,4 @@ Visit the [DiffCheck website](https://diffcheckorg.github.io/diffCheck/) for mor
 
 ![alt text](demo.png)
 
-The software is developed by the [Laboratory of Timber Construction (IBOIS)](https://www.epfl.ch/labs/ibois/) and the [Laboratory for Creative Computation (CRCL)](https://www.epfl.ch/labs/crcl/) at [Polytechnique FÃ©dÃ©rale de Lausanne (EPFL)](https://www.epfl.ch/en/).
+The software is developed by the [Laboratory of Timber Construction (IBOIS)](https://www.epfl.ch/labs/ibois/) and the [Laboratory for Creative Computation (CRCL)](https://www.epfl.ch/labs/crcl/) at [Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).

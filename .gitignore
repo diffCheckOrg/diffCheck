@@ -259,3 +259,6 @@ cython_debug/
 #######################################
 # get rid of output folder
 _build/
+
+# macos
+.DS_Store

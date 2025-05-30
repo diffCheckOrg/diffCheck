@@ -24,6 +24,6 @@ setup(
     ],
     include_package_data=True,
     package_data={
-        "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd"]
+        "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd", 'diffCheck/*.so', 'diffCheck/*.dylib']
         },
 )
