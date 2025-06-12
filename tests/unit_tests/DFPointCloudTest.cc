@@ -139,10 +139,10 @@ TEST_F(DFPointCloudTestFixture, AddPoints) {
     EXPECT_EQ(dfPointCloud.GetNumPoints(), 7379 * 2);
 }
 
-// TEST_F(DFPointCloudTestFixture, ComputeAABB) {
-//     std::vector<Eigen::Vector3d> bbox = dfPointCloud.GetAxixAlignedBoundingBox();
-//     EXPECT_EQ(bbox.size(), 2);
-// } // # Segfault
+TEST_F(DFPointCloudTestFixture, ComputeAABB) {
+    std::vector<Eigen::Vector3d> bbox = dfPointCloud.GetAxixAlignedBoundingBox();
+    EXPECT_EQ(bbox.size(), 2);
+} // # Segfault
 
 TEST_F(DFPointCloudTestFixture, ComputeOBB) {
     std::vector<Eigen::Vector3d> obb = dfPointCloud.GetTightBoundingBox();

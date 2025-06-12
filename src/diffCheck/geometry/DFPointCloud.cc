@@ -118,11 +118,33 @@ namespace diffCheck::geometry
 
     std::vector<Eigen::Vector3d> DFPointCloud::GetAxixAlignedBoundingBox()
     {
+        if (this->Points.empty()) {
+            return {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+        }
+
+        Eigen::Vector3d minBound, maxBound;
+
+#ifdef __APPLE__
+        // Compute min and max bounds directly from points
+        minBound = this->Points.front();
+        maxBound = this->Points.front();
+
+        for (const auto& point : this->Points) {
+            minBound = minBound.cwiseMin(point);
+            maxBound = maxBound.cwiseMax(point);
+        }
+#else
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
         auto boundingBox = O3DPointCloud->GetAxisAlignedBoundingBox();
-        std::vector<Eigen::Vector3d> extremePoints;
-        extremePoints.push_back(boundingBox.GetMinBound());
+
+        boundingBox.GetMinBound());
         extremePoints.push_back(boundingBox.GetMaxBound());
+
+#endif
+        std::vector<Eigen::Vector3d> extremePoints;
+        extremePoints.push_back(minBound);
+        extremePoints.push_back(maxBound);
+
         return extremePoints;
     }
 
