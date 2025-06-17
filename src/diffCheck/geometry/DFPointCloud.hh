@@ -89,6 +89,14 @@ namespace diffCheck::geometry
          */
         void RemoveStatisticalOutliers(int nbNeighbors, double stdRatio);
 
+        /**
+         *  @brief Crop the point cloud to a bounding box defined by the min and max bounds
+         * 
+         *  @param minBound the minimum bound of the bounding box as an Eigen::Vector3d
+         *  @param maxBound the maximum bound of the bounding box as an Eigen::Vector3d
+         */
+        void Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound);
+
     public:  ///< Downsamplers
         /**
          * @brief Downsample the point cloud with voxel grid
