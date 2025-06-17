@@ -1,118 +1,118 @@
 #! python3
 
 from ghpythonlib.componentbase import executingcomponent as component
-# import threading
-# import asyncio
-# import json
+import threading
+import asyncio
+import json
 import scriptcontext as sc
-# import Rhino.Geometry as rg
-# import System.Drawing as sd
-#import websockets
+import Rhino.Geometry as rg
+import System.Drawing as sd
+from websockets.server import serve
 
 
 class DFWSServerListener(component):
     def RunScript(self,
             i_start: bool,
-            i_load: bool,
             i_stop: bool,
-            i_host: str,
-            i_port: int):     # Port to bind
+            i_load: bool,
+            i_port: int,
+            i_host: str):
 
-        # --- Persistent state across runs ---
-        sc.sticky.setdefault('ws_thread', None)
-        sc.sticky.setdefault('ws_loop', None)
+        # ─── Persistent state across runs ────────────────────────────────────
         sc.sticky.setdefault('ws_server', None)
-        sc.sticky.setdefault('ws_buffer', [])
-        sc.sticky.setdefault('ws_latest', None)
-        sc.sticky.setdefault('status', 'Idle')
+        sc.sticky.setdefault('ws_loop',   None)
+        sc.sticky.setdefault('ws_thread', None)
+        sc.sticky.setdefault('last_pcd',  None)
+        sc.sticky.setdefault('loaded_pcd', None)
+        sc.sticky.setdefault('ws_logs',   [])
+        sc.sticky.setdefault('ws_thread_started', False)
         sc.sticky.setdefault('prev_start', False)
-        sc.sticky.setdefault('prev_stop', False)
-        sc.sticky.setdefault('prev_load', False)
+        sc.sticky.setdefault('prev_stop',  False)
+        sc.sticky.setdefault('prev_load',  False)
 
-        # async def handler(ws, path):
-        #     """Receive JSON-encoded dicts and buffer valid points."""
-        #     try:
-        #         async for msg in ws:
-        #             data = json.loads(msg)
-        #             if isinstance(data, dict) and {'x','y','z'}.issubset(data):
-        #                 sc.sticky['ws_buffer'].append(data)
-        #                 sc.sticky['status'] = f"Buffered {len(sc.sticky['ws_buffer'])} pts"
-        #                 ghenv.Component.ExpireSolution(True)  # noqa: F821
-        #     except Exception:
-        #         pass
+        logs = sc.sticky['ws_logs']
 
-        # def server_thread():
-        #     # Create and set a new event loop in this thread
-        #     loop = asyncio.new_event_loop()
-        #     sc.sticky['ws_loop'] = loop
-        #     asyncio.set_event_loop(loop)
-        #     try:
-        #         # Start the WebSocket server on this loop
-        #         start_srv = websockets.serve(handler, i_host, i_port)
-        #         server = loop.run_until_complete(start_srv)
-        #         sc.sticky['ws_server'] = server
-        #         sc.sticky['status'] = f"Listening ws://{i_host}:{i_port}"
-        #         ghenv.Component.ExpireSolution(True)  # noqa: F821
-        #         # Serve forever until stopped
-        #         loop.run_forever()
-        #     except Exception as ex:
-        #         sc.sticky['status'] = f"Server error: {type(ex).__name__}: {ex}"
-        #         ghenv.Component.ExpireSolution(True)  # noqa: F821
-        #     finally:
-        #         # Cleanup: wait for server to close then shutdown loop
-        #         srv = sc.sticky.get('ws_server')
-        #         if srv:
-        #             loop.run_until_complete(srv.wait_closed())
-        #         loop.close()
-        #         sc.sticky['ws_loop'] = None
-        #         sc.sticky['ws_server'] = None
+        # ─── STOP server ────────────────────────────────────────────────────
+        if i_stop and sc.sticky.pop('ws_thread_started', False):
+            server = sc.sticky.pop('ws_server', None)
+            loop = sc.sticky.pop('ws_loop',   None)
+            if server and loop:
+                try:
+                    server.close()
+                    asyncio.run_coroutine_threadsafe(server.wait_closed(), loop)
+                    logs.append("WebSocket server close initiated")
+                except Exception as e:
+                    logs.append(f"Error closing server: {e}")
+            sc.sticky['ws_thread'] = None
+            logs.append("Cleared previous WebSocket server flag")
+            ghenv.Component.ExpireSolution(True)  # noqa: F821
 
-        # def start():
-        #     # Begin server thread on rising edge
-        #     if sc.sticky['ws_thread'] is None:
-        #         sc.sticky['status'] = 'Starting WebSocket server...'
-        #         ghenv.Component.Message = sc.sticky['status']  # noqa: F821
-        #         t = threading.Thread(target=server_thread, daemon=True)
-        #         sc.sticky['ws_thread'] = t
-        #         t.start()
+        # ─── START server ────────────────────────────────────────────────────
+        if i_start and not sc.sticky['ws_thread_started']:
 
-        # def stop():
-        #     # Signal server and loop to stop
-        #     server = sc.sticky.get('ws_server')
-        #     loop   = sc.sticky.get('ws_loop')
-        #     if server and loop:
-        #         loop.call_soon_threadsafe(server.close)
-        #         loop.call_soon_threadsafe(loop.stop)
-        #     sc.sticky['status'] = 'Stopped'
-        #     sc.sticky['ws_buffer'] = []
-        #     sc.sticky['ws_thread'] = None
-        #     ghenv.Component.Message = sc.sticky['status']  # noqa: F821
+            async def echo(ws, path):
+                logs.append("[GH] Client connected")
+                try:
+                    async for msg in ws:
+                        try:
+                            pcd = json.loads(msg)
+                            if isinstance(pcd, list) and all(isinstance(pt, (list, tuple)) and len(pt) == 6 for pt in pcd):
+                                sc.sticky['last_pcd'] = pcd
+                                logs.append(f"Received PCD with {len(pcd)} points")
+                            else:
+                                logs.append("Invalid PCD format")
+                        except Exception as inner:
+                            logs.append(f"PCD parse error: {inner}")
+                except Exception as outer:
+                    logs.append(f"Handler crashed: {outer}")
 
-        # # Handle toggles
-        # if i_start and not sc.sticky['prev_start']:
-        #     start()
-        # if i_stop and not sc.sticky['prev_stop']:
-        #     stop()
-        # if i_load and not sc.sticky['prev_load']:
-        #     buf = sc.sticky['ws_buffer']
-        #     if buf:
-        #         pc = rg.PointCloud()
-        #         for pt in buf:
-        #             pc.Add(rg.Point3d(pt['x'], pt['y'], pt['z']), sd.Color.White)
-        #         sc.sticky['ws_latest'] = pc
-        #         sc.sticky['status'] = f"Retrieved {pc.Count} pts"
-        #         sc.sticky['ws_buffer'] = []
-        #     else:
-        #         sc.sticky['status'] = 'No data buffered'
-        #     ghenv.Component.Message = sc.sticky['status']  # noqa: F821
+            async def server_coro():
+                loop = asyncio.get_running_loop()
+                sc.sticky['ws_loop'] = loop
 
-        # # Update previous states
-        # sc.sticky['prev_start'] = i_start
-        # sc.sticky['prev_stop']  = i_stop
-        # sc.sticky['prev_load']  = i_load
+                logs.append(f"server_coro starting on {i_host}:{i_port}")
+                server = await serve(echo, i_host, i_port)
+                sc.sticky['ws_server'] = server
+                logs.append(f"Listening on ws://{i_host}:{i_port}")
+                await server.wait_closed()
+                logs.append("Server coroutine exited")
 
-        # # Always update message
-        # ghenv.Component.Message = sc.sticky['status']  # noqa: F821
+            def run_server():
+                try:
+                    asyncio.run(server_coro())
+                except Exception as ex:
+                    logs.append(f"WebSocket server ERROR: {ex}")
 
-        # o_cloud = sc.sticky.get('ws_latest')
-        # return [o_cloud]
+            t = threading.Thread(target=run_server, daemon=True)
+            t.start()
+            sc.sticky['ws_thread'] = t
+            sc.sticky['ws_thread_started'] = True
+            ghenv.Component.ExpireSolution(True)  # noqa: F821
+
+        # ─── LOAD buffered PCD on i_load rising edge ─────────────────────────
+        if i_load and not sc.sticky['prev_load']:
+            sc.sticky['loaded_pcd'] = sc.sticky.get('last_pcd')
+            cnt = len(sc.sticky['loaded_pcd']) if sc.sticky['loaded_pcd'] else 0
+            logs.append(f"Loaded pcd with {cnt} points")
+            ghenv.Component.ExpireSolution(True)  # noqa: F821
+
+        # ─── BUILD output PointCloud ────────────────────────────────────────
+        raw = sc.sticky.get('loaded_pcd')
+        if isinstance(raw, list) and all(isinstance(pt, (list, tuple)) and len(pt) == 6 for pt in raw):
+            pc = rg.PointCloud()
+            for x, y, z, r, g, b in raw:
+                pt = rg.Point3d(x, y, z)
+                col = sd.Color.FromArgb(r, g, b)
+                pc.Add(pt, col)
+            o_cloud = pc
+        else:
+            o_cloud = None
+
+        # ─── UPDATE UI message & return outputs ─────────────────────────────
+        ghenv.Component.Message = logs[-1] if logs else 'Waiting'  # noqa: F821
+        sc.sticky['prev_start'] = i_start
+        sc.sticky['prev_stop']  = i_stop
+        sc.sticky['prev_load']  = i_load
+
+
+        return [o_cloud]

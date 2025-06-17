@@ -1,37 +1,31 @@
-# import asyncio
-# import websockets
-# import json
-# import random
-
-URI = "ws://127.0.0.1:8765"  # match i_host and i_port on your GH component
-SEND_INTERVAL = 2.0         # seconds between sends
+import asyncio
+import websockets
+import random
+import json
 
 
-# async def send_points(uri):
-#     """
-#     Connects once to the WebSocket server and then
-#     sends a random point dict every SEND_INTERVAL seconds.
-#     """
-#     async with websockets.connect(uri) as ws:
-#         print(f"Connected to {uri}")
-#         while True:
-#             # Generate a random point
-#             pt = {
-#                 "x": random.uniform(0, 10),
-#                 "y": random.uniform(0, 10),
-#                 "z": random.uniform(0, 10),
-#             }
-#             msg = json.dumps(pt)
-#             await ws.send(msg)
-#             print(f"Sent point: {pt}")
-#             await asyncio.sleep(SEND_INTERVAL)
+def random_colored_point():
+    x, y, z = [round(random.uniform(-10, 10), 2) for _ in range(3)]
+    r, g, b = [random.randint(0, 255) for _ in range(3)]
+    return [x, y, z, r, g, b]
 
 
-# def main():
-#     try:
-#         asyncio.run(send_points(URI))
-#     except KeyboardInterrupt:
-#         print("\nSender interrupted and exiting.")
+async def send_pointcloud(host="127.0.0.1", port=8765):
+    uri = f"ws://{host}:{port}"
+    print(f"Connecting to {uri}…")
+    try:
+        async with websockets.connect(uri) as ws:
+            counter = 0
+            while True:
+                counter += 1
+                # generate and send 1 000 random points
+                pcd = [random_colored_point() for _ in range(1000)]
+                await ws.send(json.dumps(pcd))
+                print(f"[{counter}] Sent PCD with {len(pcd)} points")
+                await asyncio.sleep(5)
 
-# if __name__ == "__main__":
-#     main()
+    except Exception as e:
+        print(f"Connection error: {e}")
+
+if __name__ == "__main__":
+    asyncio.run(send_pointcloud(host="127.0.0.1", port=9000))
