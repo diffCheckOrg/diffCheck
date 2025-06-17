@@ -216,6 +216,21 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    void DFPointCloud::Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound)
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudCropped = O3DPointCloud->Crop(open3d::geometry::AxisAlignedBoundingBox(minBound, maxBound));
+        this->Points.clear();
+        for (auto &point : O3DPointCloudCropped->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudCropped->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudCropped->normals_)
+            this->Normals.push_back(normal);
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
