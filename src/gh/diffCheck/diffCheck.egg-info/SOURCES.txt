@@ -9,7 +9,7 @@ diffCheck/df_joint_detector.py
 diffCheck/df_transformations.py
 diffCheck/df_util.py
 diffCheck/df_visualization.py
-diffCheck/diffcheck_bindings.cp312-win_amd64.pyd
+diffCheck/diffcheck_bindings.cp39-win_amd64.pyd
 diffCheck.egg-info/PKG-INFO
 diffCheck.egg-info/SOURCES.txt
 diffCheck.egg-info/dependency_links.txt
