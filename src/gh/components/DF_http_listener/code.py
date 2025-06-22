@@ -8,9 +8,20 @@ import threading
 import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
+from diffCheck import df_gh_canvas
 
 
 class DFHTTPListener(component):
+
+    def __init__(self):
+        try:
+            ghenv.Component.ExpireSolution(True)  # noqa: F821
+            ghenv.Component.Attributes.PerformLayout()  # noqa: F821
+        except NameError:
+            pass
+
+        df_gh_canvas.add_button(ghenv.Component, "Load", 0, x_offset=60)  # noqa: F821
+        df_gh_canvas.add_panel(ghenv.Component, "Ply_url", "https://github.com/diffCheckOrg/diffCheck/raw/refs/heads/main/tests/test_data/cube_mesh.ply", 1, 60, 20)  # noqa: F821
 
     def RunScript(self,
             i_load: bool,
