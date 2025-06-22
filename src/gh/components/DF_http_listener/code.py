@@ -16,11 +16,14 @@ class DFHTTPListener(component):
             i_load: bool,
             i_ply_url: str):
 
-        sc.sticky.setdefault('ply_url', None) #last url processed
-        sc.sticky.setdefault('imported_geom', None) #geo imported from ply
-        sc.sticky.setdefault('status_message','Idle') #status message on component
-        sc.sticky.setdefault('prev_load', False) #previous state of toggle
-        sc.sticky.setdefault('thread_running', False) #is an import thread active?
+        prefix = 'http'
+
+        # initialize sticky variables
+        sc.sticky.setdefault(f'{prefix}_ply_url', None)  # last url processed
+        sc.sticky.setdefault(f'{prefix}_imported_geom', None)  # last geo imported from ply
+        sc.sticky.setdefault(f'{prefix}_status_message', "Waiting..")  # status message on component
+        sc.sticky.setdefault(f'{prefix}_prev_load', False)  # previous state of toggle
+        sc.sticky.setdefault(f'{prefix}_thread_running', False)  # is a background thread running?
 
         def _import_job(url):
             """
@@ -30,7 +33,10 @@ class DFHTTPListener(component):
             - Extracts the new geometry (point cloud or mesh)
             - Cleans up the temporary file and document objects
             - Updates sticky state and status message
+            - Signals to GH that it should re-solve
             """
+
+            tmp = None
             try:
                 if not url.lower().endswith('.ply'):
                     raise ValueError("URL must end in .ply")
@@ -71,43 +77,43 @@ class DFHTTPListener(component):
                 doc.Views.Redraw()
 
                 # store new geometry
-                sc.sticky['imported_geom']  = geom
+                sc.sticky[f'{prefix}_imported_geom'] = geom
                 count = geom.Count if isinstance(geom, rg.PointCloud) else geom.Vertices.Count
                 if isinstance(geom, rg.PointCloud):
-                    sc.sticky['status_message'] = f"Done: {count} points"
+                    sc.sticky[f'{prefix}_status_message'] = f"Loaded pcd with {count} pts"
                 else:
-                    sc.sticky['status_message'] = f"Done: {count} vertices"
-                ghenv.Component.Message = sc.sticky.get('status_message')  # noqa: F821
+                    sc.sticky[f'{prefix}_status_message'] = f"Loaded mesh wih {count} vertices"
+                ghenv.Component.Message = sc.sticky.get(f'{prefix}_status_message')  # noqa: F821
 
             except Exception as e:
-                sc.sticky['imported_geom'] = None
-                sc.sticky['status_message'] = f"Error: {e}"
+                sc.sticky[f'{prefix}_imported_geom'] = None
+                sc.sticky[f'{prefix}_status_message'] = f"Error: {e}"
             finally:
                 try:
                     os.remove(tmp)
                 except Exception:
                     pass
                 # mark thread as finished
-                sc.sticky['thread_running'] = False
+                sc.sticky[f'{prefix}_thread_running'] = False
                 ghenv.Component.ExpireSolution(True)  # noqa: F821
 
         # check if the URL input has changed
-        if sc.sticky['ply_url'] != i_ply_url:
-            sc.sticky['ply_url'] = i_ply_url
-            sc.sticky['status_message'] = "URL changed. Press Load"
-            sc.sticky['thread_running'] = False
-            sc.sticky['prev_load'] = False
+        if sc.sticky[f'{prefix}_ply_url'] != i_ply_url:
+            sc.sticky[f'{prefix}_ply_url'] = i_ply_url
+            sc.sticky[f'{prefix}_status_message'] = "URL changed. Press Load"
+            sc.sticky[f'{prefix}_thread_running'] = False
+            sc.sticky[f'{prefix}_prev_load'] = False
 
         # start importing if Load toggle is pressed and import thread is not already running
-        if i_load and not sc.sticky['prev_load'] and not sc.sticky['thread_running']:
-            sc.sticky['status_message'] = "Loading..."
-            sc.sticky['thread_running'] = True
+        if i_load and not sc.sticky[f'{prefix}_prev_load'] and not sc.sticky[f'{prefix}_thread_running']:
+            sc.sticky[f'{prefix}_status_message'] = "Loading..."
+            sc.sticky[f'{prefix}_thread_running'] = True
             threading.Thread(target=_import_job, args=(i_ply_url,), daemon=True).start()
 
-        sc.sticky['prev_load'] = i_load
-        ghenv.Component.Message = sc.sticky.get('status_message', "")  # noqa: F821
+        sc.sticky[f'{prefix}_prev_load'] = i_load
+        ghenv.Component.Message = sc.sticky.get(f'{prefix}_status_message', "")  # noqa: F821
 
         # output
-        o_geometry = sc.sticky.get('imported_geom')
+        o_geometry = sc.sticky.get(f'{prefix}_imported_geom')
 
         return [o_geometry]

@@ -3,7 +3,7 @@
     "nickname": "TCPIn",
     "category": "diffCheck",
     "subcategory": "IO",
-    "description": "This component get data from a tcp sender",
+    "description": "This component get point cloud data from a tcp sender",
     "exposure": 4,
     "instanceGuid": "61a9cc27-864d-4892-bd39-5d97dbccbefb",
     "ghpython": {
@@ -26,6 +26,18 @@
                 "typeHintID": "bool"
             },
             {
+                "name": "i_stop",
+                "nickname": "i_stop",
+                "description": "Button to stop the server and release the port",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
                 "name": "i_load",
                 "nickname": "i_load",
                 "description": "Button to get the latest PCD from the buffer",
@@ -38,33 +50,9 @@
                 "typeHintID": "bool"
             },
             {
-                "name": "i_stop",
-                "nickname": "i_stop",
-                "description": "Stop the server and release the port",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
-            {
-                "name": "i_port",
-                "nickname": "i_port",
-                "description": "The port for the connection",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "int"
-            },
-            {
                 "name": "i_host",
                 "nickname": "i_host",
-                "description": "The host for the connection",
+                "description": "The host to use for the connection",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -72,13 +60,25 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "str"
+            },
+            {
+                "name": "i_port",
+                "nickname": "i_port",
+                "description": "The port to use for the connection",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
             }
         ],
         "outputParameters": [
             {
                 "name": "o_cloud",
                 "nickname": "o_cloud",
-                "description": "The pcd that was received.",
+                "description": "The Rhino pcd that was received.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

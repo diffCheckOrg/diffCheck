@@ -10,7 +10,7 @@ def random_colored_point():
     return [x, y, z, r, g, b]
 
 
-async def send_pointcloud(host="127.0.0.1", port=8765):
+async def send_pointcloud(host="127.0.0.1", port=9000):
     uri = f"ws://{host}:{port}"
     print(f"Connecting to {uri}…")
     try:

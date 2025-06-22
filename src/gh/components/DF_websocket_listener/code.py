@@ -15,27 +15,29 @@ class DFWSServerListener(component):
             i_start: bool,
             i_stop: bool,
             i_load: bool,
-            i_port: int,
-            i_host: str):
+            i_host: str,
+            i_port: int):
 
-        # ─── Persistent state across runs ────────────────────────────────────
-        sc.sticky.setdefault('ws_server', None)
-        sc.sticky.setdefault('ws_loop',   None)
-        sc.sticky.setdefault('ws_thread', None)
-        sc.sticky.setdefault('last_pcd',  None)
-        sc.sticky.setdefault('loaded_pcd', None)
-        sc.sticky.setdefault('ws_logs',   [])
-        sc.sticky.setdefault('ws_thread_started', False)
-        sc.sticky.setdefault('prev_start', False)
-        sc.sticky.setdefault('prev_stop',  False)
-        sc.sticky.setdefault('prev_load',  False)
+        prefix = 'ws'
 
-        logs = sc.sticky['ws_logs']
+        # Persistent state across runs
+        sc.sticky.setdefault(f'{prefix}_ws_server', None)
+        sc.sticky.setdefault(f'{prefix}_ws_loop',   None)
+        sc.sticky.setdefault(f'{prefix}_ws_thread', None)
+        sc.sticky.setdefault(f'{prefix}_last_pcd',  None)
+        sc.sticky.setdefault(f'{prefix}_loaded_pcd', None)
+        sc.sticky.setdefault(f'{prefix}_ws_logs',   [])
+        sc.sticky.setdefault(f'{prefix}_ws_thread_started', False)
+        sc.sticky.setdefault(f'{prefix}_prev_start', False)
+        sc.sticky.setdefault(f'{prefix}_prev_stop',  False)
+        sc.sticky.setdefault(f'{prefix}_prev_load',  False)
 
-        # ─── STOP server ────────────────────────────────────────────────────
-        if i_stop and sc.sticky.pop('ws_thread_started', False):
-            server = sc.sticky.pop('ws_server', None)
-            loop = sc.sticky.pop('ws_loop',   None)
+        logs = sc.sticky[f'{prefix}_ws_logs']
+
+        # STOP server
+        if i_stop and sc.sticky.pop(f'{prefix}_ws_thread_started', False):
+            server = sc.sticky.pop(f'{prefix}_ws_server', None)
+            loop = sc.sticky.pop(f'{prefix}_ws_loop',   None)
             if server and loop:
                 try:
                     server.close()
@@ -43,12 +45,12 @@ class DFWSServerListener(component):
                     logs.append("WebSocket server close initiated")
                 except Exception as e:
                     logs.append(f"Error closing server: {e}")
-            sc.sticky['ws_thread'] = None
+            sc.sticky[f'{prefix}_ws_thread'] = None
             logs.append("Cleared previous WebSocket server flag")
             ghenv.Component.ExpireSolution(True)  # noqa: F821
 
-        # ─── START server ────────────────────────────────────────────────────
-        if i_start and not sc.sticky['ws_thread_started']:
+        # START server
+        if i_start and not sc.sticky[f'{prefix}_ws_thread_started']:
 
             async def echo(ws, path):
                 logs.append("[GH] Client connected")
@@ -57,7 +59,7 @@ class DFWSServerListener(component):
                         try:
                             pcd = json.loads(msg)
                             if isinstance(pcd, list) and all(isinstance(pt, (list, tuple)) and len(pt) == 6 for pt in pcd):
-                                sc.sticky['last_pcd'] = pcd
+                                sc.sticky[f'{prefix}_last_pcd'] = pcd
                                 logs.append(f"Received PCD with {len(pcd)} points")
                             else:
                                 logs.append("Invalid PCD format")
@@ -68,11 +70,11 @@ class DFWSServerListener(component):
 
             async def server_coro():
                 loop = asyncio.get_running_loop()
-                sc.sticky['ws_loop'] = loop
+                sc.sticky[f'{prefix}_ws_loop'] = loop
 
                 logs.append(f"server_coro starting on {i_host}:{i_port}")
                 server = await serve(echo, i_host, i_port)
-                sc.sticky['ws_server'] = server
+                sc.sticky[f'{prefix}_ws_server'] = server
                 logs.append(f"Listening on ws://{i_host}:{i_port}")
                 await server.wait_closed()
                 logs.append("Server coroutine exited")
@@ -85,19 +87,19 @@ class DFWSServerListener(component):
 
             t = threading.Thread(target=run_server, daemon=True)
             t.start()
-            sc.sticky['ws_thread'] = t
-            sc.sticky['ws_thread_started'] = True
+            sc.sticky[f'{prefix}_ws_thread'] = t
+            sc.sticky[f'{prefix}_ws_thread_started'] = True
             ghenv.Component.ExpireSolution(True)  # noqa: F821
 
-        # ─── LOAD buffered PCD on i_load rising edge ─────────────────────────
-        if i_load and not sc.sticky['prev_load']:
-            sc.sticky['loaded_pcd'] = sc.sticky.get('last_pcd')
-            cnt = len(sc.sticky['loaded_pcd']) if sc.sticky['loaded_pcd'] else 0
-            logs.append(f"Loaded pcd with {cnt} points")
+        # LOAD buffered PCD on i_load rising edge
+        if i_load and not sc.sticky[f'{prefix}_prev_load']:
+            sc.sticky[f'{prefix}_loaded_pcd'] = sc.sticky.get(f'{prefix}_last_pcd')
+            cnt = len(sc.sticky[f'{prefix}_loaded_pcd']) if sc.sticky[f'{prefix}_loaded_pcd'] else 0
+            logs.append(f"Loaded pcd with {cnt} pts")
             ghenv.Component.ExpireSolution(True)  # noqa: F821
 
-        # ─── BUILD output PointCloud ────────────────────────────────────────
-        raw = sc.sticky.get('loaded_pcd')
+        # BUILD output PointCloud
+        raw = sc.sticky.get(f'{prefix}_loaded_pcd')
         if isinstance(raw, list) and all(isinstance(pt, (list, tuple)) and len(pt) == 6 for pt in raw):
             pc = rg.PointCloud()
             for x, y, z, r, g, b in raw:
@@ -108,11 +110,10 @@ class DFWSServerListener(component):
         else:
             o_cloud = None
 
-        # ─── UPDATE UI message & return outputs ─────────────────────────────
-        ghenv.Component.Message = logs[-1] if logs else 'Waiting'  # noqa: F821
-        sc.sticky['prev_start'] = i_start
-        sc.sticky['prev_stop']  = i_stop
-        sc.sticky['prev_load']  = i_load
-
+        # UPDATE UI message & return outputs
+        ghenv.Component.Message = logs[-1] if logs else 'Waiting..'  # noqa: F821
+        sc.sticky[f'{prefix}_prev_start'] = i_start
+        sc.sticky[f'{prefix}_prev_stop']  = i_stop
+        sc.sticky[f'{prefix}_prev_load']  = i_load
 
         return [o_cloud]

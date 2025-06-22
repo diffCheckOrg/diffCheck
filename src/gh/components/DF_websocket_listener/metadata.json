@@ -26,18 +26,6 @@
                 "typeHintID": "bool"
             },
             {
-                "name": "i_load",
-                "nickname": "i_load",
-                "description": "Button to get the latest PCD from the buffer",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "bool"
-            },
-            {
                 "name": "i_stop",
                 "nickname": "i_stop",
                 "description": "Stop the server and release the port",
@@ -50,16 +38,16 @@
                 "typeHintID": "bool"
             },
             {
-                "name": "i_port",
-                "nickname": "i_port",
-                "description": "The port for the connection",
+                "name": "i_load",
+                "nickname": "i_load",
+                "description": "Button to get the latest PCD from the buffer",
                 "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "int"
+                "typeHintID": "bool"
             },
             {
                 "name": "i_host",
@@ -72,6 +60,18 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "str"
+            },
+            {
+                "name": "i_port",
+                "nickname": "i_port",
+                "description": "The port to use for the connection",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
             }
         ],
         "outputParameters": [

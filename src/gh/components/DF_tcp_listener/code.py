@@ -12,21 +12,22 @@ import System.Drawing as sd
 class DFTCPListener(component):
     def RunScript(self,
             i_start: bool,
-            i_load: bool,
             i_stop: bool,
-            i_port: int,
-            i_host: str):
+            i_load: bool,
+            i_host: str,
+            i_port: int):
 
-        # Sticky defaults
-        sc.sticky.setdefault('server_sock', None)
-        sc.sticky.setdefault('server_started', False)
-        sc.sticky.setdefault('cloud_buffer_raw', [])
-        sc.sticky.setdefault('latest_cloud', None)
-        sc.sticky.setdefault('status_message', 'Waiting...')
-        sc.sticky.setdefault('prev_start', False)
-        sc.sticky.setdefault('prev_stop', False)
-        sc.sticky.setdefault('prev_load', False)
-        sc.sticky.setdefault('client_socks', [])        # Track client sockets
+        prefix = 'tcp'
+
+        # Sticky initialization
+        sc.sticky.setdefault(f'{prefix}_server_sock', None)
+        sc.sticky.setdefault(f'{prefix}_server_started', False)
+        sc.sticky.setdefault(f'{prefix}_cloud_buffer_raw', [])
+        sc.sticky.setdefault(f'{prefix}_latest_cloud', None)
+        sc.sticky.setdefault(f'{prefix}_status_message', 'Waiting..')
+        sc.sticky.setdefault(f'{prefix}_prev_start', False)
+        sc.sticky.setdefault(f'{prefix}_prev_stop', False)
+        sc.sticky.setdefault(f'{prefix}_prev_load', False)
 
         # Client handler
         def handle_client(conn):
@@ -35,7 +36,7 @@ class DFTCPListener(component):
             """
             buf = b''
             with conn:
-                while sc.sticky.get('server_started', False):
+                while sc.sticky.get(f'{prefix}_server_started', False):
                     try:
                         chunk = conn.recv(4096)
                         if not chunk:
@@ -48,7 +49,7 @@ class DFTCPListener(component):
                             except Exception:
                                 continue
                             if isinstance(raw, list) and all(isinstance(pt, list) and len(pt) == 6 for pt in raw):
-                                sc.sticky['cloud_buffer_raw'] = raw
+                                sc.sticky[f'{prefix}_cloud_buffer_raw'] = raw
                     except Exception:
                         break
 
@@ -73,49 +74,49 @@ class DFTCPListener(component):
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             sock.bind((i_host, i_port))
             sock.listen(1)
-            sc.sticky['server_sock'] = sock
-            sc.sticky['server_started'] = True
-            sc.sticky['status_message'] = f'Listening on {i_host}:{i_port}'
+            sc.sticky[f'{prefix}_server_sock'] = sock
+            sc.sticky[f'{prefix}_server_started'] = True
+            sc.sticky[f'{prefix}_status_message'] = f'Listening on {i_host}:{i_port}'
             # Only accept one connection to keep it long-lived
             threading.Thread(target=server_loop, args=(sock,), daemon=True).start()
 
         def stop_server():
-            sock = sc.sticky.get('server_sock')
+            sock = sc.sticky.get(f'{prefix}_server_sock')
             if sock:
                 try:
                     sock.close()
                 except Exception:
                     pass
-            sc.sticky['server_sock'] = None
-            sc.sticky['server_started'] = False
-            sc.sticky['cloud_buffer_raw'] = []
-            sc.sticky['status_message'] = 'Stopped'
+            sc.sticky[f'{prefix}_server_sock'] = None
+            sc.sticky[f'{prefix}_server_started'] = False
+            sc.sticky[f'{prefix}_cloud_buffer_raw'] = []
+            sc.sticky[f'{prefix}_status_message'] = 'Stopped'
 
         # Start or stop server based on inputs
-        if i_start and not sc.sticky['prev_start']:
+        if i_start and not sc.sticky[f'{prefix}_prev_start']:
             start_server()
-        if i_stop and not sc.sticky['prev_stop']:
+        if i_stop and not sc.sticky[f'{prefix}_prev_stop']:
             stop_server()
 
-        # Load buffered points into PointCloud
-        if i_load and not sc.sticky['prev_load']:
-            raw = sc.sticky.get('cloud_buffer_raw', [])
+        # Load buffered points into Rhino PointCloud
+        if i_load and not sc.sticky[f'{prefix}_prev_load']:
+            raw = sc.sticky.get(f'{prefix}_cloud_buffer_raw', [])
             if raw:
                 pc = rg.PointCloud()
                 for x, y, z, r, g, b in raw:
                     pc.Add(rg.Point3d(x, y, z), sd.Color.FromArgb(int(r), int(g), int(b)))
-                sc.sticky['latest_cloud'] = pc
-                sc.sticky['status_message'] = f'Retrieved {pc.Count} pts'
+                sc.sticky[f'{prefix}_latest_cloud'] = pc
+                sc.sticky[f'{prefix}_status_message'] = f'Loaded pcd with {pc.Count} pts'
             else:
-                sc.sticky['status_message'] = 'No data buffered'
+                sc.sticky[f'{prefix}_status_message'] = 'No data buffered'
 
         # Update previous states
-        sc.sticky['prev_start'] = i_start
-        sc.sticky['prev_stop'] = i_stop
-        sc.sticky['prev_load'] = i_load
+        sc.sticky[f'{prefix}_prev_start'] = i_start
+        sc.sticky[f'{prefix}_prev_stop'] = i_stop
+        sc.sticky[f'{prefix}_prev_load'] = i_load
 
         # Update UI and output
-        ghenv.Component.Message = sc.sticky['status_message']  # noqa: F821
+        ghenv.Component.Message = sc.sticky[f'{prefix}_status_message']  # noqa: F821
 
-        o_cloud = sc.sticky['latest_cloud']
+        o_cloud = sc.sticky[f'{prefix}_latest_cloud']
         return [o_cloud]
