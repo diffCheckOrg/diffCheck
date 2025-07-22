@@ -144,6 +144,15 @@ namespace diffCheck::geometry
          *  /// 
         */
         std::vector<Eigen::Vector3d> GetTightBoundingBox();
+    
+    public:  ///< Point cloud subtraction
+        /**
+         * @brief Subtract the points, colors and normals from another point cloud when they are too close to the points of another point cloud.
+         * 
+         * @param pointCloud the other point cloud to subtract from this one
+         * @param distanceThreshold the distance threshold to consider a point as too close. Default is 0.01.
+         */
+        void SubtractPoints(const DFPointCloud &pointCloud, double distanceThreshold = 0.01);
 
     public:  ///< Transformers
         /**

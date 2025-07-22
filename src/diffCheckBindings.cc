@@ -41,6 +41,9 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("downsample_by_size", &diffCheck::geometry::DFPointCloud::DownsampleBySize,
             py::arg("target_size"))
 
+        .def("subtract_points", &diffCheck::geometry::DFPointCloud::SubtractPoints,
+            py::arg("point_cloud"), py::arg("distance_threshold"))
+
         .def("apply_transformation", &diffCheck::geometry::DFPointCloud::ApplyTransformation,
             py::arg("transformation"))
 

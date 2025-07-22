@@ -273,6 +273,50 @@ namespace diffCheck::geometry
         return bboxPts;
     }
 
+    void DFPointCloud::SubtractPoints(const DFPointCloud &pointCloud, double distanceThreshold)
+    {
+        if (this->Points.size() == 0 || pointCloud.Points.size() == 0)
+            throw std::invalid_argument("One of the point clouds is empty.");
+        
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = std::make_shared<DFPointCloud>(pointCloud)->Cvt2O3DPointCloud();
+        auto O3DResultPointCloud = std::make_shared<open3d::geometry::PointCloud>();
+
+        open3d::geometry::KDTreeFlann threeDTree;
+        threeDTree.SetGeometry(*O3DTargetPointCloud);
+        std::vector<int> indices;
+        std::vector<double> distances;
+        for (const auto &point : O3DSourcePointCloud->points_)
+        {
+            threeDTree.SearchRadius(point, distanceThreshold, indices, distances);
+            if (indices.empty())
+            {
+                O3DResultPointCloud->points_.push_back(point);
+                if (O3DSourcePointCloud->HasColors())
+                {
+                    O3DResultPointCloud->colors_.push_back(O3DSourcePointCloud->colors_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+                if (O3DSourcePointCloud->HasNormals())
+                {
+                    O3DResultPointCloud->normals_.push_back(O3DSourcePointCloud->normals_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+            }
+        }
+        this->Points.clear();
+        for (auto &point : O3DResultPointCloud->points_)
+            this->Points.push_back(point);
+        if (O3DResultPointCloud->HasColors())
+        {
+            this->Colors.clear();
+            for (auto &color : O3DResultPointCloud->colors_){this->Colors.push_back(color);};
+        }
+        if (O3DResultPointCloud->HasNormals())
+        {
+            this->Normals.clear();
+            for (auto &normal : O3DResultPointCloud->normals_){this->Normals.push_back(normal);};
+        }
+    }
+
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();

@@ -1,0 +1,64 @@
+{
+    "name": "DFSubtractCloud",
+    "nickname": "Subtract",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Subtracts points from a point cloud based on a distance threshold.",
+    "exposure": 4,
+    "instanceGuid": "9ef299aa-76dc-4417-9b95-2a374e2b36af",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud_subtract_from",
+                "nickname": "i_cloud_subtract_from",
+                "description": "The point cloud to subtract from.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_cloud_subtract_with",
+                "nickname": "i_cloud_subtract_with",
+                "description": "The point cloud to subtract with.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_distance_threshold",
+                "nickname": "i_distance_threshold",
+                "description": "The distance threshold to consider a point as too close.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "brep"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The resulting cloud after subtraction.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
