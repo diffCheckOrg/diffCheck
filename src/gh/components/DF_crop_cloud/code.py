@@ -12,13 +12,7 @@ class DFCloudCrop(component):
         super(DFCloudCrop, self).__init__()
     def RunScript(self,
             i_cloud: Rhino.Geometry.PointCloud,
-            i_box: Rhino.Geometry.Brep,
-            i_x_min: float,
-            i_y_min: float,
-            i_z_min: float,
-            i_x_max: float,
-            i_y_max: float,
-            i_z_max: float):
+            i_box: Rhino.Geometry.Brep):
         if i_cloud is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "No point cloud provided. Please connect a point cloud to the input.")  # noqa: F821
             return None
@@ -28,22 +22,9 @@ class DFCloudCrop(component):
             bb_min_as_array = np.asarray([bbox.Min.X, bbox.Min.Y, bbox.Min.Z])
             bb_max_as_array = np.asarray([bbox.Max.X, bbox.Max.Y, bbox.Max.Z])
 
-            ghenv.Component.AddRuntimeMessage(RML.Remark, "A box is provided and is used to crop the point cloud, all other inputs neglected. To use min/max values, disconnect the box")  # noqa: F821
         else:
-            if i_x_min is None:
-                i_x_min = -np.inf
-            if i_y_min is None:
-                i_y_min = -np.inf
-            if i_z_min is None:
-                i_z_min = -np.inf
-            if i_x_max is None:
-                i_x_max = np.inf
-            if i_y_max is None:
-                i_y_max = np.inf
-            if i_z_max is None:
-                i_z_max = np.inf
-            bb_min_as_array = np.asarray([i_x_min, i_y_min, i_z_min])
-            bb_max_as_array = np.asarray([i_x_max, i_y_max, i_z_max])
+            ghenv.Component.AddRuntimeMessage(RML.Warning, "Please provide a box to crop the point cloud with")  # noqa: F821
+
         df_cloud = df_cvt.cvt_rhcloud_2_dfcloud(i_cloud)
         df_cloud.crop(bb_min_as_array, bb_max_as_array)
         rh_cloud = df_cvt.cvt_dfcloud_2_rhcloud(df_cloud)
