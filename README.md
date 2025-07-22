@@ -88,6 +88,35 @@ gantt
     Fabrication of iterative prototype      :fab, 2025-08-01, 2w
 ```
 
+
+
 ## How to contribute
 
 If you want to contribute to the project, please refer to the [contribution guidelines]([./CONTRIBUTING.md](https://diffcheckorg.github.io/diffCheck/contribute.html)).
+
+## Logic
+The logic of the workflow is currently as follows:
+
+```mermaid
+stateDiagram-v2
+    state "[breps to assemble]" as s1
+    state "scan of latest element placed" as s2
+    state "get pose of i-th brep" as s3
+    state "get pose of i-1-th brep" as s4
+    state "compute pose of i-1-th element from scan" as s5
+    state "compute pose difference" as s6
+    state "compute pose correction" as s7
+    state "assemble i-th-element" as s8
+    state "i += 1" as s9
+    [*]-->s2
+    s1-->s3
+    s1-->s4
+    s2-->s5
+    s5-->s6
+    s4-->s6
+    s6-->s7
+    s3-->s7
+    s7-->s8
+    s8-->s9
+    s9-->[*]
+```
