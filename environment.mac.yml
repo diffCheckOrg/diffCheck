@@ -1,0 +1,40 @@
+name: diff_check
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - ca-certificates=2024.2.2
+  - libsqlite=3.45.3
+  - openssl=1.1.1w
+  - pip=24.0=pyhd8ed1ab_0
+  - python=3.9.1
+  - setuptools=69.5.1=pyhd8ed1ab_0
+  - sqlite=3.45.3=h80987f9_0
+  - tzdata=2024a=h0c530f3_0
+  - wheel=0.43.0=pyhd8ed1ab_1
+  - pip:
+    - pybind11==2.8.0
+    - pythonnet==3.0.3
+    - pytest==8.3.1
+    - pefile==2023.2.7
+    - numpy==2.0.1
+
+    - pre-commit>=3.8.0
+
+    - ruff>=0.6.1
+    
+    - types-invoke>=2.0.0.10
+    - mypy>=1.11.1
+
+    - absl-py
+    - ipython>=8.8.0  # 8.7.0 has ipython3 lexer error
+    - myst-parser==3.0.1
+    - sphinx>=7.3.2,<8.0  # 7.3.0 breaks sphinx-book-theme; 8.0 breaks myst-nb 1.1
+    - pydata-sphinx-theme==0.15.2
+    - sphinx-book-theme>=1.0.1  # Older versions fail to pin pydata-sphinx-theme
+    - sphinx-copybutton>=0.5.0
+    - sphinx-remove-toctrees
+    - sphinx-design
+    - myst-nb>=1.0.0
+    - sphinxcontrib-mermaid  #for schematics in sphiny
+    - sphinx_autodoc_typehints
