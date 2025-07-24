@@ -89,6 +89,14 @@ namespace diffCheck::geometry
          */
         void RemoveStatisticalOutliers(int nbNeighbors, double stdRatio);
 
+        /**
+         *  @brief Crop the point cloud to a bounding box defined by the min and max bounds
+         * 
+         *  @param minBound the minimum bound of the bounding box as an Eigen::Vector3d
+         *  @param maxBound the maximum bound of the bounding box as an Eigen::Vector3d
+         */
+        void Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound);
+
     public:  ///< Downsamplers
         /**
          * @brief Downsample the point cloud with voxel grid
@@ -136,6 +144,15 @@ namespace diffCheck::geometry
          *  /// 
         */
         std::vector<Eigen::Vector3d> GetTightBoundingBox();
+    
+    public:  ///< Point cloud subtraction
+        /**
+         * @brief Subtract the points, colors and normals from another point cloud when they are too close to the points of another point cloud.
+         * 
+         * @param pointCloud the other point cloud to subtract from this one
+         * @param distanceThreshold the distance threshold to consider a point as too close. Default is 0.01.
+         */
+        void SubtractPoints(const DFPointCloud &pointCloud, double distanceThreshold = 0.01);
 
     public:  ///< Transformers
         /**

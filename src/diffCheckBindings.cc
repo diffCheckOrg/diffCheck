@@ -41,6 +41,9 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("downsample_by_size", &diffCheck::geometry::DFPointCloud::DownsampleBySize,
             py::arg("target_size"))
 
+        .def("subtract_points", &diffCheck::geometry::DFPointCloud::SubtractPoints,
+            py::arg("point_cloud"), py::arg("distance_threshold"))
+
         .def("apply_transformation", &diffCheck::geometry::DFPointCloud::ApplyTransformation,
             py::arg("transformation"))
 
@@ -54,6 +57,8 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
 
         .def("remove_statistical_outliers", &diffCheck::geometry::DFPointCloud::RemoveStatisticalOutliers, 
             py::arg("nb_neighbors"), py::arg("std_ratio"))
+        .def("crop", &diffCheck::geometry::DFPointCloud::Crop,
+            py::arg("min_bound"), py::arg("max_bound"))
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
         .def("save_to_PLY", &diffCheck::geometry::DFPointCloud::SaveToPLY)
