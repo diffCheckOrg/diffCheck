@@ -8,7 +8,7 @@ import scriptcontext as sc
 import Rhino.Geometry as rg
 import System.Drawing as sd
 from websockets.server import serve
-from diffCheck import df_gh_canvas
+from diffCheck import df_gh_canvas_utils
 
 
 class DFWSServerListener(component):
@@ -20,10 +20,10 @@ class DFWSServerListener(component):
             pass
 
         for idx, label in enumerate(("Start", "Stop", "Load")):
-            df_gh_canvas.add_button(
+            df_gh_canvas_utils.add_button(
                 ghenv.Component, label, idx, x_offset=60)  # noqa: F821
-        df_gh_canvas.add_panel(ghenv.Component, "Host", "127.0.0.1", 3, 60, 20)  # noqa: F821
-        df_gh_canvas.add_panel(ghenv.Component, "Port", "9000", 4, 60, 20)  # noqa: F821
+        df_gh_canvas_utils.add_panel(ghenv.Component, "Host", "127.0.0.1", 3, 60, 20)  # noqa: F821
+        df_gh_canvas_utils.add_panel(ghenv.Component, "Port", "9000", 4, 60, 20)  # noqa: F821
 
     def RunScript(self,
             i_start: bool,

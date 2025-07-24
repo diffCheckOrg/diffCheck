@@ -5,7 +5,7 @@ from ghpythonlib.componentbase import executingcomponent as component
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from diffCheck import df_visualization
-from diffCheck import df_gh_canvas
+from diffCheck import df_gh_canvas_utils
 
 
 class DFVisualizationSettings(component):
@@ -22,38 +22,38 @@ class DFVisualizationSettings(component):
             X_cord = params[j].Attributes.Pivot.X
             input_indx = j
             if "i_value_type" == params[j].NickName:
-                df_gh_canvas.add_str_valuelist(
+                df_gh_canvas_utils.add_str_valuelist(
                     ghenv.Component,  # noqa: F821
                     self.poss_value_types,
                     "DF_value_t",
                     input_indx, X_cord, Y_cord)
             if "i_palette" == params[j].NickName:
-                df_gh_canvas.add_str_valuelist(
+                df_gh_canvas_utils.add_str_valuelist(
                     ghenv.Component,  # noqa: F821
                     self.poss_palettes,
                     "DF_palette",
                     input_indx, X_cord, Y_cord)
             if "i_legend_height" == params[j].NickName:
-                df_gh_canvas.add_slider(
+                df_gh_canvas_utils.add_slider(
                     ghenv.Component,  # noqa: F821
                     "DF_legend_height",
                     input_indx,
                     0.000, 20.000, 10.000,
                     X_cord, Y_cord)
             if "i_legend_width" == params[j].NickName:
-                df_gh_canvas.add_slider(
+                df_gh_canvas_utils.add_slider(
                     ghenv.Component,  # noqa: F821
                     "DF_legend_width",
                     input_indx,
                     0.000, 2.000, 0.500,
                     X_cord, Y_cord)
             if "i_legend_plane" == params[j].NickName:
-                df_gh_canvas.add_plane_object(
+                df_gh_canvas_utils.add_plane_object(
                     ghenv.Component,  # noqa: F821
                     "DF_legend_plane",
                     input_indx, X_cord, Y_cord)
             if "i_histogram_scale_factor" == params[j].NickName:
-                df_gh_canvas.add_slider(
+                df_gh_canvas_utils.add_slider(
                     ghenv.Component,  # noqa: F821
                     "DF_histogram_scale_factor",
                     input_indx,
