@@ -35,23 +35,23 @@ class DFWSServerListener(component):
         prefix = 'ws'
 
         # Persistent state across runs
-        sc.sticky.setdefault(f'{prefix}_ws_server', None)
-        sc.sticky.setdefault(f'{prefix}_ws_loop',   None)
-        sc.sticky.setdefault(f'{prefix}_ws_thread', None)
+        sc.sticky.setdefault(f'{prefix}_server', None)
+        sc.sticky.setdefault(f'{prefix}_loop',   None)
+        sc.sticky.setdefault(f'{prefix}_thread', None)
         sc.sticky.setdefault(f'{prefix}_last_pcd',  None)
         sc.sticky.setdefault(f'{prefix}_loaded_pcd', None)
-        sc.sticky.setdefault(f'{prefix}_ws_logs',   [])
-        sc.sticky.setdefault(f'{prefix}_ws_thread_started', False)
+        sc.sticky.setdefault(f'{prefix}_logs',   [])
+        sc.sticky.setdefault(f'{prefix}_thread_started', False)
         sc.sticky.setdefault(f'{prefix}_prev_start', False)
         sc.sticky.setdefault(f'{prefix}_prev_stop',  False)
         sc.sticky.setdefault(f'{prefix}_prev_load',  False)
 
-        logs = sc.sticky[f'{prefix}_ws_logs']
+        logs = sc.sticky[f'{prefix}_logs']
 
         # STOP server
-        if i_stop and sc.sticky.pop(f'{prefix}_ws_thread_started', False):
-            server = sc.sticky.pop(f'{prefix}_ws_server', None)
-            loop = sc.sticky.pop(f'{prefix}_ws_loop',   None)
+        if i_stop and sc.sticky.pop(f'{prefix}_thread_started', False):
+            server = sc.sticky.pop(f'{prefix}_server', None)
+            loop = sc.sticky.pop(f'{prefix}_loop',   None)
             if server and loop:
                 try:
                     server.close()
@@ -59,12 +59,12 @@ class DFWSServerListener(component):
                     logs.append("WebSocket server close initiated")
                 except Exception as e:
                     logs.append(f"Error closing server: {e}")
-            sc.sticky[f'{prefix}_ws_thread'] = None
+            sc.sticky[f'{prefix}_thread'] = None
             logs.append("Cleared previous WebSocket server flag")
             ghenv.Component.ExpireSolution(True)  # noqa: F821
 
         # START server
-        if i_start and not sc.sticky[f'{prefix}_ws_thread_started']:
+        if i_start and not sc.sticky[f'{prefix}_thread_started']:
 
             async def echo(ws, path):
                 logs.append("[GH] Client connected")
@@ -84,11 +84,11 @@ class DFWSServerListener(component):
 
             async def server_coro():
                 loop = asyncio.get_running_loop()
-                sc.sticky[f'{prefix}_ws_loop'] = loop
+                sc.sticky[f'{prefix}_loop'] = loop
 
                 logs.append(f"server_coro starting on {i_host}:{i_port}")
                 server = await serve(echo, i_host, i_port)
-                sc.sticky[f'{prefix}_ws_server'] = server
+                sc.sticky[f'{prefix}_server'] = server
                 logs.append(f"Listening on ws://{i_host}:{i_port}")
                 await server.wait_closed()
                 logs.append("Server coroutine exited")
@@ -101,8 +101,8 @@ class DFWSServerListener(component):
 
             t = threading.Thread(target=run_server, daemon=True)
             t.start()
-            sc.sticky[f'{prefix}_ws_thread'] = t
-            sc.sticky[f'{prefix}_ws_thread_started'] = True
+            sc.sticky[f'{prefix}_thread'] = t
+            sc.sticky[f'{prefix}_thread_started'] = True
             ghenv.Component.ExpireSolution(True)  # noqa: F821
 
         # LOAD buffered PCD on i_load rising edge
