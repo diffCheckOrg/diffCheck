@@ -9,7 +9,7 @@ import scriptcontext as sc
 import Rhino.Geometry as rg
 import System.Drawing as sd
 from diffCheck import df_gh_canvas_utils
-
+from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 class DFTCPListener(component):
     def __init__(self):
@@ -134,7 +134,7 @@ class DFTCPListener(component):
         # Load buffered points into Rhino PointCloud
         if i_load and not sc.sticky[f'{prefix}_prev_load']:
             if not sc.sticky.get(f'{prefix}_server_started', False):
-                self.AddRuntimeMessage(self.RuntimeMessageLevel.Warning,
+                self.AddRuntimeMessage(RML.Warning,
                                        "Please start server here before trying to send data from remote device.")
                 sc.sticky[f'{prefix}_status_message'] = "Server not started"
             else:

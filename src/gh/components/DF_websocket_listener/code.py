@@ -9,7 +9,7 @@ import Rhino.Geometry as rg
 import System.Drawing as sd
 from websockets.server import serve
 from diffCheck import df_gh_canvas_utils
-
+from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 class DFWSServerListener(component):
     def __init__(self):
@@ -129,7 +129,7 @@ class DFWSServerListener(component):
         # LOAD buffered PCD on i_load rising edge
         if i_load and not sc.sticky[f'{prefix}_prev_load']:
             if not sc.sticky.get(f'{prefix}_server'):
-                self.AddRuntimeMessage(self.RuntimeMessageLevel.Warning,
+                self.AddRuntimeMessage(RML.Warning,
                     "Please start server here before trying to send data from remote device.")
                 logs.append("Server not started")
             else:
