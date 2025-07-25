@@ -72,6 +72,13 @@ def get_ply_plane_with_one_outlier_path():
         raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
     return ply_file_path
 
+def get_ply_cnc_log_path():
+    base_test_data_dir = os.getenv('DF_TEST_DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data')))
+    ply_file_path = os.path.join(base_test_data_dir, "CNC_log.ply")
+    if not os.path.exists(ply_file_path):
+        raise FileNotFoundError(f"PLY file not found at: {ply_file_path}")
+    return ply_file_path
+
 #------------------------------------------------------------------------------
 # dfb_geometry namespace
 #------------------------------------------------------------------------------
@@ -148,6 +155,12 @@ def create_DFPointCloudOneOutlier():
     df_pcd.load_from_PLY(get_ply_plane_with_one_outlier_path())
     yield df_pcd
 
+@pytest.fixture
+def create_DFPointCloudCNCLog():
+    df_pcd = dfb.dfb_geometry.DFPointCloud()
+    df_pcd.load_from_PLY(get_ply_cnc_log_path())
+    yield df_pcd
+    
 # point cloud tests
 
 def test_DFPointCloud_properties(create_DFPointCloudSampleRoof):
@@ -341,13 +354,13 @@ def test_DFRegistration_pure_translation(create_two_DFPointCloudSphere):
 
     df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(sphere_1, sphere_2)
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(sphere_1, sphere_2)
-    # df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(sphere_1, sphere_2, max_correspondence_distance=20)
-    # df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(sphere_1, sphere_2, max_correspondence_distance=20)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(sphere_1, sphere_2, max_correspondence_distance=20)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(sphere_1, sphere_2, max_correspondence_distance=20)
 
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
-    # make_assertions(df_transformation_result_o3dicp)
-    # make_assertions(df_transformation_result_o3dgicp)
+    make_assertions(df_transformation_result_o3dicp)
+    make_assertions(df_transformation_result_o3dgicp)
 
 
 def test_DFRegistration_rotation_bunny(create_two_DFPointCloudBunny):
@@ -369,13 +382,13 @@ def test_DFRegistration_rotation_bunny(create_two_DFPointCloudBunny):
 
     df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(bunny_1, bunny_2)
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(bunny_1, bunny_2)
-    # df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(bunny_1, bunny_2, max_correspondence_distance=1.0)
-    # df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(bunny_1, bunny_2, max_correspondence_distance=15.0)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(bunny_1, bunny_2, max_correspondence_distance=1.0)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(bunny_1, bunny_2, max_correspondence_distance=15.0)
 
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
-    # make_assertions(df_transformation_result_o3dicp)
-    # make_assertions(df_transformation_result_o3dgicp)
+    make_assertions(df_transformation_result_o3dicp)
+    make_assertions(df_transformation_result_o3dgicp)
 
 
 def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
@@ -401,13 +414,13 @@ def test_DFRegistration_composite_bunny(create_two_DFPointCloudBunny):
 
     df_transformation_result_o3dfgrfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DFastGlobalRegistrationFeatureMatching(bunny_1, bunny_2)
     df_transformation_result_o3drfm = dfb.dfb_registrations.DFGlobalRegistrations.O3DRansacOnFeatureMatching(bunny_1, bunny_2)
-    # df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(bunny_1, bunny_2)
-    # df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(bunny_1, bunny_2)
+    df_transformation_result_o3dicp = dfb.dfb_registrations.DFRefinedRegistration.O3DICP(bunny_1, bunny_2)
+    df_transformation_result_o3dgicp = dfb.dfb_registrations.DFRefinedRegistration.O3DGeneralizedICP(bunny_1, bunny_2)
 
     make_assertions(df_transformation_result_o3dfgrfm)
     make_assertions(df_transformation_result_o3drfm)
-    # make_assertions(df_transformation_result_o3dicp)
-    # make_assertions(df_transformation_result_o3dgicp)
+    make_assertions(df_transformation_result_o3dicp)
+    make_assertions(df_transformation_result_o3dgicp)
 
 
 #------------------------------------------------------------------------------

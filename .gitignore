@@ -1,3 +1,12 @@
+# Build folders
+build/
+build_osx/
+cmake-build-debug/
+cmake-build-release/
+
+# IDEs
+.idea/
+
 #######################################
 ## C++
 #######################################

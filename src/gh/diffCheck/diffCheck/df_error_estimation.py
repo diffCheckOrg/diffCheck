@@ -16,7 +16,7 @@ import Rhino
 import Rhino.Geometry as rg
 from Rhino.FileIO import SerializationOptions
 
-from diffCheck import diffcheck_bindings  # type: ignore
+import diffCheck
 from diffCheck import df_cvt_bindings
 from diffCheck.df_geometries import DFAssembly
 
@@ -50,7 +50,7 @@ class DFVizResults:
     def __init__(self, assembly):
 
         self.assembly: DFAssembly = assembly
-        self.source: typing.List[diffcheck_bindings.dfb_geometry.DFPointCloud] = []
+        self.source: typing.List[diffCheck.dfb_geometry.DFPointCloud] = []
         self.target: typing.List[Rhino.Geometry.Mesh] = []
 
         self.sanity_check: typing.List[DFInvalidData] = []
@@ -88,7 +88,7 @@ class DFVizResults:
         if "source" in state and state["source"] is not None:
             source = []
             for pcd_dict in state["source"]:
-                pcd = diffcheck_bindings.dfb_geometry.DFPointCloud()
+                pcd = diffCheck.dfb_geometry.DFPointCloud()
                 pcd = df_cvt_bindings.cvt_dict_2_dfcloud(pcd_dict)
                 source.append(pcd)
             state["source"] = source
@@ -261,7 +261,7 @@ class DFVizResults:
 
     @property
     def is_source_cloud(self):
-        return type(self.source[0]) is diffcheck_bindings.dfb_geometry.DFPointCloud
+        return type(self.source[0]) is diffCheck.dfb_geometry.DFPointCloud
 
     @property
     def analysis_type(self):
@@ -271,8 +271,8 @@ class DFVizResults:
 # FIXME: ths is currently broken, we need to fix it
 def df_cloud_2_df_cloud_comparison(
     assembly: DFAssembly,
-    df_cloud_source_list: typing.List[diffcheck_bindings.dfb_geometry.DFPointCloud],
-    df_cloud_target_list: typing.List[diffcheck_bindings.dfb_geometry.DFPointCloud]
+    df_cloud_source_list: typing.List[diffCheck.dfb_geometry.DFPointCloud],
+    df_cloud_target_list: typing.List[diffCheck.dfb_geometry.DFPointCloud]
     ) -> DFVizResults:
     """
         Compute the Euclidean distance for every point of a source pcd to its
@@ -346,7 +346,7 @@ def rh_mesh_2_df_cloud_distance(source, target, signed=False):
         Calculate the distance between every vertex of a Rhino Mesh to its closest point on a PCD
     """
     # make a Df point cloud containing all the vertices of the source rhino mesh
-    df_pcd_from_mesh_vertices = diffcheck_bindings.dfb_geometry.DFPointCloud()
+    df_pcd_from_mesh_vertices = diffCheck.dfb_geometry.DFPointCloud()
     df_pcd_from_mesh_vertices.points = [[pt.X, pt.Y, pt.Z] for pt in source.Vertices]
 
     # calculate the distances

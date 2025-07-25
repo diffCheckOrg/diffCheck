@@ -248,3 +248,13 @@ function (copy_dlls directory_to_copy_dlls post_build_target)
           )
   endforeach()
 endfunction()
+
+# ------------------------------------------------------------------------------
+function (copy_so_files directory_to_copy_so_files post_build_target)
+  message (STATUS "Erasing old SO files and copy new ones to ${directory_to_copy_so_files}")
+  file(GLOB files ${directory_to_copy_so_files}/*.so)
+  foreach(file ${files})
+      message(STATUS "Removing ${file}")
+      file(REMOVE ${file})
+  endforeach()
+endfunction()

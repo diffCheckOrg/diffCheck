@@ -142,7 +142,7 @@ class JointDetector:
             """
 
             # brep vertices to cloud
-            df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
+            df_cloud = diffCheck.dfb_geometry.DFPointCloud()
             df_cloud.points = [np.array([vertex.Location.X, vertex.Location.Y, vertex.Location.Z]).reshape(3, 1) for vertex in self.brep.Vertices]
             if self.is_roundwood:
                 bounding_geometry = self._find_largest_cylinder()

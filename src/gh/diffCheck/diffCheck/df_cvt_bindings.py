@@ -12,7 +12,8 @@ import System.Drawing
 
 from typing import Any
 
-from diffCheck import diffcheck_bindings  # type: ignore
+# from .so.diffcheck_bindings import *
+import diffCheck
 
 def test_bindings() -> Any:
     """
@@ -20,9 +21,9 @@ def test_bindings() -> Any:
 
         :return is_imported: True if the bindings are imported, False otherwise
     """
-    return diffcheck_bindings.dfb_test.test()
+    return diffCheck.dfb_test.test()
 
-def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCloud:
+def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffCheck.dfb_geometry.DFPointCloud:
     """
         Convert a Rhino cloud to a diffCheck cloud.
 
@@ -34,7 +35,7 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
     if not isinstance(rh_cloud, rg.PointCloud):
         raise ValueError("rh_cloud for convertion should be a PointCloud")
 
-    df_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
+    df_cloud = diffCheck.dfb_geometry.DFPointCloud()
 
     # points
     if rh_cloud.Count == 0:
@@ -60,7 +61,7 @@ def cvt_dfcloud_2_rhcloud(df_cloud):
 
         :return rh_cloud: rhino cloud
     """
-    if not isinstance(df_cloud, diffcheck_bindings.dfb_geometry.DFPointCloud):
+    if not isinstance(df_cloud, diffCheck.dfb_geometry.DFPointCloud):
         raise ValueError("df_cloud should be a DFPointCloud")
 
     rh_cloud = rg.PointCloud()
@@ -92,7 +93,7 @@ def cvt_dfcloud_2_rhcloud(df_cloud):
 
     return rh_cloud
 
-def cvt_dfmesh_2_rhmesh(df_mesh: diffcheck_bindings.dfb_geometry.DFMesh) -> rg.Mesh:
+def cvt_dfmesh_2_rhmesh(df_mesh: diffCheck.dfb_geometry.DFMesh) -> rg.Mesh:
     """
         Convert a diffCheck mesh to a Rhino mesh.
 
@@ -100,7 +101,7 @@ def cvt_dfmesh_2_rhmesh(df_mesh: diffcheck_bindings.dfb_geometry.DFMesh) -> rg.M
 
         :return rh_mesh: rhino mesh
     """
-    if not isinstance(df_mesh, diffcheck_bindings.dfb_geometry.DFMesh):
+    if not isinstance(df_mesh, diffCheck.dfb_geometry.DFMesh):
         raise ValueError("df_mesh should be a DFMesh")
 
     rh_mesh = rg.Mesh()
@@ -130,7 +131,7 @@ def cvt_dfmesh_2_rhmesh(df_mesh: diffcheck_bindings.dfb_geometry.DFMesh) -> rg.M
 
     return rh_mesh
 
-def cvt_rhmesh_2_dfmesh(rh_mesh: rg.Mesh) -> diffcheck_bindings.dfb_geometry.DFMesh:
+def cvt_rhmesh_2_dfmesh(rh_mesh: rg.Mesh) -> diffCheck.dfb_geometry.DFMesh:
     """
         Convert a Rhino mesh to a diffCheck mesh.
 
@@ -141,7 +142,7 @@ def cvt_rhmesh_2_dfmesh(rh_mesh: rg.Mesh) -> diffcheck_bindings.dfb_geometry.DFM
     if not isinstance(rh_mesh, rg.Mesh):
         raise ValueError("rh_mesh should be a Mesh")
 
-    df_mesh = diffcheck_bindings.dfb_geometry.DFMesh()
+    df_mesh = diffCheck.dfb_geometry.DFMesh()
 
     if rh_mesh.Vertices.Count == 0:
         print("The input rhino mesh is empty")
@@ -181,14 +182,14 @@ def cvt_rhmesh_2_dfmesh(rh_mesh: rg.Mesh) -> diffcheck_bindings.dfb_geometry.DFM
 
     return df_mesh
 
-def cvt_dfxform_2_rhxform(df_xform : diffcheck_bindings.dfb_transformation.DFTransformation) -> rg.Transform:
+def cvt_dfxform_2_rhxform(df_xform : diffCheck.dfb_transformation.DFTransformation) -> rg.Transform:
     """
         Convert a diffCheck transformation to a Rhino transformation.
 
         :param df_xform: diffCheck transformation
         :return rh_xform: rhino transformation
     """
-    if not isinstance(df_xform, diffcheck_bindings.dfb_transformation.DFTransformation):
+    if not isinstance(df_xform, diffCheck.dfb_transformation.DFTransformation):
         raise ValueError("df_xform should be a DFTransformation")
 
     rh_xform = rg.Transform()
@@ -262,7 +263,7 @@ def cvt_ndarray_2_rh_transform(matrix) -> rg.Transform:
     return transfo
 
 
-def cvt_dfcloud_2_dict(df_cloud: diffcheck_bindings.dfb_geometry.DFPointCloud) -> dict:
+def cvt_dfcloud_2_dict(df_cloud: diffCheck.dfb_geometry.DFPointCloud) -> dict:
     """
         Convert a diffCheck cloud to a dictionary mainly for pickling and serialization.
 
@@ -276,14 +277,14 @@ def cvt_dfcloud_2_dict(df_cloud: diffcheck_bindings.dfb_geometry.DFPointCloud) -
     }
     return cloud_dict
 
-def cvt_dict_2_dfcloud(cloud_dict: dict) -> diffcheck_bindings.dfb_geometry.DFPointCloud:
+def cvt_dict_2_dfcloud(cloud_dict: dict) -> diffCheck.dfb_geometry.DFPointCloud:
     """
         Convert a dictionary to a diffCheck cloud mainly for pickling and deserialization.
 
         :param cloud_dict: the cloud dictionary
         :return df_cloud: diffCheck cloud
     """
-    df_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
+    df_cloud = diffCheck.dfb_geometry.DFPointCloud()
     df_cloud.points = cloud_dict["points"]
     df_cloud.normals = cloud_dict["normals"]
     df_cloud.colors = cloud_dict["colors"]

@@ -42,4 +42,6 @@ namespace diffCheck::io
     std::string GetRoofQuarterPlyPath();
     /// @brief Get the path to the plane point cloud with one outlier
     std::string GetPlanePCWithOneOutliers();
+    /// @brief Get the path to the Stanford bunny point cloud
+    std::string GetBunnyPlyPath();
 } // namespace diffCheck::io

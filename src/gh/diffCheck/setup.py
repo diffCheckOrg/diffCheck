@@ -1,14 +1,13 @@
 from setuptools import setup, find_packages
 
-
-
 setup(
     name="diffCheck",
     version="1.3.0",
     packages=find_packages(),
     install_requires=[
         "numpy",
-        "pybind11>=2.5.0"
+        "pybind11>=2.5.0",
+        # "open3d>=0.18.0"
         # other dependencies...
     ],
     description="DiffCheck is a package to check the differences between two timber structures",
@@ -24,6 +23,10 @@ setup(
     ],
     include_package_data=True,
     package_data={
-        "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd", 'diffCheck/*.so', 'diffCheck/*.dylib']
-        },
+        "diffCheck": [
+            "diffCheck/dlls/*.dll",
+            "*.pyd",
+            'diffCheck/*.so'
+        ]
+    },
 )

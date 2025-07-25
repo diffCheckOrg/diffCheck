@@ -29,6 +29,17 @@ copy_dlls(${TEST_OUT_DIR_BINARY} ${CPP_UNIT_TESTS})
 # ------------------------------------------------------------------------------
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
+# find python executable
+message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
+
+# find python include dir
+message(STATUS "Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
+
+# find python library
+message(STATUS "Python3_LIBRARIES: ${Python3_LIBRARIES}")
+
+set(PYTHON_EXECUTABLE /opt/homebrew/Caskroom/miniconda/base/bin/python)
+
 # copying pyd and dlls
 set(TARGET_PYBIND_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration_tests/pybinds_tests)
 add_custom_command(TARGET ${PYBINDMODULE_NAME} POST_BUILD
@@ -55,11 +66,11 @@ add_test(NAME PYBIND_UNIT_TEST
 # Run all tests
 # ------------------------------------------------------------------------------
 # FIXME: the post build has some problems if the tests are failing MSB3073
-if (RUN_TESTS)
-    add_custom_command(
-                    TARGET ${CPP_UNIT_TESTS} POST_BUILD  #TODO: <== this should be set to the latest test suite
-                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                    COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --verbose
-                    COMMENT "Running all tests"
-                )
-endif()
+#if (RUN_TESTS)
+#   add_custom_command(
+#                   TARGET ${CPP_UNIT_TESTS} POST_BUILD  #TODO: <== this should be set to the latest test suite
+#                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#                   COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --verbose
+#                   COMMENT "Running all tests"
+#               )
+#endif()

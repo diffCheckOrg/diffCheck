@@ -217,6 +217,58 @@ TEST_F(DFPointCloudTestFixture, Transform) {
     }
 }
 
+// This is a copy of the bu
+TEST_F(DFPointCloudTestFixture, RegistrationCompositeBunny) {
+    // Load two copies of the bunny point cloud
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> bunny1 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> bunny2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    bunny1->LoadFromPLY(diffCheck::io::GetBunnyPlyPath());
+    bunny2->LoadFromPLY(diffCheck::io::GetBunnyPlyPath());
+
+    // Create a 30-degree rotation around y-axis
+    Eigen::Matrix4d rotationMatrix;
+    rotationMatrix << 0.866, 0.0, 0.5, 0.1,
+                     0.0, 1.0, 0.0, 0.1,
+                     -0.5, 0.0, 0.866, 0.1,
+                     0.0, 0.0, 0.0, 1.0;
+    diffCheck::transformation::DFTransformation rotation(rotationMatrix);
+    bunny2->ApplyTransformation(rotation);
+
+    // Test different registration methods
+    auto makeAssertions = [](const diffCheck::transformation::DFTransformation& result) {
+        EXPECT_TRUE(result.TransformationMatrix != Eigen::Matrix4d::Zero());
+        EXPECT_NEAR(result.TransformationMatrix(0,0), 0.866, 0.2);
+        EXPECT_NEAR(result.TransformationMatrix(0,1), 0.0, 0.2);
+        EXPECT_NEAR(result.TransformationMatrix(0,2), 0.5, 0.2);
+    };
+
+    // Test Fast Global Registration
+    auto result_fgr = diffCheck::registrations::DFGlobalRegistrations::O3DFastGlobalRegistrationFeatureMatching(bunny1, bunny2);
+    makeAssertions(result_fgr);
+
+    // Test RANSAC on Feature Matching
+    auto result_ransac = diffCheck::registrations::DFGlobalRegistrations::O3DRansacOnFeatureMatching(bunny1, bunny2);
+    makeAssertions(result_ransac);
+
+    // Test ICP
+    auto result_icp = diffCheck::registrations::DFRefinedRegistration::O3DICP(bunny1, bunny2, 1.0);
+    makeAssertions(result_icp);
+
+    // Test Generalized ICP
+    auto result_gicp = diffCheck::registrations::DFRefinedRegistration::O3DGeneralizedICP(bunny1, bunny2, 15.0);
+    makeAssertions(result_gicp);
+}
+
+TEST_F(DFPointCloudTestFixture, Segmentation){
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloud2 = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    dfPointCloud2->LoadFromPLY(diffCheck::io::GetRoofQuarterPlyPath());
+    std::vector<std::shared_ptr<diffCheck::geometry::DFPointCloud>> segments = diffCheck::segmentation::DFSegmentation::NormalBasedSegmentation(dfPointCloud2);
+    EXPECT_EQ(segments.size(), 1);
+    EXPECT_EQ(segments[0]->GetNumPoints(), 7379);
+    EXPECT_EQ(segments[0]->GetNumColors(), 7379);
+    EXPECT_EQ(segments[0]->GetNumNormals(), 7379);
+}
+
 //-------------------------------------------------------------------------
 // Others
 //-------------------------------------------------------------------------

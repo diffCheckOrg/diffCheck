@@ -4,7 +4,7 @@
 If you develop for DF, you need to set up your development environment. This guide will help you to do that. Wether you are developing for the `c++` or `python` part of the project, you will find the necessary information here.
 
 ## Prepare your environment
-
+### Windows
 Before to start, especially if you used diffCheck as an end-user before you will need to:
 
 1. Make sure to have `camke` installed on your machine. You can download it [here](https://cmake.org/download/).
@@ -49,6 +49,11 @@ Before to start, especially if you used diffCheck as an end-user before you will
     ```{note}
     For your info the packages is installed in `C:\Users\andre\.rhinocode\py39-rh8\Lib\site-packages`.
     ```
+
+### Mac
+```
+/Users/petingo/.rhinocode/py39-rh8/python3.9 -m pip install -e "/Users/petingo/p/diffCheck/src/gh/diffCheck"
+```
 
 That's it you are now a contributor to the diffCheck! We raccomand to not download anymore from yak package but rather use the source code in the repository. If you want the latest diffCheck, checkout and pull the main.
 
