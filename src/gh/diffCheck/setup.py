@@ -8,7 +8,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         "numpy",
-        "pybind11>=2.5.0"
+        "pybind11>=2.5.0",
+        "websockets>=10.4"
         # other dependencies...
     ],
     description="DiffCheck is a package to check the differences between two timber structures",
