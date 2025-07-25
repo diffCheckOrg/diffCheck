@@ -107,10 +107,15 @@ class DFWSServerListener(component):
 
         # LOAD buffered PCD on i_load rising edge
         if i_load and not sc.sticky[f'{prefix}_prev_load']:
-            sc.sticky[f'{prefix}_loaded_pcd'] = sc.sticky.get(f'{prefix}_last_pcd')
-            cnt = len(sc.sticky[f'{prefix}_loaded_pcd']) if sc.sticky[f'{prefix}_loaded_pcd'] else 0
-            logs.append(f"Loaded pcd with {cnt} pts")
-            ghenv.Component.ExpireSolution(True)  # noqa: F821
+            if not sc.sticky.get(f'{prefix}_server'):
+                self.AddRuntimeMessage(self.RuntimeMessageLevel.Warning,
+                    "Please start server here before trying to send data from remote device.")
+                logs.append("Server not started")
+            else:
+                sc.sticky[f'{prefix}_loaded_pcd'] = sc.sticky.get(f'{prefix}_last_pcd')
+                cnt = len(sc.sticky[f'{prefix}_loaded_pcd']) if sc.sticky[f'{prefix}_loaded_pcd'] else 0
+                logs.append(f"Loaded pcd with {cnt} pts")
+                ghenv.Component.ExpireSolution(True)  # noqa: F821
 
         # BUILD output PointCloud
         raw = sc.sticky.get(f'{prefix}_loaded_pcd')
@@ -127,7 +132,7 @@ class DFWSServerListener(component):
         # UPDATE UI message & return outputs
         ghenv.Component.Message = logs[-1] if logs else 'Waiting..'  # noqa: F821
         sc.sticky[f'{prefix}_prev_start'] = i_start
-        sc.sticky[f'{prefix}_prev_stop']  = i_stop
-        sc.sticky[f'{prefix}_prev_load']  = i_load
+        sc.sticky[f'{prefix}_prev_stop'] = i_stop
+        sc.sticky[f'{prefix}_prev_load'] = i_load
 
         return [o_cloud]

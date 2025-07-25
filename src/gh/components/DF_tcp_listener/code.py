@@ -114,15 +114,20 @@ class DFTCPListener(component):
 
         # Load buffered points into Rhino PointCloud
         if i_load and not sc.sticky[f'{prefix}_prev_load']:
-            raw = sc.sticky.get(f'{prefix}_cloud_buffer_raw', [])
-            if raw:
-                pc = rg.PointCloud()
-                for x, y, z, r, g, b in raw:
-                    pc.Add(rg.Point3d(x, y, z), sd.Color.FromArgb(int(r), int(g), int(b)))
-                sc.sticky[f'{prefix}_latest_cloud'] = pc
-                sc.sticky[f'{prefix}_status_message'] = f'Loaded pcd with {pc.Count} pts'
+            if not sc.sticky.get(f'{prefix}_server_started', False):
+                self.AddRuntimeMessage(self.RuntimeMessageLevel.Warning,
+                                       "Please start server here before trying to send data from remote device.")
+                sc.sticky[f'{prefix}_status_message'] = "Server not started"
             else:
-                sc.sticky[f'{prefix}_status_message'] = 'No data buffered'
+                raw = sc.sticky.get(f'{prefix}_cloud_buffer_raw', [])
+                if raw:
+                    pc = rg.PointCloud()
+                    for x, y, z, r, g, b in raw:
+                        pc.Add(rg.Point3d(x, y, z), sd.Color.FromArgb(int(r), int(g), int(b)))
+                    sc.sticky[f'{prefix}_latest_cloud'] = pc
+                    sc.sticky[f'{prefix}_status_message'] = f'Loaded pcd with {pc.Count} pts'
+                else:
+                    sc.sticky[f'{prefix}_status_message'] = 'No data buffered'
 
         # Update previous states
         sc.sticky[f'{prefix}_prev_start'] = i_start
