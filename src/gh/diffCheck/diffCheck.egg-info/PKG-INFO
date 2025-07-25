@@ -12,6 +12,14 @@ Description-Content-Type: text/markdown
 Requires-Dist: numpy
 Requires-Dist: pybind11>=2.5.0
 Requires-Dist: websockets>=10.4
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary
 
 # DiffCheck: CAD-Scan comparison
 
