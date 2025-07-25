@@ -4,6 +4,7 @@ from ghpythonlib.componentbase import executingcomponent as component
 import socket
 import threading
 import json
+import time
 import scriptcontext as sc
 import Rhino.Geometry as rg
 import System.Drawing as sd
@@ -66,6 +67,7 @@ class DFTCPListener(component):
                                 sc.sticky[f'{prefix}_cloud_buffer_raw'] = raw
                     except Exception:
                         break
+                    time.sleep(0.05)  # sleep briefly to prevent CPU spin
 
         # thread to accept incoming connections
         def server_loop(sock):
