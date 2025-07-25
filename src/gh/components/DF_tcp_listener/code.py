@@ -47,7 +47,13 @@ class DFTCPListener(component):
         # Client handler
         def handle_client(conn):
             """
-            reads the incoming bytes from a single client socket and stores valid data in a shared buffer
+            Reads the incoming bytes from a single TCP client socket and stores valid data in a shared buffer.
+
+            :param conn: A socket object returned by `accept()` representing a live client connection.
+                         The client is expected to send newline-delimited JSON-encoded data, where each
+                         message is a list of 6D values: [x, y, z, r, g, b].
+
+            :returns: None
             """
             buf = b''
             with conn:
@@ -72,8 +78,12 @@ class DFTCPListener(component):
         # thread to accept incoming connections
         def server_loop(sock):
             """
-            runs in its own thread, continuously calling accept() on the listening socket
-            Each time a client connects, it launches a new thread running handle_client to deal with that connection
+            Accepts a single client connection and starts a background thread to handle it.
+
+            :param sock: A bound and listening TCP socket created by start_server().
+                         This socket will accept one incoming connection, then delegate it to handle_client().
+
+            :returns: None. This runs as a background thread and blocks on accept().
             """
             try:
                 conn, _ = sock.accept()
@@ -85,6 +95,8 @@ class DFTCPListener(component):
         def start_server():
             """
             creates and binds a TCP socket on the given host/port, marks the server as started and then starts the accept_loop in a background thread
+
+            :returns: None.
             """
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -97,6 +109,11 @@ class DFTCPListener(component):
             threading.Thread(target=server_loop, args=(sock,), daemon=True).start()
 
         def stop_server():
+            """
+            Stops the running TCP server by closing the listening socket and resetting internal state.
+
+            :returns: None.
+            """
             sock = sc.sticky.get(f'{prefix}_server_sock')
             if sock:
                 try:

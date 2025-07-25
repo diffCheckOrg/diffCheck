@@ -36,8 +36,10 @@ class DFHTTPListener(component):
         sc.sticky.setdefault(f'{prefix}_prev_load', False)  # previous state of toggle
         sc.sticky.setdefault(f'{prefix}_thread_running', False)  # is a background thread running?
 
-        def _import_job(url):
+        def _import_job(url: str):
+
             """
+            Downloads and imports a .ply file from a given URL in a background thread.
             Background job:
             - Downloads the .ply file from the URL
             - Imports it into the active Rhino document
@@ -45,6 +47,10 @@ class DFHTTPListener(component):
             - Cleans up the temporary file and document objects
             - Updates sticky state and status message
             - Signals to GH that it should re-solve
+
+            :param url: A string representing a direct URL to a .ply file (e.g. from GitHub or local server).
+                        The file must end with ".ply".
+            :returns: None
             """
 
             tmp = None

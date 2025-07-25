@@ -67,6 +67,16 @@ class DFWSServerListener(component):
         if i_start and not sc.sticky[f'{prefix}_thread_started']:
 
             async def echo(ws, path):
+                """
+                Handles a single WebSocket client connection and reads messages containing point cloud data.
+
+                :param ws: A WebSocket connection object from the 'websockets' server, representing a live client.
+                :param path: The URL path for the connection (unused here but required by the API).
+
+                :returns: None. Updates sc.sticky['ws_last_pcd'] with the most recent valid list of points.
+                          Each message is expected to be a JSON list of 6-element lists:
+                          [x, y, z, r, g, b] for each point.
+                """
                 logs.append("[GH] Client connected")
                 try:
                     async for msg in ws:
@@ -83,6 +93,12 @@ class DFWSServerListener(component):
                     logs.append(f"Handler crashed: {outer}")
 
             async def server_coro():
+                """
+                Coroutine that starts the WebSocket server and waits for it to be closed.
+
+                :returns: None. Stores the server object in sc.sticky['ws_server'] and the event loop
+                          in sc.sticky['ws_loop']. Also logs progress to sc.sticky['ws_logs'].
+                """
                 loop = asyncio.get_running_loop()
                 sc.sticky[f'{prefix}_loop'] = loop
 
@@ -94,6 +110,11 @@ class DFWSServerListener(component):
                 logs.append("Server coroutine exited")
 
             def run_server():
+                """
+                Blocking function that runs the WebSocket server coroutine in this thread.
+
+                :returns: None. Used as the target for a background thread. Logs errors if server startup fails.
+                """
                 try:
                     asyncio.run(server_coro())
                 except Exception as ex:

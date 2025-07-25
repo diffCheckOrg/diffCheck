@@ -11,7 +11,7 @@ def add_str_valuelist(comp,
     indx: int,
     X_param_coord: float,
     Y_param_coord: float,
-    X_offset: int=87
+    X_offset: int = 87
     ) -> None:
     """
         Adds a value list of string values to the component input
@@ -53,7 +53,7 @@ def add_slider(comp,
     default_value: float,
     X_param_coord: float,
     Y_param_coord: float,
-    X_offset: int=100
+    X_offset: int = 100
     ) -> None:
     """
         Adds a slider to the component input
@@ -85,13 +85,13 @@ def add_slider(comp,
         inp.AddSource(slider)  # noqa: F821
 
 
-def add_plane_object(comp, 
-    nickname: str,
-    indx: int,
-    X_param_coord: float,
-    Y_param_coord: float,
-    X_offset: int=75
-    ) -> None:
+def add_plane_object(comp,
+                     nickname: str,
+                     indx: int,
+                     X_param_coord: float,
+                     Y_param_coord: float,
+                     X_offset: int = 75
+                     ) -> None:
     """
         Adds a plane object to the component input
 
@@ -117,7 +117,19 @@ def add_plane_object(comp,
             inp.AddSource(plane)  # noqa: F821
 
 
-def add_button(comp, nickname, indx, x_offset=60):
+def add_button(comp,
+               nickname: str,
+               indx: int,
+               x_offset: int = 60
+               ) -> None:
+    """
+    Adds a one-shot Boolean button to the left of a component input.
+
+    :param comp: The Grasshopper component to which the button will be added.
+    :param nickname: The display label of the button (e.g. "Start", "Load").
+    :param indx: The index of the component input to wire the button into.
+    :param x_offset: Horizontal distance (in pixels) to place the button to the left of the input.
+    """
 
     inp = comp.Params.Input[indx]
     # only add if nothing already connected
@@ -143,7 +155,25 @@ def add_button(comp, nickname, indx, x_offset=60):
         inp.AddSource(btn)
 
 
-def add_panel(comp, nickname, text, indx, x_offset=60, panel_height=20):
+def add_panel(comp,
+              nickname: str,
+              text: str,
+              indx: int,
+              x_offset: int = 60,
+              panel_height: int = 20
+              ) -> None:
+    """
+    Adds a text panel to the left of a component input with a default string value.
+
+    :param comp: The Grasshopper component to which the panel will be added.
+    :param nickname: The label shown at the top of the panel (e.g. "Host", "Port").
+    :param text: The default string to display inside the panel.
+    :param indx: The index of the component input to connect the panel to.
+    :param x_offset: Horizontal distance (in pixels) to place the panel left of the input.
+    :param panel_height: Height of the panel in pixels (default is 20).
+
+    :returns: None. The panel is created, positioned, and connected if no existing source is present.
+    """
 
     inp = comp.Params.Input[indx]
     if inp.SourceCount == 0:
