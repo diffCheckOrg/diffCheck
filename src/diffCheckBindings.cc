@@ -55,6 +55,9 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("remove_statistical_outliers", &diffCheck::geometry::DFPointCloud::RemoveStatisticalOutliers, 
             py::arg("nb_neighbors"), py::arg("std_ratio"))
 
+        .def("get_principal_axes", &diffCheck::geometry::DFPointCloud::GetPrincipalAxes,
+            py::arg("n_components") = 6)
+
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
         .def("save_to_PLY", &diffCheck::geometry::DFPointCloud::SaveToPLY)
         

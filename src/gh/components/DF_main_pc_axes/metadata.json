@@ -1,0 +1,60 @@
+{
+    "name": "DFPoseEstimation",
+    "nickname": "PoseEsimation",
+    "category": "diffCheck",
+    "subcategory": "PointCloud",
+    "description": "This compoment calculates the pose of a list of point clouds.",
+    "exposure": 4,
+    "instanceGuid": "22b0c6fc-bc16-4ff5-b789-e99776277f65",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_clouds",
+                "nickname": "i_clouds",
+                "description": "clouds whose main axes are to be calculated",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            }, 
+            {
+                "name": "i_reset",
+                "nickname": "i_reset",
+                "description": "reset the history of the pose estimation",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_planes",
+                "nickname": "o_planes",
+                "description": "The resulting planes of the pose estimation in the last iteration.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_history",
+                "nickname": "o_history",
+                "description": "The history of poses of all the elements.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}   

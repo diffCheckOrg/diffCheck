@@ -216,6 +216,51 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    std::vector<Eigen::Vector3d> DFPointCloud::GetPrincipalAxes(int nComponents)
+    {
+        std::vector<Eigen::Vector3d> principalAxes;
+
+        if (! this->HasNormals())
+        {
+            DIFFCHECK_WARN("The point cloud has no normals. Normals will be estimated with knn = 20.");
+            this->EstimateNormals(true, 20);
+        }
+
+        // Convert normals to Eigen matrix
+        Eigen::Matrix<double, 3, Eigen::Dynamic> normalMatrix(3, this->Normals.size());
+        for (size_t i = 0; i < this->Normals.size(); ++i)
+        {
+            normalMatrix.col(i) = this->Normals[i].cast<double>();
+        }
+
+        cilantro::KMeans<double, 3> kmeans(normalMatrix); 
+        kmeans.cluster(nComponents);
+
+        const cilantro::VectorSet3d& centroids = kmeans.getClusterCentroids();
+        const std::vector<size_t>& assignments = kmeans.getPointToClusterIndexMap();
+        std::vector<int> clusterSizes(nComponents, 0);
+        for (size_t i = 0; i < assignments.size(); ++i) 
+        {
+            clusterSizes[assignments[i]]++;
+        }
+        // Sort clusters by size
+        std::vector<std::pair<int, Eigen::Vector3d>> sortedClustersBySize(nComponents);
+        for (size_t i = 0; i < nComponents; ++i) 
+        {
+            sortedClustersBySize[i] = {clusterSizes[i], centroids.col(i)};
+        }
+        std::sort(sortedClustersBySize.begin(), sortedClustersBySize.end(), [](const auto& a, const auto& b) 
+        {
+            return a.first > b.first;
+        });
+
+        for(size_t i = 0; i < nComponents; ++i) 
+        {
+            principalAxes.push_back(sortedClustersBySize[i].second);
+        }
+        return principalAxes;
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
