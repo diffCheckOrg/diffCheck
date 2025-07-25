@@ -45,7 +45,7 @@ class DFTCPListener(component):
         sc.sticky.setdefault(f'{prefix}_prev_load', False)
 
         # Client handler
-        def handle_client(conn):
+        def handle_client(conn: socket.socket) -> None:
             """
             Reads the incoming bytes from a single TCP client socket and stores valid data in a shared buffer.
 
@@ -76,7 +76,7 @@ class DFTCPListener(component):
                     time.sleep(0.05)  # sleep briefly to prevent CPU spin
 
         # thread to accept incoming connections
-        def server_loop(sock):
+        def server_loop(sock: socket.socket) -> None:
             """
             Accepts a single client connection and starts a background thread to handle it.
 
@@ -92,7 +92,7 @@ class DFTCPListener(component):
                 pass
 
         # Start TCP server
-        def start_server():
+        def start_server() -> None:
             """
             creates and binds a TCP socket on the given host/port, marks the server as started and then starts the accept_loop in a background thread
 
@@ -108,7 +108,7 @@ class DFTCPListener(component):
             # Only accept one connection to keep it long-lived
             threading.Thread(target=server_loop, args=(sock,), daemon=True).start()
 
-        def stop_server():
+        def stop_server() -> None:
             """
             Stops the running TCP server by closing the listening socket and resetting internal state.
 

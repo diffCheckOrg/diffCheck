@@ -36,7 +36,7 @@ class DFHTTPListener(component):
         sc.sticky.setdefault(f'{prefix}_prev_load', False)  # previous state of toggle
         sc.sticky.setdefault(f'{prefix}_thread_running', False)  # is a background thread running?
 
-        def _import_job(url: str):
+        def _import_job(url: str) -> None:
 
             """
             Downloads and imports a .ply file from a given URL in a background thread.

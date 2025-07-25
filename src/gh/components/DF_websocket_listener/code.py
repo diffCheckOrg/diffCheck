@@ -66,7 +66,7 @@ class DFWSServerListener(component):
         # START server
         if i_start and not sc.sticky[f'{prefix}_thread_started']:
 
-            async def echo(ws, path):
+            async def echo(ws, path: str) -> None:
                 """
                 Handles a single WebSocket client connection and reads messages containing point cloud data.
 
@@ -92,7 +92,7 @@ class DFWSServerListener(component):
                 except Exception as outer:
                     logs.append(f"Handler crashed: {outer}")
 
-            async def server_coro():
+            async def server_coro() -> None:
                 """
                 Coroutine that starts the WebSocket server and waits for it to be closed.
 
@@ -109,7 +109,7 @@ class DFWSServerListener(component):
                 await server.wait_closed()
                 logs.append("Server coroutine exited")
 
-            def run_server():
+            def run_server() -> None:
                 """
                 Blocking function that runs the WebSocket server coroutine in this thread.
 
