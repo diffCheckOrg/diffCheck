@@ -9,7 +9,6 @@ import Rhino.Geometry as rg
 import System.Drawing as sd
 from websockets.server import serve
 from diffCheck import df_gh_canvas_utils
-from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 class DFWSServerListener(component):
     def __init__(self):
