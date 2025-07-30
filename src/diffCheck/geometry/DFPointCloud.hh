@@ -152,7 +152,7 @@ namespace diffCheck::geometry
         */
         std::vector<Eigen::Vector3d> GetTightBoundingBox();
     
-    public:  ///< Point cloud subtraction
+    public:  ///< Point cloud subtraction and intersection
         /**
          * @brief Subtract the points, colors and normals from another point cloud when they are too close to the points of another point cloud.
          * 
@@ -160,6 +160,15 @@ namespace diffCheck::geometry
          * @param distanceThreshold the distance threshold to consider a point as too close. Default is 0.01.
          */
         void SubtractPoints(const DFPointCloud &pointCloud, double distanceThreshold = 0.01);
+
+        /**
+         * @brief Intersect the points, colors and normals from another point cloud when they are close enough to the points of another point cloud. Is the point cloud interpretation of a boolean intersection.
+         * 
+         * @param pointCloud the other point cloud to intersect with this one
+         * @param distanceThreshold the distance threshold to consider a point as too close. Default is 0.01.
+         * @return diffCheck::geometry::DFPointCloud the intersected point cloud
+         */
+        diffCheck::geometry::DFPointCloud Intersect(const DFPointCloud &pointCloud, double distanceThreshold = 0.01);
 
     public:  ///< Transformers
         /**
