@@ -97,6 +97,13 @@ namespace diffCheck::geometry
          */
         void Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound);
 
+        /**
+         * @brief Get the duplicate of the point cloud. This is mainly used in the python bindings
+         * 
+         * @return DFPointCloud a copy of the point cloud
+         */
+        diffCheck::geometry::DFPointCloud Duplicate() const;
+
     public:  ///< Downsamplers
         /**
          * @brief Downsample the point cloud with voxel grid

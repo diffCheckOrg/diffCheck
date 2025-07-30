@@ -231,6 +231,11 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    DFPointCloud DFPointCloud::Duplicate() const
+    {
+        return DFPointCloud(this->Points, this->Colors, this->Normals);
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
