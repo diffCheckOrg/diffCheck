@@ -134,9 +134,7 @@ class DFTCPListener(component):
         # Load buffered points into Rhino PointCloud
         if i_load and not sc.sticky[f'{prefix}_prev_load']:
             if not sc.sticky.get(f'{prefix}_server_started', False):
-                self.AddRuntimeMessage(RML.Warning,
-                                       "Please start server here before trying to send data from remote device.")
-                sc.sticky[f'{prefix}_status_message'] = "Server not started"
+                sc.sticky[f'{prefix}_status_message'] = "Start Server First!"
             else:
                 raw = sc.sticky.get(f'{prefix}_cloud_buffer_raw', [])
                 if raw:

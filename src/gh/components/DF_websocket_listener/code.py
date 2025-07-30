@@ -129,9 +129,7 @@ class DFWSServerListener(component):
         # LOAD buffered PCD on i_load rising edge
         if i_load and not sc.sticky[f'{prefix}_prev_load']:
             if not sc.sticky.get(f'{prefix}_server'):
-                self.AddRuntimeMessage(RML.Warning,
-                    "Please start server here before trying to send data from remote device.")
-                logs.append("Server not started")
+                logs.append("Start Server First!")
             else:
                 sc.sticky[f'{prefix}_loaded_pcd'] = sc.sticky.get(f'{prefix}_last_pcd')
                 cnt = len(sc.sticky[f'{prefix}_loaded_pcd']) if sc.sticky[f'{prefix}_loaded_pcd'] else 0
