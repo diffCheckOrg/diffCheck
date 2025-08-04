@@ -61,8 +61,15 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("remove_statistical_outliers", &diffCheck::geometry::DFPointCloud::RemoveStatisticalOutliers, 
             py::arg("nb_neighbors"), py::arg("std_ratio"))
 
-        .def("crop", &diffCheck::geometry::DFPointCloud::Crop,
+        .def("crop",
+            (void (diffCheck::geometry::DFPointCloud::*)(const Eigen::Vector3d&, const Eigen::Vector3d&))
+            &diffCheck::geometry::DFPointCloud::Crop,
             py::arg("min_bound"), py::arg("max_bound"))
+
+        .def("crop",
+            (void (diffCheck::geometry::DFPointCloud::*)(const std::vector<Eigen::Vector3d>&))
+            &diffCheck::geometry::DFPointCloud::Crop,
+            py::arg("corners"))
 
         .def("duplicate", &diffCheck::geometry::DFPointCloud::Duplicate)
 

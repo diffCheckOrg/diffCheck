@@ -231,6 +231,24 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    void DFPointCloud::Crop(const std::vector<Eigen::Vector3d> &corners)
+    {
+        if (corners.size() != 8)
+            throw std::invalid_argument("The corners vector must contain exactly 8 points.");
+        open3d::geometry::OrientedBoundingBox obb = open3d::geometry::OrientedBoundingBox::CreateFromPoints(corners);
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudCropped = O3DPointCloud->Crop(obb);
+        this->Points.clear();
+        for (auto &point : O3DPointCloudCropped->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudCropped->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudCropped->normals_)
+            this->Normals.push_back(normal);
+    }
+
     DFPointCloud DFPointCloud::Duplicate() const
     {
         return DFPointCloud(this->Points, this->Colors, this->Normals);

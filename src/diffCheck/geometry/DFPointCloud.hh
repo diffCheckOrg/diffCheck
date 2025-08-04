@@ -98,6 +98,12 @@ namespace diffCheck::geometry
         void Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound);
 
         /**
+         * @brief Crop the point cloud to a bounding box defined by the 8 corners of the box
+         * @param corners the 8 corners of the bounding box as a vector of Eigen::Vector3d
+         */
+        void Crop(const std::vector<Eigen::Vector3d> &corners);
+
+        /**
          * @brief Get the duplicate of the point cloud. This is mainly used in the python bindings
          * 
          * @return DFPointCloud a copy of the point cloud
