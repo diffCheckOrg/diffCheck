@@ -3,7 +3,7 @@
     "nickname": "Crop",
     "category": "diffCheck",
     "subcategory": "Cloud",
-    "description": "Crops a point cloud by giving the bounding box or limit values.",
+    "description": "Crops a point cloud by giving a boundary volume.",
     "exposure": 4,
     "instanceGuid": "f0461287-b1aa-47ec-87c4-0f03924cea24",
     "ghpython": {
@@ -26,29 +26,16 @@
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_box",
-                "nickname": "i_box",
-                "description": "The brep box to crop the point cloud with. Can only be a box.",
-                "optional": true,
+                "name": "i_boundary",
+                "nickname": "i_boundary",
+                "description": "The brep boundary to crop the point cloud with. If a box is provided, computation will be faster. If a generic brep is provided, it will be used but may be slower.",
+                "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "brep"
-            },
-            {
-                "name": "i_brep",
-                "nickname": "i_brep",
-                "description": "The brep to crop the point cloud with. This is slower than the box, but accommodates any Brep.",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "brep",
-                "flatten": false
             }
         ],
         "outputParameters": [
