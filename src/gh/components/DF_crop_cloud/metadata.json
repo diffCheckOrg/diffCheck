@@ -40,9 +40,17 @@
         ],
         "outputParameters": [
             {
-                "name": "o_cloud",
-                "nickname": "o_cloud",
-                "description": "The downsampled cloud.",
+                "name": "o_cloud_inside",
+                "nickname": "o_cloud_inside",
+                "description": "the points inside the cropping object.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_cloud_outside",
+                "nickname": "o_cloud_outside",
+                "description": "the points outside the cropping object.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
