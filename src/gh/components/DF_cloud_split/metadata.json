@@ -1,9 +1,9 @@
 {
-    "name": "DFCropCloud",
-    "nickname": "Crop",
+    "name": "DFCloudSplit",
+    "nickname": "Split",
     "category": "diffCheck",
     "subcategory": "Cloud",
-    "description": "Crops a point cloud by giving a boundary volume.",
+    "description": "Splits a point cloud using a boundary volume.",
     "exposure": 4,
     "instanceGuid": "f0461287-b1aa-47ec-87c4-0f03924cea24",
     "ghpython": {
@@ -16,7 +16,7 @@
             {
                 "name": "i_cloud",
                 "nickname": "i_cloud",
-                "description": "The point cloud to crop.",
+                "description": "The point cloud to split.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -28,7 +28,7 @@
             {
                 "name": "i_boundary",
                 "nickname": "i_boundary",
-                "description": "The brep boundary to crop the point cloud with. If a box is provided, computation will be faster. If a generic brep is provided, it will be used but may be slower.",
+                "description": "The brep boundary to split the point cloud with. If a box is provided, computation will be faster. If a generic brep is provided, it will be used but may be slower.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -42,7 +42,7 @@
             {
                 "name": "o_cloud_inside",
                 "nickname": "o_cloud_inside",
-                "description": "the points inside the cropping object.",
+                "description": "the points inside the splitting region.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
@@ -50,7 +50,7 @@
             {
                 "name": "o_cloud_outside",
                 "nickname": "o_cloud_outside",
-                "description": "the points outside the cropping object.",
+                "description": "the points outside the splitting region.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

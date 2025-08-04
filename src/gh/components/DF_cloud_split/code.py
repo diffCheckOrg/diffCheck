@@ -9,9 +9,9 @@ from ghpythonlib.componentbase import executingcomponent as component
 
 TOL = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance
 
-class DFCloudCrop(component):
+class DFCloudSplit(component):
     def __init__(self):
-        super(DFCloudCrop, self).__init__()
+        super(DFCloudSplit, self).__init__()
 
     def RunScript(self,
             i_cloud: Rhino.Geometry.PointCloud,
