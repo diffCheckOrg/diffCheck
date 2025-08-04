@@ -28,14 +28,27 @@
             {
                 "name": "i_box",
                 "nickname": "i_box",
-                "description": "The brep box to crop the point cloud with.",
-                "optional": false,
+                "description": "The brep box to crop the point cloud with. Can only be a box.",
+                "optional": true,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
                 "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "brep"
+            },
+            {
+                "name": "i_brep",
+                "nickname": "i_brep",
+                "description": "The brep to crop the point cloud with. This is slower than the box, but accommodates any Brep.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "brep",
+                "flatten": false
             }
         ],
         "outputParameters": [

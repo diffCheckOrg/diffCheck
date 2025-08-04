@@ -26,8 +26,8 @@
                 "typeHintID": "pointcloud"
             },
             {
-                "name": "i_cloud_subtract_with",
-                "nickname": "i_cloud_subtract_with",
+                "name": "i_cloud_B",
+                "nickname": "i_cloud_B",
                 "description": "The point cloud to subtract with.",
                 "optional": false,
                 "allowTreeAccess": true,

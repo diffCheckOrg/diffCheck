@@ -9,11 +9,11 @@ class DFCloudIntersect(component):
     def __init__(self):
         super(DFCloudIntersect, self).__init__()
     def RunScript(self,
-            i_cloud_intersect_from: Rhino.Geometry.PointCloud,
-            i_cloud_intersect_with: Rhino.Geometry.PointCloud,
+            i_cloud_A: Rhino.Geometry.PointCloud,
+            i_cloud_B: Rhino.Geometry.PointCloud,
             i_distance_threshold: float):
-        df_cloud = df_cvt.cvt_rhcloud_2_dfcloud(i_cloud_intersect_from)
-        df_cloud_intersect = df_cvt.cvt_rhcloud_2_dfcloud(i_cloud_intersect_with)
+        df_cloud = df_cvt.cvt_rhcloud_2_dfcloud(i_cloud_A)
+        df_cloud_intersect = df_cvt.cvt_rhcloud_2_dfcloud(i_cloud_B)
         if i_distance_threshold is None:
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Distance threshold not defined. 0.01 used as default value.")# noqa: F821
             i_distance_threshold = 0.01
