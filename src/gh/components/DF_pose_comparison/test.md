@@ -1,1 +1,0 @@
- $$ \theta = \arccos\left(\frac{\text{trace}(R_{\text{pred}}^T R_{\text{meas}}) - 1}{2}\right) $$
