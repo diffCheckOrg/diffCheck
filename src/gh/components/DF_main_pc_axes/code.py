@@ -5,16 +5,11 @@ from diffCheck import df_cvt_bindings
 from diffCheck import df_poses
 
 import Rhino
+from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from ghpythonlib.componentbase import executingcomponent as component
 
 import System
-
-def compute_dot_product(v1, v2):
-    """
-    Compute the dot product of two vectors.
-    """
-    return (v1.X * v2.X) + (v1.Y * v2.Y) + (v1.Z * v2.Z)
 
 class DFMainPCAxes(component):
     def RunScript(self,
@@ -33,7 +28,8 @@ class DFMainPCAxes(component):
             df_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud)
             if df_cloud is None:
                 return None, None
-            df_cloud.estimate_normals(True, 12)
+            if not df_cloud.has_normals():
+                ghenv.Component.AddRuntimeMessage(RML.Error, f"Point cloud {i} has no normals. Please compute the normals.") # noqa: F821
 
             df_points = df_cloud.get_axis_aligned_bounding_box()
             df_point = (df_points[0] + df_points[1]) / 2
