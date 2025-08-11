@@ -19,7 +19,8 @@ class DFCADSegmentator(component):
         i_clouds: System.Collections.Generic.IList[Rhino.Geometry.PointCloud],
         i_assembly,
         i_angle_threshold: float = 0.1,
-        i_association_threshold: float = 0.1) -> Rhino.Geometry.PointCloud:
+        i_association_threshold: float = 0.1,
+        i_stop_after_id: int = None) -> Rhino.Geometry.PointCloud:
 
         if i_clouds is None or i_assembly is None:
             self.AddRuntimeMessage(RML.Warning, "Please provide a cloud and an assembly to segment.")
@@ -38,7 +39,9 @@ class DFCADSegmentator(component):
         df_beams_meshes = []
         rh_beams_meshes = []
 
-        for df_b in df_beams:
+        stop_after_id = i_stop_after_id if i_stop_after_id is not None else len(df_beams)
+
+        for df_b in df_beams[:stop_after_id]:
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
             df_beams_meshes.append(df_b_mesh_faces)
