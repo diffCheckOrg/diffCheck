@@ -382,6 +382,7 @@ class DFBeam:
 
         self._center: rg.Point3d = None
         self._axis: rg.Line = self.compute_axis()
+        self.plane: rg.Plane = self.compute_plane()
         self._length: float = self._axis.Length
 
         self.__uuid = uuid.uuid4().int
@@ -524,15 +525,16 @@ class DFBeam:
             raise ValueError("The beam has no joints to compute a plane")
 
         #main axis as defined above
-        main_vector = self.compute_axis().Direction
+        main_direction = self.compute_axis().Direction
 
         #secondary axis as normal to the largest face of the beam
         largest_face = max(self.faces, key=lambda f: f.area)
         secondary_axis = largest_face.normal
         secondary_vector = rg.Vector3d(secondary_axis[0], secondary_axis[1], secondary_axis[2])
+        first_vector = rg.Vector3d.CrossProduct(main_direction, secondary_vector)
         origin = self.center
 
-        return rg.Plane(origin, main_vector, secondary_vector)
+        return rg.Plane(origin, first_vector, secondary_vector)
 
     def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
         """
