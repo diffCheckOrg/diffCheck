@@ -1,4 +1,7 @@
 from scriptcontext import sticky as rh_sticky_dict
+import ghpythonlib.treehelpers as th
+import Rhino
+
 import json
 from dataclasses import dataclass, field
 
@@ -10,6 +13,15 @@ class DFPose:
     origin: list
     xDirection: list
     yDirection: list
+
+    def to_rh_plane(self):
+        """
+        Convert the pose to a Rhino Plane object.
+        """
+        origin = Rhino.Geometry.Point3d(self.origin[0], self.origin[1], self.origin[2])
+        xDirection = Rhino.Geometry.Vector3d(self.xDirection[0], self.xDirection[1], self.xDirection[2])
+        yDirection = Rhino.Geometry.Vector3d(self.yDirection[0], self.yDirection[1], self.yDirection[2])
+        return Rhino.Geometry.Plane(origin, xDirection, yDirection)
 
 @dataclass
 class DFPosesBeam:
@@ -82,6 +94,18 @@ class DFPosesAssembly:
         """
         with open(file_path, 'w') as f:
             json.dump(self.poses_per_element_dictionary, f, default=lambda o: o.__dict__, indent=4)
+
+    def to_gh_tree(self):
+        """
+        Convert the assembly poses to a Grasshopper tree structure.
+        """
+        list_of_poses = []
+        for element, poses in self.poses_per_element_dictionary.items():
+            list_of_pose_of_element = []
+            for pose in poses.poses_dictionnary.values():
+                list_of_pose_of_element.append(pose.to_rh_plane() if pose is not None else None)
+            list_of_poses.append(list_of_pose_of_element)
+        return th.list_to_tree(list_of_poses)
 
 
 def compute_dot_product(v1, v2):
