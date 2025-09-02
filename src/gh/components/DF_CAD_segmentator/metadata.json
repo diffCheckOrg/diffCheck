@@ -60,18 +60,6 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "float"
-            },
-            {
-                "name": "i_stop_after_id",
-                "nickname": "i_stop_after_id",
-                "description": "The ID of the beam to stop processing after. This is intended for evaluating an assembly before its construction is completed.",
-                "optional": true,
-                "allowTreeAccess": true,
-                "showTypeHints": true,
-                "scriptParamAccess": "item",
-                "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "int"
             }
         ],
         "outputParameters": [

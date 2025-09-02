@@ -39,9 +39,7 @@ class DFCADSegmentator(component):
         df_beams_meshes = []
         rh_beams_meshes = []
 
-        stop_after_id = i_stop_after_id if i_stop_after_id is not None else len(df_beams)
-
-        for df_b in df_beams[:stop_after_id]:
+        for df_b in df_beams:
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
             df_beams_meshes.append(df_b_mesh_faces)
