@@ -26,9 +26,33 @@
                 "typeHintID": "pointcloud"
             }, 
             {
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The DFAssembly object to deconstruct.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            },
+            {
                 "name": "i_reset",
                 "nickname": "i_reset",
                 "description": "reset the history of the pose estimation",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
+                "name": "i_save",
+                "nickname": "i_save",
+                "description": "save the poses computed at this iteration",
                 "optional": true,
                 "allowTreeAccess": false,
                 "showTypeHints": true,
