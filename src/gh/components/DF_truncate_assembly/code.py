@@ -3,7 +3,7 @@ from ghpythonlib.componentbase import executingcomponent as component
 import diffCheck
 import diffCheck.df_geometries
 
-class DFTester(component):
+class DFTruncateAssembly(component):
     def RunScript(self,
                   i_assembly,
                   i_truncate_index: int):
