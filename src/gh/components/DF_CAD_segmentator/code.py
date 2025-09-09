@@ -19,8 +19,7 @@ class DFCADSegmentator(component):
         i_clouds: System.Collections.Generic.IList[Rhino.Geometry.PointCloud],
         i_assembly,
         i_angle_threshold: float = 0.1,
-        i_association_threshold: float = 0.1,
-        i_stop_after_id: int = None) -> Rhino.Geometry.PointCloud:
+        i_association_threshold: float = 0.1) -> Rhino.Geometry.PointCloud:
 
         if i_clouds is None or i_assembly is None:
             self.AddRuntimeMessage(RML.Warning, "Please provide a cloud and an assembly to segment.")
