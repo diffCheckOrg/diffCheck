@@ -7,7 +7,7 @@ class DFTruncateAssembly(component):
     def RunScript(self,
                   i_assembly,
                   i_truncate_index: int):
-        beams = i_assembly.beams[:i_truncate_index - 1]
+        beams = i_assembly.beams[:i_truncate_index + 1]
         name = i_assembly.name
 
         o_assembly = diffCheck.df_geometries.DFAssembly(name=name, beams=beams)
