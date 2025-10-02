@@ -1,0 +1,60 @@
+{
+    "name": "DFCloudSplit",
+    "nickname": "Split",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Splits a point cloud using a boundary volume.",
+    "exposure": 4,
+    "instanceGuid": "f0461287-b1aa-47ec-87c4-0f03924cea24",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud",
+                "nickname": "i_cloud",
+                "description": "The point cloud to split.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_boundary",
+                "nickname": "i_boundary",
+                "description": "The brep boundary to split the point cloud with. If a box is provided, computation will be faster. If a generic brep is provided, it will be used but may be slower.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "brep"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud_inside",
+                "nickname": "o_cloud_inside",
+                "description": "the points inside the splitting region.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_cloud_outside",
+                "nickname": "o_cloud_outside",
+                "description": "the points outside the splitting region.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
