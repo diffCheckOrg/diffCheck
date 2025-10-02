@@ -11,7 +11,8 @@ from ghpythonlib.componentbase import executingcomponent as component
 
 TOL = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance
 
-class DFMergeAssemblies(component):
+
+class DFCloudUnion(component):
     def RunScript(self,
             i_clouds: System.Collections.Generic.List[Rhino.Geometry.PointCloud]):
         if i_clouds is None or len(i_clouds) == 0:

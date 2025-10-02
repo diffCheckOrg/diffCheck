@@ -28,7 +28,7 @@ class DFCloudSplit(component):
             o_pts_in = df_cvt.cvt_dfcloud_2_rhcloud(df_cloud)
 
         else:
-            pts_in =  []
+            pts_in = []
             pts_out = []
             for pc_item in i_cloud:
                 point = Rhino.Geometry.Point3d(pc_item.X, pc_item.Y, pc_item.Z)

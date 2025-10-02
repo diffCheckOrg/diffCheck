@@ -1,6 +1,6 @@
 {
-    "name": "DFIntersectCloud",
-    "nickname": "Intersect",
+    "name": "DFCloudIntersection",
+    "nickname": "Intersection",
     "category": "diffCheck",
     "subcategory": "Cloud",
     "description": "Intersects points from two point clouds based on a distance threshold.",

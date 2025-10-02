@@ -5,9 +5,11 @@ from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from ghpythonlib.componentbase import executingcomponent as component
 
-class DFCloudIntersect(component):
+
+class DFCloudIntersection(component):
     def __init__(self):
-        super(DFCloudIntersect, self).__init__()
+        super(DFCloudIntersection, self).__init__()
+
     def RunScript(self,
             i_cloud_A: Rhino.Geometry.PointCloud,
             i_cloud_B: Rhino.Geometry.PointCloud,
