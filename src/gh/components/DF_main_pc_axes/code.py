@@ -53,4 +53,4 @@ class DFMainPCAxes(component):
         if i_save:
             all_poses_in_time.add_step(all_poses_this_time)
 
-        return [planes, all_poses_in_time]
+        return [planes, all_poses_in_time.to_gh_tree()]
