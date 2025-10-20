@@ -216,6 +216,76 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    std::vector<Eigen::Vector3d> DFPointCloud::GetPrincipalAxes(int nComponents)
+    {
+        std::vector<Eigen::Vector3d> principalAxes;
+
+        if (! this->HasNormals())
+        {
+            DIFFCHECK_WARN("The point cloud has no normals. Normals will be estimated with knn = 20.");
+            this->EstimateNormals(true, 20);
+        }
+
+        // Convert normals to Eigen matrix
+        Eigen::Matrix<double, 3, Eigen::Dynamic> normalMatrix(3, this->Normals.size());
+        for (size_t i = 0; i < this->Normals.size(); ++i)
+        {
+            normalMatrix.col(i) = this->Normals[i].cast<double>();
+        }
+
+        cilantro::KMeans<double, 3> kmeans(normalMatrix); 
+        kmeans.cluster(nComponents);
+
+        const cilantro::VectorSet3d& centroids = kmeans.getClusterCentroids();
+        const std::vector<size_t>& assignments = kmeans.getPointToClusterIndexMap();
+        std::vector<int> clusterSizes(nComponents, 0);
+        for (size_t i = 0; i < assignments.size(); ++i) 
+        {
+            clusterSizes[assignments[i]]++;
+        }
+        // Sort clusters by size
+        std::vector<std::pair<int, Eigen::Vector3d>> sortedClustersBySize(nComponents);
+        for (size_t i = 0; i < nComponents; ++i) 
+        {
+            sortedClustersBySize[i] = {clusterSizes[i], centroids.col(i)};
+        }
+        std::sort(sortedClustersBySize.begin(), sortedClustersBySize.end(), [](const auto& a, const auto& b) 
+        {
+            return a.first > b.first;
+        });
+
+        for(size_t i = 0; i < nComponents; ++i) 
+        {
+            if(principalAxes.size() == 0)
+            {
+                principalAxes.push_back(sortedClustersBySize[i].second);
+            }
+            else
+            {
+                bool isAlreadyPresent = false;
+                for (const auto& axis : principalAxes)
+                {
+                    double dotProduct = std::abs(axis.dot(sortedClustersBySize[i].second));
+                    if (std::abs(dotProduct) > 0.7) // Threshold to consider as similar direction
+                    {
+                        isAlreadyPresent = true;
+                        break;
+                    }
+                }
+                if (!isAlreadyPresent)
+                {
+                    principalAxes.push_back(sortedClustersBySize[i].second);
+                }
+            }
+        }
+        if (principalAxes.size() < 2) // Fallback to OBB if k-means fails to provide enough distinct axes
+        {
+            open3d::geometry::OrientedBoundingBox obb = this->Cvt2O3DPointCloud()->GetOrientedBoundingBox();
+            principalAxes = {obb.R_.col(0), obb.R_.col(1), obb.R_.col(2)};
+        }
+        return principalAxes;
+    }
+    
     void DFPointCloud::Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
