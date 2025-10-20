@@ -8,6 +8,8 @@
 
 #include <cilantro/utilities/point_cloud.hpp>
 #include <cilantro/core/nearest_neighbors.hpp>
+#include <cilantro/clustering/kmeans.hpp>
+
 
 namespace diffCheck::geometry
 {
@@ -89,6 +91,35 @@ namespace diffCheck::geometry
          */
         void RemoveStatisticalOutliers(int nbNeighbors, double stdRatio);
 
+        /**
+         * @brief Get the nCompoments principal axes of the normals of the point cloud
+         * It is used to compute the pose of "boxy" point clouds. It relies on KMeans clustering to find the main axes of the point cloud.
+         *  @param nComponents the number of components to compute (default 6, each of 3 main axes in both directions)
+         * @return std::vector<Eigen::Vector3d> the principal axes of the point cloud ordered by number of normals
+         */
+        std::vector<Eigen::Vector3d> GetPrincipalAxes(int nComponents = 6);
+
+        /**
+         *  @brief Crop the point cloud to a bounding box defined by the min and max bounds
+         * 
+         *  @param minBound the minimum bound of the bounding box as an Eigen::Vector3d
+         *  @param maxBound the maximum bound of the bounding box as an Eigen::Vector3d
+         */
+        void Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound);
+
+        /**
+         * @brief Crop the point cloud to a bounding box defined by the 8 corners of the box
+         * @param corners the 8 corners of the bounding box as a vector of Eigen::Vector3d
+         */
+        void Crop(const std::vector<Eigen::Vector3d> &corners);
+
+        /**
+         * @brief Get the duplicate of the point cloud. This is mainly used in the python bindings
+         * 
+         * @return DFPointCloud a copy of the point cloud
+         */
+        diffCheck::geometry::DFPointCloud Duplicate() const;
+
     public:  ///< Downsamplers
         /**
          * @brief Downsample the point cloud with voxel grid
@@ -136,6 +167,24 @@ namespace diffCheck::geometry
          *  /// 
         */
         std::vector<Eigen::Vector3d> GetTightBoundingBox();
+    
+    public:  ///< Point cloud subtraction and intersection
+        /**
+         * @brief Subtract the points, colors and normals from another point cloud when they are too close to the points of another point cloud.
+         * 
+         * @param pointCloud the other point cloud to subtract from this one
+         * @param distanceThreshold the distance threshold to consider a point as too close. Default is 0.01.
+         */
+        void SubtractPoints(const DFPointCloud &pointCloud, double distanceThreshold = 0.01);
+
+        /**
+         * @brief Intersect the points, colors and normals from another point cloud when they are close enough to the points of another point cloud. Is the point cloud interpretation of a boolean intersection.
+         * 
+         * @param pointCloud the other point cloud to intersect with this one
+         * @param distanceThreshold the distance threshold to consider a point as too close. Default is 0.01.
+         * @return diffCheck::geometry::DFPointCloud the intersected point cloud
+         */
+        diffCheck::geometry::DFPointCloud Intersect(const DFPointCloud &pointCloud, double distanceThreshold = 0.01);
 
     public:  ///< Transformers
         /**

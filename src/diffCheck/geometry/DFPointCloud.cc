@@ -216,6 +216,114 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    std::vector<Eigen::Vector3d> DFPointCloud::GetPrincipalAxes(int nComponents)
+    {
+        std::vector<Eigen::Vector3d> principalAxes;
+
+        if (! this->HasNormals())
+        {
+            DIFFCHECK_WARN("The point cloud has no normals. Normals will be estimated with knn = 20.");
+            this->EstimateNormals(true, 20);
+        }
+
+        // Convert normals to Eigen matrix
+        Eigen::Matrix<double, 3, Eigen::Dynamic> normalMatrix(3, this->Normals.size());
+        for (size_t i = 0; i < this->Normals.size(); ++i)
+        {
+            normalMatrix.col(i) = this->Normals[i].cast<double>();
+        }
+
+        cilantro::KMeans<double, 3> kmeans(normalMatrix); 
+        kmeans.cluster(nComponents);
+
+        const cilantro::VectorSet3d& centroids = kmeans.getClusterCentroids();
+        const std::vector<size_t>& assignments = kmeans.getPointToClusterIndexMap();
+        std::vector<int> clusterSizes(nComponents, 0);
+        for (size_t i = 0; i < assignments.size(); ++i) 
+        {
+            clusterSizes[assignments[i]]++;
+        }
+        // Sort clusters by size
+        std::vector<std::pair<int, Eigen::Vector3d>> sortedClustersBySize(nComponents);
+        for (size_t i = 0; i < nComponents; ++i) 
+        {
+            sortedClustersBySize[i] = {clusterSizes[i], centroids.col(i)};
+        }
+        std::sort(sortedClustersBySize.begin(), sortedClustersBySize.end(), [](const auto& a, const auto& b) 
+        {
+            return a.first > b.first;
+        });
+
+        for(size_t i = 0; i < nComponents; ++i) 
+        {
+            if(principalAxes.size() == 0)
+            {
+                principalAxes.push_back(sortedClustersBySize[i].second);
+            }
+            else
+            {
+                bool isAlreadyPresent = false;
+                for (const auto& axis : principalAxes)
+                {
+                    double dotProduct = std::abs(axis.dot(sortedClustersBySize[i].second));
+                    if (std::abs(dotProduct) > 0.7) // Threshold to consider as similar direction
+                    {
+                        isAlreadyPresent = true;
+                        break;
+                    }
+                }
+                if (!isAlreadyPresent)
+                {
+                    principalAxes.push_back(sortedClustersBySize[i].second);
+                }
+            }
+        }
+        if (principalAxes.size() < 2) // Fallback to OBB if k-means fails to provide enough distinct axes
+        {
+            open3d::geometry::OrientedBoundingBox obb = this->Cvt2O3DPointCloud()->GetOrientedBoundingBox();
+            principalAxes = {obb.R_.col(0), obb.R_.col(1), obb.R_.col(2)};
+        }
+        return principalAxes;
+    }
+    
+    void DFPointCloud::Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound)
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudCropped = O3DPointCloud->Crop(open3d::geometry::AxisAlignedBoundingBox(minBound, maxBound));
+        this->Points.clear();
+        for (auto &point : O3DPointCloudCropped->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudCropped->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudCropped->normals_)
+            this->Normals.push_back(normal);
+    }
+
+    void DFPointCloud::Crop(const std::vector<Eigen::Vector3d> &corners)
+    {
+        if (corners.size() != 8)
+            throw std::invalid_argument("The corners vector must contain exactly 8 points.");
+        open3d::geometry::OrientedBoundingBox obb = open3d::geometry::OrientedBoundingBox::CreateFromPoints(corners);
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudCropped = O3DPointCloud->Crop(obb);
+        this->Points.clear();
+        for (auto &point : O3DPointCloudCropped->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudCropped->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudCropped->normals_)
+            this->Normals.push_back(normal);
+    }
+
+    DFPointCloud DFPointCloud::Duplicate() const
+    {
+        return DFPointCloud(this->Points, this->Colors, this->Normals);
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
@@ -256,6 +364,86 @@ namespace diffCheck::geometry
         open3d::geometry::OrientedBoundingBox tightOOBB = this->Cvt2O3DPointCloud()->GetMinimalOrientedBoundingBox();
         std::vector<Eigen::Vector3d> bboxPts = tightOOBB.GetBoxPoints();
         return bboxPts;
+    }
+
+    void DFPointCloud::SubtractPoints(const DFPointCloud &pointCloud, double distanceThreshold)
+    {
+        if (this->Points.size() == 0 || pointCloud.Points.size() == 0)
+            throw std::invalid_argument("One of the point clouds is empty.");
+        
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = std::make_shared<DFPointCloud>(pointCloud)->Cvt2O3DPointCloud();
+        auto O3DResultPointCloud = std::make_shared<open3d::geometry::PointCloud>();
+
+        open3d::geometry::KDTreeFlann threeDTree;
+        threeDTree.SetGeometry(*O3DTargetPointCloud);
+        std::vector<int> indices;
+        std::vector<double> distances;
+        for (const auto &point : O3DSourcePointCloud->points_)
+        {
+            threeDTree.SearchRadius(point, distanceThreshold, indices, distances);
+            if (indices.empty())
+            {
+                O3DResultPointCloud->points_.push_back(point);
+                if (O3DSourcePointCloud->HasColors())
+                {
+                    O3DResultPointCloud->colors_.push_back(O3DSourcePointCloud->colors_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+                if (O3DSourcePointCloud->HasNormals())
+                {
+                    O3DResultPointCloud->normals_.push_back(O3DSourcePointCloud->normals_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+            }
+        }
+        this->Points.clear();
+        for (auto &point : O3DResultPointCloud->points_)
+            this->Points.push_back(point);
+        if (O3DResultPointCloud->HasColors())
+        {
+            this->Colors.clear();
+            for (auto &color : O3DResultPointCloud->colors_){this->Colors.push_back(color);};
+        }
+        if (O3DResultPointCloud->HasNormals())
+        {
+            this->Normals.clear();
+            for (auto &normal : O3DResultPointCloud->normals_){this->Normals.push_back(normal);};
+        }
+    }
+
+    diffCheck::geometry::DFPointCloud DFPointCloud::Intersect(const DFPointCloud &pointCloud, double distanceThreshold)
+    {
+        if (this->Points.size() == 0 || pointCloud.Points.size() == 0)
+            throw std::invalid_argument("One of the point clouds is empty.");
+        
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = std::make_shared<DFPointCloud>(pointCloud)->Cvt2O3DPointCloud();
+        auto O3DResultPointCloud = std::make_shared<open3d::geometry::PointCloud>();
+
+        open3d::geometry::KDTreeFlann threeDTree;
+        threeDTree.SetGeometry(*O3DTargetPointCloud);
+        std::vector<int> indices;
+        std::vector<double> distances;
+        for (const auto &point : O3DSourcePointCloud->points_)
+        {
+            threeDTree.SearchRadius(point, distanceThreshold, indices, distances);
+            if (!indices.empty())
+            {
+                O3DResultPointCloud->points_.push_back(point);
+                if (O3DSourcePointCloud->HasColors())
+                {
+                    O3DResultPointCloud->colors_.push_back(O3DSourcePointCloud->colors_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+                if (O3DSourcePointCloud->HasNormals())
+                {
+                    O3DResultPointCloud->normals_.push_back(O3DSourcePointCloud->normals_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+            }
+        }
+        diffCheck::geometry::DFPointCloud result;
+        result.Points = O3DResultPointCloud->points_;
+        result.Colors = O3DResultPointCloud->colors_;
+        result.Normals = O3DResultPointCloud->normals_;
+        return result;
     }
 
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)
