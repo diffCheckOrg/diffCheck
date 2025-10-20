@@ -41,6 +41,12 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         .def("downsample_by_size", &diffCheck::geometry::DFPointCloud::DownsampleBySize,
             py::arg("target_size"))
 
+        .def("subtract_points", &diffCheck::geometry::DFPointCloud::SubtractPoints,
+            py::arg("point_cloud"), py::arg("distance_threshold"))
+        
+        .def("intersect", &diffCheck::geometry::DFPointCloud::Intersect,
+            py::arg("point_cloud"), py::arg("distance_threshold"))
+
         .def("apply_transformation", &diffCheck::geometry::DFPointCloud::ApplyTransformation,
             py::arg("transformation"))
 
@@ -57,6 +63,17 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
 
         .def("get_principal_axes", &diffCheck::geometry::DFPointCloud::GetPrincipalAxes,
             py::arg("n_components") = 6)
+        .def("crop",
+            (void (diffCheck::geometry::DFPointCloud::*)(const Eigen::Vector3d&, const Eigen::Vector3d&))
+            &diffCheck::geometry::DFPointCloud::Crop,
+            py::arg("min_bound"), py::arg("max_bound"))
+
+        .def("crop",
+            (void (diffCheck::geometry::DFPointCloud::*)(const std::vector<Eigen::Vector3d>&))
+            &diffCheck::geometry::DFPointCloud::Crop,
+            py::arg("corners"))
+
+        .def("duplicate", &diffCheck::geometry::DFPointCloud::Duplicate)
 
         .def("load_from_PLY", &diffCheck::geometry::DFPointCloud::LoadFromPLY)
         .def("save_to_PLY", &diffCheck::geometry::DFPointCloud::SaveToPLY)
