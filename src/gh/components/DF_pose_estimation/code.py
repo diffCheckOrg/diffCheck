@@ -7,10 +7,10 @@ import Rhino
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
 
 from ghpythonlib.componentbase import executingcomponent as component
-
 import System
 
-class DFMainPCAxes(component):
+
+class DFPoseEstimation(component):
     def RunScript(self,
             i_clouds: System.Collections.Generic.List[Rhino.Geometry.PointCloud],
             i_assembly,
