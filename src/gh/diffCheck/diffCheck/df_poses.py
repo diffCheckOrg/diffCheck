@@ -145,8 +145,8 @@ def select_vectors(vectors, previous_xDirection, previous_yDirection):
         new_yDirection = sorted_vectors_by_perpendicularity[0] - compute_dot_product(sorted_vectors_by_perpendicularity[0], new_xDirection) * new_xDirection
         new_yDirection.Unitize()
     else:
-        new_xDirection = vectors[0]
+
         sorted_vectors = sorted(vectors[1:], key=lambda v: compute_dot_product(v, new_xDirection)**2)
-        new_yDirection = sorted_vectors[0] - compute_dot_product(vectors[1], new_xDirection) * new_xDirection
+        new_yDirection = sorted_vectors[0] - compute_dot_product(sorted_vectors[0], new_xDirection) * new_xDirection
         new_yDirection.Unitize()
     return new_xDirection, new_yDirection
