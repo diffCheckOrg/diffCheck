@@ -256,7 +256,32 @@ namespace diffCheck::geometry
 
         for(size_t i = 0; i < nComponents; ++i) 
         {
-            principalAxes.push_back(sortedClustersBySize[i].second);
+            if(principalAxes.size() == 0)
+            {
+                principalAxes.push_back(sortedClustersBySize[i].second);
+            }
+            else
+            {
+                bool isAlreadyPresent = false;
+                for (const auto& axis : principalAxes)
+                {
+                    double dotProduct = std::abs(axis.dot(sortedClustersBySize[i].second));
+                    if (std::abs(dotProduct) > 0.7) // Threshold to consider as similar direction
+                    {
+                        isAlreadyPresent = true;
+                        break;
+                    }
+                }
+                if (!isAlreadyPresent)
+                {
+                    principalAxes.push_back(sortedClustersBySize[i].second);
+                }
+            }
+        }
+        if (principalAxes.size() < 2) // Fallback to OBB if k-means fails to provide enough distinct axes
+        {
+            open3d::geometry::OrientedBoundingBox obb = this->Cvt2O3DPointCloud()->GetOrientedBoundingBox();
+            principalAxes = {obb.R_.col(0), obb.R_.col(1), obb.R_.col(2)};
         }
         return principalAxes;
     }

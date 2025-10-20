@@ -1,6 +1,16 @@
 from scriptcontext import sticky as rh_sticky_dict
+import ghpythonlib.treehelpers as th
+import Rhino
+
 import json
 from dataclasses import dataclass, field
+
+# use a key and not all the sticky
+_STICKY_KEY = "df_poses"
+
+def _get_store():
+    # returns private sub-dict inside rhino sticky
+    return rh_sticky_dict.setdefault(_STICKY_KEY, {})
 
 @dataclass
 class DFPose:
@@ -11,20 +21,29 @@ class DFPose:
     xDirection: list
     yDirection: list
 
+    def to_rh_plane(self):
+        """
+        Convert the pose to a Rhino Plane object.
+        """
+        origin = Rhino.Geometry.Point3d(self.origin[0], self.origin[1], self.origin[2])
+        xDirection = Rhino.Geometry.Vector3d(self.xDirection[0], self.xDirection[1], self.xDirection[2])
+        yDirection = Rhino.Geometry.Vector3d(self.yDirection[0], self.yDirection[1], self.yDirection[2])
+        return Rhino.Geometry.Plane(origin, xDirection, yDirection)
+
 @dataclass
 class DFPosesBeam:
     """
     This class contains the poses of a single beam, at different times in the assembly process.
     It also contains the number of faces detected for this element, based on which the poses are calculated.
     """
-    poses_dictionnary: dict
+    poses_dictionary: dict
     n_faces: int = 3
 
     def add_pose(self, pose: DFPose, step_number: int):
         """
         Add a pose to the dictionary of poses.
         """
-        self.poses_dictionnary[f"pose_{step_number}"] = pose
+        self.poses_dictionary[f"pose_{step_number}"] = pose
 
     def set_n_faces(self, n_faces: int):
         """
@@ -35,7 +54,7 @@ class DFPosesBeam:
 @dataclass
 class DFPosesAssembly:
     n_step: int = 0
-    poses_per_element_dictionary: dict = field(default_factory=lambda: rh_sticky_dict)
+    poses_per_element_dictionary: dict = field(default_factory=_get_store)
 
     """
     This class contains the poses of the different elements of the assembly, at different times in the assembly process.
@@ -46,7 +65,7 @@ class DFPosesAssembly:
         """
         lengths = []
         for element in self.poses_per_element_dictionary:
-            lengths.append(len(self.poses_per_element_dictionary[element].poses_dictionnary))
+            lengths.append(len(self.poses_per_element_dictionary[element].poses_dictionary))
         self.n_step = max(lengths) if lengths else 0
 
     def add_step(self, new_poses: list[DFPose]):
@@ -66,7 +85,7 @@ class DFPosesAssembly:
             return None
         last_poses = []
         for i in range(len(self.poses_per_element_dictionary)):
-            last_poses.append(self.poses_per_element_dictionary[f"element_{i}"].poses_dictionnary[f"pose_{self.n_step-1}"])
+            last_poses.append(self.poses_per_element_dictionary[f"element_{i}"].poses_dictionary[f"pose_{self.n_step-1}"])
         return last_poses
 
     def reset(self):
@@ -74,7 +93,10 @@ class DFPosesAssembly:
         Reset the assembly poses to the initial state.
         """
         self.n_step = 0
-        rh_sticky_dict.clear()
+        # clear only namespace
+        rh_sticky_dict[_STICKY_KEY] = {}
+        # refresh the local reference to the (now empty) store
+        self.poses_per_element_dictionary = _get_store()
 
     def save(self, file_path: str):
         """
@@ -82,6 +104,18 @@ class DFPosesAssembly:
         """
         with open(file_path, 'w') as f:
             json.dump(self.poses_per_element_dictionary, f, default=lambda o: o.__dict__, indent=4)
+
+    def to_gh_tree(self):
+        """
+        Convert the assembly poses to a Grasshopper tree structure.
+        """
+        list_of_poses = []
+        for element, poses in self.poses_per_element_dictionary.items():
+            list_of_pose_of_element = []
+            for pose in poses.poses_dictionary.values():
+                list_of_pose_of_element.append(pose.to_rh_plane() if pose is not None else None)
+            list_of_poses.append(list_of_pose_of_element)
+        return th.list_to_tree(list_of_poses)
 
 
 def compute_dot_product(v1, v2):
@@ -111,8 +145,8 @@ def select_vectors(vectors, previous_xDirection, previous_yDirection):
         new_yDirection = sorted_vectors_by_perpendicularity[0] - compute_dot_product(sorted_vectors_by_perpendicularity[0], new_xDirection) * new_xDirection
         new_yDirection.Unitize()
     else:
-        new_xDirection = vectors[0]
+
         sorted_vectors = sorted(vectors[1:], key=lambda v: compute_dot_product(v, new_xDirection)**2)
-        new_yDirection = sorted_vectors[0] - compute_dot_product(vectors[1], new_xDirection) * new_xDirection
+        new_yDirection = sorted_vectors[0] - compute_dot_product(sorted_vectors[0], new_xDirection) * new_xDirection
         new_yDirection.Unitize()
     return new_xDirection, new_yDirection

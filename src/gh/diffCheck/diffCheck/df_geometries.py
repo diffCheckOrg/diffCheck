@@ -101,6 +101,7 @@ class DFFace:
         self._center: DFVertex = None
         # the normal of the face
         self._normal: typing.List[float] = None
+        self._area: float = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -261,6 +262,12 @@ class DFFace:
             self._normal = [normal_rg.X, normal_rg.Y, normal_rg.Z]
         return self._normal
 
+    @property
+    def area(self):
+        if self._area is None:
+            self._area = self.to_brep_face().ToBrep().GetArea()
+        return self._area
+
 @dataclass
 class DFJoint:
     """
@@ -375,6 +382,7 @@ class DFBeam:
 
         self._center: rg.Point3d = None
         self._axis: rg.Line = self.compute_axis()
+        self.plane: rg.Plane = self.compute_plane()
         self._length: float = self._axis.Length
 
         self.__uuid = uuid.uuid4().int
@@ -505,6 +513,28 @@ class DFBeam:
             )
 
         return axis_ln
+
+    def compute_plane(self) -> rg.Plane:
+        """
+        This function computes the plane of the beam based on its axis and the first joint's center.
+        The plane is oriented along the beam's axis.
+
+        :return plane: The plane of the beam
+        """
+        if not self.joints:
+            raise ValueError("The beam has no joints to compute a plane")
+
+        #main axis as defined above
+        main_direction = self.compute_axis().Direction
+
+        #secondary axis as normal to the largest face of the beam
+        largest_face = max(self.faces, key=lambda f: f.area)
+        secondary_axis = largest_face.normal
+        secondary_vector = rg.Vector3d(secondary_axis[0], secondary_axis[1], secondary_axis[2])
+        first_vector = rg.Vector3d.CrossProduct(main_direction, secondary_vector)
+        origin = self.center
+
+        return rg.Plane(origin, first_vector, secondary_vector)
 
     def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
         """

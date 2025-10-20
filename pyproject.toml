@@ -20,7 +20,8 @@ module = [
     "GH_IO.*",
     "clr.*",
     "diffcheck_bindings",
-    "diffCheck.diffcheck_bindings"
+    "diffCheck.diffcheck_bindings",
+    "ghpythonlib.*"
 ]
 ignore_missing_imports = true
 

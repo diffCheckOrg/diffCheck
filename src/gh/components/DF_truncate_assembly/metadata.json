@@ -1,0 +1,52 @@
+{
+    "name": "DFTruncateAssembly",
+    "nickname": "TruncateAssembly",
+    "category": "diffCheck",
+    "subcategory": "Structure",
+    "description": "This component truncates an assembly.",
+    "exposure": 4,
+    "instanceGuid": "cf8af97f-dd84-40b6-af44-bf6aca7b941b",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The assembly to be truncated.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            }, 
+            {
+                "name": "i_truncate_index",
+                "nickname": "i_truncate_index",
+                "description": "The index at which to truncate the assembly.",
+                "optional": false,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_assembly",
+                "nickname": "o_assembly",
+                "description": "The resulting assembly after truncation.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}   
