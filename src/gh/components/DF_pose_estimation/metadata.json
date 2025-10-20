@@ -5,7 +5,7 @@
     "subcategory": "PointCloud",
     "description": "This compoment calculates the pose of a list of point clouds.",
     "exposure": 4,
-    "instanceGuid": "22b0c6fc-bc16-4ff5-b789-e99776277f65",
+    "instanceGuid": "a13c4414-f5df-46e6-beae-7054bb9c3e72",
     "ghpython": {
         "hideOutput": true,
         "hideInput": true,
@@ -16,7 +16,7 @@
             {
                 "name": "i_clouds",
                 "nickname": "i_clouds",
-                "description": "clouds whose main axes are to be calculated",
+                "description": "clouds whose pose is to be calculated",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -28,7 +28,7 @@
             {
                 "name": "i_assembly",
                 "nickname": "i_assembly",
-                "description": "The DFAssembly object to deconstruct.",
+                "description": "The DFAssembly corresponding to the list of clouds.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
@@ -74,7 +74,7 @@
             {
                 "name": "o_history",
                 "nickname": "o_history",
-                "description": "The history of poses of all the elements.",
+                "description": "The history of poses per elements.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
