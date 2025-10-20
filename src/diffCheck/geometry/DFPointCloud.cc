@@ -284,6 +284,8 @@ namespace diffCheck::geometry
             principalAxes = {obb.R_.col(0), obb.R_.col(1), obb.R_.col(2)};
         }
         return principalAxes;
+    }
+    
     void DFPointCloud::Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();

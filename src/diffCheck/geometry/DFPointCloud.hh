@@ -98,6 +98,8 @@ namespace diffCheck::geometry
          * @return std::vector<Eigen::Vector3d> the principal axes of the point cloud ordered by number of normals
          */
         std::vector<Eigen::Vector3d> GetPrincipalAxes(int nComponents = 6);
+
+        /**
          *  @brief Crop the point cloud to a bounding box defined by the min and max bounds
          * 
          *  @param minBound the minimum bound of the bounding box as an Eigen::Vector3d
