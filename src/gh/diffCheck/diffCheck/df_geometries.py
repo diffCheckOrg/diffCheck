@@ -516,25 +516,17 @@ class DFBeam:
 
     def compute_plane(self) -> rg.Plane:
         """
-        This function computes the plane of the beam based on its axis and the first joint's center.
-        The plane is oriented along the beam's axis.
+        This is an utility function that computes the plane of the beam.
+        The plane is calculated using the beam's axis and the world Z axis.
 
         :return plane: The plane of the beam
         """
-        if not self.joints:
-            raise ValueError("The beam has no joints to compute a plane")
+        beam_direction = self.axis.Direction
+        df_faces = [face for face in self.faces]
+        sorted_df_faces = sorted(df_faces, key=lambda face: Rhino.Geometry.AreaMassProperties.Compute(face._rh_brepface).Area if face._rh_brepface else 0, reverse=True)
+        largest_side_face_normal = sorted_df_faces[0].normal
 
-        #main axis as defined above
-        main_direction = self.compute_axis().Direction
-
-        #secondary axis as normal to the largest face of the beam
-        largest_face = max(self.faces, key=lambda f: f.area)
-        secondary_axis = largest_face.normal
-        secondary_vector = rg.Vector3d(secondary_axis[0], secondary_axis[1], secondary_axis[2])
-        first_vector = rg.Vector3d.CrossProduct(main_direction, secondary_vector)
-        origin = self.center
-
-        return rg.Plane(origin, first_vector, secondary_vector)
+        return rg.Plane(self.center, beam_direction, rg.Vector3d(largest_side_face_normal[0], largest_side_face_normal[1], largest_side_face_normal[2]))
 
     def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
         """
@@ -695,6 +687,11 @@ class DFBeam:
     def axis(self):
         self._axis = self.compute_axis()
         return self._axis
+
+    @property
+    def plane(self):
+        self._plane = self.compute_plane()
+        return self._plane
 
     @property
     def length(self):
