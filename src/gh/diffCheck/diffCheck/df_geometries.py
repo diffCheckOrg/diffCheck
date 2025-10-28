@@ -382,7 +382,7 @@ class DFBeam:
 
         self._center: rg.Point3d = None
         self._axis: rg.Line = self.compute_axis()
-        self.plane: rg.Plane = self.compute_plane()
+        self._plane: rg.Plane = self.compute_plane()
         self._length: float = self._axis.Length
 
         self.__uuid = uuid.uuid4().int
