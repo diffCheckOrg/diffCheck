@@ -14,11 +14,6 @@ class DFPoseComparison(component):
             i_assembly: diffCheck.df_geometries.DFAssembly,
             i_measured_poses: System.Collections.Generic.List[Rhino.Geometry.Plane]):
 
-        if len(i_assembly.beams) != len(i_measured_poses):
-            ghenv.Component.Message = "evaluation during assembly" # noqa: F821
-        else:
-            ghenv.Component.Message = "evaluation of completed assembly" # noqa: F821
-
         CAD_poses = [beam.plane for beam in i_assembly.beams]
 
         o_distances = []
