@@ -375,6 +375,7 @@ class DFBeam:
 
         self._center: rg.Point3d = None
         self._axis: rg.Line = self.compute_axis()
+        self._plane = self.compute_plane()
         self._length: float = self._axis.Length
 
         self.__uuid = uuid.uuid4().int
@@ -505,6 +506,20 @@ class DFBeam:
             )
 
         return axis_ln
+
+    def compute_plane(self) -> rg.Plane:
+        """
+        This is an utility function that computes the plane of the beam.
+        The plane is calculated using the beam's axis and the world Z axis.
+
+        :return plane: The plane of the beam
+        """
+        beam_direction = self.axis.Direction
+        df_faces = [face for face in self.faces]
+        sorted_df_faces = sorted(df_faces, key=lambda face: Rhino.Geometry.AreaMassProperties.Compute(face._rh_brepface).Area if face._rh_brepface else 0, reverse=True)
+        largest_side_face_normal = sorted_df_faces[0].normal
+
+        return rg.Plane(self.center, beam_direction, rg.Vector3d(largest_side_face_normal[0], largest_side_face_normal[1], largest_side_face_normal[2]))
 
     def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
         """
@@ -665,6 +680,11 @@ class DFBeam:
     def axis(self):
         self._axis = self.compute_axis()
         return self._axis
+
+    @property
+    def plane(self):
+        self._plane = self.compute_plane()
+        return self._plane
 
     @property
     def length(self):
