@@ -14,16 +14,16 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_CAD_poses",
-                "nickname": "i_CAD_poses",
-                "description": "The CAD poses to compare.",
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The DFAssembly of the structure.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
-                "scriptParamAccess": "list",
+                "scriptParamAccess": "item",
                 "wireDisplay": "default",
                 "sourceCount": 0,
-                "typeHintID": "plane"
+                "typeHintID": "ghdoc"
             },
             {
                 "name": "i_measured_poses",
