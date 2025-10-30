@@ -64,8 +64,8 @@
         ],
         "outputParameters": [
             {
-                "name": "o_planes",
-                "nickname": "o_planes",
+                "name": "o_measured_planes",
+                "nickname": "o_measured_planes",
                 "description": "The resulting planes of the pose estimation in the last iteration.",
                 "optional": false,
                 "sourceCount": 0,
