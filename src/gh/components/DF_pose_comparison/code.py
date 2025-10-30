@@ -1,3 +1,4 @@
+"""Compares CAD poses with measured poses to compute errors."""
 #! python3
 
 import Rhino
@@ -12,7 +13,7 @@ import numpy
 class DFPoseComparison(component):
     def RunScript(self,
             i_assembly: diffCheck.df_geometries.DFAssembly,
-            i_measured_poses: System.Collections.Generic.List[Rhino.Geometry.Plane]):
+            i_measured_poses: System.Collections.Generic.List[object]):
 
         CAD_poses = [beam.plane for beam in i_assembly.beams]
 
@@ -22,6 +23,11 @@ class DFPoseComparison(component):
         # Compare the origins
         #   measure the distance between the origins of the CAD pose and the measured pose and output this in the component
         for i in range(len(i_measured_poses)):
+            if not i_measured_poses[i]:
+                o_distances.append(None)
+                o_angles.append(None)
+                o_transforms_cad_to_measured.append(None)
+                continue
             cad_origin = CAD_poses[i].Origin
             measured_origin = i_measured_poses[i].Origin
             distance = cad_origin.DistanceTo(measured_origin)
