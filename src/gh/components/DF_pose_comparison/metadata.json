@@ -34,8 +34,7 @@
                 "showTypeHints": true,
                 "scriptParamAccess": "list",
                 "wireDisplay": "default",
-                "sourceCount": 0,
-                "typeHintID": "plane"
+                "sourceCount": 0
             }
         ],
         "outputParameters": [
