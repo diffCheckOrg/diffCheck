@@ -13,7 +13,7 @@ import numpy
 class DFPoseComparison(component):
     def RunScript(self,
             i_assembly: diffCheck.df_geometries.DFAssembly,
-            i_measured_poses: System.Collections.Generic.List[object]):
+            i_measured_planes: System.Collections.Generic.List[object]):
 
         CAD_poses = [beam.plane for beam in i_assembly.beams]
 
@@ -22,20 +22,20 @@ class DFPoseComparison(component):
         o_transforms_cad_to_measured = []
         # Compare the origins
         #   measure the distance between the origins of the CAD pose and the measured pose and output this in the component
-        for i in range(len(i_measured_poses)):
-            if not i_measured_poses[i]:
+        for i in range(len(i_measured_planes)):
+            if not i_measured_planes[i]:
                 o_distances.append(None)
                 o_angles.append(None)
                 o_transforms_cad_to_measured.append(None)
                 continue
             cad_origin = CAD_poses[i].Origin
-            measured_origin = i_measured_poses[i].Origin
+            measured_origin = i_measured_planes[i].Origin
             distance = cad_origin.DistanceTo(measured_origin)
             o_distances.append(distance)
 
             # Compare the orientations using the formula: $$ \theta = \arccos\left(\frac{\text{trace}(R_{\text{pred}}^T R_{\text{meas}}) - 1}{2}\right) $$
             transform_o_to_cad = Rhino.Geometry.Transform.PlaneToPlane(Rhino.Geometry.Plane.WorldXY, CAD_poses[i])
-            transform_o_to_measured = Rhino.Geometry.Transform.PlaneToPlane(Rhino.Geometry.Plane.WorldXY, i_measured_poses[i])
+            transform_o_to_measured = Rhino.Geometry.Transform.PlaneToPlane(Rhino.Geometry.Plane.WorldXY, i_measured_planes[i])
             np_transform_o_to_cad = numpy.array(transform_o_to_cad.ToDoubleArray(rowDominant=True)).reshape((4, 4))
             np_transform_o_to_measured = numpy.array(transform_o_to_measured.ToDoubleArray(rowDominant=True)).reshape((4, 4))
 
@@ -46,7 +46,7 @@ class DFPoseComparison(component):
             o_angles.append(theta)
 
             # Compute the transformation matrix between the CAD pose and the measured pose
-            transform_cad_to_measured = Rhino.Geometry.Transform.PlaneToPlane(CAD_poses[i], i_measured_poses[i])
+            transform_cad_to_measured = Rhino.Geometry.Transform.PlaneToPlane(CAD_poses[i], i_measured_planes[i])
             o_transforms_cad_to_measured.append(transform_cad_to_measured)
 
         return [o_distances, o_angles, o_transforms_cad_to_measured]

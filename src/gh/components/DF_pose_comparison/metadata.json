@@ -26,9 +26,9 @@
                 "typeHintID": "ghdoc"
             },
             {
-                "name": "i_measured_poses",
-                "nickname": "i_measured_poses",
-                "description": "The measured poses to compare against the CAD poses.",
+                "name": "i_measured_planes",
+                "nickname": "i_measured_planes",
+                "description": "The measured planes (aka poses) to compare against the CAD planes.",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,
