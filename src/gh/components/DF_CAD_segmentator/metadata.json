@@ -70,6 +70,14 @@
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
+            },
+            {
+                "name": "o_face_clusters",
+                "nickname": "o_face_clusters",
+                "description": "The clouds associated to each face.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
             }
         ]
     }

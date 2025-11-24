@@ -5,6 +5,7 @@ import System
 import Rhino
 from ghpythonlib.componentbase import executingcomponent as component
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
+import ghpythonlib.treehelpers as th
 
 
 from diffCheck.diffcheck_bindings import dfb_segmentation
@@ -19,7 +20,7 @@ class DFCADSegmentator(component):
         i_clouds: System.Collections.Generic.IList[Rhino.Geometry.PointCloud],
         i_assembly,
         i_angle_threshold: float = 0.1,
-        i_association_threshold: float = 0.1) -> Rhino.Geometry.PointCloud:
+        i_association_threshold: float = 0.1):
 
         if i_clouds is None or i_assembly is None:
             self.AddRuntimeMessage(RML.Warning, "Please provide a cloud and an assembly to segment.")
@@ -29,7 +30,8 @@ class DFCADSegmentator(component):
         if i_association_threshold is None:
             i_association_threshold = 0.1
 
-        o_clusters = []
+        o_aggregated_clusters = []
+        o_face_clusters = []
         df_clusters = []
         # we make a deepcopy of the input clouds
         df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
@@ -39,6 +41,8 @@ class DFCADSegmentator(component):
         rh_beams_meshes = []
 
         for df_b in df_beams:
+            o_face_clusters.append([])
+
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
             df_beams_meshes.append(df_b_mesh_faces)
@@ -53,27 +57,30 @@ class DFCADSegmentator(component):
                 association_threshold=i_association_threshold
             )
 
-            df_asssociated_cluster = dfb_geometry.DFPointCloud()
-            for df_associated_face in df_asssociated_cluster_faces:
-                df_asssociated_cluster.add_points(df_associated_face)
-
             dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
                 is_roundwood=df_b.is_roundwood,
                 unassociated_clusters=df_clouds,
-                associated_clusters=[df_asssociated_cluster],
+                associated_clusters=[df_asssociated_cluster_faces],
                 reference_mesh=[df_b_mesh_faces],
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold
             )
 
+            o_face_clusters[-1] = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_asssociated_cluster_faces]
+
+            df_asssociated_cluster = dfb_geometry.DFPointCloud()
+            for df_associated_face in df_asssociated_cluster_faces:
+                df_asssociated_cluster.add_points(df_associated_face)
+
             df_clusters.append(df_asssociated_cluster)
 
-        o_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
+        o_aggregated_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
-        for o_cluster in o_clusters:
-            if not o_cluster.IsValid:
-                o_cluster = None
+        for o_aggregated_cluster in o_aggregated_clusters:
+            if not o_aggregated_cluster.IsValid:
+                o_aggregated_cluster = None
                 ghenv.Component.AddRuntimeMessage(RML.Warning, "Some beams could not be segmented and were replaced by 'None'")  # noqa: F821
 
+        o_face_clusters = th.list_to_tree(o_face_clusters)
 
-        return o_clusters
+        return o_aggregated_clusters, o_face_clusters
