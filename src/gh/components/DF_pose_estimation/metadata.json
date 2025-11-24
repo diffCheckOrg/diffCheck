@@ -14,8 +14,8 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_clouds",
-                "nickname": "i_clouds",
+                "name": "i_face_clusters",
+                "nickname": "i_face_clusters",
                 "description": "clouds whose pose is to be calculated",
                 "optional": false,
                 "allowTreeAccess": true,
