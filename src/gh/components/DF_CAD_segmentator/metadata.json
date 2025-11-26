@@ -64,17 +64,17 @@
         ],
         "outputParameters": [
             {
-                "name": "o_clusters",
-                "nickname": "o_clusters",
-                "description": "The clouds associated to each beam.",
+                "name": "o_beam_clouds",
+                "nickname": "o_beam_clouds",
+                "description": "The merged clouds associated to each beam.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
             },
             {
-                "name": "o_face_clusters",
-                "nickname": "o_face_clusters",
-                "description": "The clouds associated to each face.",
+                "name": "o_face_clouds",
+                "nickname": "o_face_clouds",
+                "description": "The datatree of clouds associated to each face.",
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false

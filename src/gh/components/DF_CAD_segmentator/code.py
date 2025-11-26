@@ -30,7 +30,6 @@ class DFCADSegmentator(component):
         if i_association_threshold is None:
             i_association_threshold = 0.1
 
-        o_aggregated_clusters = []
         o_face_clusters = []
         df_clusters = []
         # we make a deepcopy of the input clouds
@@ -74,13 +73,13 @@ class DFCADSegmentator(component):
 
             df_clusters.append(df_asssociated_cluster)
 
-        o_aggregated_clusters = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
+        o_beam_clouds = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_clusters]
 
-        for o_aggregated_cluster in o_aggregated_clusters:
-            if not o_aggregated_cluster.IsValid:
-                o_aggregated_cluster = None
+        for o_beam_cloud in o_beam_clouds:
+            if not o_beam_cloud.IsValid:
+                o_beam_cloud = None
                 ghenv.Component.AddRuntimeMessage(RML.Warning, "Some beams could not be segmented and were replaced by 'None'")  # noqa: F821
 
-        o_face_clusters = th.list_to_tree(o_face_clusters)
+        o_face_clouds = th.list_to_tree(o_face_clusters)
 
-        return o_aggregated_clusters, o_face_clusters
+        return [o_beam_clouds, o_face_clouds]

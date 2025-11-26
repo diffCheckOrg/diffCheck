@@ -15,12 +15,12 @@ from ghpythonlib.componentbase import executingcomponent as component
 
 class DFPoseEstimation(component):
     def RunScript(self,
-            i_face_clusters: Grasshopper.DataTree[Rhino.Geometry.PointCloud],
+            i_face_clouds: Grasshopper.DataTree[Rhino.Geometry.PointCloud],
             i_assembly,
             i_reset: bool,
             i_save: bool):
 
-        clusters_per_beam = th.tree_to_list(i_face_clusters)
+        clusters_per_beam = th.tree_to_list(i_face_clouds)
         # ensure assembly has enough beams
         if len(i_assembly.beams) < len(clusters_per_beam):
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Assembly has fewer beams than input clouds")  # noqa: F821
