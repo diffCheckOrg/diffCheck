@@ -48,7 +48,7 @@ class DFPoseComparison(component):
                 o_angles.append(bc * [])
                 o_transforms_cad_to_measured.append(bc * [])
                 for pose in poses:
-                    if not pose:
+                    if not pose or not pose.IsValid:
                         o_distances[beam_id].append(None)
                         o_angles[beam_id].append(None)
                         o_transforms_cad_to_measured[beam_id].append(None)
