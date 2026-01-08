@@ -36,16 +36,12 @@ class DFCADSegmentator(component):
         df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
 
         df_beams = i_assembly.beams
-        df_beams_meshes = []
-        rh_beams_meshes = []
 
         for df_b in df_beams:
             o_face_clusters.append([])
 
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
-            df_beams_meshes.append(df_b_mesh_faces)
-            rh_beams_meshes.append(rh_b_mesh_faces)
 
             # different association depending on the type of beam
             df_asssociated_cluster_faces = dfb_segmentation.DFSegmentation.associate_clusters(
