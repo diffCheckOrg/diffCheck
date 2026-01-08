@@ -42,7 +42,7 @@ class DFPoseEstimation(component):
                     df_face_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(face_cloud)
                     df_cloud.add_points(df_face_cloud)
                     plane_normal = df_face_cloud.fit_plane_ransac()
-                    if plane_normal == [0,0,0]:
+                    if all(plane_normal) == 0:
                         ghenv.Component.AddRuntimeMessage(RML.Warning, f"There was a missing face in the cloud of beam {i}: the face was skipped in the pose estimation of that beam")  # noqa: F821
                         continue
                     rh_face_normals.append(Rhino.Geometry.Vector3d(plane_normal[0], plane_normal[1], plane_normal[2]))
