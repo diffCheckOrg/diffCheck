@@ -525,8 +525,9 @@ class DFBeam:
         df_faces = [face for face in self.faces]
         sorted_df_faces = sorted(df_faces, key=lambda face: Rhino.Geometry.AreaMassProperties.Compute(face._rh_brepface).Area if face._rh_brepface else 0, reverse=True)
         largest_side_face_normal = sorted_df_faces[0].normal
+        rh_largest_side_face_normal = rg.Vector3d(largest_side_face_normal[0], largest_side_face_normal[1], largest_side_face_normal[2])
 
-        return rg.Plane(self.center, beam_direction, rg.Vector3d(largest_side_face_normal[0], largest_side_face_normal[1], largest_side_face_normal[2]))
+        return rg.Plane(self.center, rg.Vector3d.CrossProduct(beam_direction, rh_largest_side_face_normal), rh_largest_side_face_normal)
 
     def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
         """
