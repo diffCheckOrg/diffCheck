@@ -44,9 +44,9 @@ class DFPoseComparison(component):
         if bc > 1:
             poses_per_beam = i_measured_planes.Branches
             for beam_id, poses in enumerate(poses_per_beam):
-                o_distances.append(bc * [])
-                o_angles.append(bc * [])
-                o_transforms_cad_to_measured.append(bc * [])
+                o_distances.append([])
+                o_angles.append([])
+                o_transforms_cad_to_measured.append([])
                 for pose in poses:
                     if not pose or not pose.IsValid:
                         o_distances[beam_id].append(None)
