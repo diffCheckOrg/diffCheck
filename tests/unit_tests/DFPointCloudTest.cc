@@ -221,10 +221,12 @@ TEST_F(DFPointCloudTestFixture, Transform) {
 // Others
 //-------------------------------------------------------------------------
 
-TEST_F(DFPointCloudTestFixture, KMeansClusteringOfNormals) {
-    std::string path = diffCheck::io::GetTwoConnectedPlanesPlyPath();
-    diffCheck::geometry::DFPointCloud dfPointCloud2Planes;
-    dfPointCloud2Planes.LoadFromPLY(path);
-    std::vector<Eigen::Vector3d> axes = dfPointCloud2Planes.GetPrincipalAxes(2);
-    EXPECT_TRUE((axes[0] - Eigen::Vector3d(0, 0, 1)).norm() < 1e-2 || (axes[1] - Eigen::Vector3d(0, 0, 1)).norm() < 1e-2);
+TEST_F(DFPointCloudTestFixture, FitPlaneRANSAC) {
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPlane = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    dfPointCloudPlane->LoadFromPLY(diffCheck::io::GetPlanePCWithOneOutliers());
+    Eigen::Vector3d planeNormal = dfPointCloudPlane->FitPlaneRANSAC(0.01, 3, 100);
+    // plane model should be close to (0, 0, 1, d)
+    EXPECT_NEAR(planeNormal[0], 0.0, 1e-2);
+    EXPECT_NEAR(planeNormal[1], 0.0, 1e-2);
+    EXPECT_NEAR(std::abs(planeNormal[2]), 1.0, 1e-2);
 }

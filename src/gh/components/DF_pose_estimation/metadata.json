@@ -14,9 +14,9 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "i_clouds",
-                "nickname": "i_clouds",
-                "description": "clouds whose pose is to be calculated",
+                "name": "i_face_clouds",
+                "nickname": "i_face_clouds",
+                "description": "datatree of beam clouds whose pose is to be calculated",
                 "optional": false,
                 "allowTreeAccess": true,
                 "showTypeHints": true,

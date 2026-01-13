@@ -1,24 +1,28 @@
+"""This compoment calculates the pose of a data tree of point clouds."""
 #! python3
 
 from diffCheck import df_cvt_bindings
 from diffCheck import df_poses
+from diffCheck.diffcheck_bindings import dfb_geometry
 
 import Rhino
 from Grasshopper.Kernel import GH_RuntimeMessageLevel as RML
+import Grasshopper
+import ghpythonlib.treehelpers as th
 
 from ghpythonlib.componentbase import executingcomponent as component
-import System
 
 
 class DFPoseEstimation(component):
     def RunScript(self,
-            i_clouds: System.Collections.Generic.List[Rhino.Geometry.PointCloud],
+            i_face_clouds: Grasshopper.DataTree[Rhino.Geometry.PointCloud],
             i_assembly,
-            i_save: bool,
-            i_reset: bool):
+            i_reset: bool,
+            i_save: bool):
 
+        clusters_per_beam = th.tree_to_list(i_face_clouds)
         # ensure assembly has enough beams
-        if len(i_assembly.beams) < len(i_clouds):
+        if len(i_assembly.beams) < len(clusters_per_beam):
             ghenv.Component.AddRuntimeMessage(RML.Warning, "Assembly has fewer beams than input clouds")  # noqa: F821
             return None, None
 
@@ -29,32 +33,34 @@ class DFPoseEstimation(component):
             return None, None
 
         all_poses_this_time = []
-        for i, cloud in enumerate(i_clouds):
+        for i, face_clouds in enumerate(clusters_per_beam):
             try:
-                df_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud)
-                if df_cloud is None:
-                    return None, None
-                if not df_cloud.has_normals():
-                    ghenv.Component.AddRuntimeMessage(RML.Error, f"Point cloud {i} has no normals. Please compute the normals.")  # noqa: F821
+                df_cloud = dfb_geometry.DFPointCloud()
 
-                df_points = df_cloud.get_axis_aligned_bounding_box()
-                df_point = (df_points[0] + df_points[1]) / 2
-                rh_point = Rhino.Geometry.Point3d(df_point[0], df_point[1], df_point[2])
+                rh_face_normals = []
+                for face_cloud in face_clouds:
+                    df_face_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(face_cloud)
+                    df_cloud.add_points(df_face_cloud)
+                    plane_normal = df_face_cloud.fit_plane_ransac()
+                    if all(plane_normal) == 0:
+                        ghenv.Component.AddRuntimeMessage(RML.Warning, f"There was a missing face in the cloud of beam {i}: the face was skipped in the pose estimation of that beam")  # noqa: F821
+                        continue
+                    rh_face_normals.append(Rhino.Geometry.Vector3d(plane_normal[0], plane_normal[1], plane_normal[2]))
 
-                axes = df_cloud.get_principal_axes(3)
-                vectors = []
-                for axe in axes:
-                    vectors.append(Rhino.Geometry.Vector3d(axe[0], axe[1], axe[2]))
+                df_bb_points = df_cloud.get_axis_aligned_bounding_box()
+                df_bb_centroid = (df_bb_points[0] + df_bb_points[1]) / 2
+                rh_bb_centroid = Rhino.Geometry.Point3d(df_bb_centroid[0], df_bb_centroid[1], df_bb_centroid[2])
 
-                new_xDirection, new_yDirection = df_poses.select_vectors(vectors, i_assembly.beams[i].plane.XAxis, i_assembly.beams[i].plane.YAxis)
+                new_xDirection, new_yDirection = df_poses.select_vectors(rh_face_normals, i_assembly.beams[i].plane.XAxis, i_assembly.beams[i].plane.YAxis)
 
                 pose = df_poses.DFPose(
-                    origin = [rh_point.X, rh_point.Y, rh_point.Z],
+                    origin = [rh_bb_centroid.X, rh_bb_centroid.Y, rh_bb_centroid.Z],
                     xDirection = [new_xDirection.X, new_xDirection.Y, new_xDirection.Z],
                     yDirection = [new_yDirection.X, new_yDirection.Y, new_yDirection.Z])
                 all_poses_this_time.append(pose)
-                plane = Rhino.Geometry.Plane(origin = rh_point, xDirection=new_xDirection, yDirection=new_yDirection)
+                plane = Rhino.Geometry.Plane(origin = rh_bb_centroid, xDirection=new_xDirection, yDirection=new_yDirection)
                 planes.append(plane)
+
             except Exception as e:
                 # Any unexpected error on this cloud, skip it and keep going
                 ghenv.Component.AddRuntimeMessage(RML.Error, f"Cloud {i}: processing failed ({e}); skipping.")  # noqa: F821
