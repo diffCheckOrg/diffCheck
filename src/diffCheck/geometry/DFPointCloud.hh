@@ -92,12 +92,17 @@ namespace diffCheck::geometry
         void RemoveStatisticalOutliers(int nbNeighbors, double stdRatio);
 
         /**
-         * @brief Get the nCompoments principal axes of the normals of the point cloud
-         * It is used to compute the pose of "boxy" point clouds. It relies on KMeans clustering to find the main axes of the point cloud.
-         *  @param nComponents the number of components to compute (default 6, each of 3 main axes in both directions)
-         * @return std::vector<Eigen::Vector3d> the principal axes of the point cloud ordered by number of normals
+         * @brief Fit a plane to the point cloud using RANSAC
+         * 
+         * @param distanceThreshold the distance threshold to consider a point as an inlier
+         * @param ransacN the number of points to sample for each RANSAC iteration
+         * @param numIterations the number of RANSAC iterations
+         * @return The Normal vector of the fitted plane as an Eigen::Vector3d
          */
-        std::vector<Eigen::Vector3d> GetPrincipalAxes(int nComponents = 6);
+        Eigen::Vector3d FitPlaneRANSAC(
+            double distanceThreshold = 0.01,
+            int ransacN = 3,
+            int numIterations = 100);
 
         /**
          *  @brief Crop the point cloud to a bounding box defined by the min and max bounds

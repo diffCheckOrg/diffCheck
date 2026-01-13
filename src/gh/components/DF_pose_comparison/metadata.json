@@ -1,0 +1,67 @@
+{
+    "name": "DFPoseComparison",
+    "nickname": "DFPoseComparison",
+    "category": "diffCheck",
+    "subcategory": "Analysis",
+    "description": "Compares CAD poses with measured poses to compute errors.",
+    "exposure": 4,
+    "instanceGuid": "13d76641-6f4f-4e78-a7dd-e64e176ffb2a",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_assembly",
+                "nickname": "i_assembly",
+                "description": "The DFAssembly of the structure.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            },
+            {
+                "name": "i_measured_planes",
+                "nickname": "i_measured_planes",
+                "description": "The measured planes (aka poses) to compare against the CAD planes.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "tree",
+                "wireDisplay": "default",
+                "sourceCount": 0
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_distances",
+                "nickname": "o_distances",
+                "description": "The distances between the CAD pose origins and measured pose origins.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_angles",
+                "nickname": "o_angles",
+                "description": "The angles between the CAD pose orientations and measured pose orientations.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            },
+            {
+                "name": "o_transforms_cad_to_measured",
+                "nickname": "o_transforms_cad_to_measured",
+                "description": "The transformation matrices from CAD poses to measured poses.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}
