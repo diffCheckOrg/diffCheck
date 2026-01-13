@@ -330,7 +330,7 @@ namespace diffCheck::segmentation
     void DFSegmentation::CleanUnassociatedClusters(
         bool isCylinder,
         std::vector<std::shared_ptr<geometry::DFPointCloud>> &unassociatedClusters,
-        std::vector<std::shared_ptr<geometry::DFPointCloud>> &existingPointCloudSegments,
+        std::vector<std::vector<std::shared_ptr<geometry::DFPointCloud>>> &existingPointCloudSegments,
         std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
         double angleThreshold,
         double associationThreshold)
@@ -459,12 +459,12 @@ namespace diffCheck::segmentation
                     DIFFCHECK_WARN("No mesh face found for the cluster. Skipping the cluster.");
                     continue;
                 }
-                if (goodMeshIndex >= existingPointCloudSegments.size())
+                if (goodMeshIndex >= existingPointCloudSegments.size() || goodFaceIndex >= existingPointCloudSegments[goodMeshIndex].size())
                 {
                     DIFFCHECK_WARN("No segment found for the face. Skipping the face.");
                     continue;
                 }
-                std::shared_ptr<geometry::DFPointCloud> completed_segment = existingPointCloudSegments[goodMeshIndex];
+                std::shared_ptr<geometry::DFPointCloud> completed_segment = existingPointCloudSegments[goodMeshIndex][goodFaceIndex];
 
                 for (Eigen::Vector3d point : cluster->Points)
                 {
