@@ -37,6 +37,7 @@ class DFCADSegmentator(component):
         df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
 
         df_beams = i_assembly.beams
+        df_asssociated_cluster_faces_per_beam = []
 
         for df_b in df_beams:
             o_face_clusters.append([])
@@ -53,20 +54,25 @@ class DFCADSegmentator(component):
                 association_threshold=i_association_threshold,
                 angle_association_threshold=i_angle_association_threshold
             )
+            df_asssociated_cluster_faces_per_beam.append(df_asssociated_cluster_faces)
+
+        for i, df_b in enumerate(df_beams):
+            rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
+            df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
 
             dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
                 is_roundwood=df_b.is_roundwood,
                 unassociated_clusters=df_clouds,
-                associated_clusters=[df_asssociated_cluster_faces],
+                associated_clusters=[df_asssociated_cluster_faces_per_beam[i]],
                 reference_mesh=[df_b_mesh_faces],
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold
             )
 
-            o_face_clusters[-1] = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_asssociated_cluster_faces]
+            o_face_clusters[-1] = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_asssociated_cluster_faces_per_beam[i]]
 
             df_asssociated_cluster = dfb_geometry.DFPointCloud()
-            for df_associated_face in df_asssociated_cluster_faces:
+            for df_associated_face in df_asssociated_cluster_faces_per_beam[i]:
                 df_asssociated_cluster.add_points(df_associated_face)
 
             df_clusters.append(df_asssociated_cluster)
