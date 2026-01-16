@@ -1,4 +1,6 @@
 #include "DFSegmentation.hh"
+#include <fstream>
+#include <chrono>
 
 #include <cilantro/utilities/point_cloud.hpp>
 #include <cilantro/core/nearest_neighbors.hpp>
@@ -234,6 +236,12 @@ namespace diffCheck::segmentation
         }
         else
         {
+            std::string timestamp = std::to_string(
+                std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+                ).count()
+            );
+            std::ofstream logFile("C:\\Users\\localuser\\Desktop\\association_log_" + timestamp + ".txt", std::ios::app);
             for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
             {
                 std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
@@ -274,6 +282,8 @@ namespace diffCheck::segmentation
                     // if the distance is smaller than the previous one, update the distance and the corresponding segment
                     if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm()))) < faceDistance)
                     {
+                        logFile << std::abs(sin(acos(faceNormal.dot(segmentNormal)))) << " < " << angleThreshold << " and " << currentDistance << " * (" << angleAssociationThreshold << " + " << std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm())) << ") < " << faceDistance << std::endl;
+                        logFile << " considered face: Face normal: " << faceNormal.transpose() << ", Segment normal: " << segmentNormal.transpose() << ", Current distance: " << currentDistance << ", Face distance: " << faceDistance << std::endl;
                         correspondingSegment = segment;
                         faceDistance = currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm())));
                     }
@@ -324,6 +334,7 @@ namespace diffCheck::segmentation
                 }
                 faceSegments.push_back(facePoints);
             }
+            logFile.close();
         }
         return faceSegments;
     }
@@ -334,7 +345,8 @@ namespace diffCheck::segmentation
         std::vector<std::vector<std::shared_ptr<geometry::DFPointCloud>>> &existingPointCloudSegments,
         std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
         double angleThreshold,
-        double associationThreshold)
+        double associationThreshold,
+        double angleAssociationThreshold)
     {
         if (unassociatedClusters.size() == 0)
         {
@@ -442,7 +454,7 @@ namespace diffCheck::segmentation
                             
                             double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle))
                             / std::min(std::abs(clusterNormal.dot(faceNormal)), 0.05) ;
-                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < distance && std::abs(1 - std::sin(clusterNormalToJunctionLineAngle)) < associationThreshold)
+                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold  && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - clusterCenter) / (faceCenter - clusterCenter).norm()))) < distance)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;

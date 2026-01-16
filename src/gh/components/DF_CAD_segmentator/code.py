@@ -30,7 +30,8 @@ class DFCADSegmentator(component):
             i_angle_threshold = 0.1
         if i_association_threshold is None:
             i_association_threshold = 0.1
-
+        if i_angle_association_threshold is None:
+            i_angle_association_threshold = 0.5
         o_face_clusters = []
         df_clusters = []
         # we make a deepcopy of the input clouds
@@ -66,7 +67,8 @@ class DFCADSegmentator(component):
                 associated_clusters=[df_asssociated_cluster_faces_per_beam[i]],
                 reference_mesh=[df_b_mesh_faces],
                 angle_threshold=i_angle_threshold,
-                association_threshold=i_association_threshold
+                association_threshold=i_association_threshold,
+                angle_association_threshold=i_angle_association_threshold
             )
 
             o_face_clusters[-1] = [df_cvt_bindings.cvt_dfcloud_2_rhcloud(cluster) for cluster in df_asssociated_cluster_faces_per_beam[i]]

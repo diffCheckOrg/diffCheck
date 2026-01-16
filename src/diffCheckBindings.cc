@@ -238,5 +238,6 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
             py::arg("associated_clusters"),
             py::arg("reference_mesh"),
             py::arg("angle_threshold") = 0.1,
-            py::arg("association_threshold") = 0.1);
+            py::arg("association_threshold") = 0.1,
+            py::arg("angle_association_threshold") = 0.5);
 }

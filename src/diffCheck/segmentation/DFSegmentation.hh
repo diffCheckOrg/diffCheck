@@ -48,8 +48,10 @@ namespace diffCheck::segmentation
          * @param unassociatedClusters the clusters from the normal-based segmentatinon that haven't been associated yet.
          * @param existingPointCloudSegments the already associated segments per mesh face.
          * @param meshes the mesh faces for all the model. This is used to associate the clusters to the mesh faces.
-         * * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees. 
+         * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees. 
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.   
+         * @param angleAssociationThreshold a number to indicate how much distance in the plane of the face should be favored, compared to distance orthogonal to the face normal. If set to 0, any face in the same plane as the face will be considered as having a distance of 0. If set to a high value (e.g. 1000000), no difference will be made between distance in the plane of the face and orthogonal to it. Default is 0.5
+         * @return void
          */
         static void DFSegmentation::CleanUnassociatedClusters(
             bool isCylinder,
@@ -57,6 +59,7 @@ namespace diffCheck::segmentation
             std::vector<std::vector<std::shared_ptr<geometry::DFPointCloud>>> &existingPointCloudSegments,
             std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
             double angleThreshold = 0.1,
-            double associationThreshold = 0.1);
+            double associationThreshold = 0.1,
+            double angleAssociationThreshold = 0.5);
     };
 } // namespace diffCheck::segmentation
