@@ -100,7 +100,8 @@ namespace diffCheck::segmentation
         std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
         std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
         double angleThreshold,
-        double associationThreshold)
+        double associationThreshold,
+        double angleAssociationThreshold)
     {
         std::vector<std::shared_ptr<geometry::DFPointCloud>> faceSegments = std::vector<std::shared_ptr<geometry::DFPointCloud>>();
 
@@ -271,10 +272,10 @@ namespace diffCheck::segmentation
                     double currentDistance = (faceCenter - segmentCenter).norm();
                     double currentAngle = std::abs(sin(acos(faceNormal.dot(faceCenter - segmentCenter))));
                     // if the distance is smaller than the previous one, update the distance and the corresponding segment
-                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance < faceDistance && std::abs(1 - currentAngle) < angleThreshold)
+                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm()))) < faceDistance)
                     {
                         correspondingSegment = segment;
-                        faceDistance = currentDistance;
+                        faceDistance = currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm())));
                     }
                 }
 

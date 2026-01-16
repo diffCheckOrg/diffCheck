@@ -32,6 +32,7 @@ namespace diffCheck::segmentation
          * @param clusters the vector of clusters from cilantro to associate with the mesh faces of the reference mesh
          * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees.
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
+         * @param angleAssociationThreshold a number to indicate how much distance in the plane of the face should be favored, compared to distance orthogonal to the face normal. If set to 0, any face in the same plane as the face will be considered as having a distance of 0. If set to a high value (e.g. 1000000), no difference will be made between distance in the plane of the face and orthogonal to it. Default is 0.5
          * @return std::shared_ptr<geometry::DFPointCloud> The unified segments
          */
         static std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::AssociateClustersToMeshes(
@@ -39,7 +40,8 @@ namespace diffCheck::segmentation
             std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
             double angleThreshold = 0.1,
-            double associationThreshold = 0.1);
+            double associationThreshold = 0.1,
+            double angleAssociationThreshold = 0.5);
 
         /** @brief Iterated through clusters and finds the corresponding mesh face. It then associates the points of the cluster that are on the mesh face to the segment already associated with the mesh face.
          * @param isCylinder a boolean to indicate if the model is a cylinder. If true, the method will use the GetCenterAndAxis method of the mesh to find the center and axis of the mesh. based on that, we only want points that have normals more or less perpendicular to the cylinder axis.

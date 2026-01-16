@@ -20,7 +20,8 @@ class DFCADSegmentator(component):
         i_clouds: System.Collections.Generic.IList[Rhino.Geometry.PointCloud],
         i_assembly,
         i_angle_threshold: float = 0.1,
-        i_association_threshold: float = 0.1):
+        i_association_threshold: float = 0.1,
+        i_angle_association_threshold: float = 0.5):
 
         if i_clouds is None or i_assembly is None:
             self.AddRuntimeMessage(RML.Warning, "Please provide a cloud and an assembly to segment.")
@@ -49,7 +50,8 @@ class DFCADSegmentator(component):
                 reference_mesh=df_b_mesh_faces,
                 unassociated_clusters=df_clouds,
                 angle_threshold=i_angle_threshold,
-                association_threshold=i_association_threshold
+                association_threshold=i_association_threshold,
+                angle_association_threshold=i_angle_association_threshold
             )
 
             dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
