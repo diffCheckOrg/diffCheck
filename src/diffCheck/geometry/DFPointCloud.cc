@@ -155,7 +155,14 @@ namespace diffCheck::geometry
                 DIFFCHECK_INFO("Default estimation of normals with knn = 30");
             }
             for (auto &normal : O3DPointCloud->normals_)
+            {
+                if(normal.z() < -0.8)
+                {
+                    normal = -normal;
+                }
                 this->Normals.push_back(normal);
+            }
+                
         }
         else
         {
@@ -165,7 +172,13 @@ namespace diffCheck::geometry
 
             this->Normals.clear();
             for (int i = 0; i < cilantroPointCloud->normals.cols(); i++)
+            {
+                if(cilantroPointCloud->normals.col(i).z() < -0.8)
+                {
+                    cilantroPointCloud->normals.col(i) = -cilantroPointCloud->normals.col(i);
+                }
                 this->Normals.push_back(cilantroPointCloud->normals.col(i).cast<double>());
+            }
             DIFFCHECK_INFO(("Estimating normals with cilantro evaluator with knn = " + std::to_string(knn.value())).c_str());
         }
 
