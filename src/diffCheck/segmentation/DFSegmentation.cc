@@ -241,7 +241,6 @@ namespace diffCheck::segmentation
                     std::chrono::system_clock::now().time_since_epoch()
                 ).count()
             );
-            std::ofstream logFile("C:\\Users\\localuser\\Desktop\\association_log_" + timestamp + ".txt", std::ios::app);
             for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
             {
                 std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
@@ -282,8 +281,6 @@ namespace diffCheck::segmentation
                     // if the distance is smaller than the previous one, update the distance and the corresponding segment
                     if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm()))) < faceDistance)
                     {
-                        logFile << std::abs(sin(acos(faceNormal.dot(segmentNormal)))) << " < " << angleThreshold << " and " << currentDistance << " * (" << angleAssociationThreshold << " + " << std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm())) << ") < " << faceDistance << std::endl;
-                        logFile << " considered face: Face normal: " << faceNormal.transpose() << ", Segment normal: " << segmentNormal.transpose() << ", Current distance: " << currentDistance << ", Face distance: " << faceDistance << std::endl;
                         correspondingSegment = segment;
                         faceDistance = currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm())));
                     }
@@ -334,7 +331,6 @@ namespace diffCheck::segmentation
                 }
                 faceSegments.push_back(facePoints);
             }
-            logFile.close();
         }
         return faceSegments;
     }
