@@ -1,6 +1,4 @@
 #include "DFSegmentation.hh"
-#include <fstream>
-#include <chrono>
 
 #include <cilantro/utilities/point_cloud.hpp>
 #include <cilantro/core/nearest_neighbors.hpp>
@@ -236,11 +234,6 @@ namespace diffCheck::segmentation
         }
         else
         {
-            std::string timestamp = std::to_string(
-                std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-                ).count()
-            );
             for (std::shared_ptr<diffCheck::geometry::DFMesh> face : referenceMesh)
             {
                 std::shared_ptr<geometry::DFPointCloud> correspondingSegment;
