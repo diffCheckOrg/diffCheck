@@ -130,7 +130,7 @@ def select_vectors(vectors, previous_xDirection, previous_yDirection):
     Select the vectors that are aligned with the xDirection and yDirection.
     """
     if previous_xDirection is not None and previous_yDirection is not None:
-        sorted_vectors_by_alignment = sorted(vectors, key=lambda v: compute_dot_product(v, previous_xDirection), reverse=True)
+        sorted_vectors_by_alignment = sorted(vectors, key=lambda v: abs(compute_dot_product(v, previous_xDirection)), reverse=True)
         new_xDirection = sorted_vectors_by_alignment[0]
     else:
         new_xDirection = vectors[0]
@@ -139,8 +139,12 @@ def select_vectors(vectors, previous_xDirection, previous_yDirection):
     for v in vectors:
         if compute_dot_product(v, new_xDirection) ** 2 < 0.5:
             condidates_for_yDirection.append(v)
+
+    if not condidates_for_yDirection:
+        return new_xDirection, None
+
     if previous_xDirection is not None and previous_yDirection is not None:
-        sorted_vectors_by_perpendicularity = sorted(condidates_for_yDirection, key=lambda v: compute_dot_product(v, previous_yDirection), reverse=True)
+        sorted_vectors_by_perpendicularity = sorted(condidates_for_yDirection, key=lambda v: abs(compute_dot_product(v, previous_yDirection)), reverse=True)
         new_xDirection = sorted_vectors_by_alignment[0]
         new_yDirection = sorted_vectors_by_perpendicularity[0] - compute_dot_product(sorted_vectors_by_perpendicularity[0], new_xDirection) * new_xDirection
         new_yDirection.Unitize()
