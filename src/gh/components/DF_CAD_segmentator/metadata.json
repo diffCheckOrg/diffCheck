@@ -60,6 +60,18 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "float"
+            },
+            {
+                "name": "i_angle_association_threshold",
+                "nickname": "i_angle_association_threshold",
+                "description": "A number to indicate how much distance in the plane of the face should be favored, compared to distance orthogonal to the face normal. Default is 0.5",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
             }
         ],
         "outputParameters": [
