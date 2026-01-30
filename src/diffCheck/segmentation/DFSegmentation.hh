@@ -28,6 +28,7 @@ namespace diffCheck::segmentation
         public: ///< segmentation refinement methods
         /** @brief Associates point cloud segments to mesh faces and merges them. It uses the center of mass of the segments and the mesh faces to find correspondances. For each mesh face it then iteratively associate the points of the segment that are actually on the mesh face.
          * @param isCylinder a boolean to indicate if the model is a cylinder. If true, the method will use the GetCenterAndAxis method of the mesh to find the center and axis of the mesh. based on that, we only want points that have normals more or less perpendicular to the cylinder axis.
+         * @param discriminatePoints a boolean to indicate if we want to discriminate points based on their normal direction when associating clusters to mesh faces. If true, only points that have normals more or less aligned with the face normal will be considered for association.
          * @param referenceMesh the vector of mesh faces to associate with the segments. It is a representation of a beam and its faces.
          * @param clusters the vector of clusters from cilantro to associate with the mesh faces of the reference mesh
          * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees.
@@ -37,6 +38,7 @@ namespace diffCheck::segmentation
          */
         static std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::AssociateClustersToMeshes(
             bool isCylinder,
+            bool discriminatePoints,
             std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
             double angleThreshold = 0.1,
@@ -45,6 +47,7 @@ namespace diffCheck::segmentation
 
         /** @brief Iterated through clusters and finds the corresponding mesh face. It then associates the points of the cluster that are on the mesh face to the segment already associated with the mesh face.
          * @param isCylinder a boolean to indicate if the model is a cylinder. If true, the method will use the GetCenterAndAxis method of the mesh to find the center and axis of the mesh. based on that, we only want points that have normals more or less perpendicular to the cylinder axis.
+         * @param discriminatePoints a boolean to indicate if we want to discriminate points based on their normal direction when associating clusters to mesh faces. If true, only points that have normals more or less aligned with the face normal will be considered for association.
          * @param unassociatedClusters the clusters from the normal-based segmentatinon that haven't been associated yet.
          * @param existingPointCloudSegments the already associated segments per mesh face.
          * @param meshes the mesh faces for all the model. This is used to associate the clusters to the mesh faces.
@@ -55,6 +58,7 @@ namespace diffCheck::segmentation
          */
         static void DFSegmentation::CleanUnassociatedClusters(
             bool isCylinder,
+            bool discriminatePoints,
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &unassociatedClusters,
             std::vector<std::vector<std::shared_ptr<geometry::DFPointCloud>>> &existingPointCloudSegments,
             std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,

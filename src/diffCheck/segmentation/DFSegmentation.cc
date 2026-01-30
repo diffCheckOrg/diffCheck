@@ -97,6 +97,7 @@ namespace diffCheck::segmentation
 
     std::vector<std::shared_ptr<geometry::DFPointCloud>> DFSegmentation::AssociateClustersToMeshes(
         bool isCylinder,
+        bool discriminatePoints,
         std::vector<std::shared_ptr<geometry::DFMesh>> referenceMesh,
         std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
         double angleThreshold,
@@ -289,8 +290,32 @@ namespace diffCheck::segmentation
 
                 for (Eigen::Vector3d point : correspondingSegment->Points)
                 {
-                    bool pointInFace = false;
-                    if (face->IsPointOnFace(point, associationThreshold))
+                    if (discriminatePoints)
+                    {
+                        bool pointInFace = false;
+                        if (face->IsPointOnFace(point, associationThreshold))
+                        {
+                            facePoints->Points.push_back(point);
+                            facePoints->Normals.push_back(
+                                correspondingSegment->Normals[std::distance(
+                                    correspondingSegment->Points.begin(), 
+                                    std::find(correspondingSegment->Points.begin(), 
+                                    correspondingSegment->Points.end(), 
+                                    point))]
+                                );
+                            if (hasColors)
+                            {
+                                facePoints->Colors.push_back(
+                                    correspondingSegment->Colors[std::distance(
+                                        correspondingSegment->Points.begin(), 
+                                        std::find(correspondingSegment->Points.begin(), 
+                                        correspondingSegment->Points.end(), 
+                                        point))]
+                                    );
+                            }
+                        }
+                    }
+                    else
                     {
                         facePoints->Points.push_back(point);
                         facePoints->Normals.push_back(
@@ -330,6 +355,7 @@ namespace diffCheck::segmentation
 
     void DFSegmentation::CleanUnassociatedClusters(
         bool isCylinder,
+        bool discriminatePoints,
         std::vector<std::shared_ptr<geometry::DFPointCloud>> &unassociatedClusters,
         std::vector<std::vector<std::shared_ptr<geometry::DFPointCloud>>> &existingPointCloudSegments,
         std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
@@ -477,12 +503,23 @@ namespace diffCheck::segmentation
                         completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
                     }
                     else
-                        if (correspondingMeshFace->IsPointOnFace(point, associationThreshold))
+                    {
+                        if (discriminatePoints)
+                        {
+                            if (correspondingMeshFace->IsPointOnFace(point, associationThreshold))
+                            {
+                                completed_segment->Points.push_back(point);
+                                completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                                completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                            }
+                        }
+                        else
                         {
                             completed_segment->Points.push_back(point);
                             completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
                             completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
                         }
+                    }
                 }
                 std::vector<int> indicesToRemove;
 
