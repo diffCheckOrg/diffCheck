@@ -102,7 +102,8 @@ namespace diffCheck::segmentation
         std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
         double angleThreshold,
         double associationThreshold,
-        double angleAssociationThreshold)
+        double angleAssociationThreshold,
+        double maximumFaceSegmentDistance)
     {
         std::vector<std::shared_ptr<geometry::DFPointCloud>> faceSegments = std::vector<std::shared_ptr<geometry::DFPointCloud>>();
 
@@ -271,12 +272,12 @@ namespace diffCheck::segmentation
                     for (auto normal : segment->Normals){segmentNormal += normal;}
                     segmentNormal.normalize();
                     double currentDistance = (faceCenter - segmentCenter).norm();
+                    double currentDitanceOrthogonalToFace = std::abs((faceCenter - segmentCenter).dot(faceNormal));
                     double currentAngle = std::abs(sin(acos(faceNormal.dot(faceCenter - segmentCenter))));
-                    // if the distance is smaller than the previous one, update the distance and the corresponding segment
-                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold  && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm()))) < faceDistance)
+                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold && currentDitanceOrthogonalToFace < maximumFaceSegmentDistance  && currentDitanceOrthogonalToFace < faceDistance)
                     {
                         correspondingSegment = segment;
-                        faceDistance = currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - segmentCenter) / (faceCenter - segmentCenter).norm())));
+                        faceDistance = currentDitanceOrthogonalToFace;
                     }
                 }
 
@@ -361,7 +362,8 @@ namespace diffCheck::segmentation
         std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
         double angleThreshold,
         double associationThreshold,
-        double angleAssociationThreshold)
+        double angleAssociationThreshold,
+        double maximumFaceSegmentDistance)
     {
         if (unassociatedClusters.size() == 0)
         {
@@ -469,7 +471,7 @@ namespace diffCheck::segmentation
                             
                             double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle))
                             / std::min(std::abs(clusterNormal.dot(faceNormal)), 0.05) ;
-                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold  && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - clusterCenter) / (faceCenter - clusterCenter).norm()))) < distance)
+                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < maximumFaceSegmentDistance && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - clusterCenter) / (faceCenter - clusterCenter).norm()))) < distance)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;
