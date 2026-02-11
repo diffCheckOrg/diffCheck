@@ -72,6 +72,30 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "float"
+            },
+            {
+                "name": "i_radius_normal_estimation",
+                "nickname": "i_radius_normal_estimation",
+                "description": "The radius used for normal estimation. Default is 0.01",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
+                "name": "i_max_correspondence_distance_icp",
+                "nickname": "i_max_correspondence_distance_icp",
+                "description": "The maximum correspondence distance for the ICP algorithm. Default is 0.1",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
             }
         ],
         "outputParameters": [
