@@ -74,6 +74,18 @@
                 "typeHintID": "float"
             },
             {
+                "name": "i_make_registration",
+                "nickname": "i_make_registration",
+                "description": "Whether to make a registration of the clusters on the mesh faces. Default is True.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
+            },
+            {
                 "name": "i_max_correspondence_distance_icp",
                 "nickname": "i_max_correspondence_distance_icp",
                 "description": "The maximum correspondence distance for the ICP algorithm. Default is 0.1",

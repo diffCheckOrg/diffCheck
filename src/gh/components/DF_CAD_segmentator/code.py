@@ -23,6 +23,7 @@ class DFCADSegmentator(component):
             i_association_threshold: float,
             i_maximum_face_segment_distance: float,
             i_radius_normal_estimation: float,
+            i_make_registration: bool,
             i_max_correspondence_distance_icp: float):
 
         if i_clouds is None or i_assembly is None:
@@ -34,8 +35,10 @@ class DFCADSegmentator(component):
             i_association_threshold = 0.1
         if i_radius_normal_estimation is None:
             i_radius_normal_estimation = 0.01
+        if i_make_registration is None:
+            i_make_registration = True
         o_face_clusters = []
-        o_transforms = []
+        transforms = []
         df_clusters = []
         # we make a deepcopy of the input clouds
         df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
@@ -60,27 +63,30 @@ class DFCADSegmentator(component):
             df_sampled_cloud.estimate_normals(use_cilantro_evaluator=False,
             search_radius = i_radius_normal_estimation,
             )
+            if i_make_registration:
+                transform = dfb_registrations.DFRefinedRegistration.O3DICP(
+                    source=df_sampled_cloud,
+                    target=df_merged_cloud,
+                    max_correspondence_distance= i_max_correspondence_distance_icp,
+                    max_iteration = 1000
+                    )
 
-            transform = dfb_registrations.DFRefinedRegistration.O3DICP(
-                source=df_sampled_cloud,
-                target=df_merged_cloud,
-                max_correspondence_distance= i_max_correspondence_distance_icp,
-                max_iteration = 1000
-                )
+                df_xform = transform.transformation_matrix
+                rh_xform = Rhino.Geometry.Transform()
+                for i in range(4):
+                    for j in range(4):
+                        rh_xform[i, j] = df_xform[i, j]
 
-            df_xform = transform.transformation_matrix
-            rh_xform = Rhino.Geometry.Transform()
-            for i in range(4):
-                for j in range(4):
-                    rh_xform[i, j] = df_xform[i, j]
-            o_transforms.append(rh_xform)
+            else:
+                rh_xform = Rhino.Geometry.Transform(1)
+            transforms.append(rh_xform)
 
         df_asssociated_cluster_faces_per_beam = []
         for i, df_b in enumerate(df_beams):
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             rh_test_mesh = Rhino.Geometry.Mesh()
             for j in range(len(rh_b_mesh_faces)):
-                sucess = rh_b_mesh_faces[j].Transform(o_transforms[i])
+                sucess = rh_b_mesh_faces[j].Transform(transforms[i])
                 if sucess:
                     rh_test_mesh.Append(rh_b_mesh_faces[j])
             rh_meshes.append(rh_test_mesh)
@@ -102,7 +108,7 @@ class DFCADSegmentator(component):
             o_face_clusters.append([])
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             for j in range(len(rh_b_mesh_faces)):
-                rh_b_mesh_faces[j].Transform(o_transforms[i])
+                rh_b_mesh_faces[j].Transform(transforms[i])
             df_b_mesh_faces = [df_cvt_bindings.cvt_rhmesh_2_dfmesh(rh_b_mesh_face) for rh_b_mesh_face in rh_b_mesh_faces]
 
             dfb_segmentation.DFSegmentation.clean_unassociated_clusters(
