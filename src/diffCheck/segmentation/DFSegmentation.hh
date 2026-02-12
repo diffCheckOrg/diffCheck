@@ -33,7 +33,6 @@ namespace diffCheck::segmentation
          * @param clusters the vector of clusters from cilantro to associate with the mesh faces of the reference mesh
          * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees.
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.
-         * @param angleAssociationThreshold a number to indicate how much distance in the plane of the face should be favored, compared to distance orthogonal to the face normal. If set to 0, any face in the same plane as the face will be considered as having a distance of 0. If set to a high value (e.g. 1000000), no difference will be made between distance in the plane of the face and orthogonal to it. Default is 0.5
          * @param maximumFaceSegmentDistance the maximum distance a segment's center of mass can be perpendicularly to a mesh face
          * @return std::shared_ptr<geometry::DFPointCloud> The unified segments
          */
@@ -44,7 +43,6 @@ namespace diffCheck::segmentation
             std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
             double angleThreshold = 0.1,
             double associationThreshold = 0.1,
-            double angleAssociationThreshold = 0.5,
             double maximumFaceSegmentDistance = 0.05);
 
         /** @brief Iterated through clusters and finds the corresponding mesh face. It then associates the points of the cluster that are on the mesh face to the segment already associated with the mesh face.
@@ -55,7 +53,6 @@ namespace diffCheck::segmentation
          * @param meshes the mesh faces for all the model. This is used to associate the clusters to the mesh faces.
          * @param angleThreshold the threshold to consider the a cluster as potential candidate for association. the value passed is the minimum sine of the angles. A value of 0 requires perfect alignment (angle = 0), while a value of 0.1 allows an angle of 5.7 degrees. 
          * @param associationThreshold the threshold to consider the points of a segment and a mesh face as associable. It is the ratio between the surface of the closest mesh triangle and the sum of the areas of the three triangles that form the rest of the pyramid described by the mesh triangle and the point we want to associate or not. The lower the number, the more strict the association will be and some poinnts on the mesh face might be wrongfully excluded.   
-         * @param angleAssociationThreshold a number to indicate how much distance in the plane of the face should be favored, compared to distance orthogonal to the face normal. If set to 0, any face in the same plane as the face will be considered as having a distance of 0. If set to a high value (e.g. 1000000), no difference will be made between distance in the plane of the face and orthogonal to it. Default is 0.5
          * @param maximumFaceSegmentDistance the maximum distance a segment's center of mass can be perpendicularly to a mesh face
          * @return void
          */
@@ -67,7 +64,6 @@ namespace diffCheck::segmentation
             std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
             double angleThreshold = 0.1,
             double associationThreshold = 0.1,
-            double angleAssociationThreshold = 0.5,
             double maximumFaceSegmentDistance = 0.05);
     };
 } // namespace diffCheck::segmentation

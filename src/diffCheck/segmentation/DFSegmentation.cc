@@ -102,7 +102,6 @@ namespace diffCheck::segmentation
         std::vector<std::shared_ptr<geometry::DFPointCloud>> &clusters,
         double angleThreshold,
         double associationThreshold,
-        double angleAssociationThreshold,
         double maximumFaceSegmentDistance)
     {
         std::vector<std::shared_ptr<geometry::DFPointCloud>> faceSegments = std::vector<std::shared_ptr<geometry::DFPointCloud>>();
@@ -362,7 +361,6 @@ namespace diffCheck::segmentation
         std::vector<std::vector<std::shared_ptr<geometry::DFMesh>>> meshes,
         double angleThreshold,
         double associationThreshold,
-        double angleAssociationThreshold,
         double maximumFaceSegmentDistance)
     {
         if (unassociatedClusters.size() == 0)
@@ -471,7 +469,7 @@ namespace diffCheck::segmentation
                             
                             double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle))
                             / std::min(std::abs(clusterNormal.dot(faceNormal)), 0.05) ;
-                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < maximumFaceSegmentDistance && currentDistance * (angleAssociationThreshold + std::abs(faceNormal.dot((faceCenter - clusterCenter) / (faceCenter - clusterCenter).norm()))) < distance)
+                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < maximumFaceSegmentDistance && currentDistance * (std::abs(faceNormal.dot((faceCenter - clusterCenter) / (faceCenter - clusterCenter).norm()))) < distance)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;

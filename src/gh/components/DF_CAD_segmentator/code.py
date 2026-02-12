@@ -21,7 +21,6 @@ class DFCADSegmentator(component):
             i_assembly,
             i_angle_threshold: float,
             i_association_threshold: float,
-            i_angle_association_threshold: float,
             i_maximum_face_segment_distance: float,
             i_radius_normal_estimation: float,
             i_max_correspondence_distance_icp: float):
@@ -33,8 +32,6 @@ class DFCADSegmentator(component):
             i_angle_threshold = 0.1
         if i_association_threshold is None:
             i_association_threshold = 0.1
-        if i_angle_association_threshold is None:
-            i_angle_association_threshold = 0.5
         if i_radius_normal_estimation is None:
             i_radius_normal_estimation = 0.01
         o_face_clusters = []
@@ -97,7 +94,6 @@ class DFCADSegmentator(component):
                 unassociated_clusters=df_clouds,
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold,
-                angle_association_threshold=i_angle_association_threshold,
                 maximum_face_segment_distance=i_maximum_face_segment_distance
             )
             df_asssociated_cluster_faces_per_beam.append(df_new_asssociated_cluster_faces)
@@ -117,7 +113,6 @@ class DFCADSegmentator(component):
                 reference_mesh=[df_b_mesh_faces],
                 angle_threshold=i_angle_threshold,
                 association_threshold=i_association_threshold,
-                angle_association_threshold=i_angle_association_threshold,
                 maximum_face_segment_distance=i_maximum_face_segment_distance
             )
 
