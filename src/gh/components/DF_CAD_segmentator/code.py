@@ -37,6 +37,11 @@ class DFCADSegmentator(component):
             i_radius_normal_estimation = 0.01
         if i_make_registration is None:
             i_make_registration = True
+        if i_max_correspondence_distance_icp is None:
+            i_max_correspondence_distance_icp = 0.1
+        if i_maximum_face_segment_distance is None:
+            i_maximum_face_segment_distance = 0.1
+
         o_face_clusters = []
         transforms = []
         df_clusters = []
