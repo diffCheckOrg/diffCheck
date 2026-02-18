@@ -62,6 +62,18 @@
                 "typeHintID": "float"
             },
             {
+                "name": "i_maximum_face_segment_distance",
+                "nickname": "i_maximum_face_segment_distance",
+                "description": "The maximum correspondence distance for the segmentation. Default is 0.1",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            },
+            {
                 "name": "i_radius_normal_estimation",
                 "nickname": "i_radius_normal_estimation",
                 "description": "The radius used for normal estimation. Default is 0.01",
