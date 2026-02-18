@@ -226,18 +226,20 @@ PYBIND11_MODULE(diffcheck_bindings, m) {
         
         .def_static("associate_clusters", &diffCheck::segmentation::DFSegmentation::AssociateClustersToMeshes,
             py::arg("is_roundwood"),
+            py::arg("discriminate_points"),
             py::arg("reference_mesh"),
             py::arg("unassociated_clusters"),
             py::arg("angle_threshold") = 0.1,
             py::arg("association_threshold") = 0.1,
-            py::arg("angle_association_threshold") = 0.5)
+            py::arg("maximum_face_segment_distance") = 0.05)
         
         .def_static("clean_unassociated_clusters", &diffCheck::segmentation::DFSegmentation::CleanUnassociatedClusters,
             py::arg("is_roundwood"),
+            py::arg("discriminate_points"),
             py::arg("unassociated_clusters"),
             py::arg("associated_clusters"),
             py::arg("reference_mesh"),
             py::arg("angle_threshold") = 0.1,
             py::arg("association_threshold") = 0.1,
-            py::arg("angle_association_threshold") = 0.5);
+            py::arg("maximum_face_segment_distance") = 0.05);
 }

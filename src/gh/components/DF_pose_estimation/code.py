@@ -47,24 +47,20 @@ class DFPoseEstimation(component):
                         continue
                     rh_face_normals.append(Rhino.Geometry.Vector3d(plane_normal[0], plane_normal[1], plane_normal[2]))
 
-                df_bb_points = df_cloud.get_axis_aligned_bounding_box()
-                df_bb_centroid = (df_bb_points[0] + df_bb_points[1]) / 2
-                rh_bb_centroid = Rhino.Geometry.Point3d(df_bb_centroid[0], df_bb_centroid[1], df_bb_centroid[2])
-
+                df_bb_points = df_cloud.get_tight_bounding_box()
+                df_bb_centroid = sum(df_bb_points)/len(df_bb_points)
+                rh_tentative_bb_centroid = Rhino.Geometry.Point3d(df_bb_centroid[0], df_bb_centroid[1], df_bb_centroid[2])
 
                 new_xDirection, new_yDirection = df_poses.select_vectors(rh_face_normals, i_assembly.beams[i].plane.XAxis, i_assembly.beams[i].plane.YAxis)
-                if not new_yDirection:
-                    df_beam_pc = dfb_geometry.DFPointCloud()
-                    for face_cloud in face_clouds:
-                        df_face_cloud = df_cvt_bindings.cvt_rhcloud_2_dfcloud(face_cloud)
-                        df_beam_pc.add_points(df_face_cloud)
-                    corners = df_beam_pc.get_tight_bounding_box()
-                    rh_corners = [Rhino.Geometry.Point3d(pt[0], pt[1], pt[2]) for pt in corners]
-                    plane = Rhino.Geometry.Plane.CreateFromPoints(rh_corners[0],rh_corners[1],rh_corners[2])
-                    box = Rhino.Geometry.Box(plane, rh_corners)
-                    longest_edge = sorted(box.ToBrep().Edges, key=lambda e: e.GetLength())[-1]
-                    longest_edge_direction = longest_edge.TangentAtEnd
-                    new_yDirection = Rhino.Geometry.Vector3d.CrossProduct(new_xDirection, longest_edge_direction)
+                rh_tentative_plane = Rhino.Geometry.Plane(rh_tentative_bb_centroid, new_yDirection, new_xDirection)
+
+                rh_beam_cloud = Rhino.Geometry.PointCloud()
+                for face_cloud in face_clouds:
+                    rh_beam_cloud.Merge(face_cloud)
+
+                rh_bbox = rh_beam_cloud.GetBoundingBox(rh_tentative_plane)
+                rh_bbox.Transform(Rhino.Geometry.Transform.PlaneToPlane(Rhino.Geometry.Plane.WorldXY, rh_tentative_plane))
+                rh_bb_centroid = rh_bbox.Center
 
                 pose = df_poses.DFPose(
                     origin = [rh_bb_centroid.X, rh_bb_centroid.Y, rh_bb_centroid.Z],
