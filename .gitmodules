@@ -17,6 +17,3 @@
 [submodule "deps/submodule-cilantro"]
 	path = deps/submodule-cilantro
 	url = https://github.com/diffCheckOrg/submodule-cilantro.git
-[submodule "deps/eigen"]
-	path = deps/eigen
-	url = https://github.com/diffCheckOrg/submodule-eigen.git
