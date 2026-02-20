@@ -579,12 +579,12 @@ class DFBeam:
                 angle = rg.Vector3d.VectorAngle(self.axis.Direction, joint_normal)
                 angle_degree = Rhino.RhinoMath.ToDegrees(angle)
                 jointfaces_angles.append(angle_degree)
-                angle_degree = int(angle_degree)
+                angle_degree = float(angle_degree)
 
-                if angle_degree > 90:
-                    angle_degree = 180 - angle_degree
-                if angle_degree >= 89 and angle_degree <= 90:
-                    angle_degree = -1
+                if angle_degree > 90.0:
+                    angle_degree = 180.0 - angle_degree
+                if angle_degree >= 89.0 and angle_degree <= 90.0:
+                    angle_degree = -1.0
 
                 jointface_angles.append(angle_degree)
         return jointface_angles
