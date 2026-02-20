@@ -1,7 +1,5 @@
 from setuptools import setup, find_packages
 
-
-
 setup(
     name="diffCheck",
     version="1.3.1",
