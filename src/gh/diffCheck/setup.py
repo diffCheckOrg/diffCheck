@@ -1,5 +1,5 @@
-from setuptools import setup, find_packages
 
+from setuptools import setup, find_packages
 
 
 setup(
@@ -24,7 +24,8 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     include_package_data=True,
+    # type: ignore[misc]
     package_data={
         "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd"]
-        },
+    },
 )
