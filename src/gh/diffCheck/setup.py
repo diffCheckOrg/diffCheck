@@ -24,8 +24,7 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     include_package_data=True,
-    # type: ignore[misc]
-    package_data={
+    package_data={  # type: ignore[misc]
         "diffCheck": ["diffCheck/dlls/*.dll", "*.pyd"]
     },
 )
