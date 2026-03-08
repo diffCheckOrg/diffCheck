@@ -258,22 +258,21 @@ namespace diffCheck::segmentation
                     Eigen::Vector3d segmentCenter;
                     Eigen::Vector3d segmentNormal;
 
-                    for (auto point : segment->Points){segmentCenter += point;}
-                    if (segment->GetNumPoints() > 0)
-                    {
-                        segmentCenter /= segment->GetNumPoints();
-                    }
-                    else
+                    if (segment->GetNumPoints() == 0)
                     {
                         DIFFCHECK_WARN("Empty segment. Skipping the segment.");
                         continue;
                     }
+                    segmentCenter = segment->GetAxixAlignedBoundingBox()[0] + (segment->GetAxixAlignedBoundingBox()[1] - segment->GetAxixAlignedBoundingBox()[0])/2.0;
+
                     for (auto normal : segment->Normals){segmentNormal += normal;}
                     segmentNormal.normalize();
                     double currentDistance = (faceCenter - segmentCenter).norm();
                     double currentDitanceOrthogonalToFace = std::abs((faceCenter - segmentCenter).dot(faceNormal));
                     double currentAngle = std::abs(sin(acos(faceNormal.dot(faceCenter - segmentCenter))));
-                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold && currentDitanceOrthogonalToFace < maximumFaceSegmentDistance  && currentDitanceOrthogonalToFace < faceDistance)
+                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold 
+                        && currentDitanceOrthogonalToFace < maximumFaceSegmentDistance  
+                        && currentDitanceOrthogonalToFace < faceDistance)
                     {
                         correspondingSegment = segment;
                         faceDistance = currentDitanceOrthogonalToFace;
@@ -435,7 +434,9 @@ namespace diffCheck::segmentation
                             double currentDistance = (center - clusterCenter).norm() ;
                             double adaptedDistance = currentDistance * std::abs(dotProduct);
 
-                            if (std::abs(dotProduct) < angleThreshold && adaptedDistance < distance && currentDistance < (max - min).norm()*associationThreshold)
+                            if (std::abs(dotProduct) < angleThreshold 
+                                && adaptedDistance < distance 
+                                && currentDistance < (max - min).norm()*associationThreshold)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;
