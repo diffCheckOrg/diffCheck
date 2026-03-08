@@ -521,13 +521,18 @@ class DFBeam:
 
         :return plane: The plane of the beam
         """
-        beam_direction = self.axis.Direction
+        bounding_geometry = diffCheck.df_util.compute_oriented_bounding_box(self.to_brep())
+        center = Rhino.Geometry.AreaMassProperties.Compute(bounding_geometry).Centroid
+        edge_lengths = [edge.GetLength() for edge in bounding_geometry.Edges]
+        longest_edge = bounding_geometry.Edges[edge_lengths.index(max(edge_lengths))]
+        z_axis = rg.Vector3d(longest_edge.PointAt(1) - longest_edge.PointAt(0))
+
         df_faces = [face for face in self.faces]
         sorted_df_faces = sorted(df_faces, key=lambda face: Rhino.Geometry.AreaMassProperties.Compute(face._rh_brepface).Area if face._rh_brepface else 0, reverse=True)
         largest_side_face_normal = sorted_df_faces[0].normal
         rh_largest_side_face_normal = rg.Vector3d(largest_side_face_normal[0], largest_side_face_normal[1], largest_side_face_normal[2])
 
-        return rg.Plane(self.center, rg.Vector3d.CrossProduct(beam_direction, rh_largest_side_face_normal), rh_largest_side_face_normal)
+        return rg.Plane(center, rg.Vector3d.CrossProduct(z_axis, rh_largest_side_face_normal), rh_largest_side_face_normal)
 
     def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
         """
