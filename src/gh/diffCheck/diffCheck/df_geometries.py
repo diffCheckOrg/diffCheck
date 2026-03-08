@@ -604,13 +604,13 @@ class DFBeam:
         return jointface_angles
 
     @classmethod
-    def from_brep_face(cls, brep, is_roundwood=False):
+    def from_brep_face(cls, brep, is_roundwood=False, allow_curved_joint_faces=False):
         """
         Create a DFBeam from a RhinoBrep object.
         It also removes duplicates and creates a list of unique faces.
         """
         faces : typing.List[DFFace] = []
-        data_faces = diffCheck.df_joint_detector.JointDetector(brep, is_roundwood).run()
+        data_faces = diffCheck.df_joint_detector.JointDetector(brep, is_roundwood).run(allow_curved_joint_faces)
         for data in data_faces:
             face = DFFace.from_brep_face(data[0], data[1])
             faces.append(face)
