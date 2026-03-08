@@ -52,7 +52,7 @@ class DFPoseEstimation(component):
                 rh_tentative_bb_centroid = Rhino.Geometry.Point3d(df_bb_centroid[0], df_bb_centroid[1], df_bb_centroid[2])
 
                 new_xDirection, new_yDirection = df_poses.select_vectors(rh_face_normals, i_assembly.beams[i].plane.XAxis, i_assembly.beams[i].plane.YAxis)
-                rh_tentative_plane = Rhino.Geometry.Plane(rh_tentative_bb_centroid, new_yDirection, new_xDirection)
+                rh_tentative_plane = Rhino.Geometry.Plane(rh_tentative_bb_centroid, new_xDirection, new_yDirection)
 
                 rh_beam_cloud = Rhino.Geometry.PointCloud()
                 for face_cloud in face_clouds:
