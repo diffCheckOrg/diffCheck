@@ -48,6 +48,18 @@
                 "wireDisplay": "default",
                 "sourceCount": 0,
                 "typeHintID": "bool"
+            },
+            {
+                "name": "i_allow_curved_joint_faces",
+                "nickname": "i_allow_curved_joint_faces",
+                "description": "Whether to allow curved faces as joint faces.",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool"
             }
         ],
         "outputParameters": [
