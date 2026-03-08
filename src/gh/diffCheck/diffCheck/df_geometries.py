@@ -178,8 +178,17 @@ class DFFace:
             loop_vertices = loop_curve.Points
             loop = []
             for l_v in loop_vertices:
-                vertex = DFVertex(l_v.X, l_v.Y, l_v.Z)
-                loop.append(vertex)
+                rg_pt = rg.Point3d(l_v.X, l_v.Y, l_v.Z)
+                res = loop_curve.ClosestPoint(rg_pt)
+                if res:
+                    t = res[1]
+                else:
+                    t = 0 # this is a fallback, but it should not happen since the point is on the curve
+                point_on_curve = loop_curve.PointAt(t)
+                distance = rg.Point3d.DistanceTo(rg_pt, point_on_curve)
+                if distance < 10 * Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance:
+                    vertex = DFVertex(l_v.X, l_v.Y, l_v.Z)
+                    loop.append(vertex)
             all_loops.append(loop)
 
         df_face = cls(all_loops, joint_id)
