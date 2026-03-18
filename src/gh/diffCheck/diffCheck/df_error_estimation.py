@@ -19,6 +19,7 @@ from Rhino.FileIO import SerializationOptions
 from diffCheck import diffcheck_bindings  # type: ignore
 from diffCheck import df_cvt_bindings
 from diffCheck.df_geometries import DFAssembly
+from diffCheck.df_poses import DFPosesBeam, DFPose
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -267,6 +268,24 @@ class DFVizResults:
     def analysis_type(self):
         self._analysis_type = self._compute_dfresult_type()
         return self._analysis_type
+
+class DFPoseResults():
+    """
+    This class compiles the results of the pose estimation into one object
+    """
+    def __init__(self, assembly: DFAssembly):
+        self.assembly = assembly
+        self.pose_history : dict[str, DFPosesBeam] = dict()
+        self.last_poses : dict[str, DFPose] = dict()
+    def add_history(self, pose_history):
+        """
+        The pose history is a dictionnary where the keys are the element names ("element_0", "element_1", etc),
+        and the values are DFPosesBeam objects containing a dictionnary of poses for each element.
+        """
+        self.pose_history = pose_history
+        for element in pose_history:
+            self.last_poses[element] = pose_history[element].poses_dictionary[list(pose_history[element].poses_dictionary.keys())[-1]]
+
 
 # FIXME: ths is currently broken, we need to fix it
 def df_cloud_2_df_cloud_comparison(
