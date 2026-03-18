@@ -3,6 +3,7 @@ import ghpythonlib.treehelpers as th
 import Rhino
 
 import json
+import numpy
 from dataclasses import dataclass, field
 
 # use a key and not all the sticky
@@ -29,6 +30,31 @@ class DFPose:
         xDirection = Rhino.Geometry.Vector3d(self.xDirection[0], self.xDirection[1], self.xDirection[2])
         yDirection = Rhino.Geometry.Vector3d(self.yDirection[0], self.yDirection[1], self.yDirection[2])
         return Rhino.Geometry.Plane(origin, xDirection, yDirection)
+
+    def compare_to_rh_plane(self, rh_plane):
+        """
+        Compare this pose to another pose and return the differences in origin, xDirection and yDirection.
+
+        :param rh_plane: the Rhino Plane to compare to
+        :return: a tuple containing the distance between the origins, the angle between the xDirections and the rhino transform to go from the compared pose to this pose.
+        """
+        other_origin = rh_plane.Origin
+        measured_origin = self.to_rh_plane().Origin
+        distance = other_origin.DistanceTo(measured_origin)
+
+        # Compare the orientations using the formula: $$ \theta = \arccos\left(\frac{\text{trace}(R_{\text{pred}}^T R_{\text{meas}}) - 1}{2}\right) $$
+        transform_o_to_other = Rhino.Geometry.Transform.PlaneToPlane(Rhino.Geometry.Plane.WorldXY, rh_plane)
+        transform_o_to_current = Rhino.Geometry.Transform.PlaneToPlane(Rhino.Geometry.Plane.WorldXY, self.to_rh_plane())
+        np_transform_o_to_other = numpy.array(transform_o_to_other.ToDoubleArray(rowDominant=True)).reshape((4, 4))
+        np_transform_o_to_measured = numpy.array(transform_o_to_current.ToDoubleArray(rowDominant=True)).reshape((4, 4))
+
+        R_other = np_transform_o_to_other[:3, :3]
+        R_measured = np_transform_o_to_measured[:3, :3]
+        R_rel = numpy.dot(R_other.T, R_measured)
+        theta = numpy.arccos(numpy.clip((numpy.trace(R_rel) - 1) / 2, -1.0, 1.0))
+
+        transform_other_to_current_plane = Rhino.Geometry.Transform.PlaneToPlane(rh_plane, self.to_rh_plane())
+        return distance, theta, transform_other_to_current_plane
 
 @dataclass
 class DFPosesBeam:
