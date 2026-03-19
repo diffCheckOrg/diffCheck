@@ -149,11 +149,19 @@ class DFPosesAssembly:
 
         :param gh_tree: the Grasshopper tree containing the poses in the form of Rhino Planes
         """
-        list_of_poses = th.tree_to_list(gh_tree)
+        bc = gh_tree.BranchCount
+        if bc > 1:
+            list_of_poses = th.tree_to_list(gh_tree)
+        else:
+            gh_tree.Flatten()
+            list_of_poses = [th.tree_to_list(gh_tree)]
         n_poses = len(list_of_poses[0]) if list_of_poses else 0
         for i in range(n_poses):
             new_poses = []
             for poses_of_element in list_of_poses:
+                if poses_of_element[i] is None:
+                    new_poses.append(None)
+                    continue
                 new_poses.append(DFPose(
                     origin = [poses_of_element[i].Origin.X, poses_of_element[i].Origin.Y, poses_of_element[i].Origin.Z],
                     xDirection = [poses_of_element[i].XAxis.X, poses_of_element[i].XAxis.Y, poses_of_element[i].XAxis.Z],
