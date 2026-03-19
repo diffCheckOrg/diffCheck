@@ -143,6 +143,21 @@ class DFPosesAssembly:
             list_of_poses.append(list_of_pose_of_element)
         return th.list_to_tree(list_of_poses)
 
+    def from_gh_tree(self, gh_tree):
+        """
+        Load the assembly poses from a Grasshopper tree structure.
+        """
+        list_of_poses = th.tree_to_list(gh_tree)
+        n_poses = len(list_of_poses[0]) if list_of_poses else 0
+        for i in range(n_poses):
+            new_poses = []
+            for poses_of_element in list_of_poses:
+                new_poses.append(DFPose(
+                    origin = [poses_of_element[i].Origin.X, poses_of_element[i].Origin.Y, poses_of_element[i].Origin.Z],
+                    xDirection = [poses_of_element[i].XAxis.X, poses_of_element[i].XAxis.Y, poses_of_element[i].XAxis.Z],
+                    yDirection = [poses_of_element[i].YAxis.X, poses_of_element[i].YAxis.Y, poses_of_element[i].YAxis.Z]))
+            self.add_step(new_poses)
+
 
 def compute_dot_product(v1, v2):
     """
