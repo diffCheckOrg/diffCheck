@@ -146,6 +146,8 @@ class DFPosesAssembly:
     def from_gh_tree(self, gh_tree):
         """
         Load the assembly poses from a Grasshopper tree structure.
+
+        :param gh_tree: the Grasshopper tree containing the poses in the form of Rhino Planes
         """
         list_of_poses = th.tree_to_list(gh_tree)
         n_poses = len(list_of_poses[0]) if list_of_poses else 0
