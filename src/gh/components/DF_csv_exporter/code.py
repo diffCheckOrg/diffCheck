@@ -8,7 +8,7 @@ import typing
 from ghpythonlib.componentbase import executingcomponent as component
 import Grasshopper as gh
 
-from diffCheck.df_error_estimation import DFInvalidData, DFVizResults
+from diffCheck.df_error_estimation import DFInvalidData, DFVizResults, DFPoseResults
 
 
 def add_bool_toggle(self,
@@ -170,21 +170,50 @@ class DFCsvExporter(component):
         if i_dump:
             os.makedirs(i_export_dir, exist_ok=True)
 
-            self.prefix = i_result.analysis_type
+            if isinstance(i_result, DFVizResults):
+                self.prefix = i_result.analysis_type
 
-            if i_export_seperate_files:
-                for idx in range(len(i_result.source)):
-                    element_id = self._get_id(idx, i_result)
-                    csv_analysis_path = os.path.join(i_export_dir, f"{i_file_name}_{self.prefix}_{element_id}.csv")
-                    rows = [self._prepare_row(idx, i_result)]
-                    self._write_csv(csv_analysis_path, rows)
+                if i_export_seperate_files:
+                    for idx in range(len(i_result.source)):
+                        element_id = self._get_id(idx, i_result)
+                        csv_analysis_path = os.path.join(i_export_dir, f"{i_file_name}_{self.prefix}_{element_id}.csv")
+                        rows = [self._prepare_row(idx, i_result)]
+                        self._write_csv(csv_analysis_path, rows)
+                        if i_export_distances:
+                            csv_distances_path = os.path.join(i_export_dir, f"{i_file_name}_{self.prefix}_{element_id}_distances.csv")
+                            self._write_csv(csv_distances_path, rows, is_writing_only_distances=True)
+                else:
+                    csv_analysis_path = os.path.join(i_export_dir, f"{i_file_name}.csv")
+                    merged_rows = [self._prepare_row(idx, i_result) for idx in range(len(i_result.source))]
+                    self._write_csv(csv_analysis_path, merged_rows)
                     if i_export_distances:
-                        csv_distances_path = os.path.join(i_export_dir, f"{i_file_name}_{self.prefix}_{element_id}_distances.csv")
-                        self._write_csv(csv_distances_path, rows, is_writing_only_distances=True)
-            else:
-                csv_analysis_path = os.path.join(i_export_dir, f"{i_file_name}.csv")
-                merged_rows = [self._prepare_row(idx, i_result) for idx in range(len(i_result.source))]
-                self._write_csv(csv_analysis_path, merged_rows)
-                if i_export_distances:
-                    csv_distances_path = os.path.join(i_export_dir, f"{i_file_name}_distances.csv")
-                    self._write_csv(csv_distances_path, merged_rows, is_writing_only_distances=True)
+                        csv_distances_path = os.path.join(i_export_dir, f"{i_file_name}_distances.csv")
+                        self._write_csv(csv_distances_path, merged_rows, is_writing_only_distances=True)
+
+            elif isinstance(i_result, DFPoseResults):
+                data_dicts = []
+                csv_analysis_path = os.path.join(i_export_dir, f"{i_file_name}_pose_data.csv")
+                elem_names, elem_last_dist_err, elem_last_rot_err, assembly_dist_err_hist, assembly_rot_err_hist = i_result.compute_history_pose_errors()
+                for i in range(len(elem_names)):
+                    dist_err_list = []
+                    rot_err_list = []
+                    for data in assembly_dist_err_hist[i]:
+                        if data :
+                            dist_err_list.append(float(data))
+                        else:
+                            dist_err_list.append("nan")
+                    for data in assembly_rot_err_hist[i]:
+                        if data:
+                            rot_err_list.append(float(data))
+                        else:
+                            rot_err_list.append("nan")
+
+                    data_dict = {
+                        "element_name": elem_names[i],
+                        "last_distance_error": elem_last_dist_err[i],
+                        "last_rotation_error": elem_last_rot_err[i],
+                        "assembly_distance_error_history": dist_err_list,
+                        "assembly_rotation_error_history": rot_err_list
+                    }
+                    data_dicts.append(data_dict)
+                self._write_csv(csv_analysis_path, data_dicts)
