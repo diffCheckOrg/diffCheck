@@ -22,6 +22,19 @@ class DFPose:
     xDirection: list
     yDirection: list
 
+    @staticmethod
+    def from_rh_plane(rh_plane):
+        """
+        Create a DFPose object from a Rhino Plane object.
+
+        :param rh_plane: the Rhino Plane to convert
+        :return: a DFPose object representing the same pose as the input Rhino Plane
+        """
+        return DFPose(
+            origin = [rh_plane.Origin.X, rh_plane.Origin.Y, rh_plane.Origin.Z],
+            xDirection = [rh_plane.XAxis.X, rh_plane.XAxis.Y, rh_plane.XAxis.Z],
+            yDirection = [rh_plane.YAxis.X, rh_plane.YAxis.Y, rh_plane.YAxis.Z])
+
     def to_rh_plane(self):
         """
         Convert the pose to a Rhino Plane object.
