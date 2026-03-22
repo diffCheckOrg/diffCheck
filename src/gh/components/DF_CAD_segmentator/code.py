@@ -43,6 +43,7 @@ class DFCADSegmentator(component):
             i_maximum_face_segment_distance = 0.1
 
         o_face_clusters = []
+        o_poses_from_icp = []
         transforms = []
         df_clusters = []
         # we make a deepcopy of the input clouds
@@ -88,6 +89,11 @@ class DFCADSegmentator(component):
 
         df_asssociated_cluster_faces_per_beam = []
         for i, df_b in enumerate(df_beams):
+            beam_initial_pose = df_b.plane
+            if beam_initial_pose.Transform(transforms[i]):
+                beam_detected_pose = beam_initial_pose
+                o_poses_from_icp.append(beam_detected_pose)
+
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             rh_test_mesh = Rhino.Geometry.Mesh()
             for j in range(len(rh_b_mesh_faces)):
@@ -144,4 +150,4 @@ class DFCADSegmentator(component):
 
         o_face_clouds = th.list_to_tree(o_face_clusters)
 
-        return [o_beam_clouds, o_face_clouds]
+        return [o_beam_clouds, o_face_clouds, o_poses_from_icp]

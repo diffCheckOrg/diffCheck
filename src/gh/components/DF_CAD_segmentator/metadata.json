@@ -126,6 +126,14 @@
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
+            },
+            {
+                "name": "o_poses_from_icp",
+                "nickname": "o_poses_from_icp",
+                "description": "The list of poses resulting from the ICP registration. If i_make_registration is False, this output will be empty.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
             }
         ]
     }
