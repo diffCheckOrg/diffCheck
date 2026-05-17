@@ -71,9 +71,10 @@ class DFPoseComparison(component):
                 o_transforms_cad_to_measured.append(transform_cad_to_measured)
 
 
-        df_poses_assembly = diffCheck.df_poses.DFPosesAssembly().from_gh_tree(i_measured_planes)
-        o_result = diffCheck.df_error_estimation.DFErrorEstimation(i_assembly)
-        o_result.add_history(df_poses_assembly)
+        df_poses_assembly = diffCheck.df_poses.DFPosesAssembly()
+        df_poses_assembly.from_gh_tree(i_measured_planes)
+        o_result = diffCheck.df_error_estimation.DFPoseResults(i_assembly)
+        o_result.add_history(df_poses_assembly.poses_per_element_dictionary)
 
         if bc == 1:
             return o_distances, o_angles, o_transforms_cad_to_measured, o_result
