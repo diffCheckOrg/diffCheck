@@ -162,6 +162,7 @@ class DFPosesAssembly:
 
         :param gh_tree: the Grasshopper tree containing the poses in the form of Rhino Planes
         """
+        self.reset()
         bc = gh_tree.BranchCount
         if bc > 1:
             list_of_poses = th.tree_to_list(gh_tree)
