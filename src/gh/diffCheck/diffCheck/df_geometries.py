@@ -241,7 +241,7 @@ class DFFace:
         for mesh_part in mesh_parts:
             mesh.Append(mesh_part)
         mesh.Faces.ConvertQuadsToTriangles()
-        # mesh.Compact()
+        mesh.Compact()
 
         return mesh
 
