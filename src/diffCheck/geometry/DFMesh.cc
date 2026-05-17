@@ -112,10 +112,12 @@ namespace diffCheck::geometry
             Eigen::Vector3d v1 = this->Vertices[triangle[1]];
             Eigen::Vector3d v2 = this->Vertices[triangle[2]];
             Eigen::Vector3d n = (v1 - v0).cross(v2 - v0);
-            n.normalize();
+            double n2 = n.squaredNorm();
 
-            // Project the point onto the plane of the triangle
-            Eigen::Vector3d projectedPoint = point - n * (n.dot(point - v0));
+            // Handle degenerate triangle
+            if (n2 < 1e-20){continue;}// skip this triangle
+
+            Eigen::Vector3d projectedPoint = point - n * (n.dot(point - v0) / n2);
 
             // Compute vectors
             Eigen::Vector3d v0v1 = v1 - v0;
@@ -130,16 +132,22 @@ namespace diffCheck::geometry
             double dot12 = v0v1.dot(v0p);
 
             // create u,v isoparametric mapping to the triangle where (u,v) = (1,0) if projectedPoint = v2, (u,v) = (0,1) if projectedPoint = v1 and (u,v) = (0,0) if projectedPoint = v0
-            double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
+            double denom = dot00 * dot11 - dot01 * dot01;
+            if (std::abs(denom) < 1e-20)
+                continue;
+
+            double invDenom = 1.0 / denom;
             double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
             double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
             // Check if point is in triangle
-            if ((u >= -associationThreshold / 100) && (v >= -associationThreshold / 100) && (u + v <= 1 + associationThreshold / 100))
+            double scale = std::max({v0v1.norm(), v0v2.norm()});
+            double epsilon = 1e-6;
+
+            if ((u >= -epsilon) && (v >= -epsilon) && (u + v <= 1 + epsilon))
             {
                 // Check if the point is close enough to the face
-                double maxProjectionDistance = associationThreshold * std::min({(v1 - v0).norm(), (v2 - v1).norm(), (v0 - v2).norm()}) ;
-                if ((projectedPoint - point).norm() < maxProjectionDistance)
+                if ((projectedPoint - point).squaredNorm() < associationThreshold * associationThreshold)
                 {
                     return true;
                 }
