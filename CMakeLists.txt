@@ -10,6 +10,9 @@ include(options)
 # disabling warnings
 if (MSVC)
     add_compile_options(/wd4003)
+    # Disable _SECURE_SCL to avoid issues with stdext::checked_array_iterator
+    # in newer MSVC versions with Open3D's bundled fmt library
+    add_compile_definitions(_SECURE_SCL=0)
 endif()
 
 # check that the -DCMAKE_BUILD_TYPE is set
