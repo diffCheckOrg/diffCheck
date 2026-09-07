@@ -36,7 +36,7 @@ class DFPoseEstimation(component):
         all_poses_this_time = []
         for i, face_clouds in enumerate(clusters_per_beam):
             try:
-                if len(i_poses_from_icp) > i and i_poses_from_icp[i] is not None:
+                if i_poses_from_icp and len(i_poses_from_icp) > i and i_poses_from_icp[i] is not None:
                     # if there is a pose from ICP for this beam, use it directly without processing the cloud
                     planes.append(i_poses_from_icp[i])
                     all_poses_this_time.append(df_poses.DFPose.from_rh_plane(i_poses_from_icp[i]))
