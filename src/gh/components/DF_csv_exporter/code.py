@@ -198,7 +198,7 @@ class DFCsvExporter(component):
                     dist_err_list = []
                     rot_err_list = []
                     for data in assembly_dist_err_hist[i]:
-                        if data :
+                        if data is not None:
                             dist_err_list.append(float(data))
                         else:
                             dist_err_list.append("nan")

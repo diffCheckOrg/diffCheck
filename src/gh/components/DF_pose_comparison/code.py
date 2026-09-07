@@ -7,8 +7,8 @@ from ghpythonlib.componentbase import executingcomponent as component
 import ghpythonlib.treehelpers as th
 
 import diffCheck.df_geometries
+import diffCheck.df_poses
 import diffCheck.df_error_estimation
-
 import numpy
 
 def compute_comparison(measured_pose, cad_pose):

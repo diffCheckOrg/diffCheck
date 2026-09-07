@@ -89,11 +89,11 @@ class DFCADSegmentator(component):
 
         df_asssociated_cluster_faces_per_beam = []
         for i, df_b in enumerate(df_beams):
-            beam_initial_pose = df_b.plane
-            if beam_initial_pose.Transform(transforms[i]):
-                beam_detected_pose = beam_initial_pose
+            beam_detected_pose = Rhino.Geometry.Plane(df_b.plane)
+            if beam_detected_pose.Transform(transforms[i]):
                 o_poses_from_icp.append(beam_detected_pose)
-
+            else:
+                o_poses_from_icp.append(None)
             rh_b_mesh_faces = [df_b_f.to_mesh() for df_b_f in df_b.side_faces]
             rh_test_mesh = Rhino.Geometry.Mesh()
             for j in range(len(rh_b_mesh_faces)):

@@ -141,7 +141,6 @@ namespace diffCheck::geometry
             double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
             // Check if point is in triangle
-            double scale = std::max({v0v1.norm(), v0v2.norm()});
             double epsilon = 1e-6;
 
             if ((u >= -epsilon) && (v >= -epsilon) && (u + v <= 1 + epsilon))
