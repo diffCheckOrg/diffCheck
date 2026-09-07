@@ -285,7 +285,8 @@ class DFPoseResults():
         """
         self.pose_history = pose_history
         for element in pose_history:
-            self.last_poses[element] = pose_history[element].poses_dictionary[list(pose_history[element].poses_dictionary.keys())[-1]]
+            poses_dict = pose_history[element].poses_dictionary
+            self.last_poses[element] = poses_dict[next(reversed(poses_dict))] if poses_dict else None
 
     def add_last_poses(self, last_poses : dict[str, DFPose]):
         """
