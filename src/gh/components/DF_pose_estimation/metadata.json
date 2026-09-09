@@ -38,6 +38,18 @@
                 "typeHintID": "ghdoc"
             },
             {
+                "name": "i_poses_from_icp",
+                "nickname": "i_poses_from_icp",
+                "description": "The optional poses detected in the CAD segmentation component though ICP. If provided, the pose will not be re-calculated using the faces normals.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "ghdoc"
+            },
+            {
                 "name": "i_reset",
                 "nickname": "i_reset",
                 "description": "reset the history of the pose estimation",

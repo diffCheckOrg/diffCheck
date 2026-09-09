@@ -156,7 +156,7 @@ namespace diffCheck::geometry
             }
             for (auto &normal : O3DPointCloud->normals_)
             {
-                if(normal.z() < -0.8)
+                if(normal.z() < -0.1)
                 {
                     normal = -normal;
                 }
@@ -173,7 +173,7 @@ namespace diffCheck::geometry
             this->Normals.clear();
             for (int i = 0; i < cilantroPointCloud->normals.cols(); i++)
             {
-                if(cilantroPointCloud->normals.col(i).z() < -0.8)
+                if(cilantroPointCloud->normals.col(i).z() < -0.1)
                 {
                     cilantroPointCloud->normals.col(i) = -cilantroPointCloud->normals.col(i);
                 }

@@ -61,6 +61,14 @@
                 "optional": false,
                 "sourceCount": 0,
                 "graft": false
+            },
+            {
+                "name": "o_result",
+                "nickname": "o_result",
+                "description": "A DFPoseResults object containing detailed error information for each pose comparison.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
             }
         ]
     }
