@@ -265,6 +265,11 @@ namespace diffCheck::segmentation
                     Eigen::Vector3d segmentCenter = segment->GetAxixAlignedBoundingBox()[0] + (segment->GetAxixAlignedBoundingBox()[1] - segment->GetAxixAlignedBoundingBox()[0])/2.0;
 
                     for (auto normal : segment->Normals){segmentNormal += normal;}
+                    if (segmentNormal.norm() == 0)
+                    {
+                        DIFFCHECK_WARN("Segment normal is zero. Skipping the segment.");
+                        continue;
+                    }
                     segmentNormal.normalize();
                     double currentDitanceOrthogonalToFace = std::abs((faceCenter - segmentCenter).dot(faceNormal));
                     if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold 
