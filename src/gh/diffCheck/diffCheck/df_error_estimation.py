@@ -369,6 +369,13 @@ def rh_cloud_2_rh_mesh_comparison(
     results = DFVizResults(assembly)
 
     for idx, source_rh in enumerate(rh_cloud_source_list):
+        if source_rh is None or not isinstance(source_rh, Rhino.Geometry.PointCloud):
+            # Add null element to results with MISSING_PCD flag
+            empty_df_cloud = diffcheck_bindings.dfb_geometry.DFPointCloud()
+            target = rhino_mesh_target_list[idx]
+            results.add(empty_df_cloud, target, np.empty(0), sanity_check=DFInvalidData.MISSING_PCD)
+            continue
+
         source_df = df_cvt_bindings.cvt_rhcloud_2_dfcloud(source_rh)
         target = rhino_mesh_target_list[idx]
 
