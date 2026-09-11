@@ -49,9 +49,9 @@ class DFCADSegmentator(component):
         # we make a deepcopy of the input clouds
         df_clouds = [df_cvt_bindings.cvt_rhcloud_2_dfcloud(cloud.Duplicate()) for cloud in i_clouds]
         df_merged_cloud = dfb_geometry.DFPointCloud()
-        df_merged_cloud.remove_statistical_outliers(100, 1.5)
         for pc in df_clouds:
             df_merged_cloud.add_points(pc)
+        df_merged_cloud.remove_statistical_outliers(100, 1.5)
 
         df_beams = i_assembly.beams
 
