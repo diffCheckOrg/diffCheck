@@ -2,6 +2,10 @@ import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
 
+import diffCheck.diffcheck_bindings
+import diffCheck.df_cvt_bindings
+import numpy as np
+
 import typing
 
 
@@ -180,3 +184,24 @@ def merge_shared_indexes(original_dict):
         if not intersection_found:
             new_dict[key] = (face, indexes)
     return new_dict
+
+def compute_oriented_bounding_box(brep):
+    """
+    Computes the oriented bounding box of a brep.
+    We use the point cloud of the vertices of the brep's 4 largest faces to compute the bounding box.
+
+    :param brep: the brep to compute the bounding box of
+    :return: the oriented bounding box of the brep
+    """
+    df_cloud = diffCheck.diffcheck_bindings.dfb_geometry.DFPointCloud()
+    sorted_faces = sorted(brep.Faces, key=lambda f : Rhino.Geometry.AreaMassProperties.Compute(f.ToBrep()).Area, reverse = True)
+    if len(sorted_faces) > 4:
+        largest_faces = sorted_faces[:4]
+    else:
+        largest_faces = sorted_faces
+    bb_vertices = []
+    for face in largest_faces:
+        for v in face.ToBrep().Vertices:
+            bb_vertices.append(Rhino.Geometry.Point3d(v.Location.X, v.Location.Y, v.Location.Z))
+    df_cloud.points = [np.array([vertex.X, vertex.Y, vertex.Z]).reshape(3, 1) for vertex in bb_vertices]
+    return diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())

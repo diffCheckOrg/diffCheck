@@ -255,25 +255,26 @@ namespace diffCheck::segmentation
                 }
                 for (auto segment : clusters)
                 {   
-                    Eigen::Vector3d segmentCenter;
-                    Eigen::Vector3d segmentNormal;
+                    Eigen::Vector3d segmentNormal = Eigen::Vector3d::Zero();
 
-                    for (auto point : segment->Points){segmentCenter += point;}
-                    if (segment->GetNumPoints() > 0)
-                    {
-                        segmentCenter /= segment->GetNumPoints();
-                    }
-                    else
+                    if (segment->GetNumPoints() == 0)
                     {
                         DIFFCHECK_WARN("Empty segment. Skipping the segment.");
                         continue;
                     }
+                    Eigen::Vector3d segmentCenter = segment->GetAxixAlignedBoundingBox()[0] + (segment->GetAxixAlignedBoundingBox()[1] - segment->GetAxixAlignedBoundingBox()[0])/2.0;
+
                     for (auto normal : segment->Normals){segmentNormal += normal;}
+                    if (segmentNormal.norm() == 0)
+                    {
+                        DIFFCHECK_WARN("Segment normal is zero. Skipping the segment.");
+                        continue;
+                    }
                     segmentNormal.normalize();
-                    double currentDistance = (faceCenter - segmentCenter).norm();
                     double currentDitanceOrthogonalToFace = std::abs((faceCenter - segmentCenter).dot(faceNormal));
-                    double currentAngle = std::abs(sin(acos(faceNormal.dot(faceCenter - segmentCenter))));
-                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold && currentDitanceOrthogonalToFace < maximumFaceSegmentDistance  && currentDitanceOrthogonalToFace < faceDistance)
+                    if (std::abs(sin(acos(faceNormal.dot(segmentNormal)))) < angleThreshold 
+                        && currentDitanceOrthogonalToFace < maximumFaceSegmentDistance  
+                        && currentDitanceOrthogonalToFace < faceDistance)
                     {
                         correspondingSegment = segment;
                         faceDistance = currentDitanceOrthogonalToFace;
@@ -288,64 +289,47 @@ namespace diffCheck::segmentation
                 }
                 bool hasColors = correspondingSegment->GetNumColors() > 0;
 
-                for (Eigen::Vector3d point : correspondingSegment->Points)
+                std::vector<int> indicesToRemove;
+                for (size_t i = 0; i < correspondingSegment->Points.size(); i++)
                 {
+                    const Eigen::Vector3d& point = correspondingSegment->Points[i];
+
                     if (discriminatePoints)
                     {
-                        bool pointInFace = false;
                         if (face->IsPointOnFace(point, associationThreshold))
                         {
                             facePoints->Points.push_back(point);
-                            facePoints->Normals.push_back(
-                                correspondingSegment->Normals[std::distance(
-                                    correspondingSegment->Points.begin(), 
-                                    std::find(correspondingSegment->Points.begin(), 
-                                    correspondingSegment->Points.end(), 
-                                    point))]
-                                );
+                            facePoints->Normals.push_back(correspondingSegment->Normals[i]);
                             if (hasColors)
                             {
-                                facePoints->Colors.push_back(
-                                    correspondingSegment->Colors[std::distance(
-                                        correspondingSegment->Points.begin(), 
-                                        std::find(correspondingSegment->Points.begin(), 
-                                        correspondingSegment->Points.end(), 
-                                        point))]
-                                    );
+                                facePoints->Colors.push_back(correspondingSegment->Colors[i]);
                             }
+                            indicesToRemove.push_back(i);
                         }
                     }
                     else
                     {
                         facePoints->Points.push_back(point);
-                        facePoints->Normals.push_back(
-                            correspondingSegment->Normals[std::distance(
-                                correspondingSegment->Points.begin(), 
-                                std::find(correspondingSegment->Points.begin(), 
-                                correspondingSegment->Points.end(), 
-                                point))]
-                            );
+                        facePoints->Normals.push_back(correspondingSegment->Normals[i]);
                         if (hasColors)
                         {
-                            facePoints->Colors.push_back(
-                                correspondingSegment->Colors[std::distance(
-                                    correspondingSegment->Points.begin(), 
-                                    std::find(correspondingSegment->Points.begin(), 
-                                    correspondingSegment->Points.end(), 
-                                    point))]
-                                );
+                            facePoints->Colors.push_back(correspondingSegment->Colors[i]);
                         }
+                        indicesToRemove.push_back(i);
                     }
                 }
                 
-                for(Eigen::Vector3d point : facePoints->Points)
+                for (auto it = indicesToRemove.rbegin(); it != indicesToRemove.rend(); ++it)
                 {
-                    correspondingSegment->Points.erase(
-                        std::remove(
-                            correspondingSegment->Points.begin(), 
-                            correspondingSegment->Points.end(), 
-                            point), 
-                        correspondingSegment->Points.end());
+                    int i = *it;
+
+                    correspondingSegment->Points.erase(correspondingSegment->Points.begin() + i);
+                    correspondingSegment->Normals.erase(correspondingSegment->Normals.begin() + i);
+
+                    if (hasColors)
+                    {
+                        correspondingSegment->Colors.erase(correspondingSegment->Colors.begin() + i);
+                    }
                 }
                 faceSegments.push_back(facePoints);
             }
@@ -373,7 +357,7 @@ namespace diffCheck::segmentation
             for (std::shared_ptr<geometry::DFPointCloud> cluster : unassociatedClusters)
             {
                 std::shared_ptr<geometry::DFMesh> correspondingMeshFace;
-                Eigen::Vector3d clusterCenter;
+                Eigen::Vector3d clusterCenter = Eigen::Vector3d::Zero();
                 Eigen::Vector3d clusterNormal = Eigen::Vector3d::Zero();
 
                 if (cluster->GetNumPoints() == 0)
@@ -391,7 +375,7 @@ namespace diffCheck::segmentation
                     DIFFCHECK_WARN("No meshes to associate with the clusters. Skipping the cluster.");
                     continue;
                 }
-                for (Eigen::Vector3d point : cluster->Points)
+                for (const Eigen::Vector3d& point : cluster->Points)
                 {
                     clusterCenter += point;
                 }
@@ -435,7 +419,9 @@ namespace diffCheck::segmentation
                             double currentDistance = (center - clusterCenter).norm() ;
                             double adaptedDistance = currentDistance * std::abs(dotProduct);
 
-                            if (std::abs(dotProduct) < angleThreshold && adaptedDistance < distance && currentDistance < (max - min).norm()*associationThreshold)
+                            if (std::abs(dotProduct) < angleThreshold 
+                                && adaptedDistance < distance 
+                                && currentDistance < (max - min).norm()*associationThreshold)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;
@@ -465,11 +451,13 @@ namespace diffCheck::segmentation
 
                             double dotProduct = clusterNormal.dot((clusterCenter - faceCenter).normalized());
                             dotProduct = std::max(-1.0, std::min(1.0, dotProduct));
-                            double clusterNormalToJunctionLineAngle = std::acos(dotProduct);
                             
-                            double currentDistance = (clusterCenter - faceCenter).norm() * std::abs(std::cos(clusterNormalToJunctionLineAngle))
-                            / std::min(std::abs(clusterNormal.dot(faceNormal)), 0.05) ;
-                            if (std::abs(sin(acos(faceNormal.dot(clusterNormal)))) < angleThreshold && currentDistance < maximumFaceSegmentDistance && currentDistance * (std::abs(faceNormal.dot((faceCenter - clusterCenter) / (faceCenter - clusterCenter).norm()))) < distance)
+                            double anglePenalty = 100*std::abs(clusterNormal.dot(faceNormal));
+                            double currentDistance = (clusterCenter - faceCenter).norm() * (.1 + std::abs(dotProduct)) / std::max(anglePenalty, 1.0);
+                            double normalAlignment = std::abs(faceNormal.dot(clusterNormal));
+                            if (std::abs(std::sqrt(1.0 - normalAlignment * normalAlignment)) < angleThreshold 
+                            && currentDistance < maximumFaceSegmentDistance 
+                            && currentDistance < distance)
                             {
                                 goodMeshIndex = meshIndex;
                                 goodFaceIndex = faceIndex;
@@ -494,13 +482,16 @@ namespace diffCheck::segmentation
                 }
                 std::shared_ptr<geometry::DFPointCloud> completed_segment = existingPointCloudSegments[goodMeshIndex][goodFaceIndex];
 
-                for (Eigen::Vector3d point : cluster->Points)
+                std::vector<int> indicesToRemove;
+                for (size_t i = 0; i <  cluster->Points.size(); i++)
                 {
+                    const Eigen::Vector3d& point = cluster->Points[i];
                     if(isCylinder)
                     {
                         completed_segment->Points.push_back(point);
-                        completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
-                        completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                        completed_segment->Normals.push_back(cluster->Normals[i]);
+                        completed_segment->Colors.push_back(cluster->Colors[i]);
+                        indicesToRemove.push_back(i);
                     }
                     else
                     {
@@ -509,25 +500,18 @@ namespace diffCheck::segmentation
                             if (correspondingMeshFace->IsPointOnFace(point, associationThreshold))
                             {
                                 completed_segment->Points.push_back(point);
-                                completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
-                                completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                                completed_segment->Normals.push_back(cluster->Normals[i]);
+                                completed_segment->Colors.push_back(cluster->Colors[i]);
+                                indicesToRemove.push_back(i);
                             }
                         }
                         else
                         {
                             completed_segment->Points.push_back(point);
-                            completed_segment->Normals.push_back(cluster->Normals[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
-                            completed_segment->Colors.push_back(cluster->Colors[std::distance(cluster->Points.begin(), std::find(cluster->Points.begin(), cluster->Points.end(), point))]);
+                            completed_segment->Normals.push_back(cluster->Normals[i]);
+                            completed_segment->Colors.push_back(cluster->Colors[i]);
+                            indicesToRemove.push_back(i);
                         }
-                    }
-                }
-                std::vector<int> indicesToRemove;
-
-                for (int i = 0; i < cluster->Points.size(); ++i) 
-                {
-                    if (std::find(completed_segment->Points.begin(), completed_segment->Points.end(), cluster->Points[i]) != completed_segment->Points.end()) 
-                    {
-                        indicesToRemove.push_back(i);
                     }
                 }
                 for (auto it = indicesToRemove.rbegin(); it != indicesToRemove.rend(); ++it) 

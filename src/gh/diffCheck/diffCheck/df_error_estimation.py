@@ -19,6 +19,7 @@ from Rhino.FileIO import SerializationOptions
 from diffCheck import diffcheck_bindings  # type: ignore
 from diffCheck import df_cvt_bindings
 from diffCheck.df_geometries import DFAssembly
+from diffCheck.df_poses import DFPosesBeam, DFPose
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -267,6 +268,64 @@ class DFVizResults:
     def analysis_type(self):
         self._analysis_type = self._compute_dfresult_type()
         return self._analysis_type
+
+class DFPoseResults():
+    """
+    This class compiles the results of the pose estimation into one object
+    """
+    def __init__(self, assembly: DFAssembly):
+        self.assembly = assembly
+        self.pose_history : dict[str, DFPosesBeam] = dict()
+        self.last_poses : dict[str, DFPose] = dict()
+
+    def add_history(self, pose_history : dict[str, DFPosesBeam]):
+        """
+        The pose history is a dictionnary where the keys are the element names ("element_0", "element_1", etc),
+        and the values are DFPosesBeam objects containing a dictionnary of poses for each element.
+        """
+        self.pose_history = pose_history
+        for element in pose_history:
+            poses_dict = pose_history[element].poses_dictionary
+            self.last_poses[element] = poses_dict[next(reversed(poses_dict))] if poses_dict else None
+
+    def add_last_poses(self, last_poses : dict[str, DFPose]):
+        """
+        Adds a dictionnary of the last poses for each element. The keys are the element names_0", "element_1", etc),
+        """
+        self.last_poses = last_poses
+
+    def compute_history_pose_errors(self):
+        """
+        This function computes the error of the pose estimation for each element at each step, compared to the poses defined in the assembly.
+        """
+        element_names = []
+        element_last_dist_errors = []
+        element_last_rot_errors = []
+        assembly_dist_error_history = []
+        assembly_rot_error_history = []
+
+        for element_name, df_poses_beam in self.pose_history.items():
+            element_index = int(element_name.split("_")[1])
+            df_beam = self.assembly.beams[element_index]
+            df_beam_pose_plane = df_beam.plane
+            dist_error_history = []
+            rot_error_history = []
+            for pose_name, pose in df_poses_beam.poses_dictionary.items():
+                if pose is None:
+                    dist_error_history.append(None)
+                    rot_error_history.append(None)
+                    continue
+                else:
+                    dist, angle, transform_error = pose.compare_to_rh_plane(df_beam_pose_plane)
+                    dist_error_history.append(dist)
+                    rot_error_history.append(angle)
+            assembly_dist_error_history.append(dist_error_history)
+            assembly_rot_error_history.append(rot_error_history)
+            element_names.append(element_name)
+            element_last_dist_errors.append(dist_error_history[-1])
+            element_last_rot_errors.append(rot_error_history[-1])
+        return element_names, element_last_dist_errors, element_last_rot_errors, assembly_dist_error_history, assembly_rot_error_history
+
 
 # FIXME: ths is currently broken, we need to fix it
 def df_cloud_2_df_cloud_comparison(

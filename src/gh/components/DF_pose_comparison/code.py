@@ -7,6 +7,8 @@ from ghpythonlib.componentbase import executingcomponent as component
 import ghpythonlib.treehelpers as th
 
 import diffCheck.df_geometries
+import diffCheck.df_poses
+import diffCheck.df_error_estimation
 import numpy
 
 def compute_comparison(measured_pose, cad_pose):
@@ -57,6 +59,7 @@ class DFPoseComparison(component):
                         o_distances[beam_id].append(dist)
                         o_angles[beam_id].append(angle)
                         o_transforms_cad_to_measured[beam_id].append(transform_cad_to_measured)
+
         else:
             i_measured_planes.Flatten()
             measured_plane_list = th.tree_to_list(i_measured_planes)
@@ -67,7 +70,13 @@ class DFPoseComparison(component):
                 o_angles.append(angle)
                 o_transforms_cad_to_measured.append(transform_cad_to_measured)
 
+
+        df_poses_assembly = diffCheck.df_poses.DFPosesAssembly()
+        df_poses_assembly.from_gh_tree(i_measured_planes)
+        o_result = diffCheck.df_error_estimation.DFPoseResults(i_assembly)
+        o_result.add_history(df_poses_assembly.poses_per_element_dictionary)
+
         if bc == 1:
-            return o_distances, o_angles, o_transforms_cad_to_measured
+            return o_distances, o_angles, o_transforms_cad_to_measured, o_result
         else:
-            return th.list_to_tree(o_distances), th.list_to_tree(o_angles), th.list_to_tree(o_transforms_cad_to_measured)
+            return th.list_to_tree(o_distances), th.list_to_tree(o_angles), th.list_to_tree(o_transforms_cad_to_measured), o_result
