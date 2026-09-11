@@ -53,7 +53,7 @@ class DFWSServerListener(component):
             loop = sc.sticky.pop(f'{prefix}_loop',   None)
             if server and loop:
                 try:
-                    server.close()
+                    loop.call_soon_threadsafe(server.close)
                     asyncio.run_coroutine_threadsafe(server.wait_closed(), loop)
                     logs.append("WebSocket server close initiated")
                 except Exception as e:
