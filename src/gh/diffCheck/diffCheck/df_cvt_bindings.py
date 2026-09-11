@@ -30,6 +30,8 @@ def cvt_rhcloud_2_dfcloud(rh_cloud) -> diffcheck_bindings.dfb_geometry.DFPointCl
 
         :return df_cloud: diffCheck cloud
     """
+    if rh_cloud is None:
+        raise ValueError("rh_cloud for convertion should not be None")
 
     if not isinstance(rh_cloud, rg.PointCloud):
         raise ValueError("rh_cloud for convertion should be a PointCloud")
