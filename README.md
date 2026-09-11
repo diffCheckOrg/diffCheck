@@ -14,7 +14,7 @@
 </p>
 
 
-![demo](https://github.com/user-attachments/assets/3c9f353d-7707-4630-aa6d-fe59cbdeae2f)
+![demo](./assets/img/intro_illustration_with_final_distances_and_pose_estimation.png)
 
 # DiffCheck: CAD-Scan comparison
 
@@ -22,7 +22,7 @@ With `diffCheck`, you can easily compare your scans and 3D models of timber stru
 
 `diffCheck` can also function as a general purpose  point cloud processing toolset and we hope that the digital community will use it, see the interest, and contribute to this open-source project we starting!
 
-`diffCheck` is originally developed and now maintained by Andrea Settimi (PhD), Damien Gilliard (PhD) from the [Laboratory of Timber Construction (IBOIS, lab head: Prof. Yves Weinand)](https://www.epfl.ch/labs/ibois/), Eleni Skevaki (PhD) and Dr. Marirena Kladeftira (Post-Doc) from the [Laboratory for Creative Computation (CRCL, lab head: Prof. Stefana Parascho)](https://www.epfl.ch/labs/crcl/) here at [Ecole Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).
+`diffCheck` is originally developed by Andrea Settimi (PhD), Damien Gilliard (PhD) from the [Laboratory of Timber Construction (IBOIS, lab head: Prof. Yves Weinand)](https://www.epfl.ch/labs/ibois/), Eleni Skevaki (PhD) and Dr. Marirena Kladeftira (Post-Doc) from the [Laboratory for Creative Computation (CRCL, lab head: Prof. Stefana Parascho)](https://www.epfl.ch/labs/crcl/) here at [Ecole Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/). Development for the version 2.0.0 was done by Damien Gilliard and Eleni Skevaki.
 
 `diffCheck` is designed to be user-friendly and can be used either via a Grasshopper plug-in, we provide tutorials and online documentation for each component and its Python API.
 
@@ -38,17 +38,20 @@ Open your Grasshopper canvas and search for the `DF` components!
 
 ## Functionalities
 
-`diffCheck` is a toolset that allows you to compare a 3D model of a structure to evaluate its assembly or joint's quality and accuracy.
+`diffCheck` is a toolset that allows you to compare a 3D model of a structure to evaluate its assembly or joint's quality and accuracy. It can be used on finished assemblies to evaluate their quality, but also to detect poses during fabrication, to allow fabricator to react to pose discrepancies on-the-fly.
 
 <div align="center">
     <img src="./assets/img/placeholder_additive.png" width="600">
-    <p>Example of several structures assembled with different digital technologies.</p>
+    <p>Example of several finished structures assembled with different digital technologies.</p>
 </div>
 <div align="center">
     <img src="./assets/img/placeholder_subtractive.png" width="600">
     <p>Example of joinery evaluation.</p>
 </div>
-
+<div align="center">
+    <img src="./assets/img/pose_detection.png" width="400">
+    <p>Example of pose estimation.</p>
+</div>
 
 ## Documentation
 
