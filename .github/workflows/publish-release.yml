@@ -15,6 +15,8 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # single source of truth for gh CLI auth across all steps
 
     steps:
     - uses: actions/checkout@v2
@@ -35,9 +37,6 @@ jobs:
     - name: Install GitHub CLI
       run: |
         choco install gh
-    - name: Authenticate GitHub CLI
-      run: |
-        echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
 
     - name: Create a new branch and commit the version change
       # Delete branch remotely version-sync-branch (if exists)
@@ -48,8 +47,6 @@ jobs:
         else
           echo "Branch version-sync-branch does not exist."
         fi
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: bash
       # Create new branch and commit version change
     - run: |
@@ -58,25 +55,17 @@ jobs:
         git checkout -b version-sync-branch
         git commit -am "ACTION_BOT: Sync version for release"
         git push --set-upstream origin version-sync-branch
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Close existing pull requests for version-sync-branch
     - run: |
         gh pr list --state open --head version-sync-branch --json number --jq '.[].number' | ForEach-Object { gh pr close $_ }
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
       # Create pull request
     - run: |
         gh pr create --title "ACTION_BOT: Sync version for release" --body "Sync version for release" --base main --head version-sync-branch --label ACTION_BOT
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Merge pull request
     - run: |
         $pr = gh pr list --head version-sync-branch --json number --jq '.[0].number'
         gh pr merge $pr --squash --delete-branch --admin
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
 
   build-ghusers:
