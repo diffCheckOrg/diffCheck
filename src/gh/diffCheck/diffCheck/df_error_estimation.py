@@ -276,7 +276,7 @@ class DFPoseResults():
     def __init__(self, assembly: DFAssembly):
         self.assembly = assembly
         self.pose_history : dict[str, DFPosesBeam] = dict()
-        self.last_poses : dict[str, DFPose] = dict()
+        self.last_poses : dict[str, typing.Optional[DFPose]] = dict()
 
     def add_history(self, pose_history : dict[str, DFPosesBeam]):
         """
@@ -288,7 +288,7 @@ class DFPoseResults():
             poses_dict = pose_history[element].poses_dictionary
             self.last_poses[element] = poses_dict[next(reversed(poses_dict))] if poses_dict else None
 
-    def add_last_poses(self, last_poses : dict[str, DFPose]):
+    def add_last_poses(self, last_poses : dict[str, typing.Optional[DFPose]]):
         """
         Adds a dictionnary of the last poses for each element. The keys are the element names_0", "element_1", etc),
         """
