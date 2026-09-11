@@ -475,6 +475,13 @@ class DFBeam:
             center = DFVertex.__new__(DFVertex)
             center.__setstate__(state["_center"])
             state["_center"] = rg.Point3d(center.x, center.y, center.z)
+        if "_plane" in state and state["_plane"] is not None:
+            plane_data = state["_plane"]
+            state["_plane"] = rg.Plane(
+                rg.Point3d(plane_data[0], plane_data[1], plane_data[2]),
+                rg.Vector3d(plane_data[3], plane_data[4], plane_data[5]),
+                rg.Vector3d(plane_data[6], plane_data[7], plane_data[8])
+            )
         self.__dict__.update(state)
 
     def __repr__(self):
