@@ -39,14 +39,12 @@ class DFHTTPListener(component):
         def _import_job(url: str) -> None:
 
             """
-            Downloads and imports a .ply file from a given URL in a background thread.
+            Downloads a .ply file from a given URL in a background thread,
+            then marshals document operations to the UI thread.
             Background job:
             - Downloads the .ply file from the URL
-            - Imports it into the active Rhino document
-            - Extracts the new geometry (point cloud or mesh)
-            - Cleans up the temporary file and document objects
-            - Updates sticky state and status message
-            - Signals to GH that it should re-solve
+            - Saves to temp file
+            - Marshals import and cleanup to UI thread
 
             :param url: A string representing a direct URL to a .ply file (e.g. from GitHub or local server).
                         The file must end with ".ply".
@@ -60,59 +58,68 @@ class DFHTTPListener(component):
 
                 resp = requests.get(url, timeout=30)
                 resp.raise_for_status()
-                # save om temporary file
+                # save to temporary file
                 fn = os.path.basename(url)
                 tmp = os.path.join(tempfile.gettempdir(), fn)
                 with open(tmp, 'wb') as f:
                     f.write(resp.content)
 
-                doc = Rhino.RhinoDoc.ActiveDoc
-                # recordd existing object IDs to detect new ones
-                before_ids = {o.Id for o in doc.Objects}
+                # Marshal all Rhino document operations to the UI thread
+                def _do_import():
+                    try:
+                        doc = Rhino.RhinoDoc.ActiveDoc
+                        # record existing object IDs to detect new ones
+                        before_ids = {o.Id for o in doc.Objects}
 
-                # import PLY using Rhino's API
-                opts = Rhino.FileIO.FilePlyReadOptions()
-                ok = Rhino.FileIO.FilePly.Read(tmp, doc, opts)
-                if not ok:
-                    raise RuntimeError("Rhino.FilePly.Read failed")
+                        # import PLY using Rhino's API
+                        opts = Rhino.FileIO.FilePlyReadOptions()
+                        ok = Rhino.FileIO.FilePly.Read(tmp, doc, opts)
+                        if not ok:
+                            raise RuntimeError("Rhino.FilePly.Read failed")
 
-                after_ids = {o.Id for o in doc.Objects}
-                new_ids = after_ids - before_ids
-                # get new pcd or mesh from document
-                geom = None
-                for guid in new_ids:
-                    g = doc.Objects.FindId(guid).Geometry
-                    if isinstance(g, rg.PointCloud):
-                        geom = g.Duplicate()
-                        break
-                    elif isinstance(g, rg.Mesh):
-                        geom = g.DuplicateMesh()
-                        break
-                # remove imported objects
-                for guid in new_ids:
-                    doc.Objects.Delete(guid, True)
-                doc.Views.Redraw()
+                        after_ids = {o.Id for o in doc.Objects}
+                        new_ids = after_ids - before_ids
+                        # get new pcd or mesh from document
+                        geom = None
+                        for guid in new_ids:
+                            g = doc.Objects.FindId(guid).Geometry
+                            if isinstance(g, rg.PointCloud):
+                                geom = g.Duplicate()
+                                break
+                            elif isinstance(g, rg.Mesh):
+                                geom = g.DuplicateMesh()
+                                break
+                        # remove imported objects
+                        for guid in new_ids:
+                            doc.Objects.Delete(guid, True)
+                        doc.Views.Redraw()
 
-                # store new geometry
-                sc.sticky[f'{prefix}_imported_geom'] = geom
-                count = geom.Count if isinstance(geom, rg.PointCloud) else geom.Vertices.Count
-                if isinstance(geom, rg.PointCloud):
-                    sc.sticky[f'{prefix}_status_message'] = f"Loaded pcd with {count} pts"
-                else:
-                    sc.sticky[f'{prefix}_status_message'] = f"Loaded mesh wih {count} vertices"
-                ghenv.Component.Message = sc.sticky.get(f'{prefix}_status_message')  # noqa: F821
+                        # store new geometry
+                        sc.sticky[f'{prefix}_imported_geom'] = geom
+                        count = geom.Count if isinstance(geom, rg.PointCloud) else geom.Vertices.Count
+                        if isinstance(geom, rg.PointCloud):
+                            sc.sticky[f'{prefix}_status_message'] = f"Loaded pcd with {count} pts"
+                        else:
+                            sc.sticky[f'{prefix}_status_message'] = f"Loaded mesh with {count} vertices"
+
+                    except Exception as e:
+                        sc.sticky[f'{prefix}_imported_geom'] = None
+                        sc.sticky[f'{prefix}_status_message'] = f"Error: {e}"
+                    finally:
+                        try:
+                            os.remove(tmp)
+                        except Exception:
+                            pass
+                        # mark thread as finished and expire on UI thread
+                        sc.sticky[f'{prefix}_thread_running'] = False
+                        ghenv.Component.ExpireSolution(True)  # noqa: F821
+
+                Rhino.RhinoApp.InvokeOnUiThread(_do_import)
 
             except Exception as e:
                 sc.sticky[f'{prefix}_imported_geom'] = None
                 sc.sticky[f'{prefix}_status_message'] = f"Error: {e}"
-            finally:
-                try:
-                    os.remove(tmp)
-                except Exception:
-                    pass
-                # mark thread as finished
                 sc.sticky[f'{prefix}_thread_running'] = False
-                ghenv.Component.ExpireSolution(True)  # noqa: F821
 
         # check if the URL input has changed
         if sc.sticky[f'{prefix}_ply_url'] != i_ply_url:
