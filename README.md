@@ -55,68 +55,7 @@ Open your Grasshopper canvas and search for the `DF` components!
 The full documentation, with tutorials, automatic documentation for GHComponents and PythonAPI is available [here](https://diffcheckorg.github.io/diffCheck/).
 
 
-
-## Roadmap
-
-```mermaid
-gantt
-    dateFormat  YYYY-MM-DD
-    title       diffCheck - general overview
-    excludes    weekends
-
-    section Workshop
-    Workshop dryrun                         :milestone, crit, dryrun, 2025-09-15, 1d
-    Workshop in Boston                      :workshop, 2025-11-16, 2d
-
-    section Component development
-    Pose estimation                         :CD1, 2025-05-15, 1w
-    Communication w/ hardware               :CD2, after CD1, 3w
-    Pose comparison                         :CD3, after CD1, 3w
-    General PC manipulation                 :CD4, after CD1, 6w
-    Data analysis component                 :CD5, after CD3, 3w
-
-    section Workshop preparation
-    Workshop scenario                       :doc1, 2025-08-01, 1w
-    New compilation documentation           :doc2, after mac, 2w
-    New components documentation            :doc2, 2025-08-01, 4w
-    Development of special pipeline for data:doc3, after doc1, 3w
-
-    section Cross-platform
-    adaptation of CMake for mac compilation :mac, 2025-07-01, 3w
-
-    section Prototype testing
-    Fabrication of iterative prototype      :fab, 2025-08-01, 2w
-```
-
-
-
 ## How to contribute
 
 If you want to contribute to the project, please refer to the [contribution guidelines]([./CONTRIBUTING.md](https://diffcheckorg.github.io/diffCheck/contribute.html)).
 
-## Logic
-The logic of the workflow is currently as follows:
-
-```mermaid
-stateDiagram-v2
-    state "[breps to assemble]" as s1
-    state "scan of latest element placed" as s2
-    state "get pose of i-th brep" as s3
-    state "get pose of i-1-th brep" as s4
-    state "compute pose of i-1-th element from scan" as s5
-    state "compute pose difference" as s6
-    state "compute pose correction" as s7
-    state "assemble i-th-element" as s8
-    state "i += 1" as s9
-    [*]-->s2
-    s1-->s3
-    s1-->s4
-    s2-->s5
-    s5-->s6
-    s4-->s6
-    s6-->s7
-    s3-->s7
-    s7-->s8
-    s8-->s9
-    s9-->[*]
-```
