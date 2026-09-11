@@ -421,6 +421,13 @@ class DFBeam:
             ]
         if "_center" in state and state["_center"] is not None:
             state["_center"] = DFVertex(self._center.X, self._center.Y, self._center.Z).__getstate__()
+        if "_plane" in state and state["_plane"] is not None:
+            plane = state["_plane"]
+            state["_plane"] = [
+                plane.Origin.X, plane.Origin.Y, plane.Origin.Z,
+                plane.XAxis.X, plane.XAxis.Y, plane.XAxis.Z,
+                plane.YAxis.X, plane.YAxis.Y, plane.YAxis.Z
+            ]
         return state
 
     def __setstate__(self, state: typing.Dict):
