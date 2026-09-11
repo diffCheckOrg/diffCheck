@@ -108,7 +108,9 @@ class DFPosesAssembly:
         self.n_step = max(lengths) if lengths else 0
 
     def add_step(self, new_poses: list[DFPose]):
-        for i, pose in enumerate(new_poses):
+        element_count = max(len(new_poses), len(self.poses_per_element_dictionary))
+        for i in range(element_count):
+            pose = new_poses[i] if i < len(new_poses) else None
             if f"element_{i}" not in self.poses_per_element_dictionary:
                 self.poses_per_element_dictionary[f"element_{i}"] = DFPosesBeam({}, 4)
                 for j in range(self.n_step):
