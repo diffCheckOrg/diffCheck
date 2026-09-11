@@ -355,19 +355,9 @@ namespace diffCheck::geometry
                 }
             }
         }
-        this->Points.clear();
-        for (auto &point : O3DResultPointCloud->points_)
-            this->Points.push_back(point);
-        if (O3DResultPointCloud->HasColors())
-        {
-            this->Colors.clear();
-            for (auto &color : O3DResultPointCloud->colors_){this->Colors.push_back(color);};
-        }
-        if (O3DResultPointCloud->HasNormals())
-        {
-            this->Normals.clear();
-            for (auto &normal : O3DResultPointCloud->normals_){this->Normals.push_back(normal);};
-        }
+        this->Points = O3DResultPointCloud->points_;
+        this->Colors = O3DResultPointCloud->colors_;
+        this->Normals = O3DResultPointCloud->normals_;
     }
 
     diffCheck::geometry::DFPointCloud DFPointCloud::Intersect(const DFPointCloud &pointCloud, double distanceThreshold)
