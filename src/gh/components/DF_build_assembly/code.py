@@ -28,8 +28,9 @@ class DFBuildAssembly(component):
             i_allow_curved_joint_faces = False
 
         for brep in i_breps:
-            brep.Faces.ShrinkFaces()
-            beam = DFBeam.from_brep_face(brep, i_is_roundwood, i_allow_curved_joint_faces)
+            brep_copy = brep.DuplicateBrep()
+            brep_copy.Faces.ShrinkFaces()
+            beam = DFBeam.from_brep_face(brep_copy, i_is_roundwood, i_allow_curved_joint_faces)
             beams.append(beam)
 
         o_assembly = DFAssembly(beams, i_assembly_name)
