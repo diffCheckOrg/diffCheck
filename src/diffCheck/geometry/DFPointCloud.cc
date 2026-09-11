@@ -155,7 +155,14 @@ namespace diffCheck::geometry
                 DIFFCHECK_INFO("Default estimation of normals with knn = 30");
             }
             for (auto &normal : O3DPointCloud->normals_)
+            {
+                if(normal.z() < -0.1)
+                {
+                    normal = -normal;
+                }
                 this->Normals.push_back(normal);
+            }
+                
         }
         else
         {
@@ -165,7 +172,13 @@ namespace diffCheck::geometry
 
             this->Normals.clear();
             for (int i = 0; i < cilantroPointCloud->normals.cols(); i++)
+            {
+                if(cilantroPointCloud->normals.col(i).z() < -0.1)
+                {
+                    cilantroPointCloud->normals.col(i) = -cilantroPointCloud->normals.col(i);
+                }
                 this->Normals.push_back(cilantroPointCloud->normals.col(i).cast<double>());
+            }
             DIFFCHECK_INFO(("Estimating normals with cilantro evaluator with knn = " + std::to_string(knn.value())).c_str());
         }
 
@@ -216,6 +229,61 @@ namespace diffCheck::geometry
             this->Normals.push_back(normal);
     }
 
+    Eigen::Vector3d DFPointCloud::FitPlaneRANSAC(
+            double distanceThreshold,
+            int ransacN,
+            int numIterations)
+    {
+        if (this->Points.size() < ransacN)
+        {
+            DIFFCHECK_ERROR("Not enough points to fit a plane with RANSAC.");
+            return Eigen::Vector3d::Zero();
+        }
+        
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        std::tuple< Eigen::Vector4d, std::vector<size_t>> planeModel = O3DPointCloud->SegmentPlane(distanceThreshold, ransacN, numIterations);
+        Eigen::Vector3d planeParameters = std::get<0>(planeModel).head<3>();
+        return planeParameters;
+    }
+    
+    void DFPointCloud::Crop(const Eigen::Vector3d &minBound, const Eigen::Vector3d &maxBound)
+    {
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudCropped = O3DPointCloud->Crop(open3d::geometry::AxisAlignedBoundingBox(minBound, maxBound));
+        this->Points.clear();
+        for (auto &point : O3DPointCloudCropped->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudCropped->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudCropped->normals_)
+            this->Normals.push_back(normal);
+    }
+
+    void DFPointCloud::Crop(const std::vector<Eigen::Vector3d> &corners)
+    {
+        if (corners.size() != 8)
+            throw std::invalid_argument("The corners vector must contain exactly 8 points.");
+        open3d::geometry::OrientedBoundingBox obb = open3d::geometry::OrientedBoundingBox::CreateFromPoints(corners);
+        auto O3DPointCloud = this->Cvt2O3DPointCloud();
+        auto O3DPointCloudCropped = O3DPointCloud->Crop(obb);
+        this->Points.clear();
+        for (auto &point : O3DPointCloudCropped->points_)
+            this->Points.push_back(point);
+        this->Colors.clear();
+        for (auto &color : O3DPointCloudCropped->colors_)
+            this->Colors.push_back(color);
+        this->Normals.clear();
+        for (auto &normal : O3DPointCloudCropped->normals_)
+            this->Normals.push_back(normal);
+    }
+
+    DFPointCloud DFPointCloud::Duplicate() const
+    {
+        return DFPointCloud(this->Points, this->Colors, this->Normals);
+    }
+
     void DFPointCloud::UniformDownsample(int everyKPoints)
     {
         auto O3DPointCloud = this->Cvt2O3DPointCloud();
@@ -256,6 +324,76 @@ namespace diffCheck::geometry
         open3d::geometry::OrientedBoundingBox tightOOBB = this->Cvt2O3DPointCloud()->GetMinimalOrientedBoundingBox();
         std::vector<Eigen::Vector3d> bboxPts = tightOOBB.GetBoxPoints();
         return bboxPts;
+    }
+
+    void DFPointCloud::SubtractPoints(const DFPointCloud &pointCloud, double distanceThreshold)
+    {
+        if (this->Points.size() == 0 || pointCloud.Points.size() == 0)
+            throw std::invalid_argument("One of the point clouds is empty.");
+        
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = std::make_shared<DFPointCloud>(pointCloud)->Cvt2O3DPointCloud();
+        auto O3DResultPointCloud = std::make_shared<open3d::geometry::PointCloud>();
+
+        open3d::geometry::KDTreeFlann threeDTree;
+        threeDTree.SetGeometry(*O3DTargetPointCloud);
+        std::vector<int> indices;
+        std::vector<double> distances;
+        for (const auto &point : O3DSourcePointCloud->points_)
+        {
+            threeDTree.SearchRadius(point, distanceThreshold, indices, distances);
+            if (indices.empty())
+            {
+                O3DResultPointCloud->points_.push_back(point);
+                if (O3DSourcePointCloud->HasColors())
+                {
+                    O3DResultPointCloud->colors_.push_back(O3DSourcePointCloud->colors_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+                if (O3DSourcePointCloud->HasNormals())
+                {
+                    O3DResultPointCloud->normals_.push_back(O3DSourcePointCloud->normals_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+            }
+        }
+        this->Points = O3DResultPointCloud->points_;
+        this->Colors = O3DResultPointCloud->colors_;
+        this->Normals = O3DResultPointCloud->normals_;
+    }
+
+    diffCheck::geometry::DFPointCloud DFPointCloud::Intersect(const DFPointCloud &pointCloud, double distanceThreshold)
+    {
+        if (this->Points.size() == 0 || pointCloud.Points.size() == 0)
+            throw std::invalid_argument("One of the point clouds is empty.");
+        
+        auto O3DSourcePointCloud = this->Cvt2O3DPointCloud();
+        auto O3DTargetPointCloud = std::make_shared<DFPointCloud>(pointCloud)->Cvt2O3DPointCloud();
+        auto O3DResultPointCloud = std::make_shared<open3d::geometry::PointCloud>();
+
+        open3d::geometry::KDTreeFlann threeDTree;
+        threeDTree.SetGeometry(*O3DTargetPointCloud);
+        std::vector<int> indices;
+        std::vector<double> distances;
+        for (const auto &point : O3DSourcePointCloud->points_)
+        {
+            threeDTree.SearchRadius(point, distanceThreshold, indices, distances);
+            if (!indices.empty())
+            {
+                O3DResultPointCloud->points_.push_back(point);
+                if (O3DSourcePointCloud->HasColors())
+                {
+                    O3DResultPointCloud->colors_.push_back(O3DSourcePointCloud->colors_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+                if (O3DSourcePointCloud->HasNormals())
+                {
+                    O3DResultPointCloud->normals_.push_back(O3DSourcePointCloud->normals_[&point - &O3DSourcePointCloud->points_[0]]);
+                }
+            }
+        }
+        diffCheck::geometry::DFPointCloud result;
+        result.Points = O3DResultPointCloud->points_;
+        result.Colors = O3DResultPointCloud->colors_;
+        result.Normals = O3DResultPointCloud->normals_;
+        return result;
     }
 
     void DFPointCloud::ApplyTransformation(const diffCheck::transformation::DFTransformation &transformation)

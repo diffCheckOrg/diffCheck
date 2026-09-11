@@ -232,19 +232,19 @@ endfunction()
 
 # ------------------------------------------------------------------------------
 function (copy_dlls directory_to_copy_dlls post_build_target)
-  message (STATUS "Erasing old DLLs and copy new ones to ${directory_to_copy_dlls}")
-  file(GLOB files ${directory_to_copy_dlls}/*.dll)
-  foreach(file ${files})
-      message(STATUS "Removing ${file}")
-      file(REMOVE ${file})
-  endforeach()
-  file(GLOB files ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/*.dll)
-  foreach(file ${files})
-      message(STATUS "Copying ${file} to ${directory_to_copy_dlls}")
-      add_custom_command(TARGET ${post_build_target} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy
-          ${file}
-          ${directory_to_copy_dlls}
-          )
-  endforeach()
+  message (STATUS "Configuring DLL copy to ${directory_to_copy_dlls} at build time")
+  
+  # Get the path to the script relative to the project source dir
+  set(COPY_DLLS_SCRIPT ${PROJECT_SOURCE_DIR}/cmake/copy_dlls_script.cmake)
+  
+  # Add a post-build command that will copy DLLs at build time
+  # This ensures the file list is evaluated at build time, not configure time
+  add_custom_command(TARGET ${post_build_target} POST_BUILD
+      COMMAND ${CMAKE_COMMAND}
+      -DDIR_TO_CLEAN="${directory_to_copy_dlls}"
+      -DSRC_DIR="${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}"
+      -DDST_DIR="${directory_to_copy_dlls}"
+      -P "${COPY_DLLS_SCRIPT}"
+      COMMENT "Copying DLLs to ${directory_to_copy_dlls}"
+      )
 endfunction()

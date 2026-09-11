@@ -14,7 +14,7 @@
 </p>
 
 
-![demo](https://github.com/user-attachments/assets/3c9f353d-7707-4630-aa6d-fe59cbdeae2f)
+![demo](./assets/img/intro_illustration_with_final_distances_and_pose_estimation.png)
 
 # DiffCheck: CAD-Scan comparison
 
@@ -22,7 +22,7 @@ With `diffCheck`, you can easily compare your scans and 3D models of timber stru
 
 `diffCheck` can also function as a general purpose  point cloud processing toolset and we hope that the digital community will use it, see the interest, and contribute to this open-source project we starting!
 
-`diffCheck` is originally developed and now maintained by Andrea Settimi (PhD), Damien Gilliard (PhD) from the [Laboratory of Timber Construction (IBOIS, lab head: Prof. Yves Weinand)](https://www.epfl.ch/labs/ibois/), Eleni Skevaki (PhD) and Dr. Marirena Kladeftira (Post-Doc) from the [Laboratory for Creative Computation (CRCL, lab head: Prof. Stefana Parascho)](https://www.epfl.ch/labs/crcl/) here at [Ecole Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/).
+`diffCheck` 1 was originally developed by Dr. Andrea Settimi, Damien Gilliard (PhD candidate) from the [Laboratory of Timber Construction (IBOIS, lab head: Prof. Yves Weinand)](https://www.epfl.ch/labs/ibois/), Eleni Skevaki (PhD candidate) and Dr. Marirena Kladeftira (Post-Doc) from the [Laboratory for Creative Computation (CRCL, lab head: Prof. Stefana Parascho)](https://www.epfl.ch/labs/crcl/) here at [Ecole Polytechnique Fédérale de Lausanne (EPFL)](https://www.epfl.ch/en/). Development for the version 2 was done by Damien Gilliard (still PhD candidate) from the [Laboratory of Timber Construction (IBOIS, lab head: Prof. Yves Weinand)](https://www.epfl.ch/labs/ibois/) and Eleni Skevaki (PhD candidate) from the [Laboratory for Creative Computation (CRCL, lab head: Prof. Stefana Parascho)](https://www.epfl.ch/labs/crcl/).
 
 `diffCheck` is designed to be user-friendly and can be used either via a Grasshopper plug-in, we provide tutorials and online documentation for each component and its Python API.
 
@@ -38,50 +38,27 @@ Open your Grasshopper canvas and search for the `DF` components!
 
 ## Functionalities
 
-`diffCheck` is a toolset that allows you to compare a 3D model of a structure to evaluate its assembly or joint's quality and accuracy.
+`diffCheck` is a toolset that allows you to compare a 3D model of a structure to evaluate its assembly or joint's quality and accuracy. It can be used on finished assemblies to evaluate their quality, but also to detect poses during fabrication, to allow fabricator to react to pose discrepancies on-the-fly.
 
 <div align="center">
     <img src="./assets/img/placeholder_additive.png" width="600">
-    <p>Example of several structures assembled with different digital technologies.</p>
+    <p>Example of several finished structures assembled with different digital technologies.</p>
 </div>
 <div align="center">
     <img src="./assets/img/placeholder_subtractive.png" width="600">
     <p>Example of joinery evaluation.</p>
 </div>
-
+<div align="center">
+    <img src="./assets/img/pose_detection.png" width="400">
+    <p>Example of pose estimation.</p>
+</div>
 
 ## Documentation
 
 The full documentation, with tutorials, automatic documentation for GHComponents and PythonAPI is available [here](https://diffcheckorg.github.io/diffCheck/).
 
 
-
-## Roadmap
-
-```mermaid
-gantt
-    dateFormat  YYYY-MM-DD
-    title       diffCheck - general overview
-    excludes    weekends
-
-    section Publication
-    Abstract edition                    :active, absed, 2024-03-01, 2024-03-15
-    Submission abstract ICSA            :milestone, icsaabs, 2024-03-15, 0d
-    Paper edition                       :paperd, 2024-10-01, 2024-10-30
-    Submission paper ICSA               :milestone, icsapap, 2024-10-30, 0d
-
-    section Code development
-    Backend development                 :backenddev, after icsaabs, 6w
-    Rhino/Grasshopper integration       :rhghinteg, after backenddev, 6w
-    Documentation & Interface           :docuint, after fabar, 3w
-
-    section Prototype testing
-    Fabrication of AR Prototype         :crit, fabar, 2024-07-01, 2024-08-30
-    Fabrication of CNC Prototype        :crit, fabcnc, 2024-07-01, 2024-08-30
-    Fabrication of Robot Prototype      :crit, fabrob, 2024-07-01, 2024-08-30
-    Data collection and evaluation      :dataeval, after fabrob, 4w
-```
-
 ## How to contribute
 
 If you want to contribute to the project, please refer to the [contribution guidelines]([./CONTRIBUTING.md](https://diffcheckorg.github.io/diffCheck/contribute.html)).
+

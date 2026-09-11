@@ -1,0 +1,64 @@
+{
+    "name": "DFCloudIntersection",
+    "nickname": "Intersection",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "Intersects points from two point clouds based on a distance threshold.",
+    "exposure": 4,
+    "instanceGuid": "b1a87021-dc4d-4844-86e0-8dcf55965ac6",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_cloud_A",
+                "nickname": "i_cloud_A",
+                "description": "The point cloud to intersect from.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_cloud_B",
+                "nickname": "i_cloud_B",
+                "description": "The point cloud to intersect with.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud"
+            },
+            {
+                "name": "i_distance_threshold",
+                "nickname": "i_distance_threshold",
+                "description": "The distance threshold to consider a point as close enough.",
+                "optional": true,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "float"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The resulting cloud after intersection.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

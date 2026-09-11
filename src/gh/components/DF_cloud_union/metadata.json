@@ -1,0 +1,41 @@
+{
+    "name": "DFCloudUnion",
+    "nickname": "DFCloudUnion",
+    "category": "diffCheck",
+    "subcategory": "Cloud",
+    "description": "This component merges a series of point clouds into a unique point cloud.",
+    "exposure": 4,
+    "instanceGuid": "1e5e3ce8-1eb8-4227-9456-016f3cedd235",
+    "ghpython": {
+        "hideOutput": true,
+        "hideInput": true,
+        "isAdvancedMode": true,
+        "marshalOutGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "i_clouds",
+                "nickname": "i_clouds",
+                "description": "The point clouds to merge.",
+                "optional": false,
+                "allowTreeAccess": true,
+                "showTypeHints": true,
+                "scriptParamAccess": "list",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "pointcloud",
+                "flatten": true
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "o_cloud",
+                "nickname": "o_cloud",
+                "description": "The merged point clouds.",
+                "optional": false,
+                "sourceCount": 0,
+                "graft": false
+            }
+        ]
+    }
+}

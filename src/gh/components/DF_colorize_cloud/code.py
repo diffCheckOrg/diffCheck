@@ -15,6 +15,8 @@ class DFColorizeCloud(component):
             return None
 
         for cloud in i_clouds:
+            if cloud is None:
+                continue
             random_color = System.Drawing.Color.FromArgb(
                 np.random.randint(0, 255),
                 np.random.randint(0, 255),

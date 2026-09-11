@@ -6,6 +6,9 @@
 #include <loguru.hpp>
 
 #include <cilantro/cilantro.hpp>
+#include <cilantro/clustering/kmeans.hpp>
+
+#include <Eigen/Dense>
 
 // diffCheck includes
 #include "diffCheck/log.hh"

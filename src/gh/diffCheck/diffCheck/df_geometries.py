@@ -101,6 +101,7 @@ class DFFace:
         self._center: DFVertex = None
         # the normal of the face
         self._normal: typing.List[float] = None
+        self._area: float = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -177,8 +178,17 @@ class DFFace:
             loop_vertices = loop_curve.Points
             loop = []
             for l_v in loop_vertices:
-                vertex = DFVertex(l_v.X, l_v.Y, l_v.Z)
-                loop.append(vertex)
+                rg_pt = rg.Point3d(l_v.X, l_v.Y, l_v.Z)
+                res = loop_curve.ClosestPoint(rg_pt)
+                if res:
+                    t = res[1]
+                else:
+                    t = 0 # this is a fallback, but it should not happen since the point is on the curve
+                point_on_curve = loop_curve.PointAt(t)
+                distance = rg.Point3d.DistanceTo(rg_pt, point_on_curve)
+                if distance < 10 * Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance:
+                    vertex = DFVertex(l_v.X, l_v.Y, l_v.Z)
+                    loop.append(vertex)
             all_loops.append(loop)
 
         df_face = cls(all_loops, joint_id)
@@ -231,7 +241,7 @@ class DFFace:
         for mesh_part in mesh_parts:
             mesh.Append(mesh_part)
         mesh.Faces.ConvertQuadsToTriangles()
-        # mesh.Compact()
+        mesh.Compact()
 
         return mesh
 
@@ -260,6 +270,12 @@ class DFFace:
             normal_rg = self.to_brep_face().NormalAt(0, 0)
             self._normal = [normal_rg.X, normal_rg.Y, normal_rg.Z]
         return self._normal
+
+    @property
+    def area(self):
+        if self._area is None:
+            self._area = self.to_brep_face().ToBrep().GetArea()
+        return self._area
 
 @dataclass
 class DFJoint:
@@ -375,6 +391,7 @@ class DFBeam:
 
         self._center: rg.Point3d = None
         self._axis: rg.Line = self.compute_axis()
+        self._plane: rg.Plane = self.compute_plane()
         self._length: float = self._axis.Length
 
         self.__uuid = uuid.uuid4().int
@@ -404,6 +421,13 @@ class DFBeam:
             ]
         if "_center" in state and state["_center"] is not None:
             state["_center"] = DFVertex(self._center.X, self._center.Y, self._center.Z).__getstate__()
+        if "_plane" in state and state["_plane"] is not None:
+            plane = state["_plane"]
+            state["_plane"] = [
+                plane.Origin.X, plane.Origin.Y, plane.Origin.Z,
+                plane.XAxis.X, plane.XAxis.Y, plane.XAxis.Z,
+                plane.YAxis.X, plane.YAxis.Y, plane.YAxis.Z
+            ]
         return state
 
     def __setstate__(self, state: typing.Dict):
@@ -451,6 +475,13 @@ class DFBeam:
             center = DFVertex.__new__(DFVertex)
             center.__setstate__(state["_center"])
             state["_center"] = rg.Point3d(center.x, center.y, center.z)
+        if "_plane" in state and state["_plane"] is not None:
+            plane_data = state["_plane"]
+            state["_plane"] = rg.Plane(
+                rg.Point3d(plane_data[0], plane_data[1], plane_data[2]),
+                rg.Vector3d(plane_data[3], plane_data[4], plane_data[5]),
+                rg.Vector3d(plane_data[6], plane_data[7], plane_data[8])
+            )
         self.__dict__.update(state)
 
     def __repr__(self):
@@ -506,6 +537,26 @@ class DFBeam:
 
         return axis_ln
 
+    def compute_plane(self) -> rg.Plane:
+        """
+        This is an utility function that computes the plane of the beam.
+        The plane is calculated using the beam's axis and the world Z axis.
+
+        :return plane: The plane of the beam
+        """
+        bounding_geometry = diffCheck.df_util.compute_oriented_bounding_box(self.to_brep())
+        center = Rhino.Geometry.AreaMassProperties.Compute(bounding_geometry).Centroid
+        edge_lengths = [edge.GetLength() for edge in bounding_geometry.Edges]
+        longest_edge = bounding_geometry.Edges[edge_lengths.index(max(edge_lengths))]
+        z_axis = rg.Vector3d(longest_edge.PointAt(1) - longest_edge.PointAt(0))
+
+        df_faces = [face for face in self.faces]
+        sorted_df_faces = sorted(df_faces, key=lambda face: Rhino.Geometry.AreaMassProperties.Compute(face._rh_brepface).Area if face._rh_brepface else 0, reverse=True)
+        largest_side_face_normal = sorted_df_faces[0].normal
+        rh_largest_side_face_normal = rg.Vector3d(largest_side_face_normal[0], largest_side_face_normal[1], largest_side_face_normal[2])
+
+        return rg.Plane(center, rg.Vector3d.CrossProduct(z_axis, rh_largest_side_face_normal), rh_largest_side_face_normal)
+
     def compute_joint_distances_to_midpoint(self) -> typing.List[float]:
         """
             This function computes the distances from the center of the beam to each joint.
@@ -556,24 +607,24 @@ class DFBeam:
                 angle = rg.Vector3d.VectorAngle(self.axis.Direction, joint_normal)
                 angle_degree = Rhino.RhinoMath.ToDegrees(angle)
                 jointfaces_angles.append(angle_degree)
-                angle_degree = int(angle_degree)
+                angle_degree = float(angle_degree)
 
-                if angle_degree > 90:
-                    angle_degree = 180 - angle_degree
-                if angle_degree >= 89 and angle_degree <= 90:
-                    angle_degree = -1
+                if angle_degree > 90.0:
+                    angle_degree = 180.0 - angle_degree
+                if angle_degree >= 89.0 and angle_degree <= 90.0:
+                    angle_degree = -1.0
 
                 jointface_angles.append(angle_degree)
         return jointface_angles
 
     @classmethod
-    def from_brep_face(cls, brep, is_roundwood=False):
+    def from_brep_face(cls, brep, is_roundwood=False, allow_curved_joint_faces=False):
         """
         Create a DFBeam from a RhinoBrep object.
         It also removes duplicates and creates a list of unique faces.
         """
         faces : typing.List[DFFace] = []
-        data_faces = diffCheck.df_joint_detector.JointDetector(brep, is_roundwood).run()
+        data_faces = diffCheck.df_joint_detector.JointDetector(brep, is_roundwood).run(allow_curved_joint_faces)
         for data in data_faces:
             face = DFFace.from_brep_face(data[0], data[1])
             faces.append(face)
@@ -665,6 +716,11 @@ class DFBeam:
     def axis(self):
         self._axis = self.compute_axis()
         return self._axis
+
+    @property
+    def plane(self):
+        self._plane = self.compute_plane()
+        return self._plane
 
     @property
     def length(self):

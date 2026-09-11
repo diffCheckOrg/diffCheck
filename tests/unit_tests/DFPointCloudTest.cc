@@ -220,3 +220,13 @@ TEST_F(DFPointCloudTestFixture, Transform) {
 //-------------------------------------------------------------------------
 // Others
 //-------------------------------------------------------------------------
+
+TEST_F(DFPointCloudTestFixture, FitPlaneRANSAC) {
+    std::shared_ptr<diffCheck::geometry::DFPointCloud> dfPointCloudPlane = std::make_shared<diffCheck::geometry::DFPointCloud>();
+    dfPointCloudPlane->LoadFromPLY(diffCheck::io::GetPlanePCWithOneOutliers());
+    Eigen::Vector3d planeNormal = dfPointCloudPlane->FitPlaneRANSAC(0.01, 3, 100);
+    // plane model should be close to (0, 0, 1, d)
+    EXPECT_NEAR(planeNormal[0], 0.0, 1e-2);
+    EXPECT_NEAR(planeNormal[1], 0.0, 1e-2);
+    EXPECT_NEAR(std::abs(planeNormal[2]), 1.0, 1e-2);
+}
