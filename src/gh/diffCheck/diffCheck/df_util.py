@@ -204,4 +204,12 @@ def compute_oriented_bounding_box(brep):
         for v in face.ToBrep().Vertices:
             bb_vertices.append(Rhino.Geometry.Point3d(v.Location.X, v.Location.Y, v.Location.Z))
     df_cloud.points = [np.array([vertex.X, vertex.Y, vertex.Z]).reshape(3, 1) for vertex in bb_vertices]
-    return diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
+    brep_bb = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
+    if brep_bb is not None:
+        return brep_bb
+    else:
+        for edge in brep.Edges:
+            bb_vertices.extend([Rhino.Geometry.Point3d(pt.X, pt.Y, pt.Z) for pt in edge.ToNurbsCurve().DivideByCount(10, True)])
+        df_cloud.points = [np.array([vertex.X, vertex.Y, vertex.Z]).reshape(3, 1) for vertex in bb_vertices]
+        brep_bb = diffCheck.df_cvt_bindings.cvt_dfOBB_2_rhbrep(df_cloud.get_tight_bounding_box())
+        return brep_bb
