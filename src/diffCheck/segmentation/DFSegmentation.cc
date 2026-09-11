@@ -395,6 +395,7 @@ namespace diffCheck::segmentation
 
                 for (std::vector<std::shared_ptr<geometry::DFMesh>> mesh : meshes)
                 {
+                    faceIndex = 0;
                     if (mesh.size() == 0)
                     {
                         DIFFCHECK_WARN("Empty piece in the meshes vector. Skipping the mesh face vector.");
