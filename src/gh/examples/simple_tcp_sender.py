@@ -16,7 +16,7 @@ def random_colored_point():
 with socket.create_connection((host, port)) as s:
     print("Connected to GH")
     while True:
-        cloud = [random_colored_point() for _ in range(1000)]
+        cloud = [random_colored_point() for _ in range(1000000)]
         msg = json.dumps(cloud) + "\n"
         s.sendall(msg.encode())
         print("Sent cloud with", len(cloud), "colored points")
